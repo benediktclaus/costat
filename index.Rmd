@@ -1,9 +1,9 @@
 ---
 title: "Home"
-knit: (function(input_file, encoding) {
-  out_dir <- 'docs';
-  rmarkdown::render(input_file,
- encoding=encoding,
- output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
 ---
-Willkommen auf der Seite!
+# Chamber of statistics
+Willkommen auf der Seite
+
+# Worum geht's hier?
+
+# Für wen ist es?

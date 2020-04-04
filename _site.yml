@@ -1,17 +1,14 @@
 name: "costat"
+output_dir: "docs"
 navbar:
   title: "Chamber of Statistics"
   left:
     - text: "Home"
       href: index.html
     - text: "Software"
-    - text: "Zusammenhänge"
-    - text: "Mittelwerte vergleichen"
-    - text: "Clusteranalyse"
-    - text: "Meta-Analyse"
-  right:
-    -text: "About"
+      href: software.html
 output:
   html_document:
+    theme: cosmo
     include:
       after_body: footer.html
