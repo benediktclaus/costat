@@ -1,0 +1,6 @@
+name: "costat"
+navbar:
+  title: "Chamber of Statistics"
+  left:
+    - text: "Home"
+      href: index.html
