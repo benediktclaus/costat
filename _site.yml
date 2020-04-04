@@ -4,6 +4,13 @@ navbar:
   left:
     - text: "Home"
       href: index.html
+    - text: "Software"
+    - text: "Zusammenhänge"
+    - text: "Mittelwerte vergleichen"
+    - text: "Clusteranalyse"
+    - text: "Meta-Analyse"
+  right:
+    -text: "About"
 output:
   html_document:
     include:
