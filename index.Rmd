@@ -1,9 +1,16 @@
 ---
-title: "Home"
+title: "Chamber of Statistics"
 ---
-# Chamber of statistics
-Willkommen auf der Seite
+
+Willkommen in der Chamber of Statistics. Muhahaha. Sie ist mein Beitrag zur Ausweitung der wissenschaftich fundierten Anwendung statistischer Methoden, vor allem im Bereich der Psychologie. Damit betreten wir eine mysteriöse und dunkle Kammer, vollgestopt mit *t*-Tests, ANOVAS, MLMs, Bootstrapping, Regressionen und noch so vielem mehr.
 
 # Worum geht's hier?
+Auf dieser Website werden viele standardmäßige und spezielle Methoden vorgestellt. Wir widmen uns zusammen der Frage, bei welcher Fragestellung welche Methode sinnvoll ist, welche Voraussetzungen es dabei zu beachten gilt, wie man diese Methoden dann konkret und anhand von Beispielen anwendet und wie man sie interpretiert. Wir gucken uns keine Formeln an (zumindest nur sehr wenige)! Stattdessen gehe ich davon aus, dass Du hier Hilfe in der Anwendung suchst.
 
-# Für wen ist es?
+Nach einem kurzen Blick auf die Themen-Seiten sollte klar werden, dass ich vor allem mit **R** arbeite -- ein Buchstabe, doch belegt mit so vielen aversiven Gefühlen. Davor muss man jedoch keine Angst haben! Ja, wenn man im Studium mit IBM SPSS groß geworden ist, wovon es zwar alle paar Jahre wieder eine neue Version gibt und doch immer alles merkwürdig gleich aussieht, dann ist das eine andere Form der Arbeit. Meiner Meinung nach überwiegt der Nutzen dabei jedoch deutlich die Kosten. Aber mache Dir am besten selbst ein Bild.
+
+# Wer sollte eintreten?
+Stehen Forschungsprojekte, Haus-, Bachelor- oder Masterarbeiten auf Deinem Abgabe-Kalender und zittern Deine Hände schon beim Gedanken an die dunkle Kammer der Statistik? Dann bist Du hier genau richtig. Wir gehen jedes Verfahren Schritt für Schritt anhand von konkreten Beispielen durch. Wir ziehen hier keine drei Kugeln aus einer Urne, werfen danach Münzen und ergötzen uns am Anblick von Spielkarten.
+
+# Gibt's noch mehr?
+Ja! Diese Website wird über ein [GitHub-Repository](https://github.com/benediktclaus/costat.git) gespeist. Dort findest du alle Ressourcen, auch die Beispieldaten, die Du zum Mitmachen brauchst. Dort können auch Fehler gemeldet werden, insofern sich welche eingeschlichen haben.

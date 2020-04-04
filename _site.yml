@@ -4,9 +4,10 @@ navbar:
   title: "Chamber of Statistics"
   left:
     - text: "Home"
+      icon: fa-home
       href: index.html
     - text: "Software"
-      href: software.html
+      href: 01-software.html
 output:
   html_document:
     theme: cosmo
