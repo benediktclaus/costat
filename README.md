@@ -1,2 +1,3 @@
 # costat
-To follow
+To follow.
+https://benediktclaus.github.io/costat/
