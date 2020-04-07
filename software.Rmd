@@ -1,0 +1,37 @@
+---
+title: "Software"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+---
+
+Die moderne Datenanalyse findet heutzutage fast ausschließlich am PC statt. Damit ist die Hardware gesichert und es stellt sich die Frage nach der Statistik-Sotfware. Hier ein kleiner, aber feiner, Überblick über die gängige Statistik-Software mit einigen wohlgemeinten, persönlichen Empfehlungen.
+
+# IBM SPSS Statistics
+Oder einfach nur kurz "SPSS". Die Abkürzung stand einmal für "Statistical Package for the Social Sciences" und machte deutlich, wo sich IBM mit diesem kommerziellen Produkt sieht. An vielen Universitäten und Forschungseinrichtungen ist es der Standard zur Datenauswertung. Allerdings auch nur da, was angesichts des hohen Preises nicht verwunderlich ist (für Privatpersonen ist es daher eher ungeeignet). Gelegentlich erscheinen neue Versionen (derzeit 26), doch für das Forschungsfeld der Psychologie oder der Medizin sind meiner Meinung nach seit den frühesten Versionen keine aufregenden Neurungen dazugekommen. Im Gegenteil: essentielle Verfahren, wie die Berechnung von Effektstärken -- bspw. Cohens $d$ [@Cohen.1988] -- werden auch 2020 immer noch herzlich vermisst.
+
+Die Standard-Methoden kann man hier über ein Graphical User Interface (GUI), also durch Klicken und Ziehen mit der Maus, ausführen. Gerade für Einsteiger ist das also echt bequem -- auch wenn man für den Funktionsumfang auf IBM angewiesen ist. Zudem ist SPSS, wie breits erwähnt, eine kommerzielle Software, d.h., dass alles "hinter verschlossenen Türen" stattfindet, den Quellcode kann man nicht einsehen und man muss darauf vertrauen, dass das Programm macht, was IBM verspricht. Manchmal macht SPSS jedoch Dinge, die man nicht erwartet. Für alle, die bei einer Faktorenanalyse schon einmal die Rotationsmethode "Promax" angewandt haben: SPSS führt dabei vorher eine Kaiser-Normalisierung durch, von der man im [offiziellen Support](https://www.ibm.com/support/knowledgecenter/de/SSLVMB_26.0.0/statistics_mainhelp_ddita/spss/base/idh_fact_rot.html) nichts liest.
+
+# R
+[R](https://www.r-project.org/) ist eine Programmiersprache für statistische Berechnungen und *de facto* Standard im Bereich Statistik. Sie ist open source, das heißt, dass der Quellcode auch von Dritten eingesehen werden kann. Zudem ist sie [frei zugänglich](https://www.r-project.org/). Die Tatsache, dass es sich bei R um eine Programmiersprache handelt, schreckt viele ab. Anders als bei IBM SPSS Statistics gibt es hier kein GUI, man führt alle Befehle über die Eingabe von Text aus.
+
+Warum sollte ich es mir dann also schwer machen und R lernen? Weil es unglaublich umfangreich ist! Durch den Open-Source-Ansatz kann jeder zum Funktionsumfang von R beitragen. Neue Funktionen oder Erweiterungen werden als Pakete auf einem zentralen Platz zur Verfügung gestellt, sind wiederum frei zugänglich und können sofort zur eigenen Arbeit verwendet werden. Zudem können diese Befehle, wie auch bei der SPSS-Syntax, abgespeichert und mit anderen Forschern geteilt werden. Ergebnisse sind so reproduzierbar.
+
+Ein weiterer Vorteil von R ist, dass es von Statistikern entwickelt wurde -- gleichzeitig ist das auch der größte Nachteil. R hat eine steile Lernkurve; man muss sich also damit beschäftigen, bis man Analysen sicher durchführen kann. Zum Glück gibt es Mittel, Wege und diese Website, um auch ohne große Programmierkenntnisse zurechtzukommen.
+
+# RStudio
+[RStudio](https://rstudio.com/) ist das, was jeden R-Hack am Leben hält. R an sich (auch "base R" genannt) ist voll funktionsfähig, doch das Arbeiten damit alleine ist sehr mühselig. Als Ergänzung zu R gibt es RStudio, ein Programm, dass das Arbeiten mit R deutlich vereinfacht. Hier findet man eine klare Benutzeroberfläche, automatische Code-Ergänzungen, Hilfen, und, und, und. Wer mit R arbeitet, sollte hierauf nicht verzichten und direkt RStudio mit installieren.
+
+Was mache ich aber, wenn ich keine Zeit habe, R zu lernen und trotzdem einen tollen Funktionsumfang möchte? Dafür gibt es JASP!
+
+# JASP
+[Jeffrey's Amazing Statistics Program](https://jasp-stats.org/) (JASP) ist der lang ersehnte Silberstreif am Horizont. Es bietet alle Vorteile von R und stellt dem Benutzer eine Oberfläche zum Klicken und Ziehen zur Verfüfung. Der Reihe nach: JASP ist open source und frei zugänglich. Es basiert auf R und man kann sich dennoch in einem klar strukturierten GUI bewegen. Der Funktionsumfang ist gigantisch, von klassichen, statistischen Methoden bis hin zu Machine-Learning-Anwendungen und Meta-Analysen ist im Prinzip alles dabei. 
+
+Hinzu kommt, dass eine abgespeicherte JASP-Datei immer den Original-Datensatz und die Ergebnisse enthält. Man muss also nicht Analysen und Output teilen, es reicht eine Datei, in der eine andere Person klar nachvollziehen kann, wie die Daten aussehen, was und mit welchen Einstellungen es berechnet wurde und was am Ende das Ergebnis war. Besonders wertvoll ist, dass man diesen Output direkt im [Open Science Framework](https://osf.io/) (OSF) teilen kann, so dass alle Analysen transparent, nachvollziehbar und reproduzierbar sind.
+
+Wer also  als Einsteiger oder Experte das Beste aus beiden Welten will, dem sei JASP ans Herz gelegt.
+
+# Worauf liegt hier der Fokus?
+Der Fokus der Chamber of Statistics liegt auf R. JASP klingt verlockend, und das ist es auch (nutzt es ohne Scheu!), aber in R kann man einfach immer noch am meisten erreichen.
+
+# Literatur

@@ -11,7 +11,7 @@
 
 
 
-<title>Chamber of Statistics</title>
+<title>Software</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -295,24 +295,45 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Chamber of Statistics</h1>
+<h1 class="title toc-ignore">Software</h1>
 
 </div>
 
 
-<p>Willkommen in der Chamber of Statistics. Muhahaha. Sie ist mein Beitrag zur Ausweitung der wissenschaftich fundierten Anwendung statistischer Methoden, vor allem im Bereich der Psychologie. Damit betreten wir eine mysteriöse und dunkle Kammer, vollgestopt mit <em>t</em>-Tests, ANOVAS, MLMs, Bootstrapping, Regressionen und noch so vielem mehr.</p>
-<div id="worum-gehts-hier" class="section level1">
-<h1>Worum geht’s hier?</h1>
-<p>Auf dieser Website werden viele standardmäßige und spezielle Methoden vorgestellt. Wir widmen uns zusammen der Frage, bei welcher Fragestellung welche Methode sinnvoll ist, welche Voraussetzungen es dabei zu beachten gilt, wie man diese Methoden dann konkret und anhand von Beispielen anwendet und wie man sie interpretiert. Wir gucken uns keine Formeln an (zumindest nur sehr wenige)! Stattdessen gehe ich davon aus, dass Du hier Hilfe in der Anwendung suchst.</p>
-<p>Nach einem kurzen Blick auf die Themen-Seiten sollte klar werden, dass ich vor allem mit <strong>R</strong> arbeite – ein Buchstabe, doch belegt mit so vielen aversiven Gefühlen. Davor muss man jedoch keine Angst haben! Ja, wenn man im Studium mit IBM SPSS groß geworden ist, wovon es zwar alle paar Jahre wieder eine neue Version gibt und doch immer alles merkwürdig gleich aussieht, dann ist das eine andere Form der Arbeit. Meiner Meinung nach überwiegt der Nutzen dabei jedoch deutlich die Kosten. Aber mache Dir am besten selbst ein Bild.</p>
+<p>Die moderne Datenanalyse findet heutzutage fast ausschließlich am PC statt. Damit ist die Hardware gesichert und es stellt sich die Frage nach der Statistik-Sotfware. Hier ein kleiner, aber feiner, Überblick über die gängige Statistik-Software mit einigen wohlgemeinten, persönlichen Empfehlungen.</p>
+<div id="ibm-spss-statistics" class="section level1">
+<h1>IBM SPSS Statistics</h1>
+<p>Oder einfach nur kurz “SPSS”. Die Abkürzung stand einmal für “Statistical Package for the Social Sciences” und machte deutlich, wo sich IBM mit diesem kommerziellen Produkt sieht. An vielen Universitäten und Forschungseinrichtungen ist es der Standard zur Datenauswertung. Allerdings auch nur da, was angesichts des hohen Preises nicht verwunderlich ist (für Privatpersonen ist es daher eher ungeeignet). Gelegentlich erscheinen neue Versionen (derzeit 26), doch für das Forschungsfeld der Psychologie oder der Medizin sind meiner Meinung nach seit den frühesten Versionen keine aufregenden Neurungen dazugekommen. Im Gegenteil: essentielle Verfahren, wie die Berechnung von Effektstärken – bspw. Cohens <span class="math inline">\(d\)</span> <span class="citation">(Cohen, <a href="#ref-Cohen.1988" role="doc-biblioref">1988</a>)</span> – werden auch 2020 immer noch herzlich vermisst.</p>
+<p>Die Standard-Methoden kann man hier über ein Graphical User Interface (GUI), also durch Klicken und Ziehen mit der Maus, ausführen. Gerade für Einsteiger ist das also echt bequem – auch wenn man für den Funktionsumfang auf IBM angewiesen ist. Zudem ist SPSS, wie breits erwähnt, eine kommerzielle Software, d.h., dass alles “hinter verschlossenen Türen” stattfindet, den Quellcode kann man nicht einsehen und man muss darauf vertrauen, dass das Programm macht, was IBM verspricht. Manchmal macht SPSS jedoch Dinge, die man nicht erwartet. Für alle, die bei einer Faktorenanalyse schon einmal die Rotationsmethode “Promax” angewandt haben: SPSS führt dabei vorher eine Kaiser-Normalisierung durch, von der man im <a href="https://www.ibm.com/support/knowledgecenter/de/SSLVMB_26.0.0/statistics_mainhelp_ddita/spss/base/idh_fact_rot.html">offiziellen Support</a> nichts liest.</p>
 </div>
-<div id="wer-sollte-eintreten" class="section level1">
-<h1>Wer sollte eintreten?</h1>
-<p>Stehen Forschungsprojekte, Haus-, Bachelor- oder Masterarbeiten auf Deinem Abgabe-Kalender und zittern Deine Hände schon beim Gedanken an die dunkle Kammer der Statistik? Dann bist Du hier genau richtig. Wir gehen jedes Verfahren Schritt für Schritt anhand von konkreten Beispielen durch. Wir ziehen hier keine drei Kugeln aus einer Urne, werfen danach Münzen und ergötzen uns am Anblick von Spielkarten.</p>
+<div id="r" class="section level1">
+<h1>R</h1>
+<p><a href="https://www.r-project.org/">R</a> ist eine Programmiersprache für statistische Berechnungen und <em>de facto</em> Standard im Bereich Statistik. Sie ist open source, das heißt, dass der Quellcode auch von Dritten eingesehen werden kann. Zudem ist sie <a href="https://www.r-project.org/">frei zugänglich</a>. Die Tatsache, dass es sich bei R um eine Programmiersprache handelt, schreckt viele ab. Anders als bei IBM SPSS Statistics gibt es hier kein GUI, man führt alle Befehle über die Eingabe von Text aus.</p>
+<p>Warum sollte ich es mir dann also schwer machen und R lernen? Weil es unglaublich umfangreich ist! Durch den Open-Source-Ansatz kann jeder zum Funktionsumfang von R beitragen. Neue Funktionen oder Erweiterungen werden als Pakete auf einem zentralen Platz zur Verfügung gestellt, sind wiederum frei zugänglich und können sofort zur eigenen Arbeit verwendet werden. Zudem können diese Befehle, wie auch bei der SPSS-Syntax, abgespeichert und mit anderen Forschern geteilt werden. Ergebnisse sind so reproduzierbar.</p>
+<p>Ein weiterer Vorteil von R ist, dass es von Statistikern entwickelt wurde – gleichzeitig ist das auch der größte Nachteil. R hat eine steile Lernkurve; man muss sich also damit beschäftigen, bis man Analysen sicher durchführen kann. Zum Glück gibt es Mittel, Wege und diese Website, um auch ohne große Programmierkenntnisse zurechtzukommen.</p>
 </div>
-<div id="gibts-noch-mehr" class="section level1">
-<h1>Gibt’s noch mehr?</h1>
-<p>Ja! Diese Website wird über ein <a href="https://github.com/benediktclaus/costat.git">GitHub-Repository</a> gespeist. Dort findest du alle Ressourcen, auch die Beispieldaten, die Du zum Mitmachen brauchst. Dort können auch Fehler gemeldet werden, insofern sich welche eingeschlichen haben.</p>
+<div id="rstudio" class="section level1">
+<h1>RStudio</h1>
+<p><a href="https://rstudio.com/">RStudio</a> ist das, was jeden R-Hack am Leben hält. R an sich (auch “base R” genannt) ist voll funktionsfähig, doch das Arbeiten damit alleine ist sehr mühselig. Als Ergänzung zu R gibt es RStudio, ein Programm, dass das Arbeiten mit R deutlich vereinfacht. Hier findet man eine klare Benutzeroberfläche, automatische Code-Ergänzungen, Hilfen, und, und, und. Wer mit R arbeitet, sollte hierauf nicht verzichten und direkt RStudio mit installieren.</p>
+<p>Was mache ich aber, wenn ich keine Zeit habe, R zu lernen und trotzdem einen tollen Funktionsumfang möchte? Dafür gibt es JASP!</p>
+</div>
+<div id="jasp" class="section level1">
+<h1>JASP</h1>
+<p><a href="https://jasp-stats.org/">Jeffrey’s Amazing Statistics Program</a> (JASP) ist der lang ersehnte Silberstreif am Horizont. Es bietet alle Vorteile von R und stellt dem Benutzer eine Oberfläche zum Klicken und Ziehen zur Verfüfung. Der Reihe nach: JASP ist open source und frei zugänglich. Es basiert auf R und man kann sich dennoch in einem klar strukturierten GUI bewegen. Der Funktionsumfang ist gigantisch, von klassichen, statistischen Methoden bis hin zu Machine-Learning-Anwendungen und Meta-Analysen ist im Prinzip alles dabei.</p>
+<p>Hinzu kommt, dass eine abgespeicherte JASP-Datei immer den Original-Datensatz und die Ergebnisse enthält. Man muss also nicht Analysen und Output teilen, es reicht eine Datei, in der eine andere Person klar nachvollziehen kann, wie die Daten aussehen, was und mit welchen Einstellungen es berechnet wurde und was am Ende das Ergebnis war. Besonders wertvoll ist, dass man diesen Output direkt im <a href="https://osf.io/">Open Science Framework</a> (OSF) teilen kann, so dass alle Analysen transparent, nachvollziehbar und reproduzierbar sind.</p>
+<p>Wer also als Einsteiger oder Experte das Beste aus beiden Welten will, dem sei JASP ans Herz gelegt.</p>
+</div>
+<div id="worauf-liegt-hier-der-fokus" class="section level1">
+<h1>Worauf liegt hier der Fokus?</h1>
+<p>Der Fokus der Chamber of Statistics liegt auf R. JASP klingt verlockend, und das ist es auch (nutzt es ohne Scheu!), aber in R kann man einfach immer noch am meisten erreichen.</p>
+</div>
+<div id="literatur" class="section level1 unnumbered">
+<h1>Literatur</h1>
+<div id="refs" class="references">
+<div id="ref-Cohen.1988">
+<p>Cohen, J. (1988). <em>Statistical Power Analysis for the Behavioral Sciences</em> (2nd ed.). Lawrence Erlbaum Associates.</p>
+</div>
+</div>
 </div>
 
 <p>Copyright &copy; 2020 Benedikt Claus. <a href="impressum.html">Impressum</a></p>
