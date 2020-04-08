@@ -1,7 +1,66 @@
 ---
-title: "Stil"
+title: "Tidyverse"
 bibliography: references.bib
 link-citations: yes
 csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
 ---
 
+```{r out.width = "30%", message=FALSE, echo=FALSE, fig.align='center'}
+knitr::include_graphics(path = "https://tidyverse.tidyverse.org/articles/tidyverse-logo.png")
+```
+
+
+Das [**Tidyverse**](https://www.tidyverse.org/) [@Wickham.2019b] in ein Verbund von Paketen, der das Arbeiten in R deutlichst vereinfacht. Alle Pakete sind aufeinander abgestimmt, haben einheitliche Syntaxen und arbeiten problemlos zusammen.
+
+Einer der ersten Schritte jeder frischen R-Installation sollte deshalb sein:
+```{r eval=FALSE}
+install.packages("tidyverse")
+```
+
+Eingebunden wird es, wie jedes andere Paket auch, über den Befehl `library()`:
+```{r message=FALSE}
+library(tidyverse)
+```
+Dadurch werden direkt mehrere Pakete aus dem Tidyverse geladen, die man eigentlich immer benötigt.
+
+# Pakete
+## ggplot2
+ggplot2 ist der *de facto* Standard zur Erstellung von Statistischen Abbildungen.
+```{r message=FALSE}
+ggplot(faithful, aes(x = waiting, y = eruptions)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+## tibble
+In R werden Datensätze als "data.frames" gespeichert. Wenn man sich in einem Datensatz orientieren und ihn kennenlernen möchte, kann der normale R-Output schon mal leicht unübersichtlich sein:
+```{r}
+faithful
+```
+ tibble behebt das Problem und liefert übersichtliche Datensätze:
+```{r}
+as_tibble(faithful)
+```
+Wir bekommen eine Übersicht über die Dimensionen des Datensatzes, die Variablennamen und die Art der Variable, in diesem Fall dbl = double.
+ 
+## readr
+Vergesst die in R von Haus aus eingebauten Funktionen zum Import. Vergesst sie einfach. Mit dem readr werden alle Daten in der Regel sauber eingelesen und direkt als tibble ausgegeben:
+```{r}
+read_csv(readr_example("mtcars.csv"))
+```
+## dplyr und tidyr
+Mit dplyr wird das data wrangling wesentlich einfacher als mit base R. Die fünf Grundbefehle lassen sich schnell lernen und sind einfach in der Anwendung. So lassen sich beispielsweise die beiden Variablen `mpg` und `disp` aus dem Datensatz `mtcars` extrahieren:
+```{r}
+as_tibble(select(mtcars, mpg, disp))
+```
+
+## haven
+Mit haven können Datensätze von SAS, Stata und SPSS direkt eingelesen werden:
+```{r eval=FALSE}
+read_spss("data.sav")
+```
+
+## purrr
+Mit purr gehören "for loops" eigentlich der Geschichte an. Iterative Prozesse können so einfach umgesetzt werden.
+
+# Literatur
