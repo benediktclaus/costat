@@ -15,6 +15,7 @@ navbar:
           href: r-basics.html
         - text: "Stil"
         - text: "Tidyverse"
+          href: tidyverse.html
         - text: "Data Wrangling"
   right:
     - text: "About"
