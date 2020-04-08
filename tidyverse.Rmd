@@ -1,0 +1,29 @@
+---
+title: "Tidyverse"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+output:
+  html_document:
+    toc: false
+---
+
+```{r echo=FALSE, out.width="30%", fig.align='center'}
+knitr::include_graphics(path = "https://tidyverse.tidyverse.org/articles/tidyverse-logo.png")
+```
+
+Das [**Tidyverse**](https://www.tidyverse.org/) [@Wickham.2019b] ist ein Verbund von Paketen, der das Arbeiten in R auf das angenehmste erleichtert. Diese sind aufeinander abgestimmt, benutzen einheitliche Syntaxen und beheben einige Marotten von base R.
+
+Nach jeder frischen Installation von R sollte man somit diesen Befehl ausführen:
+```{r eval=FALSE}
+install.packages("tidyverse")
+```
+
+Im Prinzip jedes script kann dann direkt starten mit:
+```{r eval=FALSE}
+library(tidyverse)
+```
+
+Was die Pakete im einzelnen machen, und wo wir sie anwenden können, zeige ich dann im einzelnen.
+
+# Literatur

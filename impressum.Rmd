@@ -5,7 +5,7 @@ link-citations: yes
 csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
 ---
 
-# Angaben gemäß § 5 TMG
+## Angaben gemäß § 5 TMG
 
 PedScience Vestische Forschungs- gGmbH   
 Dr.-Friedrich-Steiner-Str. 5  
