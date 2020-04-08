@@ -1,0 +1,68 @@
+---
+title: "Stil"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+---
+
+![](images/style_r.jpg)
+
+Um Code möglichst lesbar und verständlich zu gestalten, muss man sich einen gewissen Stil angewöhnen. Warum mus mein Code verständlich sein? Natürlich für andere, wenn jemand eine Berechnung nachvollziehen will. Aber auch für Dich, denn früher oder später wirst du noch einmal in deine Analyse gucken und wissen wollen, was Du warum gemacht hast.
+
+Man ist beim Coden in vielen Dingen frei, aber genau das kann Inkonsistenzen fördern. Deswegen gibt's einige Richtlinien von @Wickham.2019, die das Arbeiten einfach einfacher machen.
+
+# Objektnamen
+Nutze nur Kleinbuchstaben und trenne Wörter und Zahlen mit einem `_` ("snake case"-Schreibweise):
+```{r eval=FALSE}
+# Gut
+bdi_one
+bdi_1
+
+# Schlecht
+BdiOne
+bdione
+```
+
+Halte dich kurz, sei präzise und einheitlich:
+```{r eval=FALSE}
+# Gut
+bdi_1
+bdi_total_1
+
+# Schlecht
+bdi_at_day_one_of_study
+bdi_total_score_1_measurement
+bdi_t_m_dkms_1
+```
+
+In welcher Sprache du deine Objektbeschreibungen verfasst, ist dir überlassen, aber sei das ganze Projekt einheitlich! Ich persönlich rechne mit englischen Publikationen, also findet man bei mir auch englische Scripts.
+
+Selbes gilt übrigens auch für **Variablennamen**. Gehe davon aus, dass Du sie in R eingeben muss, um mit ihnen zu arbeiten. Durch eine kurze und einheitliche Benennung kannst du dir also Zeit sparen und machst deinen Code verständlich! Es spricht beispielsweise nichts dagegen, die durchschnittliche Schmerzintensität eines Probanden zum Messzeitpunkt 1 als `mean_pain_1` zu bezeichnen, anstatt `DurchschnIntensität_Schmerz.1.zeitpunkt`.
+
+Vermeide unbedingt Umlaute! Nutze am besten den Buchstaben ohne Punkte, also "ä" zu "a", usw.
+
+Benutze ausgiebig **Kommentare**, diese kannst du nach einem `#` einfach in dein Script schreiben. Alles, was nach einem `#` kommt, wird von R nicht ausgewertet. Warum genau hast Du hier diese eine Analyse gemacht? Was soll sie prüfen? Was kam dabei grob heraus? Warum hast du deine Daten hier gefiltert? Diese Angaben helfen Dir, dich in deinem Script zurechtzufinden.
+
+# Spacing
+Nach einem Komma kommt immer ein Leerzeichen, vor einem Komma nicht:
+```{r eval=FALSE}
+# Gut
+function(x, y)
+
+# Schlecht
+function(x,y)
+function(x , y)
+```
+
+Klammern werden immer direkt um einen Ausruck gesetzt (keine Leerzeichen):
+```{r eval=FALSE}
+# Gut
+function(x, y)
+  
+# Schlecht
+function( x, y )
+```
+
+Benutze einfach Deinen gesunden Menschenverstand. Mit ein bisschen Übung und Erfahrung wirst du sehen, ob und wo du klarer sein kannst, oder mehr kommentieren musst.
+
+# Literatur
