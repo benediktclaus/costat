@@ -19,6 +19,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -250,6 +253,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -257,6 +323,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -300,10 +376,14 @@ $(document).ready(function () {
 </div>
 
 
+<div class="figure">
+<img src="images/software_r.jpg" alt="Foto von unsplash.com" />
+<p class="caption">Foto von unsplash.com</p>
+</div>
 <p>Die moderne Datenanalyse findet heutzutage fast ausschließlich am PC statt. Damit ist die Hardware gesichert und es stellt sich die Frage nach der Statistik-Sotfware. Hier ein kleiner, aber feiner, Überblick über die gängige Statistik-Software mit einigen wohlgemeinten, persönlichen Empfehlungen.</p>
 <div id="ibm-spss-statistics" class="section level1">
 <h1>IBM SPSS Statistics</h1>
-<p>Oder einfach nur kurz “SPSS”. Die Abkürzung stand einmal für “Statistical Package for the Social Sciences” und machte deutlich, wo sich IBM mit diesem kommerziellen Produkt sieht. An vielen Universitäten und Forschungseinrichtungen ist es der Standard zur Datenauswertung. Allerdings auch nur da, was angesichts des hohen Preises nicht verwunderlich ist (für Privatpersonen ist es daher eher ungeeignet). Gelegentlich erscheinen neue Versionen (derzeit 26), doch für das Forschungsfeld der Psychologie oder der Medizin sind meiner Meinung nach seit den frühesten Versionen keine aufregenden Neurungen dazugekommen. Im Gegenteil: essentielle Verfahren, wie die Berechnung von Effektstärken – bspw. Cohens <span class="math inline">\(d\)</span> <span class="citation">(Cohen, <a href="#ref-Cohen.1988" role="doc-biblioref">1988</a>)</span> – werden auch 2020 immer noch herzlich vermisst.</p>
+<p>Oder einfach nur kurz “SPSS”. Die Abkürzung stand einmal für “Statistical Package for the Social Sciences” und machte deutlich, wo sich IBM mit diesem kommerziellen Produkt sieht. An vielen Universitäten und Forschungseinrichtungen ist es der Standard zur Datenauswertung. Allerdings auch nur da, was angesichts des hohen Preises nicht verwunderlich ist (für Privatpersonen ist es daher eher ungeeignet). Gelegentlich erscheinen neue Versionen (derzeit 26), doch für das Forschungsfeld der Psychologie oder der Medizin sind meiner Meinung nach seit den frühesten Versionen keine aufregenden Neurungen dazugekommen. Im Gegenteil: essentielle Verfahren, wie die Berechnung von Effektstärken – bspw. Cohens <span class="math inline">\(d\)</span> <span class="citation">(Cohen, <a href="#ref-Cohen.1988" role="doc-biblioref">1988</a>)</span> – werden auch 2020 immer noch sehnlichst vermisst.</p>
 <p>Die Standard-Methoden kann man hier über ein Graphical User Interface (GUI), also durch Klicken und Ziehen mit der Maus, ausführen. Gerade für Einsteiger ist das also echt bequem – auch wenn man für den Funktionsumfang auf IBM angewiesen ist. Zudem ist SPSS, wie breits erwähnt, eine kommerzielle Software, d.h., dass alles “hinter verschlossenen Türen” stattfindet, den Quellcode kann man nicht einsehen und man muss darauf vertrauen, dass das Programm macht, was IBM verspricht. Manchmal macht SPSS jedoch Dinge, die man nicht erwartet. Für alle, die bei einer Faktorenanalyse schon einmal die Rotationsmethode “Promax” angewandt haben: SPSS führt dabei vorher eine Kaiser-Normalisierung durch, von der man im <a href="https://www.ibm.com/support/knowledgecenter/de/SSLVMB_26.0.0/statistics_mainhelp_ddita/spss/base/idh_fact_rot.html">offiziellen Support</a> nichts liest.</p>
 </div>
 <div id="r" class="section level1">
@@ -339,6 +419,8 @@ $(document).ready(function () {
 <p>Copyright &copy; 2020 Benedikt Claus. <a href="impressum.html">Impressum</a></p>
 
 
+</div>
+</div>
 
 </div>
 
@@ -371,6 +453,32 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

@@ -1,5 +1,6 @@
 name: "costat"
 output_dir: "docs"
+include: ["content/*"]
 navbar:
   title: "Chamber of Statistics"
   left:
@@ -12,6 +13,9 @@ navbar:
     - text: "About"
 output:
   html_document:
+    toc: true
+    toc_float: true
+    smooth_scroll: true
     theme: cosmo
     include:
       after_body: footer.html

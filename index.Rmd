@@ -1,6 +1,11 @@
 ---
 title: "Chamber of Statistics"
+output:
+  html_document:
+    toc: false
 ---
+
+![](images/spooky_r.jpg)
 
 Willkommen in der Chamber of Statistics. Muhahaha. Sie ist mein Beitrag zur Ausweitung der wissenschaftich fundierten Anwendung statistischer Methoden, vor allem im Bereich der Psychologie. Damit betreten wir eine mysteriöse und dunkle Kammer, vollgestopt mit *t*-Tests, ANOVAS, MLMs, Bootstrapping, Regressionen und noch so vielem mehr.
 
