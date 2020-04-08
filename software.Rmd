@@ -5,7 +5,7 @@ link-citations: yes
 csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
 ---
 
-![Foto von unsplash.com](images/software_r.jpg)
+![](images/software_r.jpg)
 
 Die moderne Datenanalyse findet heutzutage fast ausschließlich am PC statt. Damit ist die Hardware gesichert und es stellt sich die Frage nach der Statistik-Sotfware. Hier ein kleiner, aber feiner, Überblick über die gängige Statistik-Software mit einigen wohlgemeinten, persönlichen Empfehlungen.
 

@@ -1,0 +1,44 @@
+---
+title: "R Basics"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+---
+
+Dann fangen wir mal an! R ist im Prinzip nur ein Taschenrechner und man kann es als solchen verwenden. Wenn Du mit RStudio arbeitest, wirst du vier "Panes" sehen; links oben ist das "Source" Pane, links unten die "Console", rechts oben die "Environment" und rechts unten befindet sich das "Files" Pane. Bei allen Panes siehst Du Tabs, mit denen du die Funktion des Panes umschalten kannst. Erstellst du beispielsweise eine Abbildung, schaltet RStudio rechts unten automatisch auf "Plots".
+
+# Befehle
+Geben wir nun unseren ersten **Befehl** in das Source Pane ein und führen ihn dann mit der Tastenkombination "Strg + Enter" aus:
+```{r}
+2 + 2
+```
+In der Console erscheint die 4, wir haben uns also schon mal nicht verrechnet! Brauchen wir ein Ergebnis später noch einmal, können wir es einem Objekt zuweisen, das dann für die Dauer der Session (bis R geschlossen oder neu gestartet wird) weiter besteht. Zuweisungen machen wir durch ein `<-` kenntlich.
+
+Wir können das Ergebnis zum Beispiel so als `x` zuweisen:
+```{r}
+x <- 2 + 2
+```
+
+Führt man diesen Befehl aus ("Strg + Enter"), wurde das Ergebnis in `x` gespeichert. Um das Ergebnis nun wieder abzurufen, geben wir unser Objekt in die Source ein und führen den Befehl wie gewohnt aus:
+```{r}
+x
+```
+
+# Funktionen
+Auf Dauer wäre es ziemlich anstrengend, alle Berechnungen von Hand auszuführen. Deshalb gibt es **Funktionen**. Man kann so zum Beispiel eine Sequenz von 1 bis 10 generieren:
+```{r}
+seq(1:10)
+```
+
+Die könnte man natürlich auch wieder speichern und dann den Mittelwert berechnen:
+```{r}
+seq_1_10 <- seq(1:10)
+
+mean(seq_1_10)
+```
+
+Der Mittelwert aller ganzen Zahlen von 1 bis 10 ist somit 5.5. Ich habe das Objekt, das die Sequenz enthält, an dieser Stelle `seq_1_10` gennant, aber in deiner Namensgebung bist du frei. Obwohl, eigentlich auch nicht so ganz, denn Bezeichnungen für Objekte *müssen* mit einem Buchstaben beginnen und dürfen nur Buchstaben, Zahlen, `_` und `.` beinhalten.
+
+Weitere Informationen findest Du in den ersten Kapiteln von @Wickham.2017.
+
+# Literatur
