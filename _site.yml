@@ -9,6 +9,13 @@ navbar:
       href: index.html
     - text: "Software"
       href: software.html
+    - text: "Allgemeines"
+      menu:
+        - text: "R Basics"
+          href: r-basics.html
+        - text: "Stil"
+        - text: "Tidyverse"
+        - text: "Data Wrangling"
   right:
     - text: "About"
 output:

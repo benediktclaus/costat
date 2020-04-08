@@ -11,7 +11,7 @@
 
 
 
-<title>Chamber of Statistics</title>
+<title>R Basics</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,6 +19,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -250,6 +253,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -257,6 +323,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -310,30 +386,51 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Chamber of Statistics</h1>
+<h1 class="title toc-ignore">R Basics</h1>
 
 </div>
 
 
-<p><img src="images/spooky_r.jpg" /></p>
-<p>Willkommen in der Chamber of Statistics. Muhahaha. Sie ist mein Beitrag zur Ausweitung der wissenschaftich fundierten Anwendung statistischer Methoden, vor allem im Bereich der Psychologie. Damit betreten wir eine mysteriöse und dunkle Kammer, vollgestopt mit <em>t</em>-Tests, ANOVAS, MLMs, Bootstrapping, Regressionen und noch so vielem mehr.</p>
-<div id="worum-gehts-hier" class="section level1">
-<h1>Worum geht’s hier?</h1>
-<p>Auf dieser Website werden viele standardmäßige und spezielle Methoden vorgestellt. Wir widmen uns zusammen der Frage, bei welcher Fragestellung welche Methode sinnvoll ist, welche Voraussetzungen es dabei zu beachten gilt, wie man diese Methoden dann konkret und anhand von Beispielen anwendet und wie man sie interpretiert. Wir gucken uns keine Formeln an (zumindest nur sehr wenige)! Stattdessen gehe ich davon aus, dass Du hier Hilfe in der Anwendung suchst.</p>
-<p>Nach einem kurzen Blick auf die Themen-Seiten sollte klar werden, dass ich vor allem mit <strong>R</strong> arbeite – ein Buchstabe, doch belegt mit so vielen aversiven Gefühlen. Davor muss man jedoch keine Angst haben! Ja, wenn man im Studium mit IBM SPSS groß geworden ist, wovon es zwar alle paar Jahre wieder eine neue Version gibt und doch immer alles merkwürdig gleich aussieht, dann ist das eine andere Form der Arbeit. Meiner Meinung nach überwiegt der Nutzen dabei jedoch deutlich die Kosten. Aber mache Dir am besten selbst ein Bild.</p>
+<p>Dann fangen wir mal an! R ist im Prinzip nur ein Taschenrechner und man kann es als solchen verwenden. Wenn Du mit RStudio arbeitest, wirst du vier “Panes” sehen; links oben ist das “Source” Pane, links unten die “Console”, rechts oben die “Environment” und rechts unten befindet sich das “Files” Pane. Bei allen Panes siehst Du Tabs, mit denen du die Funktion des Panes umschalten kannst. Erstellst du beispielsweise eine Abbildung, schaltet RStudio rechts unten automatisch auf “Plots”.</p>
+<div id="befehle" class="section level1">
+<h1>Befehle</h1>
+<p>Geben wir nun unseren ersten <strong>Befehl</strong> in das Source Pane ein und führen ihn dann mit der Tastenkombination “Strg + Enter” aus:</p>
+<pre class="r"><code>2 + 2</code></pre>
+<pre><code>## [1] 4</code></pre>
+<p>In der Console erscheint die 4, wir haben uns also schon mal nicht verrechnet! Brauchen wir ein Ergebnis später noch einmal, können wir es einem Objekt zuweisen, das dann für die Dauer der Session (bis R geschlossen oder neu gestartet wird) weiter besteht. Zuweisungen machen wir durch ein <code>&lt;-</code> kenntlich.</p>
+<p>Wir können das Ergebnis zum Beispiel so als <code>x</code> zuweisen:</p>
+<pre class="r"><code>x &lt;- 2 + 2</code></pre>
+<p>Führt man diesen Befehl aus (“Strg + Enter”), wurde das Ergebnis in <code>x</code> gespeichert. Um das Ergebnis nun wieder abzurufen, geben wir unser Objekt in die Source ein und führen den Befehl wie gewohnt aus:</p>
+<pre class="r"><code>x</code></pre>
+<pre><code>## [1] 4</code></pre>
 </div>
-<div id="wer-sollte-eintreten" class="section level1">
-<h1>Wer sollte eintreten?</h1>
-<p>Stehen Forschungsprojekte, Haus-, Bachelor- oder Masterarbeiten auf Deinem Abgabe-Kalender und zittern Deine Hände schon beim Gedanken an die dunkle Kammer der Statistik? Dann bist Du hier genau richtig. Wir gehen jedes Verfahren Schritt für Schritt anhand von konkreten Beispielen durch. Wir ziehen hier keine drei Kugeln aus einer Urne, werfen danach Münzen und ergötzen uns am Anblick von Spielkarten.</p>
+<div id="funktionen" class="section level1">
+<h1>Funktionen</h1>
+<p>Auf Dauer wäre es ziemlich anstrengend, alle Berechnungen von Hand auszuführen. Deshalb gibt es <strong>Funktionen</strong>. Man kann so zum Beispiel eine Sequenz von 1 bis 10 generieren:</p>
+<pre class="r"><code>seq(1:10)</code></pre>
+<pre><code>##  [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+<p>Die könnte man natürlich auch wieder speichern und dann den Mittelwert berechnen:</p>
+<pre class="r"><code>seq_1_10 &lt;- seq(1:10)
+
+mean(seq_1_10)</code></pre>
+<pre><code>## [1] 5.5</code></pre>
+<p>Der Mittelwert aller ganzen Zahlen von 1 bis 10 ist somit 5.5. Ich habe das Objekt, das die Sequenz enthält, an dieser Stelle <code>seq_1_10</code> gennant, aber in deiner Namensgebung bist du frei. Obwohl, eigentlich auch nicht so ganz, denn Bezeichnungen für Objekte <em>müssen</em> mit einem Buchstaben beginnen und dürfen nur Buchstaben, Zahlen, <code>_</code> und <code>.</code> beinhalten.</p>
+<p>Weitere Informationen findest Du in den ersten Kapiteln von <span class="citation">Wickham &amp; Grolemund (<a href="#ref-Wickham.2017" role="doc-biblioref">2017</a>)</span>.</p>
 </div>
-<div id="gibts-noch-mehr" class="section level1">
-<h1>Gibt’s noch mehr?</h1>
-<p>Ja! Diese Website wird über ein <a href="https://github.com/benediktclaus/costat.git">GitHub-Repository</a> gespeist. Dort findest du alle Ressourcen, auch die Beispieldaten, die Du zum Mitmachen brauchst. Dort können auch Fehler gemeldet werden, insofern sich welche eingeschlichen haben.</p>
+<div id="literatur" class="section level1 unnumbered">
+<h1>Literatur</h1>
+<div id="refs" class="references">
+<div id="ref-Wickham.2017">
+<p>Wickham, H., &amp; Grolemund, G. (2017). <em>R for Data Science</em>. O’Reilly. <a href="https://r4ds.had.co.nz/">https://r4ds.had.co.nz/</a></p>
+</div>
+</div>
 </div>
 
 <p>Copyright &copy; 2020 Benedikt Claus. <a href="impressum.html">Impressum</a></p>
 
 
+</div>
+</div>
 
 </div>
 
@@ -366,6 +463,32 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
