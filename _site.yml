@@ -16,6 +16,7 @@ navbar:
         - text: "Stil"
           href: stil.html
         - text: "Tidyverse"
+          href: tidyverse.html
         - text: "Data Wrangling"
   right:
     - text: "About"
