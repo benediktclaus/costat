@@ -1,6 +1,4 @@
 # costat
-Das GitHub-Repository zur Website "Chamber of Statistics". Die Chamber ist work in progress, neue Inhalte werden hinzugefügt und ständig aktualisiert.
+Das GitHub-Repository zur Website [Chamber of Statistics](https://benediktclaus.github.io/costat/). Die Chamber ist work in progress, neue Inhalte werden ständig hinzugefügt und laufend aktualisiert.
 
-Bei Problemen: open an issue!
-
-https://benediktclaus.github.io/costat/
+Bei Problemen oder Fehlern: open an issue!
