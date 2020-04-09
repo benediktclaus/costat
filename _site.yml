@@ -25,6 +25,5 @@ output:
     toc: true
     toc_float: true
     smooth_scroll: true
-    theme: cosmo
-    include:
-      after_body: footer.html
+    theme: flatly
+    highlight: default
