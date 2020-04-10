@@ -18,6 +18,7 @@ navbar:
         - text: "Pakete"
           href: pakete.html
         - text: "Data Wrangling"
+          href: data-wrangling.html
   right:
     - icon: fa-info
       href: about.html

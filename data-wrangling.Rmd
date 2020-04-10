@@ -3,10 +3,174 @@ title: "Data Wrangling"
 bibliography: references.bib
 link-citations: yes
 csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
 ---
 
 ![](images/foxes_r.jpg)
 
-Wie bereits erwähnt, entstand das Tidyverse um die Idee "sauberer Daten" (tidy data). 
+So wie es diesen beiden Füchsen geht, so kann es einem selbst mit seinem Datensatz gehen. Nach monatelangen Vorbereitungen hat man nun alle Anträge geschrieben, Beschlüsse eingeholt, Probanden rekrutiert, Daten gesammelt und von fleißigen HiWis in den PC eingeben lassen. Nun will man "mal eben" etwas damit rechnen und stellt fest, dass der Datensatz für die Analysen gar nicht richtig formatiert ist.
+
+Wie bereits erwähnt, entstand das Tidyverse um die Idee "sauberer Daten" (tidy data). Das Konzept wurde von @Wickham.2014 beschrieben und ist eigentlich recht simpel (siehe untere Abbildung).
+
+```{r echo=FALSE, out.width="70%", fig.align='center'}
+knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/6f1ddb544fc5c69a2478e444ab8112fb0eea23f8/91adc/images/tidy-1.png")
+```
+
+Datensätze sollten so formatiert sein, dass jede Spalte eine Variable darstellt. Jede Zeile soll eine Beobachtung sein und jede Zelle schlielich ein einzelner Wert. Jeder SPSS-Nutzer wird sich nun wundern und denken "Was will der Typ eigentlich? Jede Zeile meines Datensatzes steht doch für einen Probanden, wie ich es im Statistik-Seminar gelernt habe. Das ist doch schon im richtigen Format (?)" Aber leider nein, denn für einen Probanden kann man *mehrere* Beobachtungen haben. Um im Tidyverse (und im Großteil von R) zu arbeiten, müssen die Daten jedoch tidy sein. Schauen wir uns einmal an, was ich damit meine.
+
+# Datensatz einlesen 
+Zu Beginn laden wir einige der bereits bekannten [Pakete](pakete.html). `haven` gehört mit zum Tidyverse, wird automatisch installiert, wenn man das Tidyverse installiert, jedoch aber nicht automatisch geladen, weil es ein zu spezielles Paket ist. Mit `haven` können nämlich SAS-, Stata- und (jetzt kommt's) SPSS-Datensätze eingelesen werden. Im Ordner `data` gibt es den Datensatz `wrangling.sav`. Wir laden ihn mit der passend benannten Funktion `read_spss("<FILE-PATH>")`.
+
+```{r message=FALSE}
+library(tidyverse)
+library(haven)
+library(janitor)
+library(skimr)
+
+read_spss("data/wrangling.sav")
+```
+
+Nutzt man zum Datenimport Funktionen des Tidyverse, ist der Datensatz sofort als eine Tibble, ein optimierter data.frame, formatiert. Wir bekommen auch den Hinweis, dass es sich bei dem Objekt, das wir betrachten, um eine Tibble handelt, nämlich eine mit 43 Zeilen und 8 Spalten. Der eigentliche Datensatz wird daraufhin mit den Variablen und den ersten 10 Zeilen angezeigt. Direkt unter dem Namen findet sich der **Datentyp** der Variable, dbl steht für "double", chr würde für "character" stehen, etc. Für die unterschiedlichen Datentypen, sei auf [Wikipedia verwiesen](https://de.wikipedia.org/wiki/Datentyp). In der Variable `treatment` begegnet uns die Bezeichung `<dbl + lbl>`; hier sind die Wertelabels aus SPSS hinterlegt.
+
+Wieso ist es nun schön, dass der Datensatz als Tibble und nicht als der R-Standard data.frame eingelesen wird? Gucken wir uns doch einfach mal denselben Datensatz als data.frame an:
+```{r}
+as.data.frame(read_spss("data/wrangling.sav"))
+```
+
+Im Prinzip sieht das sehr ähnlich aus, jedoch fällt sofort auf, dass der Output viel länger ist und alle 43 Zeilen umfasst. Meistens möchte man die alle gar nicht sehen. Hinzu kommt, dass auch alle Variablen angezeigt werden würden. In diesem Fall ist das kein Problem, weil ich nur acht habe, aber bei 200 ist das schon etwas anderes. Außerdem sind in der Variable `treatment` alle von mir mühsam in SPSS eingegebenen Wertelabels weg -- welche eine Gemeinheit! Und dann habe ich noch nicht mal eine Ahnung davon, welchen Datentyp meine Variablen enthalten. Unerhört! Hier wird direkt deutlich, warum man Fan des Tidyverse werden könnte.
+
+Alles in allem haben wir hier einen Datensatz mit 43 Probanden, deren Alter, Geschlecht und Behandlung wir erfasst haben, so wie den BMI für 4 konsekutive Messungen.
+
+# Variablennamen bereinigen
+Uff, ist das hässlich! Nach allem, was wir über [stilsichere Objektnamen](stil.html) gelernt haben, sind wir über die Benennung der Variablen überhaupt nicht glücklich. Das müssen wir ändern, gut, dass wir das Paket `janitor` haben. Zunächst speichern wir den Datensatz als ein Objekt (in diesem Falle `wrangling_data`), damit wir es nicht dauern neu einlesen müssen und wenden dann die Funktion `clean_names()` an.
+```{r}
+wrangling_data <- clean_names(read_spss("data/wrangling.sav"))
+
+wrangling_data
+```
+
+Das sieht doch schon gleich ganz anders aus, alle Variablen sind einheitlich als "snake case" gesetzt. So lässt es sich arbeiten!
+
+# Faktoren
+Faktoren sind in R eine ganz besondere Angelegenheit. Wenn wir Abbildungen erstellen möchten, die nach Gruppen aufgeteilt sind (z.B. nach Geschlecht oder Experimentalbedingung), oder wenn wir Gruppenunterschiede statistisch untersuchen wollen, dann müssen diese Gruppen als **Faktor** definiert sein. In unserem Datensatz betrifft das die Variablen `gender` und `treatment`, also das Geschlecht der Probanden und die erhaltene Behandlung.
+
+## Selbst definieren
+Um Faktoren zu definieren, gibt es mehrere Möglichkeiten. Meistens bekommt man Daten, in denen nur Zahlen hinterlegt sind, wir aber wollen, dass diese Zahlen für etwas stehen. Die Variable `gender` ist ein gutes Beispiel dafür. Die Probanden wurden hier einem von zwei Geschlechtern zugeordnet, weiblich und männlich. Wenn man in R mit Faktoren arbeitet, arbeitet man *nicht* mit reinen Zahlen. Faktoren sind immer Zeichenfolgen, die als spezieller Datantyp "Faktor"  gespeichert werden. In anderen Statistikumgebungen, wie etwa SPSS, wurde das anders gelöst. Hier werden Faktoren als verschiedene nummerische Ausprägungen (= Levels) einer Variablen  verstanden, die mit Beschriftungen (= Labels) verknüpft sind. So können die Frauen in einem Datensatz mal die 0, mal die 4 sein, oder die Männer, oder die Experimentalgruppe, oder die... Im Sinne der Einheitlichkeit und der Minimierung von Fehlern, empfiehlt es sich übrigens in solchen Umgebungen, Geschlecht **anatomisch** zu codieren, also Frauen als 0 und Männer als 1.
+
+In R arbeiten wir mit "richtigen" Faktoren. In der Variable `gender` soll also die Bezeichnung "weiblich" oder "männlich" direkt hinterlegt werden. Wie kommen wir nun von unseren Zahlen zu den Faktoren? Mit der Funktion `factor()`, die nativer Bestandteil von R ist. Die Funktion benötigt von uns die Ausgangsvariable, die Levels und die Labels, die wir gerne vergeben würden. Die generelle Syntax ist
+```{r eval=FALSE}
+factor(<VARIABLE>, levels = c("<LEVEL1>", "<LEVEL2>"), labels = c("<LABEL1>", "<LABEL2>"))
+```
+
+Um eine bestehende Variable zu modifizieren, oder zu *mutieren*, benutzen wir die Funktion `mutate`, der wir als erstes Argument unseren Datensatz nennen und dann die Variable, die wir verändern wollen.
+
+```{r}
+mutate(wrangling_data, gender = factor(gender, levels = c(0, 1), labels = c("Female", "Male")))
+```
+
+Die Variable `gender` ist nun als ordentlicher Faktor definiert worden, was wir auch anhand des Datentyps `fct` erkennen können. Im Sinne der besseren Lasbarkeit, können wir den obigen Code etwas einfach aufschreiben. Wir nutzen dazu den "Pipe"-Operator (` %>% `). Im obigen Befehl wird dir auffallen, dass wir die Funktion `mutate` verwenden und dann als erstes sofort den Datensatz als Funktionsargument nennen. Das können wir etwas abkürzen, und zwar mit dem Pipe. Er nimmt das Objekt, das vor ihm steht und fügt es als erster Funktionsargument in die Funktion, die nach ihm steht ein.
+```{r eval=FALSE}
+# Der Befehl
+f(x)
+
+# ist identisch mit
+x %>% 
+  f()
+```
+
+Wo ist nun der Nutzen dabei? Der Befehl wird länger und enthält diesen grausam schreibbaren Pipe-Operator! Der Vorteil liegt darin, dass wir die Syntax besser verstehen, indem wir den Pipe als "dann" lesen können. Im obigen Beispiel kann man den Befehl lesen als "Nimm `x` und *dann* mache Funktion `f()`". Der Vorteil wird noch deutlicher, wenn wir uns unserem Datensatz zuwenden. Wir wollten in dem Datensatz die Variable `gender` als Faktor definieren. Wenden wir nun den Pipe (` %>% `) an, ergibt sich dieser Befehl:
+```{r}
+wrangling_data %>% 
+  mutate(gender = factor(gender,
+                         levels = c(0,1),
+                         labels = c("Female", "Male")))
+```
+
+Das Ergebnis ist dasselbe wie in der ersten Version dieses Befehls, jedoch kann man ihn so besser *lesen* und *verstehen*: "Nimm den Datensatz `wrangling_data` und wende die Funktion `mutate` an." Von nun an, werde ich den Pipe-Operator immer verwenden.
+
+Wichtig zu beachten ist, dass die Änderung noch nirgendwo gespeichert wurde. Wir sehen unseren Erfolg zwar in der Konsole, doch wenn wir den Datensatz noch einmal aufrufen stellen wir fest, dass `gender` immer noch als 0 und 1 kodiert sind.
+```{r}
+wrangling_data
+```
+
+Um Änderungen in R dauerhaft zu speichern, müssen wir sie einem Objekt zuweisen. Weil wir den Datensatz verbessert haben, spricht nichts dagegen, den alten Datensatz mit dem neuen zu überschreiben. Wir können unsere Änderung also mit ` <- ` den Namen `wrangling_data` zuweisen. Rufen wir die Daten nun erneut auf, ist die erfolgreiche Änderung gespeichert.
+```{r}
+wrangling_data <- wrangling_data %>% 
+  mutate(gender = factor(gender, 
+                         levels = c(0, 1),
+                         labels = c("Female", "Male")))
+
+wrangling_data
+```
+
+## Automatisch definieren
+Wurden in SPSS bereits die richtigen Wertelabels vergeben, wie für die Variable `treatment`, können wir uns den Weg etwas abkürzen. Im Datensatz ist zu sehen, dass sowohl Levels als auch Label des Faktors bereits hinterlegt sind (daher der komische Datentyp `<dbl + lbl>`). Mit der Funktion `as_factor()` wird die Variable automatisch als Faktor definiert.
+```{r}
+wrangling_data <- wrangling_data %>% 
+  mutate(treatment = as_factor(treatment))
+
+wrangling_data
+```
+
+Super, das sieht schön aus, alle Faktoren sind als richtige faktoren definiert worden. Aber was ist das? Die Bezeichnungen für die Variable `treatment` sind "TAU" und "EG", die für "Treatment as Usual" und "Experimental Group" stehen. Mmh, eigentlich hätte ich gerne "CG" für "Control Group" anstatt "TAU". Auch da können wir etwas machen. Wir wollen einen Faktor umkodieren und bedienen uns deshalb der Funktion `fct_recode()`. Da wir eine Variable verändern wollen, müssen wir sie wieder "mutieren".
+```{r}
+wrangling_data <-  wrangling_data %>% 
+  mutate(treatment = fct_recode(treatment,
+                                "CG" = "TAU"))
+
+wrangling_data
+```
+
+Das hat wunderbar funktioniert, nun sind auch die Bezeichnungen meiner Experimentalbedingung einheitlich.
+
+# Wide vs. Long
+An dieser Stelle machen wir noch einmal den Sprung zum Anfang der Seite. Wir haben von "tidy data" gelesen, also der Ansicht, dass eine Variable in eine Spalte, eine Beobachtung in eine Zeile und ein Wert in eine Zelle gehört. Ich habe bereits gespoilert, dass diese Daten nicht tidy sind -- warum? Weil ich für die Messung des BMI ganze vier Beobachtungen pro Proband habe, also vier Beobachtungen pro Zeile. Was uns allerdings vorschwebt ist ein Datensatz, in dem jede Beobachtung auch tatsächlich nur eine Zeile ist, somit hätten wir konsequenterweise vier Zeilen pro Proband. Dem gewohnten SPSS-Nutzer pfeifen mittlerweile bestimmt die Ohren, aber nur so ergibt die Datenstruktur eigentlich Sinn. Denn weche Variable taucht im Datensatz nirgendwo auf? Wir haben eindeutig longitudinale Daten, aber nirgendwo die Zeit hinterlegt! Obwohl, eigentlich ist die hinterlegt, aber an einer Stelle, an die wir nicht drankommen, nämlich im Variablennamen selbst (als `_1`, `_2`, usw.).
+
+Diese Datenstruktur nennt man **wide format**, weil sie breit ist. Wir hätten gerne mehrere Zeilen pro Proband, die Daten werden also länger, und die entstehende längere und tidy Datenstruktur nennt man **long format**. Um diese zu bekommen, müssen wir die Daten "länger machen", am besten mit der Funktion `pivot_longer()`. Dieser müssen wir angeben, welche Variablen wir als eine lange haben wollen, welchen Namen wir für die neu erstellte Variable verwenden möchten und unter welchem Namen die Werte abgespeichert werden sollen. Die neu erstellte Variable ist in unserem Fall die Zeit, wir könnten sie "measurement" nennen, und die Variable, in der die Werte stehen "bmi". Dank unserer einheitlichen Benennung, können wir angeben, dass unsere Variable "measurement" ein nerviges Präfix enthält, nämlich "bmi_", welches automatisch gelöscht werden kann.
+
+```{r}
+wrangling_data <- wrangling_data %>% 
+  pivot_longer(
+    cols = bmi_1:bmi_4,
+    names_to = "measurement",
+    names_prefix = "bmi_",
+    values_to = "bmi"
+  )
+
+wrangling_data
+```
+
+Leider ist die Variable `measurement` jetzt noch als Zeichenfolge ("chr") abgespeichert, wir hätten sie aber gerne nummerisch. Das lässt sich schnell mit einem `mutate` lösen.
+
+```{r}
+wrangling_data <- wrangling_data %>% 
+  mutate(measurement = as.numeric(measurement))
+
+wrangling_data
+```
+
+Und schon ist der Datensatz fertig formatiert. Da es aber ziemlich aufwendig ist, jedes Mal ein neues Objekt zu definieren, sobald man eine Änderung durchgeführt hat, kann man auch alle Änderungen in einem Befehl ausführen.
+
+```{r}
+wrangling_complete <- read_spss("data/wrangling.sav") %>% 
+  clean_names() %>% 
+  mutate(gender = factor(gender,
+                         levels = c(0, 1),
+                         labels = c("Female", "Male")),
+         treatment = as_factor(treatment),
+         treatment = fct_recode(treatment,
+                                "CG" = "TAU")) %>% 
+  pivot_longer(
+    cols = bmi_1:bmi_4,
+    names_to = "measurement",
+    names_prefix = "bmi_",
+    values_to = "bmi"
+  ) %>% 
+  mutate(measurement = as.numeric(measurement))
+
+wrangling_complete
+```
+
 
 # Literatur

@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Data Wrangling</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Chamber of Statistics</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Allgemeines
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="software.html">Software</a>
+    </li>
+    <li>
+      <a href="r-basics.html">R Basics</a>
+    </li>
+    <li>
+      <a href="stil.html">Stil</a>
+    </li>
+    <li>
+      <a href="pakete.html">Pakete</a>
+    </li>
+    <li>
+      <a href="data-wrangling.html">Data Wrangling</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">
+    <span class="fa fa-info"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Data Wrangling</h1>
+
+</div>
+
+
+<p><img src="images/foxes_r.jpg" /></p>
+<p>So wie es diesen beiden Füchsen geht, so kann es einem selbst mit seinem Datensatz gehen. Nach monatelangen Vorbereitungen hat man nun alle Anträge geschrieben, Beschlüsse eingeholt, Probanden rekrutiert, Daten gesammelt und von fleißigen HiWis in den PC eingeben lassen. Nun will man “mal eben” etwas damit rechnen und stellt fest, dass der Datensatz für die Analysen gar nicht richtig formatiert ist.</p>
+<p>Wie bereits erwähnt, entstand das Tidyverse um die Idee “sauberer Daten” (tidy data). Das Konzept wurde von <span class="citation">Wickham (<a href="#ref-Wickham.2014" role="doc-biblioref">2014</a>)</span> beschrieben und ist eigentlich recht simpel (siehe untere Abbildung).</p>
+<p><img src="https://d33wubrfki0l68.cloudfront.net/6f1ddb544fc5c69a2478e444ab8112fb0eea23f8/91adc/images/tidy-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>Datensätze sollten so formatiert sein, dass jede Spalte eine Variable darstellt. Jede Zeile soll eine Beobachtung sein und jede Zelle schlielich ein einzelner Wert. Jeder SPSS-Nutzer wird sich nun wundern und denken “Was will der Typ eigentlich? Jede Zeile meines Datensatzes steht doch für einen Probanden, wie ich es im Statistik-Seminar gelernt habe. Das ist doch schon im richtigen Format (?)” Aber leider nein, denn für einen Probanden kann man <em>mehrere</em> Beobachtungen haben. Um im Tidyverse (und im Großteil von R) zu arbeiten, müssen die Daten jedoch tidy sein. Schauen wir uns einmal an, was ich damit meine.</p>
+<div id="datensatz-einlesen" class="section level1">
+<h1>Datensatz einlesen</h1>
+<p>Zu Beginn laden wir einige der bereits bekannten <a href="pakete.html">Pakete</a>. <code>haven</code> gehört mit zum Tidyverse, wird automatisch installiert, wenn man das Tidyverse installiert, jedoch aber nicht automatisch geladen, weil es ein zu spezielles Paket ist. Mit <code>haven</code> können nämlich SAS-, Stata- und (jetzt kommt’s) SPSS-Datensätze eingelesen werden. Im Ordner <code>data</code> gibt es den Datensatz <code>wrangling.sav</code>. Wir laden ihn mit der passend benannten Funktion <code>read_spss("&lt;FILE-PATH&gt;")</code>.</p>
+<pre class="r"><code>library(tidyverse)
+library(haven)
+library(janitor)
+library(skimr)
+
+read_spss(&quot;data/wrangling.sav&quot;)</code></pre>
+<pre><code>## # A tibble: 43 x 8
+##       ID   Age gender treatment BMI_1 BMI_2 BMI_3 BMI_4
+##    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl+lbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     1    54      1   0 [TAU]  26.8  27.2  27.8  28.7
+##  2     2    52      0   1 [EG]   NA    NA    NA    NA  
+##  3     3    54      1   1 [EG]   NA    NA    NA    NA  
+##  4     4    35      1   1 [EG]   28.4  NA    NA    NA  
+##  5     5    50      0   0 [TAU]  34.0  35.7  35.6  35.9
+##  6     6    20      0   1 [EG]   20.7  20.7  20.9  20.7
+##  7     7    45      1   0 [TAU]  26.2  26.1  25.7  25.5
+##  8     8    37      1   1 [EG]   35.7  35.5  35.6  36.0
+##  9     9    57      1   1 [EG]   34.2  33.9  33.4  33.7
+## 10    10    61      0   1 [EG]   16.9  17.2  17.3  17.3
+## # ... with 33 more rows</code></pre>
+<p>Nutzt man zum Datenimport Funktionen des Tidyverse, ist der Datensatz sofort als eine Tibble, ein optimierter data.frame, formatiert. Wir bekommen auch den Hinweis, dass es sich bei dem Objekt, das wir betrachten, um eine Tibble handelt, nämlich eine mit 43 Zeilen und 8 Spalten. Der eigentliche Datensatz wird daraufhin mit den Variablen und den ersten 10 Zeilen angezeigt. Direkt unter dem Namen findet sich der <strong>Datentyp</strong> der Variable, dbl steht für “double”, chr würde für “character” stehen, etc. Für die unterschiedlichen Datentypen, sei auf <a href="https://de.wikipedia.org/wiki/Datentyp">Wikipedia verwiesen</a>. In der Variable <code>treatment</code> begegnet uns die Bezeichung <code>&lt;dbl + lbl&gt;</code>; hier sind die Wertelabels aus SPSS hinterlegt.</p>
+<p>Wieso ist es nun schön, dass der Datensatz als Tibble und nicht als der R-Standard data.frame eingelesen wird? Gucken wir uns doch einfach mal denselben Datensatz als data.frame an:</p>
+<pre class="r"><code>as.data.frame(read_spss(&quot;data/wrangling.sav&quot;))</code></pre>
+<pre><code>##    ID Age gender treatment BMI_1 BMI_2 BMI_3 BMI_4
+## 1   1  54      1         0 26.81 27.17 27.76 28.67
+## 2   2  52      0         1    NA    NA    NA    NA
+## 3   3  54      1         1    NA    NA    NA    NA
+## 4   4  35      1         1 28.41    NA    NA    NA
+## 5   5  50      0         0 34.05 35.68 35.61 35.89
+## 6   6  20      0         1 20.70 20.66 20.94 20.68
+## 7   7  45      1         0 26.19 26.09 25.71 25.50
+## 8   8  37      1         1 35.74 35.52 35.61 35.97
+## 9   9  57      1         1 34.19 33.93 33.45 33.67
+## 10 10  61      0         1 16.94 17.22 17.33 17.29
+## 11 11  34      0         0 23.23 23.26 23.32 22.93
+## 12 12  57      1         1 37.70 37.91 38.05 39.15
+## 13 13  55      0         0 41.34 41.31 40.49 39.23
+## 14 14  29      0         1 22.51 23.15 22.83 23.55
+## 15 15  36      0         1 20.56 20.23 20.86 20.64
+## 16 16  49      0         1 26.25 25.66 25.55 25.86
+## 17 17  37      1         1 25.00    NA    NA    NA
+## 18 18  47      1         0 28.70 29.78 29.41 29.35
+## 19 19  53      0         1 20.10 19.42 19.39 19.23
+## 20 20  42      1         0 24.95 25.57 25.67 26.12
+## 21 21  46      0         1 38.38 38.54 37.89 34.85
+## 22 22  29      1         0 22.04 22.19 21.92 22.25
+## 23 23  26      0         1 20.35 20.11 20.15 20.21
+## 24 24  52      1         0 33.19 33.31 33.57 33.60
+## 25 25  19      1         0 20.25 20.31 20.77 21.56
+## 26 26  49      1         1 21.99 21.88 21.95 22.06
+## 27 27  27      1         0    NA    NA    NA    NA
+## 28 28  59      0         0 25.72 25.40 25.19 24.98
+## 29 29  57      0         1 20.08 20.71 21.08 20.75
+## 30 30  43      1         0 33.85 33.13    NA    NA
+## 31 31  44      0         1 24.80 24.84 24.88 24.84
+## 32 32  44      0         1 24.73 24.45 24.61 24.69
+## 33 33  37      1         0 17.49 17.39 17.45 17.58
+## 34 34  50      1         1 24.30 23.32 23.64 24.49
+## 35 35  29      1         0 26.30 25.98 25.39 24.16
+## 36 36  60      1         1 23.09 23.05 23.12 22.96
+## 37 37  55      0         1 18.81 18.95 19.17 19.72
+## 38 38  48      0         0 33.94 34.33 34.08 34.08
+## 39 39  51      1         0 22.69 22.78 22.81 22.87
+## 40 40  58      0         1 25.28 25.51 24.91 25.91
+## 41 41  58      1         0 37.03 36.52 36.13 37.41
+## 42 42  21      1         0 22.49 21.56 21.52 21.66
+## 43 43  41      0         0    NA    NA    NA    NA</code></pre>
+<p>Im Prinzip sieht das sehr ähnlich aus, jedoch fällt sofort auf, dass der Output viel länger ist und alle 43 Zeilen umfasst. Meistens möchte man die alle gar nicht sehen. Hinzu kommt, dass auch alle Variablen angezeigt werden würden. In diesem Fall ist das kein Problem, weil ich nur acht habe, aber bei 200 ist das schon etwas anderes. Außerdem sind in der Variable <code>treatment</code> alle von mir mühsam in SPSS eingegebenen Wertelabels weg – welche eine Gemeinheit! Und dann habe ich noch nicht mal eine Ahnung davon, welchen Datentyp meine Variablen enthalten. Unerhört! Hier wird direkt deutlich, warum man Fan des Tidyverse werden könnte.</p>
+<p>Alles in allem haben wir hier einen Datensatz mit 43 Probanden, deren Alter, Geschlecht und Behandlung wir erfasst haben, so wie den BMI für 4 konsekutive Messungen.</p>
+</div>
+<div id="variablennamen-bereinigen" class="section level1">
+<h1>Variablennamen bereinigen</h1>
+<p>Uff, ist das hässlich! Nach allem, was wir über <a href="stil.html">stilsichere Objektnamen</a> gelernt haben, sind wir über die Benennung der Variablen überhaupt nicht glücklich. Das müssen wir ändern, gut, dass wir das Paket <code>janitor</code> haben. Zunächst speichern wir den Datensatz als ein Objekt (in diesem Falle <code>wrangling_data</code>), damit wir es nicht dauern neu einlesen müssen und wenden dann die Funktion <code>clean_names()</code> an.</p>
+<pre class="r"><code>wrangling_data &lt;- clean_names(read_spss(&quot;data/wrangling.sav&quot;))
+
+wrangling_data</code></pre>
+<pre><code>## # A tibble: 43 x 8
+##       id   age gender treatment bmi_1 bmi_2 bmi_3 bmi_4
+##    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl+lbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     1    54      1   0 [TAU]  26.8  27.2  27.8  28.7
+##  2     2    52      0   1 [EG]   NA    NA    NA    NA  
+##  3     3    54      1   1 [EG]   NA    NA    NA    NA  
+##  4     4    35      1   1 [EG]   28.4  NA    NA    NA  
+##  5     5    50      0   0 [TAU]  34.0  35.7  35.6  35.9
+##  6     6    20      0   1 [EG]   20.7  20.7  20.9  20.7
+##  7     7    45      1   0 [TAU]  26.2  26.1  25.7  25.5
+##  8     8    37      1   1 [EG]   35.7  35.5  35.6  36.0
+##  9     9    57      1   1 [EG]   34.2  33.9  33.4  33.7
+## 10    10    61      0   1 [EG]   16.9  17.2  17.3  17.3
+## # ... with 33 more rows</code></pre>
+<p>Das sieht doch schon gleich ganz anders aus, alle Variablen sind einheitlich als “snake case” gesetzt. So lässt es sich arbeiten!</p>
+</div>
+<div id="faktoren" class="section level1">
+<h1>Faktoren</h1>
+<p>Faktoren sind in R eine ganz besondere Angelegenheit. Wenn wir Abbildungen erstellen möchten, die nach Gruppen aufgeteilt sind (z.B. nach Geschlecht oder Experimentalbedingung), oder wenn wir Gruppenunterschiede statistisch untersuchen wollen, dann müssen diese Gruppen als <strong>Faktor</strong> definiert sein. In unserem Datensatz betrifft das die Variablen <code>gender</code> und <code>treatment</code>, also das Geschlecht der Probanden und die erhaltene Behandlung.</p>
+<div id="selbst-definieren" class="section level2">
+<h2>Selbst definieren</h2>
+<p>Um Faktoren zu definieren, gibt es mehrere Möglichkeiten. Meistens bekommt man Daten, in denen nur Zahlen hinterlegt sind, wir aber wollen, dass diese Zahlen für etwas stehen. Die Variable <code>gender</code> ist ein gutes Beispiel dafür. Die Probanden wurden hier einem von zwei Geschlechtern zugeordnet, weiblich und männlich. Wenn man in R mit Faktoren arbeitet, arbeitet man <em>nicht</em> mit reinen Zahlen. Faktoren sind immer Zeichenfolgen, die als spezieller Datantyp “Faktor” gespeichert werden. In anderen Statistikumgebungen, wie etwa SPSS, wurde das anders gelöst. Hier werden Faktoren als verschiedene nummerische Ausprägungen (= Levels) einer Variablen verstanden, die mit Beschriftungen (= Labels) verknüpft sind. So können die Frauen in einem Datensatz mal die 0, mal die 4 sein, oder die Männer, oder die Experimentalgruppe, oder die… Im Sinne der Einheitlichkeit und der Minimierung von Fehlern, empfiehlt es sich übrigens in solchen Umgebungen, Geschlecht <strong>anatomisch</strong> zu codieren, also Frauen als 0 und Männer als 1.</p>
+<p>In R arbeiten wir mit “richtigen” Faktoren. In der Variable <code>gender</code> soll also die Bezeichnung “weiblich” oder “männlich” direkt hinterlegt werden. Wie kommen wir nun von unseren Zahlen zu den Faktoren? Mit der Funktion <code>factor()</code>, die nativer Bestandteil von R ist. Die Funktion benötigt von uns die Ausgangsvariable, die Levels und die Labels, die wir gerne vergeben würden. Die generelle Syntax ist</p>
+<pre class="r"><code>factor(&lt;VARIABLE&gt;, levels = c(&quot;&lt;LEVEL1&gt;&quot;, &quot;&lt;LEVEL2&gt;&quot;), labels = c(&quot;&lt;LABEL1&gt;&quot;, &quot;&lt;LABEL2&gt;&quot;))</code></pre>
+<p>Um eine bestehende Variable zu modifizieren, oder zu <em>mutieren</em>, benutzen wir die Funktion <code>mutate</code>, der wir als erstes Argument unseren Datensatz nennen und dann die Variable, die wir verändern wollen.</p>
+<pre class="r"><code>mutate(wrangling_data, gender = factor(gender, levels = c(0, 1), labels = c(&quot;Female&quot;, &quot;Male&quot;)))</code></pre>
+<pre><code>## # A tibble: 43 x 8
+##       id   age gender treatment bmi_1 bmi_2 bmi_3 bmi_4
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;  &lt;dbl+lbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     1    54 Male     0 [TAU]  26.8  27.2  27.8  28.7
+##  2     2    52 Female   1 [EG]   NA    NA    NA    NA  
+##  3     3    54 Male     1 [EG]   NA    NA    NA    NA  
+##  4     4    35 Male     1 [EG]   28.4  NA    NA    NA  
+##  5     5    50 Female   0 [TAU]  34.0  35.7  35.6  35.9
+##  6     6    20 Female   1 [EG]   20.7  20.7  20.9  20.7
+##  7     7    45 Male     0 [TAU]  26.2  26.1  25.7  25.5
+##  8     8    37 Male     1 [EG]   35.7  35.5  35.6  36.0
+##  9     9    57 Male     1 [EG]   34.2  33.9  33.4  33.7
+## 10    10    61 Female   1 [EG]   16.9  17.2  17.3  17.3
+## # ... with 33 more rows</code></pre>
+<p>Die Variable <code>gender</code> ist nun als ordentlicher Faktor definiert worden, was wir auch anhand des Datentyps <code>fct</code> erkennen können. Im Sinne der besseren Lasbarkeit, können wir den obigen Code etwas einfach aufschreiben. Wir nutzen dazu den “Pipe”-Operator (<code>%&gt;%</code>). Im obigen Befehl wird dir auffallen, dass wir die Funktion <code>mutate</code> verwenden und dann als erstes sofort den Datensatz als Funktionsargument nennen. Das können wir etwas abkürzen, und zwar mit dem Pipe. Er nimmt das Objekt, das vor ihm steht und fügt es als erster Funktionsargument in die Funktion, die nach ihm steht ein.</p>
+<pre class="r"><code># Der Befehl
+f(x)
+
+# ist identisch mit
+x %&gt;% 
+  f()</code></pre>
+<p>Wo ist nun der Nutzen dabei? Der Befehl wird länger und enthält diesen grausam schreibbaren Pipe-Operator! Der Vorteil liegt darin, dass wir die Syntax besser verstehen, indem wir den Pipe als “dann” lesen können. Im obigen Beispiel kann man den Befehl lesen als “Nimm <code>x</code> und <em>dann</em> mache Funktion <code>f()</code>”. Der Vorteil wird noch deutlicher, wenn wir uns unserem Datensatz zuwenden. Wir wollten in dem Datensatz die Variable <code>gender</code> als Faktor definieren. Wenden wir nun den Pipe (<code>%&gt;%</code>) an, ergibt sich dieser Befehl:</p>
+<pre class="r"><code>wrangling_data %&gt;% 
+  mutate(gender = factor(gender,
+                         levels = c(0,1),
+                         labels = c(&quot;Female&quot;, &quot;Male&quot;)))</code></pre>
+<pre><code>## # A tibble: 43 x 8
+##       id   age gender treatment bmi_1 bmi_2 bmi_3 bmi_4
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;  &lt;dbl+lbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     1    54 Male     0 [TAU]  26.8  27.2  27.8  28.7
+##  2     2    52 Female   1 [EG]   NA    NA    NA    NA  
+##  3     3    54 Male     1 [EG]   NA    NA    NA    NA  
+##  4     4    35 Male     1 [EG]   28.4  NA    NA    NA  
+##  5     5    50 Female   0 [TAU]  34.0  35.7  35.6  35.9
+##  6     6    20 Female   1 [EG]   20.7  20.7  20.9  20.7
+##  7     7    45 Male     0 [TAU]  26.2  26.1  25.7  25.5
+##  8     8    37 Male     1 [EG]   35.7  35.5  35.6  36.0
+##  9     9    57 Male     1 [EG]   34.2  33.9  33.4  33.7
+## 10    10    61 Female   1 [EG]   16.9  17.2  17.3  17.3
+## # ... with 33 more rows</code></pre>
+<p>Das Ergebnis ist dasselbe wie in der ersten Version dieses Befehls, jedoch kann man ihn so besser <em>lesen</em> und <em>verstehen</em>: “Nimm den Datensatz <code>wrangling_data</code> und wende die Funktion <code>mutate</code> an.” Von nun an, werde ich den Pipe-Operator immer verwenden.</p>
+<p>Wichtig zu beachten ist, dass die Änderung noch nirgendwo gespeichert wurde. Wir sehen unseren Erfolg zwar in der Konsole, doch wenn wir den Datensatz noch einmal aufrufen stellen wir fest, dass <code>gender</code> immer noch als 0 und 1 kodiert sind.</p>
+<pre class="r"><code>wrangling_data</code></pre>
+<pre><code>## # A tibble: 43 x 8
+##       id   age gender treatment bmi_1 bmi_2 bmi_3 bmi_4
+##    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl+lbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     1    54      1   0 [TAU]  26.8  27.2  27.8  28.7
+##  2     2    52      0   1 [EG]   NA    NA    NA    NA  
+##  3     3    54      1   1 [EG]   NA    NA    NA    NA  
+##  4     4    35      1   1 [EG]   28.4  NA    NA    NA  
+##  5     5    50      0   0 [TAU]  34.0  35.7  35.6  35.9
+##  6     6    20      0   1 [EG]   20.7  20.7  20.9  20.7
+##  7     7    45      1   0 [TAU]  26.2  26.1  25.7  25.5
+##  8     8    37      1   1 [EG]   35.7  35.5  35.6  36.0
+##  9     9    57      1   1 [EG]   34.2  33.9  33.4  33.7
+## 10    10    61      0   1 [EG]   16.9  17.2  17.3  17.3
+## # ... with 33 more rows</code></pre>
+<p>Um Änderungen in R dauerhaft zu speichern, müssen wir sie einem Objekt zuweisen. Weil wir den Datensatz verbessert haben, spricht nichts dagegen, den alten Datensatz mit dem neuen zu überschreiben. Wir können unsere Änderung also mit <code>&lt;-</code> den Namen <code>wrangling_data</code> zuweisen. Rufen wir die Daten nun erneut auf, ist die erfolgreiche Änderung gespeichert.</p>
+<pre class="r"><code>wrangling_data &lt;- wrangling_data %&gt;% 
+  mutate(gender = factor(gender, 
+                         levels = c(0, 1),
+                         labels = c(&quot;Female&quot;, &quot;Male&quot;)))
+
+wrangling_data</code></pre>
+<pre><code>## # A tibble: 43 x 8
+##       id   age gender treatment bmi_1 bmi_2 bmi_3 bmi_4
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;  &lt;dbl+lbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     1    54 Male     0 [TAU]  26.8  27.2  27.8  28.7
+##  2     2    52 Female   1 [EG]   NA    NA    NA    NA  
+##  3     3    54 Male     1 [EG]   NA    NA    NA    NA  
+##  4     4    35 Male     1 [EG]   28.4  NA    NA    NA  
+##  5     5    50 Female   0 [TAU]  34.0  35.7  35.6  35.9
+##  6     6    20 Female   1 [EG]   20.7  20.7  20.9  20.7
+##  7     7    45 Male     0 [TAU]  26.2  26.1  25.7  25.5
+##  8     8    37 Male     1 [EG]   35.7  35.5  35.6  36.0
+##  9     9    57 Male     1 [EG]   34.2  33.9  33.4  33.7
+## 10    10    61 Female   1 [EG]   16.9  17.2  17.3  17.3
+## # ... with 33 more rows</code></pre>
+</div>
+<div id="automatisch-definieren" class="section level2">
+<h2>Automatisch definieren</h2>
+<p>Wurden in SPSS bereits die richtigen Wertelabels vergeben, wie für die Variable <code>treatment</code>, können wir uns den Weg etwas abkürzen. Im Datensatz ist zu sehen, dass sowohl Levels als auch Label des Faktors bereits hinterlegt sind (daher der komische Datentyp <code>&lt;dbl + lbl&gt;</code>). Mit der Funktion <code>as_factor()</code> wird die Variable automatisch als Faktor definiert.</p>
+<pre class="r"><code>wrangling_data &lt;- wrangling_data %&gt;% 
+  mutate(treatment = as_factor(treatment))
+
+wrangling_data</code></pre>
+<pre><code>## # A tibble: 43 x 8
+##       id   age gender treatment bmi_1 bmi_2 bmi_3 bmi_4
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     1    54 Male   TAU        26.8  27.2  27.8  28.7
+##  2     2    52 Female EG         NA    NA    NA    NA  
+##  3     3    54 Male   EG         NA    NA    NA    NA  
+##  4     4    35 Male   EG         28.4  NA    NA    NA  
+##  5     5    50 Female TAU        34.0  35.7  35.6  35.9
+##  6     6    20 Female EG         20.7  20.7  20.9  20.7
+##  7     7    45 Male   TAU        26.2  26.1  25.7  25.5
+##  8     8    37 Male   EG         35.7  35.5  35.6  36.0
+##  9     9    57 Male   EG         34.2  33.9  33.4  33.7
+## 10    10    61 Female EG         16.9  17.2  17.3  17.3
+## # ... with 33 more rows</code></pre>
+<p>Super, das sieht schön aus, alle Faktoren sind als richtige faktoren definiert worden. Aber was ist das? Die Bezeichnungen für die Variable <code>treatment</code> sind “TAU” und “EG”, die für “Treatment as Usual” und “Experimental Group” stehen. Mmh, eigentlich hätte ich gerne “CG” für “Control Group” anstatt “TAU”. Auch da können wir etwas machen. Wir wollen einen Faktor umkodieren und bedienen uns deshalb der Funktion <code>fct_recode()</code>. Da wir eine Variable verändern wollen, müssen wir sie wieder “mutieren”.</p>
+<pre class="r"><code>wrangling_data &lt;-  wrangling_data %&gt;% 
+  mutate(treatment = fct_recode(treatment,
+                                &quot;CG&quot; = &quot;TAU&quot;))
+
+wrangling_data</code></pre>
+<pre><code>## # A tibble: 43 x 8
+##       id   age gender treatment bmi_1 bmi_2 bmi_3 bmi_4
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     1    54 Male   CG         26.8  27.2  27.8  28.7
+##  2     2    52 Female EG         NA    NA    NA    NA  
+##  3     3    54 Male   EG         NA    NA    NA    NA  
+##  4     4    35 Male   EG         28.4  NA    NA    NA  
+##  5     5    50 Female CG         34.0  35.7  35.6  35.9
+##  6     6    20 Female EG         20.7  20.7  20.9  20.7
+##  7     7    45 Male   CG         26.2  26.1  25.7  25.5
+##  8     8    37 Male   EG         35.7  35.5  35.6  36.0
+##  9     9    57 Male   EG         34.2  33.9  33.4  33.7
+## 10    10    61 Female EG         16.9  17.2  17.3  17.3
+## # ... with 33 more rows</code></pre>
+<p>Das hat wunderbar funktioniert, nun sind auch die Bezeichnungen meiner Experimentalbedingung einheitlich.</p>
+</div>
+</div>
+<div id="wide-vs.-long" class="section level1">
+<h1>Wide vs. Long</h1>
+<p>An dieser Stelle machen wir noch einmal den Sprung zum Anfang der Seite. Wir haben von “tidy data” gelesen, also der Ansicht, dass eine Variable in eine Spalte, eine Beobachtung in eine Zeile und ein Wert in eine Zelle gehört. Ich habe bereits gespoilert, dass diese Daten nicht tidy sind – warum? Weil ich für die Messung des BMI ganze vier Beobachtungen pro Proband habe, also vier Beobachtungen pro Zeile. Was uns allerdings vorschwebt ist ein Datensatz, in dem jede Beobachtung auch tatsächlich nur eine Zeile ist, somit hätten wir konsequenterweise vier Zeilen pro Proband. Dem gewohnten SPSS-Nutzer pfeifen mittlerweile bestimmt die Ohren, aber nur so ergibt die Datenstruktur eigentlich Sinn. Denn weche Variable taucht im Datensatz nirgendwo auf? Wir haben eindeutig longitudinale Daten, aber nirgendwo die Zeit hinterlegt! Obwohl, eigentlich ist die hinterlegt, aber an einer Stelle, an die wir nicht drankommen, nämlich im Variablennamen selbst (als <code>_1</code>, <code>_2</code>, usw.).</p>
+<p>Diese Datenstruktur nennt man <strong>wide format</strong>, weil sie breit ist. Wir hätten gerne mehrere Zeilen pro Proband, die Daten werden also länger, und die entstehende längere und tidy Datenstruktur nennt man <strong>long format</strong>. Um diese zu bekommen, müssen wir die Daten “länger machen”, am besten mit der Funktion <code>pivot_longer()</code>. Dieser müssen wir angeben, welche Variablen wir als eine lange haben wollen, welchen Namen wir für die neu erstellte Variable verwenden möchten und unter welchem Namen die Werte abgespeichert werden sollen. Die neu erstellte Variable ist in unserem Fall die Zeit, wir könnten sie “measurement” nennen, und die Variable, in der die Werte stehen “bmi”. Dank unserer einheitlichen Benennung, können wir angeben, dass unsere Variable “measurement” ein nerviges Präfix enthält, nämlich “bmi_”, welches automatisch gelöscht werden kann.</p>
+<pre class="r"><code>wrangling_data &lt;- wrangling_data %&gt;% 
+  pivot_longer(
+    cols = bmi_1:bmi_4,
+    names_to = &quot;measurement&quot;,
+    names_prefix = &quot;bmi_&quot;,
+    values_to = &quot;bmi&quot;
+  )
+
+wrangling_data</code></pre>
+<pre><code>## # A tibble: 172 x 6
+##       id   age gender treatment measurement   bmi
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;     &lt;chr&gt;       &lt;dbl&gt;
+##  1     1    54 Male   CG        1            26.8
+##  2     1    54 Male   CG        2            27.2
+##  3     1    54 Male   CG        3            27.8
+##  4     1    54 Male   CG        4            28.7
+##  5     2    52 Female EG        1            NA  
+##  6     2    52 Female EG        2            NA  
+##  7     2    52 Female EG        3            NA  
+##  8     2    52 Female EG        4            NA  
+##  9     3    54 Male   EG        1            NA  
+## 10     3    54 Male   EG        2            NA  
+## # ... with 162 more rows</code></pre>
+<p>Leider ist die Variable <code>measurement</code> jetzt noch als Zeichenfolge (“chr”) abgespeichert, wir hätten sie aber gerne nummerisch. Das lässt sich schnell mit einem <code>mutate</code> lösen.</p>
+<pre class="r"><code>wrangling_data &lt;- wrangling_data %&gt;% 
+  mutate(measurement = as.numeric(measurement))
+
+wrangling_data</code></pre>
+<pre><code>## # A tibble: 172 x 6
+##       id   age gender treatment measurement   bmi
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;           &lt;dbl&gt; &lt;dbl&gt;
+##  1     1    54 Male   CG                  1  26.8
+##  2     1    54 Male   CG                  2  27.2
+##  3     1    54 Male   CG                  3  27.8
+##  4     1    54 Male   CG                  4  28.7
+##  5     2    52 Female EG                  1  NA  
+##  6     2    52 Female EG                  2  NA  
+##  7     2    52 Female EG                  3  NA  
+##  8     2    52 Female EG                  4  NA  
+##  9     3    54 Male   EG                  1  NA  
+## 10     3    54 Male   EG                  2  NA  
+## # ... with 162 more rows</code></pre>
+<p>Und schon ist der Datensatz fertig formatiert. Da es aber ziemlich aufwendig ist, jedes Mal ein neues Objekt zu definieren, sobald man eine Änderung durchgeführt hat, kann man auch alle Änderungen in einem Befehl ausführen.</p>
+<pre class="r"><code>wrangling_complete &lt;- read_spss(&quot;data/wrangling.sav&quot;) %&gt;% 
+  clean_names() %&gt;% 
+  mutate(gender = factor(gender,
+                         levels = c(0, 1),
+                         labels = c(&quot;Female&quot;, &quot;Male&quot;)),
+         treatment = as_factor(treatment),
+         treatment = fct_recode(treatment,
+                                &quot;CG&quot; = &quot;TAU&quot;)) %&gt;% 
+  pivot_longer(
+    cols = bmi_1:bmi_4,
+    names_to = &quot;measurement&quot;,
+    names_prefix = &quot;bmi_&quot;,
+    values_to = &quot;bmi&quot;
+  ) %&gt;% 
+  mutate(measurement = as.numeric(measurement))
+
+wrangling_complete</code></pre>
+<pre><code>## # A tibble: 172 x 6
+##       id   age gender treatment measurement   bmi
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;           &lt;dbl&gt; &lt;dbl&gt;
+##  1     1    54 Male   CG                  1  26.8
+##  2     1    54 Male   CG                  2  27.2
+##  3     1    54 Male   CG                  3  27.8
+##  4     1    54 Male   CG                  4  28.7
+##  5     2    52 Female EG                  1  NA  
+##  6     2    52 Female EG                  2  NA  
+##  7     2    52 Female EG                  3  NA  
+##  8     2    52 Female EG                  4  NA  
+##  9     3    54 Male   EG                  1  NA  
+## 10     3    54 Male   EG                  2  NA  
+## # ... with 162 more rows</code></pre>
+</div>
+<div id="literatur" class="section level1 unnumbered">
+<h1>Literatur</h1>
+<div id="refs" class="references">
+<div id="ref-Wickham.2014">
+<p>Wickham, H. (2014). Tidy Data. <em>Journal of Statistical Software</em>, <em>59</em>(10). <a href="https://doi.org/10.18637/jss.v059.i10">https://doi.org/10.18637/jss.v059.i10</a></p>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
