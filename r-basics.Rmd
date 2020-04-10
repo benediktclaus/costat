@@ -5,6 +5,8 @@ link-citations: yes
 csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
 ---
 
+![](images/computer_r.jpg)
+
 Dann fangen wir mal an! R ist im Prinzip nur ein Taschenrechner und man kann es als solchen verwenden. Wenn Du mit RStudio arbeitest, wirst du vier "Panes" sehen; links oben ist das "Source" Pane, links unten die "Console", rechts oben die "Environment" und rechts unten befindet sich das "Files" Pane. Bei allen Panes siehst Du Tabs, mit denen du die Funktion des Panes umschalten kannst. Erstellst du beispielsweise eine Abbildung, schaltet RStudio rechts unten automatisch auf "Plots".
 
 # Befehle
