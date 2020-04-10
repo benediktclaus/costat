@@ -3,9 +3,6 @@ title: "Pakete"
 bibliography: references.bib
 link-citations: yes
 csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
-output:
-  html_document:
-    toc: false
 ---
 
 Um uns die Arbeit in R nicht schwerer als nötig zu machen, nutzen wir einige Pakete, die aufeinander abgestimmt sind und tolle Funktionen bieten. Alle R-Pakete sind frei verfügbar und können mit dem Befehl `install.packages("<PACKAGE>")` installiert werden. Um sie in einer R-Session zu nutzen, müssen sie mit dem Befehl `library(<PACKAGE>)` "angehängt" werden.

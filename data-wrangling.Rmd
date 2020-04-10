@@ -1,0 +1,12 @@
+---
+title: "Data Wrangling"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+---
+
+![](images/foxes_r.jpg)
+
+Wie bereits erwähnt, entstand das Tidyverse um die Idee "sauberer Daten" (tidy data). 
+
+# Literatur
