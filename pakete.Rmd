@@ -1,0 +1,80 @@
+---
+title: "Pakete"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+output:
+  html_document:
+    toc: false
+---
+
+Um uns die Arbeit in R nicht schwerer als nötig zu machen, nutzen wir einige Pakete, die aufeinander abgestimmt sind und tolle Funktionen bieten. Alle R-Pakete sind frei verfügbar und können mit dem Befehl `install.packages("<PACKAGE>")` installiert werden. Um sie in einer R-Session zu nutzen, müssen sie mit dem Befehl `library(<PACKAGE>)` "angehängt" werden.
+
+# tidyverse
+
+```{r echo=FALSE, out.width="30%", fig.align='center'}
+knitr::include_graphics(path = "https://tidyverse.tidyverse.org/articles/tidyverse-logo.png")
+```
+
+
+Das [**Tidyverse**](https://www.tidyverse.org/) [@Wickham.2019b] ist ein Verbund von Paketen, der das Arbeiten in R auf das angenehmste erleichtert. Diese sind aufeinander abgestimmt, benutzen einheitliche Syntaxen und beheben einige Marotten von base R.
+
+Nach jeder frischen Installation von R sollte man somit diesen Befehl ausführen:
+```{r eval=FALSE}
+install.packages("tidyverse")
+```
+
+Das Tidyverse ist unter anderem um die Idee "sauberer" ( = tidy) Daten entstanden. Was genau tidy data ist, wird beim data wrangling deutlich. Nur so viel vorab: tidy data unterscheidet sich von der "herkömmlichen" Darstellung von Daten, wie etwa in SPSS.
+
+Das Tidyverse bietet nun alle Instrumente, um alle Schritte dieses Workflows zu durchlaufen:
+```{r echo=FALSE, out.width="70%", fig.align='center'}
+knitr::include_graphics("https://tidyverse.tidyverse.org/articles/data-science.png")
+```
+
+
+# rstatix
+Eine Ausnahme sind die Modelle, also unsere statistischen Tests. Für diese gibt es in R hunderte Pakete. In R gibt es viele Wege zum Ziel, jedoch einfachere und schwierigere. Einer der einfachsten Wege, um statistische Standard-Verfahren einzusetzen, und dann noch abgestimmt auf das Arbeiten im Tidyverse, ist das Paket `rstatix` [@Kassambara.2020]. Installiert wird es, wie alle anderen Pakete mit:
+```{r eval=FALSE}
+install.packages("rstatix")
+```
+
+
+# janitor
+Den Hausmeister, also das Paket `janitor` [@Firke.2020], wird hauptsächlich zur Bereinigung von Variablennamen genutzt und formatiert diese einheitlich im "snake case"-Format (siehe auch die Informationen zum [Stil](stil.html)). Auch `janitor` ist im Tidyverse-Framework zuhause:
+
+```{r echo=FALSE, message=FALSE}
+library(janitor)
+library(tidyverse)
+```
+
+```{r}
+# Aus unsauberen Variablen-Namen...
+unclean_names <- tibble(
+  "First name" = "x",
+  "LastName" = "y",
+  "DOB" = "z",
+  "BDI_1?" = 1,
+  "BDI_2" = 2,
+  "bdi_3" = 3
+)
+
+# ... werden saubere, einheitliche
+clean_names(unclean_names)
+```
+
+
+
+# skimr
+Mit `skimr` [@Waring.2020] können wir uns auf einfache Weise umfangreiche deskriptive Statistiken ausgeben lassen. Für den Datensatz `mtcars` sieht das beispielwesie so aus:
+
+```{r echo=FALSE, message=FALSE}
+library(skimr)
+```
+
+```{r}
+skim(mtcars)
+```
+
+Mit nur einem Befehl bekommen wir so eine klar strukturierte Übersicht über die Dimensionen des Datensatzes, sowie deskriptive Statistiken zu allen Variablen, getrennt nach Variablen-Typ. Im diesem Datensatz sind alle Variablen nummerisch ("numeric") und so bekommen wir die Anzahl fehlender Werte, den Mittelwert, die Standardabweichung, die Range (p0 und p100 sind das 0%, bzw. das 100% Perzentil, also der niedrigste und der höchste Wert) und ein inline Histogramm, um die Verteilung grob abzuschätzen. Auch `skimr` ist im Tidyverse-Framework zuhause.
+
+# Literatur
