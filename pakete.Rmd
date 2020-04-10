@@ -77,4 +77,9 @@ skim(mtcars)
 
 Mit nur einem Befehl bekommen wir so eine klar strukturierte Übersicht über die Dimensionen des Datensatzes, sowie deskriptive Statistiken zu allen Variablen, getrennt nach Variablen-Typ. Im diesem Datensatz sind alle Variablen nummerisch ("numeric") und so bekommen wir die Anzahl fehlender Werte, den Mittelwert, die Standardabweichung, die Range (p0 und p100 sind das 0%, bzw. das 100% Perzentil, also der niedrigste und der höchste Wert) und ein inline Histogramm, um die Verteilung grob abzuschätzen. Auch `skimr` ist im Tidyverse-Framework zuhause.
 
+```{r echo=FALSE}
+rm(list = ls())
+```
+
+
 # Literatur

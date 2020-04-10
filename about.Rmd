@@ -1,30 +1,46 @@
 ---
-title: "Impressum"
+title: "About"
 bibliography: references.bib
 link-citations: yes
 csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
 ---
 
-## Angaben gemäß § 5 TMG
+
+```{r echo=FALSE, out.width="30%", fig.align='right', out.extra='style="float:right; padding:10px"'}
+knitr::include_graphics("images/portrait.jpg")
+```
+
+Am Laufen gehalten wird diese Website von mir, Benedikt Claus, wissenschaftlicher Mitarbeiter bei der PedScience Vestischen Forschungs-gGmbh in Datteln. Ich habe von 2012 -- 2017 an der [Ruhr-Universität Bochum](https://www.ruhr-uni-bochum.de/de)  studiert und dort an der [Fakultät für Psychologie](http://www.psy.ruhr-uni-bochum.de/index.html.de) meinen M. Sc. in Klinischer Psychologie gemacht. Danach habe ich die Ausbildung zum Psychologischen Psychotherapeuten (VT) bei der [Deutschen Gesellschaft für Verhaltenstherapie](https://www.dgvt.de/aktuelles/) begonnen und wurde 2019 von der [Medizinischen Fakultät](https://www.uni-due.de/med/) der [Universität Duisburg-Essen](https://www.uni-due.de/de/index.php) promoviert.
+
+Mich interessiert zum einen alles, was mit psychischen Störungen, ihrer Verbreitung, Entstehung und vor allem deren Behandlung zu tun hat. Speziell interessiere ich mich für die Wirksamkeit von Psychopharmaka (wie etwa Antidepressiva), deren Nutzen über den Placebo-Effekt hinaus und deren Langzeitfolgen. Zum anderen bin ich aber auch von ziemlich vielem angetan, was eher dem bereich der wissenschaftlichen Methoden zuzuordnen ist. Hier beschäftige ich mich insbesondere mit longitudinalen Daten, dem Vergleich statistischer vs. klinischer Signifikanz und der Implementierung von Standard-Methoden im [Tidyverse](https://www.tidyverse.org/).
+
+### Links 
+`r icon::ai_orcid()`  [ORCiD](https://orcid.org/0000-0001-9501-0954)  
+`r icon::fa_github()` [GitHub](https://github.com/benediktclaus)  
+`r icon::ai_osf()` [OSF](https://osf.io/du5kq/)
+
+
+
+
+### Angaben gemäß § 5 TMG
 
 PedScience Vestische Forschungs- gGmbH   
 Dr.-Friedrich-Steiner-Str. 5  
 45711 Datteln
 
-## Vertreten durch:
+**Vertreten durch:**  
 Benedikt Claus
 
-## Kontakt:
-
+**Kontakt:**  
 Telefon: 02363-9752012  
 E-Mail: b.claus@pedscience.de
 
-## Haftungsausschluss:
+**Haftungsausschluss:**
 
-### Haftung für Inhalte
+**Haftung für Inhalte**
 
 Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.
 
-### Haftung für Links
+**Haftung für Links**
 
 Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.

@@ -7,10 +7,10 @@ navbar:
     - text: "Home"
       icon: fa-home
       href: index.html
-    - text: "Software"
-      href: software.html
     - text: "Allgemeines"
       menu:
+        - text: "Software"
+          href: software.html
         - text: "R Basics"
           href: r-basics.html
         - text: "Stil"
@@ -19,7 +19,8 @@ navbar:
           href: pakete.html
         - text: "Data Wrangling"
   right:
-    - text: "About"
+    - icon: fa-info
+      href: about.html
 output:
   html_document:
     toc: true
