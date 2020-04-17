@@ -1,0 +1,9 @@
+---
+title: "Voraussetzungen im GLM"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+

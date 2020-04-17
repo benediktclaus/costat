@@ -20,6 +20,11 @@ navbar:
         - text: "Data Wrangling"
           href: data-wrangling.html
   right:
+    - icon: fa-question
+      menu:
+        - text: "Voraussetzungen im GLM"
+          href: voraussetzungen.html
+        - text: "Zentraler Grenzwertsatz"
     - icon: fa-info
       href: about.html
 output:
