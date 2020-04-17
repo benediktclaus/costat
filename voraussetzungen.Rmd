@@ -88,7 +88,7 @@ Normalverteilte Daten erscheinen in einem QQ-Plot als Punkte auf oder an der ein
 # Homoskedastizität
 Auch bekannt als Varianzhomogenität. Hiermit ist gemeint, dass die Daten für jede Stufe der unabhängigen Variable gleichmäßig streuen. Auch das überprüft man am besten mit einer Abbildung.
 
-```{r echo=FALSE}
+```{r echo=FALSE, message=FALSE}
 tibble(
   x = runif(200, 0, 10),
   error = rnorm(200, mean = 0, sd = x / 2),
