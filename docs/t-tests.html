@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>t-Tests</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Chamber of Statistics</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Allgemeines
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="software.html">Software</a>
+    </li>
+    <li>
+      <a href="r-basics.html">R Basics</a>
+    </li>
+    <li>
+      <a href="stil.html">Stil</a>
+    </li>
+    <li>
+      <a href="pakete.html">Pakete</a>
+    </li>
+    <li>
+      <a href="data-wrangling.html">Data Wrangling</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Mittelwerte vergleichen
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="t-tests.html">t-Tests</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-question"></span>
+     
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="voraussetzungen.html">Voraussetzungen im GLM</a>
+    </li>
+    <li class="dropdown-header">Zentraler Grenzwertsatz</li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">
+    <span class="fa fa-info"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="math inline">\(t\)</span>-Tests</h1>
+
+</div>
+
+
+<div id="einleitung" class="section level1">
+<h1>Einleitung</h1>
+<p>Der <span class="math inline">\(t\)</span>-Test, oder besser gesagt die <span class="math inline">\(t\)</span>-Tests, sind eine kleine Gruppe von statistischen Signifikanztests, mit denen man Gruppenunterschiede untersuchen kann. Meistens unterscheidet man zwischen dem</p>
+<ul>
+<li>Einstichproben-<span class="math inline">\(t\)</span>-Test, dem</li>
+<li><span class="math inline">\(t\)</span>-Test mit unabhängigen Stichproben und dem</li>
+<li><span class="math inline">\(t\)</span>-Test mit abhängigen (oder verbundenen) Stichproben.</li>
+</ul>
+<p>Na super, drei Tests – aber ich wollte doch nur einen Test machen! Welchen nehme ich denn jetzt?!</p>
+<p>Den Einstichproben-<span class="math inline">\(t\)</span>-Test benutzt man, wenn man eine Aussage darüber treffen will, ob sich eine Population im Mittelwert von einem vorgegebenen Wert unterscheidet. Stell Dir vor, Du hast zufällig die Größe von 80 Leuten in der Dortmunder Innenstadt gemessen, die im Schnitt 181,2 cm griß sind. Nun möchtest Du wissen, ob sich diese mittlere Größe von Dortmundern von einer anderen Population signifikant unterscheidet. Amerikaner sind im <a href="https://www.verywellfit.com/average-height-for-a-man-statistics-2632137">Durchschnitt 175,4 cm</a> groß. Ist dieser Unterschied jetzt signifikant? Das kannst du mit einem Einstichproben-<span class="math inline">\(t\)</span>-Test überprüfen, auch wenn man diese Fragestellung “in der freien Wildbahn” eigentlich nicht findet.</p>
+<p>Der <span class="math inline">\(t\)</span>-Test mit unabhängigen Stichproben ist in der Regel schon etwas anwendungsnäher, denn bei diesem wird untersucht, ob sich zwei Gruppen in ihrem Mittelwert unterscheiden. Beispielsweise möchtest Du untersuchen, ob sich die Kontrollgruppe am Ende einer Interventions-Studie signifikant von Deiner Interventionsgruppe unterscheidet. Im Gegensatz zum vorherigen Test, werden hier beide Mittelwerte erst einmal anhand der Probanden in den Gruppen bestimmt. Sollen also zwei Gruppen anhand einer kontinuierlichen Variable miteinander verglichen werden, ist das ein valider Ansatz. Liegen mehrere Gruppen vor, deren Mittelwerte Du anhand einer Variable auf signifikante Unterschiede vergleichen möchtest, dann solltest du über ein anderes Verfahren, wie die ANOVA nachdenken.</p>
+<p>Der <span class="math inline">\(t\)</span>-Test für abhängige, oder verbundene, Stichproben kommt zutragen, wenn die Unabhängigkeitsannahme (siehe <a href="voraussetzungen.html">Voraussetzungen im GLM</a>) verletzt ist. Ein einfaches Beispiel wärst Du, der/die eine tolle Therapie für Patienten mit depressiver Störung entwickelt hat. Nun hast Du ein paar Patienten gefunden, die deine Therapie ausprobieren wollen und erhebst vor und nach der Therapie die mittlere “Depressivität”. Im Anschluss daran möchtest Du jetzt herausfinden, ob sich die Werte über die Zeit signifikant verbessert haben. Pro Proband hast du einen Prä- und einen Post-Wert (= vor und nach der Therapie), d.h., dass die Unabhängigkeitsannahme verletzt ist, weil mehrere Datenpunkte von einer Person kommen. Kein Problem, hier nutzt Du einfach den <span class="math inline">\(t\)</span>-Test für verbundene Stichproben</p>
+<p>Die Daten zum fleißigen Mitrechnen findest Du wie immer im <a href="https://github.com/benediktclaus/costat/tree/master/data">Git-Repository</a>.</p>
+</div>
+<div id="voraussetzungen" class="section level1">
+<h1>Voraussetzungen</h1>
+<p>Es gelten die üblichen <a href="voraussetzungen.html">Voraussetzungen im GLM</a>.</p>
+</div>
+<div id="pakete" class="section level1">
+<h1>Pakete</h1>
+<p>Alle Tests können mit unseren Standard-Paketen durchgeführt werden. Mit den folgenden Befehlen sind wir startklar.</p>
+<pre class="r"><code>library(tidyverse)
+library(haven)
+library(rstatix)
+library(skimr)</code></pre>
+</div>
+<div id="syntax" class="section level1">
+<h1>Syntax</h1>
+<p>Die auf dieser Seite vorgestellten Tests werden alle durch die kreativ benannte Funktion <code>t_test()</code> abgedeckt. Wenn alle Daten im long format sind, dann sehen die Befehle wie folgt aus:</p>
+<pre class="r"><code># Einstichproben-t-Test
+t_test(data = &lt;DATA&gt;, formula = &lt;DEPENDENT-VARIABLE&gt; ~ 1, mu = &lt;TEST-VALUE&gt;)</code></pre>
+<p>Die Formelschreibweise kennen wir schon von der linearen Regression, die Variable links der Tilde (<code>~</code>) wird durch die Variablen rechts der Tilde vorhergesagt. Da wir die abhängige Variable im ersten Fall jedoch nur durch einen einzigen Wert, nämlich dem Testwert, erklären wollen, steht dort eine <code>1</code>. Mit <code>mu</code> geben wir den Wert an, gegen den getestet werden soll.</p>
+<pre class="r"><code># t-Test bei unabhängigen Stichproben
+t_test(data = &lt;DATA&gt;, formula = &lt;DEP-VARIABLE&gt; ~ &lt;INDEP-VARIABLE&gt;)
+
+# t-Test bei verbundenen Stichproben
+t_test(data = &lt;DATA&gt;, formula = &lt;DEP-VARIABLE&gt; ~ &lt;INDEP-VARIABLE&gt;, paired = TRUE)</code></pre>
+<p>Diese Befehle sollten selbsterklärend sein, die abhängige Variable wird durch die unabhängige Variable (Gruppenzugehörigkeit oder Messzeitpunkt) vorhergesagt. Bei den abhängigen Stichproben, geben wir mit <code>paired = TRUE</code> lediglich noch weiter an, dass wir gepaarte, also abhängige Stichproben haben.</p>
+</div>
+<div id="beispiele" class="section level1">
+<h1>Beispiele</h1>
+<p><img src="images/hogwarts-express_r.jpg" /></p>
+<p>Begeben wir uns in die Welt der Magie, Muggel und Zauberstäbe; tauchen wir ein in die Welt von Harry Potter. Auch in Hogwarts gibt es viel zu entdecken und statistisch zu entschlüsseln.</p>
+<div id="einstichproben-t-test" class="section level2">
+<h2>Einstichproben-<span class="math inline">\(t\)</span>-Test</h2>
+<p>Vielleicht kennst Du die vier Häuser von Hogwarts: Gryffindor, Hufflepuff, Ravenclaw und Slytherin. Jedem dieser Häuser werden verschiedene Eigenschaften nachgesagt, und jeder Schüler wird ausgehend von seinen Eigenschaften durch den sprechenden Hut einem der Häuser zugeteilt. Genau diese Eigenschaften der Schüler in den Häusern können wir uns nun einmal anschauen.</p>
+<p>Das Haus Ravenclaw soll durch ausgesprochene Intelligenz punkten. Nun gut, gehen wir dem einmal auf den Grund. Der Intelligenzquotient (IQ) ist so normiert, dass sein Mittelwert normalerweise 100 beträgt und die Standardbweichung 15. Wir haben IQ-Daten von Mitgliedern des Hauses Ravenclaws im Datensatz <code>ravenclaw.sav</code>.</p>
+<pre class="r"><code>ravenclaw &lt;- read_spss(&quot;data/ravenclav.sav&quot;)</code></pre>
+<div id="voraussetzungen-1" class="section level3">
+<h3>Voraussetzungen</h3>
+<p>Mit <code>skim()</code> und ggplot2 können wir uns die Daten etwas genauer angucken. Wichtig ist, dass die Voraussetzungen erfüllt sind.</p>
+<pre class="r"><code>skim(ravenclaw)</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">ravenclaw</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">48</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">id</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">48</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">intelligence</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">121.16</td>
+<td align="right">13.11</td>
+<td align="right">88.14</td>
+<td align="right">114.24</td>
+<td align="right">121</td>
+<td align="right">130.09</td>
+<td align="right">150.3</td>
+<td align="left">▁▃▇▅▂</td>
+</tr>
+</tbody>
+</table>
+<p><img src="t-tests_files/figure-html/unnamed-chunk-8-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p>Aus der Übersicht können wir entnehmen, dass wir erst einmal Daten von 48 Ravenclaws haben. Der IQ (von mir dreister- und fälschlicherweise als <code>intelligence</code> betitelt) der Stichprobe ist im Mittel bei 121 (sowohl Mittelwert als auch Median) – nicht schlecht! Die Standardabweichung beträgt 13.1, der niedrigste Wert 88.1 und der höchste 150.3. In Ravenclaw scheinen also ganz schöne Brains am Werke zu sein.</p>
+</div>
+<div id="durchführung" class="section level3">
+<h3>Durchführung</h3>
+<p>Wir haben nun eine gute Idee davon, in welche Richtung unsere Ergebnisse gehen könnten, aber unterscheidet sich dieser Wert jetzt vom Bevölkerungsdurchschnitt?</p>
+<pre class="r"><code>ravenclaw %&gt;% 
+  t_test(intelligence ~ 1, mu = 100)</code></pre>
+<pre><code>## # A tibble: 1 x 7
+##   .y.          group1 group2         n statistic    df        p
+## * &lt;chr&gt;        &lt;chr&gt;  &lt;chr&gt;      &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intelligence 1      null model    48      11.2    47 7.73e-15</code></pre>
+</div>
+<div id="interpretation" class="section level3">
+<h3>Interpretation</h3>
+<p>Der <span class="math inline">\(p\)</span>-Wert ist unter 0.05, also ist der mittlere IQ der Ravenclaws signifikant verschieden von 100. Mehr gibt es an dieser Stelle eigentlich schon gar nicht zu sagen, der Einstichproben-<span class="math inline">\(t\)</span>-Test ist relativ einfach.</p>
+</div>
+<div id="berichten" class="section level3">
+<h3>Berichten</h3>
+<p>Will man diesen Unterschied berichten, dann kann man etwas schreiben wie:</p>
+<p>Ravenclaws mean IQ was <span class="math inline">\(121.2\)</span> (<span class="math inline">\(SD = 13.11\)</span>), which was significantly different from the test value 100, <span class="math inline">\(t(47) = 11.18, p &lt; .001\)</span>.</p>
+</div>
+</div>
+<div id="t-test-bei-unabhängigen-stichproben" class="section level2">
+<h2><span class="math inline">\(t\)</span>-Test bei unabhängigen Stichproben</h2>
+<p>Es wird spannend, denn nun betrachten wir die Rivalität der Häuser Griffyndor und Slytherin. Dem Haus Griffyndor werden Tapferkeit, Kühnheit und Ritterlichkeit zugeschrieben – dem Haus Slytherin, naja, eher nicht. Im Datensatz <code>chivalry.sav</code> sind die Ergebnisse eines Persönlichkeitstests zu finden, den alle Bewohner dieser zwei Häuser durchführten, und der die Variable “Ritterlichkeit” erfasst. Der Gesamtwert dieses Tests kann Werte zwischen 0 (keine Richtterlichkeit vorhanden) und 110 (nimmt den Kampf gegen Voldemort auf und empfängt den Tod als einen alten Freund) annehmen.</p>
+<pre class="r"><code>chivalry_data &lt;- read_spss(&quot;data/chivalry.sav&quot;)
+
+chivalry_data &lt;- chivalry_data %&gt;% mutate(house = as_factor(house))</code></pre>
+<p>Da wir wieder SPSS-Daten importieren, finden wir den merkwürdigen Datentyp <code>&lt;dbl+lbl&gt;</code>. Hier ist R nur mehr als freundlich zu uns, indem es uns beides, die Werte-Levels und -Labels gleichzeitig gibt. Für die Analysen benötigen wir jedoch nur die Labels als ordentliche Faktoren. Das beheben wir mit der Funktion <code>as_factor()</code> (siehe auch die Seite zum <a href="data-wrangling.html">Data Wrangling</a>).</p>
+<div id="voraussetzungen-2" class="section level3">
+<h3>Voraussetzungen</h3>
+<p>Auch hier überprüfen wir erst einmal die Voraussetzungen, bevor wir den Test durchführen.</p>
+<pre class="r"><code>chivalry_data %&gt;% 
+  group_by(house) %&gt;% 
+  skim()</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">Piped data</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">80</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">house</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="left">house</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">id</td>
+<td align="left">gryffindor</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">42</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">id</td>
+<td align="left">slytherin</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">38</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="left">house</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">chivalry</td>
+<td align="left">gryffindor</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">92.33</td>
+<td align="right">6.86</td>
+<td align="right">75.34</td>
+<td align="right">89.06</td>
+<td align="right">92.38</td>
+<td align="right">96.31</td>
+<td align="right">105.33</td>
+<td align="left">▂▂▇▆▃</td>
+</tr>
+<tr class="even">
+<td align="left">chivalry</td>
+<td align="left">slytherin</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">48.09</td>
+<td align="right">8.94</td>
+<td align="right">26.06</td>
+<td align="right">42.36</td>
+<td align="right">47.63</td>
+<td align="right">52.65</td>
+<td align="right">72.20</td>
+<td align="left">▁▅▇▂▁</td>
+</tr>
+</tbody>
+</table>
+<p><img src="t-tests_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Wir sehen einen eindeutigen Trend dahingehend, dass sich die Mitglieder Griffyndors als deutlicher ritterlicher einschätzen (<span class="math inline">\(M = 92.3, SD = 6.9\)</span>) als die Mitglieder der Hauses Slytherin (<span class="math inline">\(M = 48.1, SD = 8.94\)</span>). Auch in der Abbildung sehen wir diesen Unterschied deutlich. Die Boxplots zeigen uns insgesamt 4 Outlier, zwei in jedem Haus. Die könnte man bei Bedarf entfernen, wir belassen es jedoch dabei und fahren fort, auch weil die Varianz der Daten in beiden Häusern ähnlich zu sein scheint.</p>
+<p>Wer auf Tests zur Überprüfung der Voraussetzungen besteht (<a href="voraussetzungen.html">ein Vorgehen, von dem ich entschieden abrate</a>), der kann diese so durchführen.</p>
+<pre class="r"><code>chivalry_data %&gt;% 
+  group_by(house) %&gt;% 
+  shapiro_test(chivalry)</code></pre>
+<pre><code>## # A tibble: 2 x 4
+##   house      variable statistic     p
+##   &lt;fct&gt;      &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
+## 1 gryffindor chivalry     0.973 0.420
+## 2 slytherin  chivalry     0.980 0.711</code></pre>
+<pre class="r"><code>chivalry_data %&gt;% 
+  levene_test(chivalry ~ house)</code></pre>
+<pre><code>## # A tibble: 1 x 4
+##     df1   df2 statistic     p
+##   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1     1    78      2.11 0.151</code></pre>
+<p>Also auch anand der Tests können wir in diesem Falle festhalten, dass die Daten nicht signifikant von einer theoretischen Normalverteilung abweichen und die Varianzen in beiden Häusern auch nicht signifikant verschieden sind. Diese Ergebnisse heißen jedoch <em>nicht</em>, dass die Daten normalverteilt und die Varianzen homogen sind.</p>
+</div>
+<div id="durchführung-1" class="section level3">
+<h3>Durchführung</h3>
+<pre class="r"><code>chivalry_data %&gt;% 
+  t_test(chivalry ~ house)</code></pre>
+<pre><code>## # A tibble: 1 x 8
+##   .y.      group1     group2       n1    n2 statistic    df        p
+## * &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;     &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1 chivalry gryffindor slytherin    42    38      24.6  69.2 5.59e-36</code></pre>
+<p>Ja, die beiden Mitglieder der Häuser unterscheiden sich in ihrer selbst eingeschätzten Ritterlichkeit signifikant voneinander, da <span class="math inline">\(p &lt; 0.05\)</span> ist. Wer sich die Daten in einem anderen Statistikprogramm vorgenommen und mitgerechnet hat, vielleicht sogar direkt in SPSS, der wird feststellen, dass die Werte etwas von seinen abweichen. Das liegt daran, dass R standardmäßig gar nicht den traditionellen <span class="math inline">\(t\)</span>-Test (auch Student’s <span class="math inline">\(t\)</span>-Test genannt) berechnet, sondern den <strong>Welch-Test</strong>. Den kennen viele Psychologie-Studenten eigentlich als Alternative zum <span class="math inline">\(t\)</span>-Test, wenn die Voraussetzungen der Normalverteilung und Varianzhomogenität verletzt sind. Eigentlich sollte er jedoch standardmäßig durchgeführt werden, wie R es auch anbietet <span class="citation">(Rasch et al., <a href="#ref-Rasch.2011" role="doc-biblioref">2011</a>; Ruxton, <a href="#ref-Ruxton.2006" role="doc-biblioref">2006</a>)</span>. Wer dennoch unbedingt den “richtigen” <span class="math inline">\(t\)</span>-Test haben möchte, gibt einfach ein zusätzliches Argument an und schon stimmt wieder alles.</p>
+<pre class="r"><code>chivalry_data %&gt;% 
+  t_test(chivalry ~ house, var.equal = TRUE)</code></pre>
+<pre><code>## # A tibble: 1 x 8
+##   .y.      group1     group2       n1    n2 statistic    df        p
+## * &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;     &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1 chivalry gryffindor slytherin    42    38      25.0    78 6.13e-39</code></pre>
+<p>Bei Gruppenunterschieden ist nicht nur interessant, ob sich diese statistisch signifikant voneinander unterscheiden; vor allem interessiert uns die Größe des Effekts, also die Effektstärke. Auch diese lässt sich einfach berechnen. Hier sollte man immer das Argument <code>hedges.correction = TRUE</code> angeben, da Cohens <span class="math inline">\(d\)</span> von Haus aus positiv verzerrt ist <span class="citation">(Hedges &amp; Olkin, <a href="#ref-Hedges.1985" role="doc-biblioref">1985</a>)</span>.</p>
+<pre class="r"><code>chivalry_data %&gt;% 
+  cohens_d(chivalry ~ house, hedges.correction = TRUE)</code></pre>
+<pre><code>## # A tibble: 1 x 7
+##   .y.      group1     group2    effsize    n1    n2 magnitude
+## * &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;ord&gt;    
+## 1 chivalry gryffindor slytherin    5.50    42    38 large</code></pre>
+</div>
+<div id="berichten-1" class="section level3">
+<h3>Berichten</h3>
+<p>Members of the Hogwarts house “Gryffindor” yielded greater greater scores on a test estimating chivalry as opposed to members of house “Slytherin”. The mean difference of 44.2 points was statistically significant, <span class="math inline">\(t(69.2) = 24.6, p &lt; .001\)</span> with an effect size of Hedges’ <span class="math inline">\(g = 5.50\)</span>, indicating a huge effect.</p>
+</div>
+</div>
+</div>
+<div id="robuste-alternativen" class="section level1">
+<h1>Robuste Alternativen</h1>
+<p>Folgt.</p>
+</div>
+<div id="aus-der-praxis" class="section level1">
+<h1>Aus der Praxis</h1>
+<p>Praxis-Beispiele folgen.</p>
+</div>
+<div id="literatur" class="section level1 unnumbered">
+<h1>Literatur</h1>
+<div id="refs" class="references">
+<div id="ref-Hedges.1985">
+<p>Hedges, L. V., &amp; Olkin, I. (1985). <em>Statistical Methods for Meta-Analysis</em>. Academic Press.</p>
+</div>
+<div id="ref-Rasch.2011">
+<p>Rasch, D., Kubinger, K. D., &amp; Moder, K. (2011). The two-sample t test: pre-testing its assumptions does not pay off. <em>Statistical Papers</em>, <em>52</em>(1), 219–231. <a href="https://doi.org/10.1007/s00362-009-0224-x">https://doi.org/10.1007/s00362-009-0224-x</a></p>
+</div>
+<div id="ref-Ruxton.2006">
+<p>Ruxton, G. D. (2006). The unequal variance t-test is an underused alternative to Student’s t-test and the Mann–Whitney U test. <em>Behavioral Ecology</em>, <em>17</em>(4), 688–690. <a href="https://doi.org/10.1093/beheco/ark016">https://doi.org/10.1093/beheco/ark016</a></p>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

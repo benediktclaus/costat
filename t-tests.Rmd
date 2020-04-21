@@ -1,0 +1,189 @@
+---
+title: "$t$-Tests"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(fig.align = "center")
+```
+
+
+# Einleitung
+Der $t$-Test, oder besser gesagt die $t$-Tests, sind eine kleine Gruppe von statistischen Signifikanztests, mit denen man Gruppenunterschiede untersuchen kann. Meistens unterscheidet man zwischen dem
+
+* Einstichproben-$t$-Test, dem
+* $t$-Test mit unabhängigen Stichproben und dem
+* $t$-Test mit abhängigen (oder verbundenen) Stichproben.
+
+Na super, drei Tests -- aber ich wollte doch nur einen Test machen! Welchen nehme ich denn jetzt?!
+
+Den Einstichproben-$t$-Test benutzt man, wenn man eine Aussage darüber treffen will, ob sich eine Population im Mittelwert von einem vorgegebenen Wert unterscheidet. Stell Dir vor, Du hast zufällig die Größe von 80 Leuten in der Dortmunder Innenstadt gemessen, die im Schnitt 181,2 cm griß sind. Nun möchtest Du wissen, ob sich diese mittlere Größe von Dortmundern von einer anderen Population signifikant unterscheidet. Amerikaner sind im [Durchschnitt 175,4 cm](https://www.verywellfit.com/average-height-for-a-man-statistics-2632137) groß. Ist dieser Unterschied jetzt signifikant? Das kannst du mit einem Einstichproben-$t$-Test überprüfen, auch wenn man diese Fragestellung "in der freien Wildbahn" eigentlich nicht findet.
+
+Der $t$-Test mit unabhängigen Stichproben ist in der Regel schon etwas anwendungsnäher, denn bei diesem wird untersucht, ob sich zwei Gruppen in ihrem Mittelwert unterscheiden. Beispielsweise möchtest Du untersuchen, ob sich die Kontrollgruppe am Ende einer Interventions-Studie signifikant von Deiner Interventionsgruppe unterscheidet. Im Gegensatz zum vorherigen Test, werden hier beide Mittelwerte erst einmal anhand der Probanden in den Gruppen bestimmt. Sollen also zwei Gruppen anhand einer kontinuierlichen Variable miteinander verglichen werden, ist das ein valider Ansatz. Liegen mehrere Gruppen vor, deren Mittelwerte Du anhand einer Variable auf signifikante Unterschiede vergleichen möchtest, dann solltest du über ein anderes Verfahren, wie die ANOVA nachdenken.
+
+Der $t$-Test für abhängige, oder verbundene, Stichproben kommt zutragen, wenn die Unabhängigkeitsannahme (siehe [Voraussetzungen im GLM](voraussetzungen.html)) verletzt ist. Ein einfaches Beispiel wärst Du, der/die eine tolle Therapie für Patienten mit depressiver Störung entwickelt hat. Nun hast Du ein paar Patienten gefunden, die deine Therapie ausprobieren wollen und erhebst vor und nach der Therapie die mittlere "Depressivität". Im Anschluss daran möchtest Du jetzt herausfinden, ob sich die Werte über die Zeit signifikant verbessert haben. Pro Proband hast du einen Prä- und einen Post-Wert (= vor und nach der Therapie), d.h., dass die Unabhängigkeitsannahme verletzt ist, weil mehrere Datenpunkte von einer Person kommen. Kein Problem, hier nutzt Du einfach den $t$-Test für verbundene Stichproben
+
+Die Daten zum fleißigen Mitrechnen findest Du wie immer im [Git-Repository](https://github.com/benediktclaus/costat/tree/master/data).
+
+# Voraussetzungen
+Es gelten die üblichen [Voraussetzungen im GLM](voraussetzungen.html).
+
+# Pakete
+Alle Tests können mit unseren Standard-Paketen durchgeführt werden. Mit den folgenden Befehlen sind wir startklar.
+```{r message=FALSE}
+library(tidyverse)
+library(haven)
+library(rstatix)
+library(skimr)
+```
+
+```{r echo=FALSE}
+library(patchwork)
+```
+
+
+# Syntax
+Die auf dieser Seite vorgestellten Tests werden alle durch die kreativ benannte Funktion `t_test()` abgedeckt. Wenn alle Daten im long format sind, dann sehen die Befehle wie folgt aus:
+```{r eval=FALSE}
+# Einstichproben-t-Test
+t_test(data = <DATA>, formula = <DEPENDENT-VARIABLE> ~ 1, mu = <TEST-VALUE>)
+```
+
+Die Formelschreibweise kennen wir schon von der linearen Regression, die Variable links der Tilde (`~`) wird durch die Variablen rechts der Tilde vorhergesagt. Da wir die abhängige Variable im ersten Fall jedoch nur durch einen einzigen Wert, nämlich dem Testwert, erklären wollen, steht dort eine `1`. Mit `mu` geben wir den Wert an, gegen den getestet werden soll.
+
+```{r eval=FALSE}
+# t-Test bei unabhängigen Stichproben
+t_test(data = <DATA>, formula = <DEP-VARIABLE> ~ <INDEP-VARIABLE>)
+
+# t-Test bei verbundenen Stichproben
+t_test(data = <DATA>, formula = <DEP-VARIABLE> ~ <INDEP-VARIABLE>, paired = TRUE)
+```
+
+Diese Befehle sollten selbsterklärend sein, die abhängige Variable wird durch die unabhängige Variable (Gruppenzugehörigkeit oder Messzeitpunkt) vorhergesagt. Bei den abhängigen Stichproben, geben wir mit `paired = TRUE` lediglich noch weiter an, dass wir gepaarte, also abhängige Stichproben haben.
+
+# Beispiele
+![](images/hogwarts-express_r.jpg)
+
+Begeben wir uns in die Welt der Magie, Muggel und Zauberstäbe; tauchen wir ein in die Welt von Harry Potter. Auch in Hogwarts gibt es viel zu entdecken und statistisch zu entschlüsseln.
+
+## Einstichproben-$t$-Test
+Vielleicht kennst Du die vier Häuser von Hogwarts: Gryffindor, Hufflepuff, Ravenclaw und Slytherin. Jedem dieser Häuser werden verschiedene Eigenschaften nachgesagt, und jeder Schüler wird ausgehend von seinen Eigenschaften durch den sprechenden Hut einem der Häuser zugeteilt. Genau diese Eigenschaften der Schüler in den Häusern können wir uns nun einmal anschauen.
+
+Das Haus Ravenclaw soll durch ausgesprochene Intelligenz punkten. Nun gut, gehen wir dem einmal auf den Grund. Der Intelligenzquotient (IQ) ist so normiert, dass sein Mittelwert normalerweise 100 beträgt und die Standardbweichung 15. Wir haben IQ-Daten von Mitgliedern des Hauses Ravenclaws im Datensatz `ravenclaw.sav`.
+```{r}
+ravenclaw <- read_spss("data/ravenclav.sav")
+```
+
+### Voraussetzungen
+Mit `skim()` und ggplot2 können wir uns die Daten etwas genauer angucken. Wichtig ist, dass die Voraussetzungen erfüllt sind.
+
+```{r}
+skim(ravenclaw)
+```
+
+```{r echo=FALSE, fig.width=4}
+ggplot(ravenclaw, aes(y = intelligence)) +
+  geom_boxplot()
+```
+
+Aus der Übersicht können wir entnehmen, dass wir erst einmal Daten von 48 Ravenclaws haben. Der IQ (von mir dreister- und fälschlicherweise als `intelligence` betitelt) der Stichprobe ist im Mittel bei 121 (sowohl Mittelwert als auch Median) -- nicht schlecht! Die Standardabweichung beträgt 13.1, der niedrigste Wert 88.1 und der höchste 150.3. In Ravenclaw scheinen also ganz schöne Brains am Werke zu sein.
+
+### Durchführung
+Wir haben nun eine gute Idee davon, in welche Richtung unsere Ergebnisse gehen könnten, aber unterscheidet sich dieser Wert jetzt vom Bevölkerungsdurchschnitt?
+
+```{r}
+ravenclaw %>% 
+  t_test(intelligence ~ 1, mu = 100)
+```
+
+### Interpretation
+Der $p$-Wert ist unter 0.05, also ist der mittlere IQ der Ravenclaws signifikant verschieden von 100. Mehr gibt es an dieser Stelle eigentlich schon gar nicht zu sagen, der Einstichproben-$t$-Test ist relativ einfach.
+
+### Berichten
+Will man diesen Unterschied berichten, dann kann man etwas schreiben wie: 
+
+Ravenclaws mean IQ was $121.2$ ($SD = 13.11$), which was significantly different from the test value 100, $t(47) = 11.18, p < .001$.
+
+## $t$-Test bei unabhängigen Stichproben
+
+Es wird spannend, denn nun betrachten wir die Rivalität der Häuser Griffyndor und Slytherin. Dem Haus Griffyndor werden Tapferkeit, Kühnheit und Ritterlichkeit zugeschrieben -- dem Haus Slytherin, naja, eher nicht. Im Datensatz `chivalry.sav` sind die Ergebnisse eines Persönlichkeitstests zu finden, den alle Bewohner dieser zwei Häuser durchführten, und der die Variable "Ritterlichkeit" erfasst. Der Gesamtwert dieses Tests kann Werte zwischen 0 (keine Richtterlichkeit vorhanden) und 110 (nimmt den Kampf gegen Voldemort auf und empfängt den Tod als einen alten Freund) annehmen.
+```{r}
+chivalry_data <- read_spss("data/chivalry.sav")
+
+chivalry_data <- chivalry_data %>% mutate(house = as_factor(house))
+```
+
+Da wir wieder SPSS-Daten importieren, finden wir den merkwürdigen Datentyp `<dbl+lbl>`. Hier ist R nur mehr als freundlich zu uns, indem es uns beides, die Werte-Levels und -Labels gleichzeitig gibt. Für die Analysen benötigen wir jedoch nur die Labels als ordentliche Faktoren. Das beheben wir mit der Funktion `as_factor()` (siehe auch die Seite zum [Data Wrangling](data-wrangling.html)).
+
+### Voraussetzungen
+Auch hier überprüfen wir erst einmal die Voraussetzungen, bevor wir den Test durchführen.
+
+```{r}
+chivalry_data %>% 
+  group_by(house) %>% 
+  skim()
+```
+
+```{r echo=FALSE, message=FALSE}
+chivalry_hist <- ggplot(chivalry_data, aes(x = chivalry, fill = house)) +
+  geom_density()
+
+chivalry_qq <- ggplot(chivalry_data, aes(sample = chivalry)) +
+  stat_qq() +
+  stat_qq_line() +
+  facet_wrap(~ house, scales = "free")
+
+chivalry_box <- ggplot(chivalry_data, aes(x = house, y = chivalry)) +
+  geom_boxplot() +
+  expand_limits(y = 0)
+
+chivalry_hist / (chivalry_qq + chivalry_box)
+```
+
+Wir sehen einen eindeutigen Trend dahingehend, dass sich die Mitglieder Griffyndors als deutlicher ritterlicher einschätzen ($M = 92.3, SD = 6.9$) als die Mitglieder der Hauses Slytherin ($M = 48.1, SD = 8.94$). Auch in der Abbildung sehen wir diesen Unterschied deutlich. Die Boxplots zeigen uns insgesamt 4 Outlier, zwei in jedem Haus. Die könnte man bei Bedarf entfernen, wir belassen es jedoch dabei und fahren fort, auch weil die Varianz der Daten in beiden Häusern ähnlich zu sein scheint.
+
+Wer auf Tests zur Überprüfung der Voraussetzungen besteht ([ein Vorgehen, von dem ich entschieden abrate](voraussetzungen.html)), der kann diese so durchführen.
+```{r}
+chivalry_data %>% 
+  group_by(house) %>% 
+  shapiro_test(chivalry)
+
+chivalry_data %>% 
+  levene_test(chivalry ~ house)
+```
+
+Also auch anand der Tests können wir in diesem Falle festhalten, dass die Daten nicht signifikant von einer theoretischen Normalverteilung abweichen und die Varianzen in beiden Häusern auch nicht signifikant verschieden sind. Diese Ergebnisse heißen jedoch *nicht*, dass die Daten normalverteilt und die Varianzen homogen sind.
+
+### Durchführung
+```{r}
+chivalry_data %>% 
+  t_test(chivalry ~ house)
+```
+
+Ja, die beiden Mitglieder der Häuser unterscheiden sich in ihrer selbst eingeschätzten Ritterlichkeit signifikant voneinander, da $p < 0.05$ ist. Wer sich die Daten in einem anderen Statistikprogramm vorgenommen und mitgerechnet hat, vielleicht sogar direkt in SPSS, der wird feststellen, dass die Werte etwas von seinen abweichen. Das liegt daran, dass R standardmäßig gar nicht den traditionellen $t$-Test (auch Student's $t$-Test genannt) berechnet, sondern den **Welch-Test**. Den kennen viele Psychologie-Studenten eigentlich als Alternative zum $t$-Test, wenn die Voraussetzungen der Normalverteilung und Varianzhomogenität verletzt sind. Eigentlich sollte er jedoch standardmäßig durchgeführt werden, wie R es auch anbietet [@Rasch.2011; @Ruxton.2006]. Wer dennoch unbedingt den "richtigen" $t$-Test haben möchte, gibt einfach ein zusätzliches Argument an und schon stimmt wieder alles.
+```{r}
+chivalry_data %>% 
+  t_test(chivalry ~ house, var.equal = TRUE)
+```
+
+Bei Gruppenunterschieden ist nicht nur interessant, ob sich diese statistisch signifikant voneinander unterscheiden; vor allem interessiert uns die Größe des Effekts, also die Effektstärke. Auch diese lässt sich einfach berechnen. Hier sollte man immer das Argument `hedges.correction = TRUE` angeben, da Cohens $d$ von Haus aus  positiv verzerrt ist [@Hedges.1985].
+```{r}
+chivalry_data %>% 
+  cohens_d(chivalry ~ house, hedges.correction = TRUE)
+```
+
+
+### Berichten
+Members of the Hogwarts house "Gryffindor" yielded greater greater scores on a test estimating chivalry as opposed to members of house "Slytherin". The mean difference of 44.2 points was statistically significant, $t(69.2) = 24.6, p < .001$ with an effect size of Hedges' $g = 5.50$, indicating a huge effect.
+
+# Robuste Alternativen
+Folgt.
+
+# Aus der Praxis
+Praxis-Beispiele folgen.
+
+# Literatur

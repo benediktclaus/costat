@@ -19,6 +19,10 @@ navbar:
           href: pakete.html
         - text: "Data Wrangling"
           href: data-wrangling.html
+    - text: Mittelwerte vergleichen
+      menu:
+       - text: "t-Tests"
+         href: t-tests.html
   right:
     - icon: fa-question
       menu:
