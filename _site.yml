@@ -1,6 +1,7 @@
 name: "costat"
 output_dir: "docs"
-include: ["content/*"]
+editor_options: 
+  chunk_output_type: console
 navbar:
   title: "Chamber of Statistics"
   left:
@@ -21,8 +22,18 @@ navbar:
           href: data-wrangling.html
     - text: Mittelwerte vergleichen
       menu:
+       - text: "Überblick"
+         href: mittelwerte-vergleichen.html
+       - text: "--------"
        - text: "t-Tests"
-         href: t-tests.html
+       - text: "Bei einer Stichprobe"
+         href: t-test-einstichprobe.html
+       - text: "Bei unabhängigen Stichproben"
+         href: t-test-unabhaengig.html
+       - text: "Bei abhängigen Stichproben"
+         href: t-test-abhaengig.html
+       - text: "--------"
+       - text: "ANOVAs"
   right:
     - icon: fa-question
       menu:

@@ -11,7 +11,7 @@
 
 
 
-<title>Chamber of Statistics</title>
+<title>Überblick</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,6 +19,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -250,6 +253,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -257,6 +323,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -360,29 +436,39 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Chamber of Statistics</h1>
+<h1 class="title toc-ignore">Überblick</h1>
 
 </div>
 
 
-<p><img src="images/spooky_r.jpg" /></p>
-<p>Willkommen in der Chamber of Statistics. Muhahaha. Sie ist mein Beitrag zur Ausweitung der wissenschaftich fundierten Anwendung statistischer Methoden, vor allem im Bereich der Psychologie. Damit betreten wir eine mysteriöse und dunkle Kammer, vollgestopt mit <em>t</em>-Tests, ANOVAS, MLMs, Bootstrapping, Regressionen und noch so vielem mehr.</p>
-<div id="worum-gehts-hier" class="section level1">
-<h1>Worum geht’s hier?</h1>
-<p>Auf dieser Website werden viele standardmäßige und spezielle Methoden vorgestellt. Wir widmen uns zusammen der Frage, bei welcher Fragestellung welche Methode sinnvoll ist, welche Voraussetzungen es dabei zu beachten gilt, wie man diese Methoden dann konkret und anhand von Beispielen anwendet und wie man sie interpretiert. Wir gucken uns keine Formeln an (zumindest nur sehr wenige)! Stattdessen gehe ich davon aus, dass Du hier Hilfe in der Anwendung suchst.</p>
-<p>Nach einem kurzen Blick auf die Themen-Seiten sollte klar werden, dass ich vor allem mit <strong>R</strong> arbeite – ein Buchstabe, doch belegt mit so vielen aversiven Gefühlen. Davor muss man jedoch keine Angst haben! Ja, wenn man im Studium mit IBM SPSS groß geworden ist, wovon es zwar alle paar Jahre wieder eine neue Version gibt und doch immer alles merkwürdig gleich aussieht, dann ist das eine andere Form der Arbeit. Meiner Meinung nach überwiegt der Nutzen dabei jedoch deutlich die Kosten. Aber mache Dir am besten selbst ein Bild.</p>
+<div id="t-tests" class="section level1">
+<h1><span class="math inline">\(t\)</span>-Tests</h1>
+<p>Der <span class="math inline">\(t\)</span>-Test, oder besser gesagt die <span class="math inline">\(t\)</span>-Tests, sind eine kleine Gruppe von statistischen Signifikanztests, mit denen man Gruppenunterschiede untersuchen kann. Meistens unterscheidet man zwischen dem</p>
+<ul>
+<li>Einstichproben-<span class="math inline">\(t\)</span>-Test, dem</li>
+<li><span class="math inline">\(t\)</span>-Test mit unabhängigen Stichproben und dem</li>
+<li><span class="math inline">\(t\)</span>-Test mit abhängigen (oder verbundenen) Stichproben.</li>
+</ul>
+<p>Na super, drei Tests – aber ich wollte doch nur einen Test machen! Welchen nehme ich denn jetzt?!</p>
+<p>Den Einstichproben-<span class="math inline">\(t\)</span>-Test benutzt man, wenn man eine Aussage darüber treffen will, ob sich eine Population im Mittelwert von einem bereits bekannten Wert unterscheidet. Stell Dir vor, Du hast zufällig die Größe von 80 Leuten in der Dortmunder Innenstadt gemessen, die im Schnitt 181 cm groß sind. Nun möchtest Du wissen, ob sich diese mittlere Größe von Dortmundern von beispielweise 170 cm signifikant unterscheidet. Das kannst du mit einem Einstichproben-<span class="math inline">\(t\)</span>-Test überprüfen (auch wenn man diese Fragestellung “in der freien Wildbahn” eigentlich nicht findet).<br />
+<a href="t-test-einstichprobe.html">Hier geht’s zur Anleitung</a>.</p>
+<p>Der <span class="math inline">\(t\)</span>-Test mit unabhängigen Stichproben ist in der Regel schon etwas anwendungsnäher, denn bei diesem wird untersucht, ob sich <strong>zwei Gruppen</strong> in ihrem Mittelwert unterscheiden. Beispielsweise möchtest Du untersuchen, ob sich die Kontrollgruppe am Ende einer Interventions-Studie signifikant von Deiner Interventionsgruppe unterscheidet. Im Gegensatz zum vorherigen Test, werden hier beide Mittelwerte erst einmal anhand der Probanden in den Gruppen bestimmt. Sollen also zwei Gruppen anhand einer kontinuierlichen Variable miteinander verglichen werden, ist das ein valider Ansatz. Liegen mehrere Gruppen vor, deren Mittelwerte Du anhand einer Variable auf signifikante Unterschiede vergleichen möchtest, dann solltest du über ein anderes Verfahren, wie die ANOVA (s.u.) nachdenken.<br />
+<a href="t-test-unabhaengig.html">Hier geht’s zur Anleitung</a>.</p>
+<p>Der <span class="math inline">\(t\)</span>-Test für abhängige, oder verbundene, Stichproben kommt zutragen, wenn die Unabhängigkeitsannahme (siehe <a href="voraussetzungen.html">Voraussetzungen im GLM</a>) verletzt ist. Ein einfaches Beispiel wärst Du, der/die eine tolle Therapie für Patienten mit depressiver Störung entwickelt hat. Nun hast Du ein paar Patienten gefunden, die deine Therapie ausprobieren wollen und erhebst vor und nach der Therapie die mittlere “Depressivität”. Im Anschluss daran möchtest Du jetzt herausfinden, ob sich die Werte über die Zeit signifikant verbessert haben. Pro Proband hast du einen Prä- und einen Post-Wert (= vor und nach der Therapie). Das bedeutet jedoch, dass die Unabhängigkeitsannahme verletzt ist, weil mehrere Datenpunkte von einer Person kommen. Kein Problem, bei <strong>zwei Messungen</strong> nutzt Du einfach den <span class="math inline">\(t\)</span>-Test für verbundene Stichproben.<br />
+<a href="t-test-ahaengig.html">Hier geht’s zur Anleitung</a></p>
+<p>Die <strong>Daten zum fleißigen Mitrechnen</strong> findest Du wie immer im <a href="https://github.com/benediktclaus/costat/tree/master/data">Git-Repository</a>.</p>
 </div>
-<div id="wer-sollte-eintreten" class="section level1">
-<h1>Wer sollte eintreten?</h1>
-<p>Stehen Forschungsprojekte, Haus-, Bachelor- oder Masterarbeiten auf Deinem Abgabe-Kalender und zittern Deine Hände schon beim Gedanken an die dunkle Kammer der Statistik? Dann bist Du hier genau richtig. Wir gehen jedes Verfahren Schritt für Schritt anhand von konkreten Beispielen durch. Wir ziehen hier keine drei Kugeln aus einer Urne, werfen danach Münzen und ergötzen uns am Anblick von Spielkarten.</p>
+<div id="anovas" class="section level1">
+<h1>ANOVAs</h1>
 </div>
-<div id="gibts-noch-mehr" class="section level1">
-<h1>Gibt’s noch mehr?</h1>
-<p>Ja! Diese Website wird über ein <a href="https://github.com/benediktclaus/costat.git">GitHub-Repository</a> gespeist. Dort findest du alle Ressourcen, auch die Beispieldaten, die Du zum Mitmachen brauchst. Dort können auch Fehler gemeldet werden, insofern sich welche eingeschlichen haben.</p>
+<div id="literatur" class="section level1">
+<h1>Literatur</h1>
 </div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -415,6 +501,32 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

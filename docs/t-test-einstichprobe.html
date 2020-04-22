@@ -11,7 +11,7 @@
 
 
 
-<title>Pakete</title>
+<title>t-Test bei einer Stichprobe</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -436,65 +436,63 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Pakete</h1>
+<h1 class="title toc-ignore"><span class="math inline">\(t\)</span>-Test bei einer Stichprobe</h1>
 
 </div>
 
 
-<p><img src="images/package_r.jpg" /></p>
-<p>Um uns die Arbeit in R nicht schwerer als nötig zu machen, nutzen wir einige Pakete, die aufeinander abgestimmt sind und tolle Funktionen bieten. Alle R-Pakete sind frei verfügbar und können mit dem Befehl <code>install.packages("&lt;PACKAGE&gt;")</code> installiert werden. Um sie in einer R-Session zu nutzen, müssen sie mit dem Befehl <code>library(&lt;PACKAGE&gt;)</code> “angehängt” werden.</p>
-<div id="tidyverse" class="section level1">
-<h1>tidyverse</h1>
-<p><img src="https://tidyverse.tidyverse.org/articles/tidyverse-logo.png" width="30%" style="display: block; margin: auto;" /></p>
-<p>Das <a href="https://www.tidyverse.org/"><strong>Tidyverse</strong></a> <span class="citation">(Wickham et al., <a href="#ref-Wickham.2019b" role="doc-biblioref">2019</a>)</span> ist ein Verbund von Paketen, der das Arbeiten in R auf das angenehmste erleichtert. Diese sind aufeinander abgestimmt, benutzen einheitliche Syntaxen und beheben einige Marotten von base R.</p>
-<p>Nach jeder frischen Installation von R sollte man somit diesen Befehl ausführen:</p>
-<pre class="r"><code>install.packages(&quot;tidyverse&quot;)</code></pre>
-<p>Das Tidyverse ist unter anderem um die Idee “sauberer” ( = tidy) Daten entstanden. Was genau tidy data ist, wird beim data wrangling deutlich. Nur so viel vorab: tidy data unterscheidet sich von der “herkömmlichen” Darstellung von Daten, wie etwa in SPSS.</p>
-<p>Das Tidyverse bietet nun alle Instrumente, um alle Schritte dieses Workflows zu durchlaufen: <img src="https://tidyverse.tidyverse.org/articles/data-science.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="images/hogwarts-express_r.jpg" /></p>
+<p>Begeben wir uns in die Welt der Magie, Muggel und Zauberstäbe; tauchen wir ein in die Welt von Harry Potter <span class="citation">(Rowling, <a href="#ref-Rowling.1997" role="doc-biblioref">1997</a>)</span>. Auch in Hogwarts gibt es viel zu entdecken und statistisch zu entschlüsseln. Vielleicht kennst Du die vier Häuser von Hogwarts: Gryffindor, Hufflepuff, Ravenclaw und Slytherin. Jedem dieser Häuser werden verschiedene Eigenschaften nachgesagt, und jeder Schüler wird ausgehend von seinen Eigenschaften durch den sprechenden Hut einem der Häuser zugeteilt. Genau diese Eigenschaften der Schüler in den Häusern können wir uns nun einmal anschauen.</p>
+<div id="pakete" class="section level1">
+<h1>Pakete</h1>
+<p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien, <code>rstatix</code> für statistische Analysen und <code>skimr</code> für schnelle deskriptive Statistiken.</p>
+<pre class="r"><code>library(tidyverse)
+library(haven)
+library(rstatix)
+library(skimr)</code></pre>
 </div>
-<div id="rstatix" class="section level1">
-<h1>rstatix</h1>
-<p>Eine Ausnahme sind die Modelle, also unsere statistischen Tests. Für diese gibt es in R hunderte Pakete. In R gibt es viele Wege zum Ziel, jedoch einfachere und schwierigere. Einer der einfachsten Wege, um statistische Standard-Verfahren einzusetzen, und dann noch abgestimmt auf das Arbeiten im Tidyverse, ist das Paket <code>rstatix</code> <span class="citation">(Kassambara, <a href="#ref-Kassambara.2020" role="doc-biblioref">2020</a>)</span>. Installiert wird es, wie alle anderen Pakete mit:</p>
-<pre class="r"><code>install.packages(&quot;rstatix&quot;)</code></pre>
-</div>
-<div id="janitor" class="section level1">
-<h1>janitor</h1>
-<p>Den Hausmeister, also das Paket <code>janitor</code> <span class="citation">(Firke, <a href="#ref-Firke.2020" role="doc-biblioref">2020</a>)</span>, wird hauptsächlich zur Bereinigung von Variablennamen genutzt und formatiert diese einheitlich im “snake case”-Format (siehe auch die Informationen zum <a href="stil.html">Stil</a>). Auch <code>janitor</code> ist im Tidyverse-Framework zuhause:</p>
-<pre class="r"><code># Aus unsauberen Variablen-Namen...
-unclean_names &lt;- tibble(
-  &quot;First name&quot; = &quot;x&quot;,
-  &quot;LastName&quot; = &quot;y&quot;,
-  &quot;DOB&quot; = &quot;z&quot;,
-  &quot;BDI_1?&quot; = 1,
-  &quot;BDI_2&quot; = 2,
-  &quot;bdi_3&quot; = 3
-)
+<div id="beispiel" class="section level1">
+<h1>Beispiel</h1>
+<p>Das Haus Ravenclaw soll durch ausgesprochene Intelligenz punkten. Nun gut, gehen wir dem einmal auf den Grund. Der Intelligenzquotient (IQ) ist so normiert, dass sein Mittelwert normalerweise 100 beträgt und die Standardbweichung 15. Wir haben IQ-Daten von Mitgliedern des Hauses Ravenclaws im Datensatz <code>ravenclaw.sav</code>.</p>
+<pre class="r"><code>ravenclaw &lt;- read_spss(&quot;data/ravenclav.sav&quot;)
 
-# ... werden saubere, einheitliche
-clean_names(unclean_names)</code></pre>
-<pre><code>## # A tibble: 1 x 6
-##   first_name last_name dob   bdi_1 bdi_2 bdi_3
-##   &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 x          y         z         1     2     3</code></pre>
+ravenclaw</code></pre>
+<pre><code>## # A tibble: 48 x 2
+##    id    intelligence
+##    &lt;chr&gt;        &lt;dbl&gt;
+##  1 1              125
+##  2 2               88
+##  3 3              124
+##  4 4              125
+##  5 5              102
+##  6 6              119
+##  7 7              114
+##  8 8              130
+##  9 9              108
+## 10 10             130
+## # ... with 38 more rows</code></pre>
+<div id="voraussetzungen" class="section level2">
+<h2>Voraussetzungen</h2>
+<p>Es gelten die üblichen <a href="voraussetzungen.html">Voraussetzungen des GLM</a></p>
 </div>
-<div id="skimr" class="section level1">
-<h1>skimr</h1>
-<p>Mit <code>skimr</code> <span class="citation">(Waring et al., <a href="#ref-Waring.2020" role="doc-biblioref">2020</a>)</span> können wir uns auf einfache Weise umfangreiche deskriptive Statistiken ausgeben lassen. Für den Datensatz <code>mtcars</code> sieht das beispielwesie so aus:</p>
-<pre class="r"><code>skim(mtcars)</code></pre>
+<div id="eda" class="section level2">
+<h2>EDA</h2>
+<p>Mit <code>skim()</code> und ggplot2 können wir uns die Daten etwas genauer angucken.</p>
+<pre class="r"><code>skim(ravenclaw)</code></pre>
 <table>
 <caption>Data summary</caption>
 <tbody>
 <tr class="odd">
 <td align="left">Name</td>
-<td align="left">mtcars</td>
+<td align="left">ravenclaw</td>
 </tr>
 <tr class="even">
 <td align="left">Number of rows</td>
-<td align="left">32</td>
+<td align="left">48</td>
 </tr>
 <tr class="odd">
 <td align="left">Number of columns</td>
-<td align="left">11</td>
+<td align="left">2</td>
 </tr>
 <tr class="even">
 <td align="left">_______________________</td>
@@ -505,16 +503,47 @@ clean_names(unclean_names)</code></pre>
 <td align="left"></td>
 </tr>
 <tr class="even">
-<td align="left">numeric</td>
-<td align="left">11</td>
+<td align="left">character</td>
+<td align="left">1</td>
 </tr>
 <tr class="odd">
+<td align="left">numeric</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
 <td align="left">________________________</td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Group variables</td>
 <td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">id</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">48</td>
+<td align="right">0</td>
 </tr>
 </tbody>
 </table>
@@ -537,166 +566,58 @@ clean_names(unclean_names)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">mpg</td>
+<td align="left">intelligence</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">20.09</td>
-<td align="right">6.03</td>
-<td align="right">10.40</td>
-<td align="right">15.43</td>
-<td align="right">19.20</td>
-<td align="right">22.80</td>
-<td align="right">33.90</td>
-<td align="left">▃▇▅▁▂</td>
-</tr>
-<tr class="even">
-<td align="left">cyl</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">6.19</td>
-<td align="right">1.79</td>
-<td align="right">4.00</td>
-<td align="right">4.00</td>
-<td align="right">6.00</td>
-<td align="right">8.00</td>
-<td align="right">8.00</td>
-<td align="left">▆▁▃▁▇</td>
-</tr>
-<tr class="odd">
-<td align="left">disp</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">230.72</td>
-<td align="right">123.94</td>
-<td align="right">71.10</td>
-<td align="right">120.83</td>
-<td align="right">196.30</td>
-<td align="right">326.00</td>
-<td align="right">472.00</td>
-<td align="left">▇▃▃▃▂</td>
-</tr>
-<tr class="even">
-<td align="left">hp</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">146.69</td>
-<td align="right">68.56</td>
-<td align="right">52.00</td>
-<td align="right">96.50</td>
-<td align="right">123.00</td>
-<td align="right">180.00</td>
-<td align="right">335.00</td>
-<td align="left">▇▇▆▃▁</td>
-</tr>
-<tr class="odd">
-<td align="left">drat</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">3.60</td>
-<td align="right">0.53</td>
-<td align="right">2.76</td>
-<td align="right">3.08</td>
-<td align="right">3.70</td>
-<td align="right">3.92</td>
-<td align="right">4.93</td>
-<td align="left">▇▃▇▅▁</td>
-</tr>
-<tr class="even">
-<td align="left">wt</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">3.22</td>
-<td align="right">0.98</td>
-<td align="right">1.51</td>
-<td align="right">2.58</td>
-<td align="right">3.33</td>
-<td align="right">3.61</td>
-<td align="right">5.42</td>
-<td align="left">▃▃▇▁▂</td>
-</tr>
-<tr class="odd">
-<td align="left">qsec</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">17.85</td>
-<td align="right">1.79</td>
-<td align="right">14.50</td>
-<td align="right">16.89</td>
-<td align="right">17.71</td>
-<td align="right">18.90</td>
-<td align="right">22.90</td>
-<td align="left">▃▇▇▂▁</td>
-</tr>
-<tr class="even">
-<td align="left">vs</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0.44</td>
-<td align="right">0.50</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
-<td align="right">1.00</td>
-<td align="right">1.00</td>
-<td align="left">▇▁▁▁▆</td>
-</tr>
-<tr class="odd">
-<td align="left">am</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0.41</td>
-<td align="right">0.50</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
-<td align="right">1.00</td>
-<td align="right">1.00</td>
-<td align="left">▇▁▁▁▆</td>
-</tr>
-<tr class="even">
-<td align="left">gear</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">3.69</td>
-<td align="right">0.74</td>
-<td align="right">3.00</td>
-<td align="right">3.00</td>
-<td align="right">4.00</td>
-<td align="right">4.00</td>
-<td align="right">5.00</td>
-<td align="left">▇▁▆▁▂</td>
-</tr>
-<tr class="odd">
-<td align="left">carb</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2.81</td>
-<td align="right">1.62</td>
-<td align="right">1.00</td>
-<td align="right">2.00</td>
-<td align="right">2.00</td>
-<td align="right">4.00</td>
-<td align="right">8.00</td>
-<td align="left">▇▂▅▁▁</td>
+<td align="right">121.15</td>
+<td align="right">13.13</td>
+<td align="right">88</td>
+<td align="right">114</td>
+<td align="right">121</td>
+<td align="right">130</td>
+<td align="right">150</td>
+<td align="left">▁▃▇▅▂</td>
 </tr>
 </tbody>
 </table>
-<p>Mit nur einem Befehl bekommen wir so eine klar strukturierte Übersicht über die Dimensionen des Datensatzes, sowie deskriptive Statistiken zu allen Variablen, getrennt nach Variablen-Typ. Im diesem Datensatz sind alle Variablen nummerisch (“numeric”) und so bekommen wir die Anzahl fehlender Werte, den Mittelwert, die Standardabweichung, die Range (p0 und p100 sind das 0%, bzw. das 100% Perzentil, also der niedrigste und der höchste Wert) und ein inline Histogramm, um die Verteilung grob abzuschätzen. Auch <code>skimr</code> ist im Tidyverse-Framework zuhause.</p>
+<p>Aus der Übersicht können wir entnehmen, dass wir erst einmal Daten von 48 Ravenclaws haben. Der IQ (von mir dreister- und fälschlicherweise als <code>intelligence</code> betitelt) der Stichprobe ist im Mittel bei 121 (sowohl Mittelwert als auch Median) – nicht schlecht! Die Standardabweichung beträgt 13.1, der niedrigste Wert 88.1 und der höchste 150.3. In Ravenclaw scheinen also ganz schöne Brains am Werke zu sein.</p>
+<p><img src="t-test-einstichprobe_files/figure-html/unnamed-chunk-6-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p>Mit einem Boxplot werden die kennwerte, die uns die Funktion <code>skim()</code> ausgibt noch einmal übersichtlich dargestellt. Die Box an sich (ohne die Whiskers) enthält 50% der Daten und ist somit so lang wie der Interquartilsabstand. Die dicke schwarze Linie kennzeichnet den Median, der in diesem Fall 121 beträgt..</p>
+<p>Die Normalverteilungsannahme können wir mit einem QQ-Plot überprüfen. Wir haben in dieser Stichprobe “nur” 48 Probanden und somit ebenso viele Datenpunkte. Optimal wäre es, wenn alle Punkte möglichst nah an der Diagonalen liegen, was hier ungefähr der Fall ist. Mit mehr Datenpunkten hätten wir vielleicht ein eindeutigeres Muster gehabt, aber so sieht das auch gut aus. <img src="t-test-einstichprobe_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Auch wenn ich von Tests zur Normalverteilung der Daten <a href="voraussetzungen.html">entschieden abrate</a>, kann man es den Daten trotzdem antun.</p>
+<pre class="r"><code>ravenclaw %&gt;% 
+  shapiro_test(intelligence)</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##   variable     statistic     p
+##   &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt;
+## 1 intelligence     0.980 0.583</code></pre>
+<p>Da <span class="math inline">\(p = .631\)</span>, weicht die hier betrachtete Verteilung der IQ-Werte der Ravenclaws nicht signifikant von der Normalverteilung ab. Das heißt jedoch <em>nicht</em>, dass die Daten normalverteilt sind!</p>
+</div>
+<div id="durchführung" class="section level2">
+<h2>Durchführung</h2>
+<p>Wir haben nun eine gute Idee davon, in welche Richtung unsere Ergebnisse gehen könnten, aber unterscheidet sich dieser Wert jetzt vom Bevölkerungsdurchschnitt?</p>
+<pre class="r"><code>ravenclaw %&gt;% 
+  t_test(intelligence ~ 1, mu = 100)</code></pre>
+<pre><code>## # A tibble: 1 x 7
+##   .y.          group1 group2         n statistic    df        p
+## * &lt;chr&gt;        &lt;chr&gt;  &lt;chr&gt;      &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intelligence 1      null model    48      11.2    47 8.22e-15</code></pre>
+</div>
+<div id="interpretation" class="section level2">
+<h2>Interpretation</h2>
+<p>Der <span class="math inline">\(p\)</span>-Wert ist unter 0.05, also ist der mittlere IQ der Ravenclaws signifikant verschieden von 100. Mehr gibt es an dieser Stelle eigentlich schon gar nicht zu sagen, der Einstichproben-<span class="math inline">\(t\)</span>-Test ist relativ einfach.</p>
+</div>
+<div id="berichten" class="section level2">
+<h2>Berichten</h2>
+<p>Will man diesen Unterschied berichten, dann kann man etwas schreiben wie:</p>
+<p>Ravenclaw-students’ mean IQ was <span class="math inline">\(121.15\)</span> (<span class="math inline">\(SD = 13.11\)</span>), which was significantly different from the test value 100, <span class="math inline">\(t(47) = 11.18, p &lt; .001\)</span>.</p>
+</div>
 </div>
 <div id="literatur" class="section level1 unnumbered">
 <h1>Literatur</h1>
 <div id="refs" class="references">
-<div id="ref-Firke.2020">
-<p>Firke, S. (2020). <em>janitor: Simple Tools for Examining and Cleaning Dirty Data</em>. <a href="https://CRAN.R-project.org/package=janitor">https://CRAN.R-project.org/package=janitor</a></p>
-</div>
-<div id="ref-Kassambara.2020">
-<p>Kassambara, A. (2020). <em>rstatix: Pipe-Friendly Framework for Basic Statistical Tests</em>. <a href="https://CRAN.R-project.org/package=rstatix">https://CRAN.R-project.org/package=rstatix</a></p>
-</div>
-<div id="ref-Waring.2020">
-<p>Waring, E., Quinn, M., McNamara, A., Arino de la Rubia, Eduardo, Zhu, H., &amp; Ellis, S. (2020). <em>skimr: Compact and Flexible Summaries of Data</em>. <a href="https://CRAN.R-project.org/package=skimr">https://CRAN.R-project.org/package=skimr</a></p>
-</div>
-<div id="ref-Wickham.2019b">
-<p>Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L., François, R., Grolemund, G., Hayes, A., Henry, L., Hester, J., Kuhn, M., Pedersen, T., Miller, E., Bache, S., Müller, K., Ooms, J., Robinson, D., Seidel, D., Spinu, V., … Yutani, H. (2019). Welcome to the Tidyverse. <em>Journal of Open Source Software</em>, <em>4</em>(43), 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a></p>
+<div id="ref-Rowling.1997">
+<p>Rowling, J. K. (1997). <em>Harry Potter and the Philosopher’s Stone</em>. Bloomsbury.</p>
 </div>
 </div>
 </div>

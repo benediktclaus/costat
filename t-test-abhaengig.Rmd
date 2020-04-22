@@ -1,0 +1,143 @@
+---
+title: "$t$-Test bei abhängigen Stichproben"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(fig.align = "center")
+ggplot2::theme_set(ggplot2::theme_light())
+```
+
+![](images/owl_r.jpg)
+
+Begeben wir uns in die Welt der Magie, Muggel und Zauberstäbe; tauchen wir ein in die Welt von Harry Potter [@Rowling.1997]. Auch in Hogwarts gibt es viel zu entdecken und statistisch zu entschlüsseln.
+Vielleicht kennst Du die vier Häuser von Hogwarts: Gryffindor, Hufflepuff, Ravenclaw und Slytherin. Jedem dieser Häuser werden verschiedene Eigenschaften nachgesagt, und jeder Schüler wird ausgehend von seinen Eigenschaften durch den sprechenden Hut einem der Häuser zugeteilt. Genau diese Eigenschaften der Schüler in den Häusern können wir uns nun einmal anschauen.
+
+
+# Pakete
+Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien, `rstatix` für statistische Analysen und `skimr` für schnelle deskriptive Statistiken.
+```{r message=FALSE}
+library(tidyverse)
+library(haven)
+library(rstatix)
+library(skimr)
+```
+
+```{r echo=FALSE}
+library(patchwork)
+```
+
+# Beispiel
+Den Bewohnern des Hogwarts-Hauses Hufflepuff wird ausgesprochene Geduld nachgesagt. Da ist es nicht verwunderlich, dass die Hauslehrerin Hufflepuffs Professor Pomona Sprout ist, die die langwierige Kräuterkunde unterrichtet. Ein ambitionierter Psychologie-Student hat sich gefragt, ob die Geduld der Mitglieder Hufflepuffs über das Schuljahr in Hogwarts eigentlich zunimmt. Man könnte annehmen, dass die Schüler zu Beginn des Schuljahres weniger geduldig sind, aber während des Schuljahres mit Aufgaben und Herausvorderungen konfrontiert werden, die ihre Geduld wachsen lassen. Dieser ambitionierte Psychologie-Student hat daraufhin zu Beginn und am Ende des Schuljahres alle Hufflepuffs hinsichtlich ihrer Geduld untersucht und uns den Datensatz `patience.sav` überlassen. Höhere Werte bedeuten eine höhere Geduld des Schülers.
+
+```{r}
+patience_data <- read_spss("data/patience.sav")
+
+patience_data <- patience_data %>% 
+  mutate(measurement = as_factor(measurement))
+
+patience_data
+```
+
+Auch hier finden wir in der Variable `measurement` wieder den Datentyp `<dbl+lbl>`, durch den gleichzeitig Werte-Levels und -Labels gespeichert werden. In R arbeiten wir immer mit ordentlichen Faktoren, die wir mit `as_factor()` erstellen können.
+
+## Voraussetzungen
+Es gelten die üblichen [Voraussetzungen des GLM](voraussetzungen.html), allerdings untersuchen wir beim $t$-Test mit abhängigen Stichproben die *Unterschiede* zwischen den beiden Bedingungen (in diesem Fall Beginn vs. Ende des Schuljahres), wodurch der Mittelwert der Differenz dieser beiden Werte normalverteilt sein sollte [@Field.2018]. Auch entfällt bei Designs mit Messwiederholung die Annahme der Varianzhomogenität.
+
+## EDA
+```{r}
+patience_data %>%
+  group_by(measurement) %>% 
+  skim()
+```
+
+Anhand der wichtigsten statistischen Kennwerte können wir sehen, dass sich die mittlere Geduld der 53 untersuchten Hufflepuffs von Beginn bis Ende des Schuljahres leicht gesteigert hat, von $M = 42.42, SD = 7.20$ auf $M = 48.68, SD = 8.85$. 
+
+```{r echo=FALSE}
+patience_dens <- patience_data %>%
+  pivot_wider(
+    names_from = measurement,
+    values_from = patience
+  ) %>% 
+  mutate(
+    difference = End - Begin
+  ) %>% 
+  ggplot(aes(x = difference)) +
+  geom_density() +
+  labs(x = "Differenz", y = "Dichte")
+
+patience_qq <- patience_data %>%
+  pivot_wider(
+    names_from = measurement,
+    values_from = patience
+  ) %>% 
+  mutate(
+    difference = End - Begin
+  ) %>% 
+  ggplot(aes(sample = difference)) +
+  stat_qq() +
+  stat_qq_line() +
+  labs(x = "Theoretisch", y = "Beobachtet")
+
+patience_line <- patience_data %>% 
+  ggplot(aes(x = measurement, y = patience)) +
+  stat_summary(fun.data = "mean_sdl", geom = "point", fun.args = list(mult = 1)) +
+  stat_summary(fun.data = "mean_sdl", geom = "errorbar", fun.args = list(mult = 1), width = 0.2) +
+  stat_summary(fun = "mean", geom = "line", aes(group = 1)) +
+  expand_limits(y = 0) +
+  labs(x = "Messung", y = "Geduld")
+
+((patience_dens / patience_qq) | patience_line) + plot_annotation(tag_levels = "A") & theme(legend.position = "bottom")
+```
+
+Diesen leichten Trend finden wir auch in der entsprechenden Abbildung (C) wieder. Bezüglich der Voraussetzungen können wir anhand der Kerndichteschätzung (= "geglättetes" Histogramm in A) und dem QQ-Plot (B) davon ausgehen, dass die Unterschiede in den Messwerten annähernd normalverteilt sind. Aufgrund des zentralen Grenzwertsatzes können wir jedoch in jedem Fall davon ausgehen, dass die Voraussetzung der Normalverteilung (der Stichprobenkennwerteverteilung) erfüllt ist.
+
+Wer seine Voraussetzungen gegen [ausdrückliche Empfehlung](voraussetzungen.html) dennoch statistisch prüfen will, kann das natürlich trotzdem machen.
+```{r}
+patience_data %>% 
+  pivot_wider(
+    names_from = measurement,
+    values_from = patience
+  ) %>% 
+  mutate(
+    difference = End - Begin
+  ) %>% 
+  shapiro_test(difference)
+```
+
+Da wir ein Design mit Messwiederholungen betrachten, interessiert uns, wie bereits oben erwähnt, die Verteilung der *Unterschiede* zwischen den Messungen, die wir erst noch berechnen mussten. Der Test legt dann nahe, dass die Verteilung der Differenzen zwischen den Messungen nicht signifikant von einer Normalverteilung abweichen ($p = .785$). Das heißt natürlich *nicht*, dass die Differenzen normalverteilt sind.
+
+
+## Durchführung
+Ist Die Zunahme der Geduld von Anfang bis Ende des Schuljahres nun statistisch signifikant? Das überprüfen wir nun mit dem $t$-Test für abhängige Stichproben.
+
+```{r}
+patience_data %>% 
+  t_test(patience ~ measurement, paired = TRUE)
+```
+
+$p < .001$, also können wir fetstellten, dass sich die Geduld der untersuchten Hufflepuffs von Beginn zu Ende des Schuljahres tatsächlich gesteigert hat. Natürlich interessiert uns nicht nur, ob der Effekt statistisch signifikant ist, vielmehr wollen wir auch die Größe des Effekts, also die Effektstärke berechnen.
+
+```{r}
+patience_data %>% 
+  cohens_d(patience ~ measurement, paired = TRUE, hedges.correction = TRUE)
+```
+
+Am Ende des Schuljahres haben die Hufflepuffs eine größere Geduld, die Effektstärke betrug in dieser Stichprobe $g = 0.483$ (ausgegeben wird eine Effektstärke von $g = -0.483$, die nicht angibt, wie viel größer die Geduld der Hufflepuffs am Jahresende, sondern wie viel kleiner die Geduld am Jahresbeginn war; man kann es auf beide Arten berichten).
+
+## Berichten
+We found Hufflepuff's students to gain significantly more patience from begin ($M = 42.42, SD = 7.20$) to end of school year ($M = 48.68, SD = 8.85$), $t(52) = -3.57, p < .001$. Hedges' $g$ between these measurements was $g = 0.483$, indicating a small to medium effect.
+
+# Robuste Alternativen
+Folgen.
+
+
+# Aus der Praxis
+Praxis-Beispiele folgen.
+
+
+# Literatur

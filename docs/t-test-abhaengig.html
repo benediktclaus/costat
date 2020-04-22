@@ -11,7 +11,7 @@
 
 
 
-<title>Pakete</title>
+<title>t-Test bei abhängigen Stichproben</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -436,65 +436,68 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Pakete</h1>
+<h1 class="title toc-ignore"><span class="math inline">\(t\)</span>-Test bei abhängigen Stichproben</h1>
 
 </div>
 
 
-<p><img src="images/package_r.jpg" /></p>
-<p>Um uns die Arbeit in R nicht schwerer als nötig zu machen, nutzen wir einige Pakete, die aufeinander abgestimmt sind und tolle Funktionen bieten. Alle R-Pakete sind frei verfügbar und können mit dem Befehl <code>install.packages("&lt;PACKAGE&gt;")</code> installiert werden. Um sie in einer R-Session zu nutzen, müssen sie mit dem Befehl <code>library(&lt;PACKAGE&gt;)</code> “angehängt” werden.</p>
-<div id="tidyverse" class="section level1">
-<h1>tidyverse</h1>
-<p><img src="https://tidyverse.tidyverse.org/articles/tidyverse-logo.png" width="30%" style="display: block; margin: auto;" /></p>
-<p>Das <a href="https://www.tidyverse.org/"><strong>Tidyverse</strong></a> <span class="citation">(Wickham et al., <a href="#ref-Wickham.2019b" role="doc-biblioref">2019</a>)</span> ist ein Verbund von Paketen, der das Arbeiten in R auf das angenehmste erleichtert. Diese sind aufeinander abgestimmt, benutzen einheitliche Syntaxen und beheben einige Marotten von base R.</p>
-<p>Nach jeder frischen Installation von R sollte man somit diesen Befehl ausführen:</p>
-<pre class="r"><code>install.packages(&quot;tidyverse&quot;)</code></pre>
-<p>Das Tidyverse ist unter anderem um die Idee “sauberer” ( = tidy) Daten entstanden. Was genau tidy data ist, wird beim data wrangling deutlich. Nur so viel vorab: tidy data unterscheidet sich von der “herkömmlichen” Darstellung von Daten, wie etwa in SPSS.</p>
-<p>Das Tidyverse bietet nun alle Instrumente, um alle Schritte dieses Workflows zu durchlaufen: <img src="https://tidyverse.tidyverse.org/articles/data-science.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><img src="images/owl_r.jpg" /></p>
+<p>Begeben wir uns in die Welt der Magie, Muggel und Zauberstäbe; tauchen wir ein in die Welt von Harry Potter <span class="citation">(Rowling, <a href="#ref-Rowling.1997" role="doc-biblioref">1997</a>)</span>. Auch in Hogwarts gibt es viel zu entdecken und statistisch zu entschlüsseln. Vielleicht kennst Du die vier Häuser von Hogwarts: Gryffindor, Hufflepuff, Ravenclaw und Slytherin. Jedem dieser Häuser werden verschiedene Eigenschaften nachgesagt, und jeder Schüler wird ausgehend von seinen Eigenschaften durch den sprechenden Hut einem der Häuser zugeteilt. Genau diese Eigenschaften der Schüler in den Häusern können wir uns nun einmal anschauen.</p>
+<div id="pakete" class="section level1">
+<h1>Pakete</h1>
+<p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien, <code>rstatix</code> für statistische Analysen und <code>skimr</code> für schnelle deskriptive Statistiken.</p>
+<pre class="r"><code>library(tidyverse)
+library(haven)
+library(rstatix)
+library(skimr)</code></pre>
 </div>
-<div id="rstatix" class="section level1">
-<h1>rstatix</h1>
-<p>Eine Ausnahme sind die Modelle, also unsere statistischen Tests. Für diese gibt es in R hunderte Pakete. In R gibt es viele Wege zum Ziel, jedoch einfachere und schwierigere. Einer der einfachsten Wege, um statistische Standard-Verfahren einzusetzen, und dann noch abgestimmt auf das Arbeiten im Tidyverse, ist das Paket <code>rstatix</code> <span class="citation">(Kassambara, <a href="#ref-Kassambara.2020" role="doc-biblioref">2020</a>)</span>. Installiert wird es, wie alle anderen Pakete mit:</p>
-<pre class="r"><code>install.packages(&quot;rstatix&quot;)</code></pre>
-</div>
-<div id="janitor" class="section level1">
-<h1>janitor</h1>
-<p>Den Hausmeister, also das Paket <code>janitor</code> <span class="citation">(Firke, <a href="#ref-Firke.2020" role="doc-biblioref">2020</a>)</span>, wird hauptsächlich zur Bereinigung von Variablennamen genutzt und formatiert diese einheitlich im “snake case”-Format (siehe auch die Informationen zum <a href="stil.html">Stil</a>). Auch <code>janitor</code> ist im Tidyverse-Framework zuhause:</p>
-<pre class="r"><code># Aus unsauberen Variablen-Namen...
-unclean_names &lt;- tibble(
-  &quot;First name&quot; = &quot;x&quot;,
-  &quot;LastName&quot; = &quot;y&quot;,
-  &quot;DOB&quot; = &quot;z&quot;,
-  &quot;BDI_1?&quot; = 1,
-  &quot;BDI_2&quot; = 2,
-  &quot;bdi_3&quot; = 3
-)
+<div id="beispiel" class="section level1">
+<h1>Beispiel</h1>
+<p>Den Bewohnern des Hogwarts-Hauses Hufflepuff wird ausgesprochene Geduld nachgesagt. Da ist es nicht verwunderlich, dass die Hauslehrerin Hufflepuffs Professor Pomona Sprout ist, die die langwierige Kräuterkunde unterrichtet. Ein ambitionierter Psychologie-Student hat sich gefragt, ob die Geduld der Mitglieder Hufflepuffs über das Schuljahr in Hogwarts eigentlich zunimmt. Man könnte annehmen, dass die Schüler zu Beginn des Schuljahres weniger geduldig sind, aber während des Schuljahres mit Aufgaben und Herausvorderungen konfrontiert werden, die ihre Geduld wachsen lassen. Dieser ambitionierte Psychologie-Student hat daraufhin zu Beginn und am Ende des Schuljahres alle Hufflepuffs hinsichtlich ihrer Geduld untersucht und uns den Datensatz <code>patience.sav</code> überlassen. Höhere Werte bedeuten eine höhere Geduld des Schülers.</p>
+<pre class="r"><code>patience_data &lt;- read_spss(&quot;data/patience.sav&quot;)
 
-# ... werden saubere, einheitliche
-clean_names(unclean_names)</code></pre>
-<pre><code>## # A tibble: 1 x 6
-##   first_name last_name dob   bdi_1 bdi_2 bdi_3
-##   &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 x          y         z         1     2     3</code></pre>
+patience_data &lt;- patience_data %&gt;% 
+  mutate(measurement = as_factor(measurement))
+
+patience_data</code></pre>
+<pre><code>## # A tibble: 106 x 3
+##    id    measurement patience
+##    &lt;chr&gt; &lt;fct&gt;          &lt;dbl&gt;
+##  1 1     Begin             44
+##  2 2     Begin             24
+##  3 3     Begin             44
+##  4 4     Begin             44
+##  5 5     Begin             32
+##  6 6     Begin             41
+##  7 7     Begin             38
+##  8 8     Begin             47
+##  9 9     Begin             35
+## 10 10    Begin             46
+## # ... with 96 more rows</code></pre>
+<p>Auch hier finden wir in der Variable <code>measurement</code> wieder den Datentyp <code>&lt;dbl+lbl&gt;</code>, durch den gleichzeitig Werte-Levels und -Labels gespeichert werden. In R arbeiten wir immer mit ordentlichen Faktoren, die wir mit <code>as_factor()</code> erstellen können.</p>
+<div id="voraussetzungen" class="section level2">
+<h2>Voraussetzungen</h2>
+<p>Es gelten die üblichen <a href="voraussetzungen.html">Voraussetzungen des GLM</a>, allerdings untersuchen wir beim <span class="math inline">\(t\)</span>-Test mit abhängigen Stichproben die <em>Unterschiede</em> zwischen den beiden Bedingungen (in diesem Fall Beginn vs. Ende des Schuljahres), wodurch der Mittelwert der Differenz dieser beiden Werte normalverteilt sein sollte <span class="citation">(Field, <a href="#ref-Field.2018" role="doc-biblioref">2018</a>)</span>. Auch entfällt bei Designs mit Messwiederholung die Annahme der Varianzhomogenität.</p>
 </div>
-<div id="skimr" class="section level1">
-<h1>skimr</h1>
-<p>Mit <code>skimr</code> <span class="citation">(Waring et al., <a href="#ref-Waring.2020" role="doc-biblioref">2020</a>)</span> können wir uns auf einfache Weise umfangreiche deskriptive Statistiken ausgeben lassen. Für den Datensatz <code>mtcars</code> sieht das beispielwesie so aus:</p>
-<pre class="r"><code>skim(mtcars)</code></pre>
+<div id="eda" class="section level2">
+<h2>EDA</h2>
+<pre class="r"><code>patience_data %&gt;%
+  group_by(measurement) %&gt;% 
+  skim()</code></pre>
 <table>
 <caption>Data summary</caption>
 <tbody>
 <tr class="odd">
 <td align="left">Name</td>
-<td align="left">mtcars</td>
+<td align="left">Piped data</td>
 </tr>
 <tr class="even">
 <td align="left">Number of rows</td>
-<td align="left">32</td>
+<td align="left">106</td>
 </tr>
 <tr class="odd">
 <td align="left">Number of columns</td>
-<td align="left">11</td>
+<td align="left">3</td>
 </tr>
 <tr class="even">
 <td align="left">_______________________</td>
@@ -505,16 +508,60 @@ clean_names(unclean_names)</code></pre>
 <td align="left"></td>
 </tr>
 <tr class="even">
-<td align="left">numeric</td>
-<td align="left">11</td>
+<td align="left">character</td>
+<td align="left">1</td>
 </tr>
 <tr class="odd">
+<td align="left">numeric</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
 <td align="left">________________________</td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Group variables</td>
-<td align="left">None</td>
+<td align="left">measurement</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="left">measurement</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">id</td>
+<td align="left">Begin</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">53</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">id</td>
+<td align="left">End</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">53</td>
+<td align="right">0</td>
 </tr>
 </tbody>
 </table>
@@ -523,6 +570,7 @@ clean_names(unclean_names)</code></pre>
 <thead>
 <tr class="header">
 <th align="left">skim_variable</th>
+<th align="left">measurement</th>
 <th align="right">n_missing</th>
 <th align="right">complete_rate</th>
 <th align="right">mean</th>
@@ -537,166 +585,93 @@ clean_names(unclean_names)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">mpg</td>
+<td align="left">patience</td>
+<td align="left">Begin</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">20.09</td>
-<td align="right">6.03</td>
-<td align="right">10.40</td>
-<td align="right">15.43</td>
-<td align="right">19.20</td>
-<td align="right">22.80</td>
-<td align="right">33.90</td>
-<td align="left">▃▇▅▁▂</td>
+<td align="right">42.42</td>
+<td align="right">7.20</td>
+<td align="right">24</td>
+<td align="right">38</td>
+<td align="right">42</td>
+<td align="right">47</td>
+<td align="right">60</td>
+<td align="left">▂▃▇▅▂</td>
 </tr>
 <tr class="even">
-<td align="left">cyl</td>
+<td align="left">patience</td>
+<td align="left">End</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">6.19</td>
-<td align="right">1.79</td>
-<td align="right">4.00</td>
-<td align="right">4.00</td>
-<td align="right">6.00</td>
-<td align="right">8.00</td>
-<td align="right">8.00</td>
-<td align="left">▆▁▃▁▇</td>
-</tr>
-<tr class="odd">
-<td align="left">disp</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">230.72</td>
-<td align="right">123.94</td>
-<td align="right">71.10</td>
-<td align="right">120.83</td>
-<td align="right">196.30</td>
-<td align="right">326.00</td>
-<td align="right">472.00</td>
-<td align="left">▇▃▃▃▂</td>
-</tr>
-<tr class="even">
-<td align="left">hp</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">146.69</td>
-<td align="right">68.56</td>
-<td align="right">52.00</td>
-<td align="right">96.50</td>
-<td align="right">123.00</td>
-<td align="right">180.00</td>
-<td align="right">335.00</td>
-<td align="left">▇▇▆▃▁</td>
-</tr>
-<tr class="odd">
-<td align="left">drat</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">3.60</td>
-<td align="right">0.53</td>
-<td align="right">2.76</td>
-<td align="right">3.08</td>
-<td align="right">3.70</td>
-<td align="right">3.92</td>
-<td align="right">4.93</td>
-<td align="left">▇▃▇▅▁</td>
-</tr>
-<tr class="even">
-<td align="left">wt</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">3.22</td>
-<td align="right">0.98</td>
-<td align="right">1.51</td>
-<td align="right">2.58</td>
-<td align="right">3.33</td>
-<td align="right">3.61</td>
-<td align="right">5.42</td>
-<td align="left">▃▃▇▁▂</td>
-</tr>
-<tr class="odd">
-<td align="left">qsec</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">17.85</td>
-<td align="right">1.79</td>
-<td align="right">14.50</td>
-<td align="right">16.89</td>
-<td align="right">17.71</td>
-<td align="right">18.90</td>
-<td align="right">22.90</td>
-<td align="left">▃▇▇▂▁</td>
-</tr>
-<tr class="even">
-<td align="left">vs</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0.44</td>
-<td align="right">0.50</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
-<td align="right">1.00</td>
-<td align="right">1.00</td>
-<td align="left">▇▁▁▁▆</td>
-</tr>
-<tr class="odd">
-<td align="left">am</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0.41</td>
-<td align="right">0.50</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
-<td align="right">1.00</td>
-<td align="right">1.00</td>
-<td align="left">▇▁▁▁▆</td>
-</tr>
-<tr class="even">
-<td align="left">gear</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">3.69</td>
-<td align="right">0.74</td>
-<td align="right">3.00</td>
-<td align="right">3.00</td>
-<td align="right">4.00</td>
-<td align="right">4.00</td>
-<td align="right">5.00</td>
-<td align="left">▇▁▆▁▂</td>
-</tr>
-<tr class="odd">
-<td align="left">carb</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2.81</td>
-<td align="right">1.62</td>
-<td align="right">1.00</td>
-<td align="right">2.00</td>
-<td align="right">2.00</td>
-<td align="right">4.00</td>
-<td align="right">8.00</td>
-<td align="left">▇▂▅▁▁</td>
+<td align="right">48.68</td>
+<td align="right">8.85</td>
+<td align="right">27</td>
+<td align="right">43</td>
+<td align="right">48</td>
+<td align="right">54</td>
+<td align="right">73</td>
+<td align="left">▁▆▇▅▁</td>
 </tr>
 </tbody>
 </table>
-<p>Mit nur einem Befehl bekommen wir so eine klar strukturierte Übersicht über die Dimensionen des Datensatzes, sowie deskriptive Statistiken zu allen Variablen, getrennt nach Variablen-Typ. Im diesem Datensatz sind alle Variablen nummerisch (“numeric”) und so bekommen wir die Anzahl fehlender Werte, den Mittelwert, die Standardabweichung, die Range (p0 und p100 sind das 0%, bzw. das 100% Perzentil, also der niedrigste und der höchste Wert) und ein inline Histogramm, um die Verteilung grob abzuschätzen. Auch <code>skimr</code> ist im Tidyverse-Framework zuhause.</p>
+<p>Anhand der wichtigsten statistischen Kennwerte können wir sehen, dass sich die mittlere Geduld der 53 untersuchten Hufflepuffs von Beginn bis Ende des Schuljahres leicht gesteigert hat, von <span class="math inline">\(M = 42.42, SD = 7.20\)</span> auf <span class="math inline">\(M = 48.68, SD = 8.85\)</span>.</p>
+<p><img src="t-test-abhaengig_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Diesen leichten Trend finden wir auch in der entsprechenden Abbildung (C) wieder. Bezüglich der Voraussetzungen können wir anhand der Kerndichteschätzung (= “geglättetes” Histogramm in A) und dem QQ-Plot (B) davon ausgehen, dass die Unterschiede in den Messwerten annähernd normalverteilt sind. Aufgrund des zentralen Grenzwertsatzes können wir jedoch in jedem Fall davon ausgehen, dass die Voraussetzung der Normalverteilung (der Stichprobenkennwerteverteilung) erfüllt ist.</p>
+<p>Wer seine Voraussetzungen gegen <a href="voraussetzungen.html">ausdrückliche Empfehlung</a> dennoch statistisch prüfen will, kann das natürlich trotzdem machen.</p>
+<pre class="r"><code>patience_data %&gt;% 
+  pivot_wider(
+    names_from = measurement,
+    values_from = patience
+  ) %&gt;% 
+  mutate(
+    difference = End - Begin
+  ) %&gt;% 
+  shapiro_test(difference)</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##   variable   statistic     p
+##   &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt;
+## 1 difference     0.986 0.785</code></pre>
+<p>Da wir ein Design mit Messwiederholungen betrachten, interessiert uns, wie bereits oben erwähnt, die Verteilung der <em>Unterschiede</em> zwischen den Messungen, die wir erst noch berechnen mussten. Der Test legt dann nahe, dass die Verteilung der Differenzen zwischen den Messungen nicht signifikant von einer Normalverteilung abweichen (<span class="math inline">\(p = .785\)</span>). Das heißt natürlich <em>nicht</em>, dass die Differenzen normalverteilt sind.</p>
+</div>
+<div id="durchführung" class="section level2">
+<h2>Durchführung</h2>
+<p>Ist Die Zunahme der Geduld von Anfang bis Ende des Schuljahres nun statistisch signifikant? Das überprüfen wir nun mit dem <span class="math inline">\(t\)</span>-Test für abhängige Stichproben.</p>
+<pre class="r"><code>patience_data %&gt;% 
+  t_test(patience ~ measurement, paired = TRUE)</code></pre>
+<pre><code>## # A tibble: 1 x 8
+##   .y.      group1 group2    n1    n2 statistic    df        p
+## * &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1 patience Begin  End       53    53     -3.57    52 0.000778</code></pre>
+<p><span class="math inline">\(p &lt; .001\)</span>, also können wir fetstellten, dass sich die Geduld der untersuchten Hufflepuffs von Beginn zu Ende des Schuljahres tatsächlich gesteigert hat. Natürlich interessiert uns nicht nur, ob der Effekt statistisch signifikant ist, vielmehr wollen wir auch die Größe des Effekts, also die Effektstärke berechnen.</p>
+<pre class="r"><code>patience_data %&gt;% 
+  cohens_d(patience ~ measurement, paired = TRUE, hedges.correction = TRUE)</code></pre>
+<pre><code>## # A tibble: 1 x 7
+##   .y.      group1 group2 effsize    n1    n2 magnitude
+## * &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;ord&gt;    
+## 1 patience Begin  End     -0.483    53    53 small</code></pre>
+<p>Am Ende des Schuljahres haben die Hufflepuffs eine größere Geduld, die Effektstärke betrug in dieser Stichprobe <span class="math inline">\(g = 0.483\)</span> (ausgegeben wird eine Effektstärke von <span class="math inline">\(g = -0.483\)</span>, die nicht angibt, wie viel größer die Geduld der Hufflepuffs am Jahresende, sondern wie viel kleiner die Geduld am Jahresbeginn war; man kann es auf beide Arten berichten).</p>
+</div>
+<div id="berichten" class="section level2">
+<h2>Berichten</h2>
+<p>We found Hufflepuff’s students to gain significantly more patience from begin (<span class="math inline">\(M = 42.42, SD = 7.20\)</span>) to end of school year (<span class="math inline">\(M = 48.68, SD = 8.85\)</span>), <span class="math inline">\(t(52) = -3.57, p &lt; .001\)</span>. Hedges’ <span class="math inline">\(g\)</span> between these measurements was <span class="math inline">\(g = 0.483\)</span>, indicating a small to medium effect.</p>
+</div>
+</div>
+<div id="robuste-alternativen" class="section level1">
+<h1>Robuste Alternativen</h1>
+<p>Folgen.</p>
+</div>
+<div id="aus-der-praxis" class="section level1">
+<h1>Aus der Praxis</h1>
+<p>Praxis-Beispiele folgen.</p>
 </div>
 <div id="literatur" class="section level1 unnumbered">
 <h1>Literatur</h1>
 <div id="refs" class="references">
-<div id="ref-Firke.2020">
-<p>Firke, S. (2020). <em>janitor: Simple Tools for Examining and Cleaning Dirty Data</em>. <a href="https://CRAN.R-project.org/package=janitor">https://CRAN.R-project.org/package=janitor</a></p>
+<div id="ref-Field.2018">
+<p>Field, A. P. (2018). <em>Discovering Statistics using IBM SPSS Statistics</em> (5th ed.). SAGE.</p>
 </div>
-<div id="ref-Kassambara.2020">
-<p>Kassambara, A. (2020). <em>rstatix: Pipe-Friendly Framework for Basic Statistical Tests</em>. <a href="https://CRAN.R-project.org/package=rstatix">https://CRAN.R-project.org/package=rstatix</a></p>
-</div>
-<div id="ref-Waring.2020">
-<p>Waring, E., Quinn, M., McNamara, A., Arino de la Rubia, Eduardo, Zhu, H., &amp; Ellis, S. (2020). <em>skimr: Compact and Flexible Summaries of Data</em>. <a href="https://CRAN.R-project.org/package=skimr">https://CRAN.R-project.org/package=skimr</a></p>
-</div>
-<div id="ref-Wickham.2019b">
-<p>Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L., François, R., Grolemund, G., Hayes, A., Henry, L., Hester, J., Kuhn, M., Pedersen, T., Miller, E., Bache, S., Müller, K., Ooms, J., Robinson, D., Seidel, D., Spinu, V., … Yutani, H. (2019). Welcome to the Tidyverse. <em>Journal of Open Source Software</em>, <em>4</em>(43), 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a></p>
+<div id="ref-Rowling.1997">
+<p>Rowling, J. K. (1997). <em>Harry Potter and the Philosopher’s Stone</em>. Bloomsbury.</p>
 </div>
 </div>
 </div>

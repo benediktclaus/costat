@@ -1,0 +1,129 @@
+---
+title: "$t$-Test bei unabhängigen Stichproben"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(fig.align = "center")
+ggplot2::theme_set(ggplot2::theme_light())
+```
+
+![](images/harry-potter-car_r.jpg)
+
+Begeben wir uns in die Welt der Magie, Muggel und Zauberstäbe; tauchen wir ein in die Welt von Harry Potter [@Rowling.1997]. Auch in Hogwarts gibt es viel zu entdecken und statistisch zu entschlüsseln. Vielleicht kennst Du die vier Häuser von Hogwarts: Gryffindor, Hufflepuff, Ravenclaw und Slytherin. Jedem dieser Häuser werden verschiedene Eigenschaften nachgesagt, und jeder Schüler wird ausgehend von seinen Eigenschaften durch den sprechenden Hut einem der Häuser zugeteilt. Genau diese Eigenschaften der Schüler in den Häusern können wir uns nun einmal anschauen.
+
+
+# Pakete
+Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien, `rstatix` für statistische Analysen und `skimr` für schnelle deskriptive Statistiken.
+```{r message=FALSE}
+library(tidyverse)
+library(haven)
+library(rstatix)
+library(skimr)
+```
+
+```{r echo=FALSE}
+library(patchwork)
+```
+
+# Beispiel
+
+Es wird spannend, denn wir betrachten die Rivalität der Häuser Griffyndor und Slytherin. Dem Haus Griffyndor werden Tapferkeit, Kühnheit und Ritterlichkeit zugeschrieben -- dem Haus Slytherin, naja, eher nicht. Im Datensatz `chivalry.sav` sind die Ergebnisse eines Persönlichkeitstests zu finden, den alle in Hogwarts eingeschriebenen Bewohner dieser zwei Häuser durchführten, und der das Konstrukt "Ritterlichkeit" erfasst. Der Gesamtwert dieses Tests kann Werte zwischen 0 (keine Richtterlichkeit vorhanden) und 110 (nimmt den Kampf gegen Voldemort auf und empfängt den Tod als einen alten Freund) annehmen.
+```{r}
+chivalry_data <- read_spss("data/chivalry.sav")
+
+chivalry_data <- chivalry_data %>% mutate(house = as_factor(house))
+
+chivalry_data
+```
+
+Da wir wieder SPSS-Daten importieren, finden wir für die Variable `house` wieder den merkwürdigen Datentyp `<dbl+lbl>` vor. Hier ist R nur mehr als freundlich zu uns, indem es uns beides, die Werte-Levels und -Labels gleichzeitig anzeigt Für die Analysen benötigen wir jedoch nur die Labels als ordentliche Faktoren. Das beheben wir mit der Funktion `as_factor()` (siehe auch die Seite zum [Data Wrangling](data-wrangling.html)).
+
+## Voraussetzungen
+Es gelten die üblichen [Voraussetzungen des GLM](voraussetzungen.html).
+
+## EDA
+Auch hier betrachten wir die Daten erstmal, bevor wir irgendwelche Analysen durchführen. Beobachtet man verschiedene Gruppen, macht es Sinn, die Ausgabe der statistischen Kennwerte für jede Gruppe durchzuführen.
+
+```{r}
+chivalry_data %>% 
+  group_by(house) %>% 
+  skim()
+```
+
+Wir sehen einen eindeutigen Trend dahingehend, dass sich die Mitglieder Griffyndors als deutlicher ritterlicher einschätzen ($M = 92.3, SD = 6.86$) als die Mitglieder der Hauses Slytherin ($M = 48.1, SD = 8.94$). Auch in der Abbildung sehen wir diesen Unterschied deutlich. Die Boxplots (C) zeigen uns insgesamt 4 Outlier, zwei in jedem Haus. Die könnte man bei Bedarf entfernen, wir belassen es jedoch dabei und fahren fort, auch weil die Varianz der Daten in beiden Häusern ähnlich zu sein scheint. Außerdem sehen die Daten gut normalverteilt aus, was wir anhand der Kerndichteschätzungen (= "geglättetes" Histogramm in A) und dem QQ-Plot (B) erkennen können.
+
+```{r echo=FALSE, message=FALSE}
+chivalry_dens <- chivalry_data %>% 
+  ggplot(aes(x = chivalry, fill = house, color = house)) +
+  geom_density(alpha = 0.5) +
+  labs(x = "Ritterlichkeit", y = "Dichte", fill = "Haus")
+
+chivalry_qq <- chivalry_data %>% 
+  ggplot(aes(sample = chivalry)) +
+  stat_qq() +
+  stat_qq_line() +
+  facet_wrap(~ house, scales = "free") +
+  labs(x = "Theoretisch", y = "Beobachtet")
+
+chivalry_box <- chivalry_data %>% 
+  ggplot(aes(x = house, y = chivalry)) +
+  geom_boxplot() +
+  expand_limits(y = 0) +
+  labs(x = "Haus", y = "Ritterlichkeit")
+
+((chivalry_dens / chivalry_qq) | chivalry_box) + plot_annotation(tag_levels = "A") & theme(legend.position = "bottom")
+```
+
+Wer auf Tests zur Überprüfung der Voraussetzungen besteht, also dem Vorgehen, von dem ich wieder [entschieden abrate](voraussetzungen.html)), der kann diese natürlich durchführen. Wichtig ist dabei zu beachten, dass der Test der Daten "auf Normalverteilung" pro Haus, bzw. pro Gruppe, durchgeführt werden muss.
+
+```{r}
+chivalry_data %>% 
+  group_by(house) %>% 
+  shapiro_test(chivalry)
+
+chivalry_data %>% 
+  levene_test(chivalry ~ house)
+```
+
+Auch anhand der Tests können wir in diesem Falle (alle $p > .05$) festhalten, dass die Daten nicht signifikant von einer theoretischen Normalverteilung abweichen und die Varianzen in beiden Häusern auch nicht signifikant verschieden sind. Diese Ergebnisse heißen jedoch *nicht*, dass die Daten normalverteilt und die Varianzen gleich sind.
+
+## Durchführung
+```{r}
+chivalry_data %>% 
+  t_test(chivalry ~ house)
+```
+
+Ja, die beiden Mitglieder der Häuser unterscheiden sich in ihrer selbst eingeschätzten Ritterlichkeit signifikant voneinander, da $p < 0.05$ ist. Wer sich die Daten in einem anderen Statistikprogramm vorgenommen und mitgerechnet hat, vielleicht sogar direkt in SPSS, der wird feststellen, dass die Werte etwas von seinen abweichen. Das liegt daran, dass R standardmäßig gar nicht den traditionellen $t$-Test (auch Students $t$-Test genannt) berechnet, sondern den **Welchs-$t$-Test**. Den kennen viele Psychologie-Studenten eigentlich als Alternative zum $t$-Test, wenn die Voraussetzungen der Normalverteilung und Varianzhomogenität verletzt sind. Auf die Prüfung dieser beiden Annahmen kann man eigentlich gänzlich verzichten und standardmäßigdirekt den Welch-Test durchführen [@Rasch.2011; @Ruxton.2006], so, wie R es auch anbietet. Wer dennoch unbedingt den "richtigen" $t$-Test haben möchte, gibt einfach ein zusätzliches Argument an und schon decken sich alle Ergebnisse.
+
+```{r}
+chivalry_data %>% 
+  t_test(chivalry ~ house, var.equal = TRUE)
+```
+
+Bei Gruppenunterschieden ist nicht nur interessant, ob sich diese statistisch signifikant voneinander unterscheiden; vor allem interessiert uns die Größe des Effekts, also die Effektstärke. Auch diese lässt sich einfach berechnen. Hier sollte man immer das Argument `hedges.correction = TRUE` angeben, da Cohens $d$ von Haus aus  positiv verzerrt ist [@Hedges.1985]. Entgegen dem Namen des Befehls (`cohens_d()`) erhalten wir so nicht Cohens $d$, sondern Hedges' $g$.
+
+```{r}
+chivalry_data %>% 
+  cohens_d(chivalry ~ house, hedges.correction = TRUE)
+```
+
+
+## Berichten
+Members of the Hogwarts house "Gryffindor" yielded greater scores on a test estimating chivalry as opposed to members of house "Slytherin". The mean difference of 44.2 points was statistically significant, $t(69.2) = 24.6, p < .001$ with an effect size of Hedges' $g = 5.50$, indicating a huge effect.
+
+# Robuste Alternativen
+Folgen.
+
+# Aus der Praxis
+Praxis-Beispiele folgen.
+
+# Literatur
+
+```{r echo=FALSE}
+remove(list = ls())
+```
