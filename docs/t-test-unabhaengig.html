@@ -616,8 +616,9 @@ chivalry_data</code></pre>
 </table>
 <p>Wir sehen einen eindeutigen Trend dahingehend, dass sich die Mitglieder Griffyndors als deutlicher ritterlicher einschätzen (<span class="math inline">\(M = 92.3, SD = 6.86\)</span>) als die Mitglieder der Hauses Slytherin (<span class="math inline">\(M = 48.1, SD = 8.94\)</span>). Auch in der Abbildung sehen wir diesen Unterschied deutlich. Die Boxplots (C) zeigen uns insgesamt 4 Outlier, zwei in jedem Haus. Die könnte man bei Bedarf entfernen, wir belassen es jedoch dabei und fahren fort, auch weil die Varianz der Daten in beiden Häusern ähnlich zu sein scheint. Außerdem sehen die Daten gut normalverteilt aus, was wir anhand der Kerndichteschätzungen (= “geglättetes” Histogramm in A) und dem QQ-Plot (B) erkennen können.</p>
 <p><img src="t-test-unabhaengig_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Wer auf Tests zur Überprüfung der Voraussetzungen besteht, also dem Vorgehen, von dem ich wieder <a href="voraussetzungen.html">entschieden abrate</a>), der kann diese natürlich durchführen. Wichtig ist dabei zu beachten, dass der Test der Daten “auf Normalverteilung” pro Haus, bzw. pro Gruppe, durchgeführt werden muss.</p>
-<pre class="r"><code>chivalry_data %&gt;% 
+<p>Wer auf Tests zur Überprüfung der Voraussetzungen besteht, also dem Vorgehen, von dem ich bei großen Stichproben wieder <a href="voraussetzungen.html">entschieden abrate</a>), der kann diese natürlich durchführen. Wichtig ist dabei zu beachten, dass der Test der Daten “auf Normalverteilung” pro Haus, bzw. pro Gruppe, durchgeführt werden muss.</p>
+<pre class="r"><code># Shapiro-Wilk-Test
+chivalry_data %&gt;% 
   group_by(house) %&gt;% 
   shapiro_test(chivalry)</code></pre>
 <pre><code>## # A tibble: 2 x 4
@@ -625,7 +626,8 @@ chivalry_data</code></pre>
 ##   &lt;fct&gt;      &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
 ## 1 Gryffindor chivalry     0.972 0.382
 ## 2 Slytherin  chivalry     0.980 0.717</code></pre>
-<pre class="r"><code>chivalry_data %&gt;% 
+<pre class="r"><code># Levene-Test
+chivalry_data %&gt;% 
   levene_test(chivalry ~ house)</code></pre>
 <pre><code>## # A tibble: 1 x 4
 ##     df1   df2 statistic     p
@@ -667,13 +669,239 @@ chivalry_data</code></pre>
 </div>
 <div id="aus-der-praxis" class="section level1">
 <h1>Aus der Praxis</h1>
-<p>Praxis-Beispiele folgen.</p>
+<p><span class="citation">Matzke et al. (<a href="#ref-Matzke.2015" role="doc-biblioref">2015</a>)</span> ließen eine Reihe von Probanden neutrale Worte auswendig lernen. Die Autoren teilten ihre Probanden unter anderem nun in zwei Gruppen ein: die eine Gruppe ließen sie nun nach dem Lernen und vor dem Abruf (im <em>retention interval</em>) ihre Augen horizontal bewegen, die andere Gruppe ließen sie einen Punkt fixieren. Anschließend sollten die Probanden so viele gelernte Worte wie möglich abrufen. Die Frage war nun, ob die Augenbewegung den Abruf verbessert oder verschlechtert. Die Daten aus der Original-Studie sind in der Datei <code>eye_movements.csv</code> und stammen aus der <a href="https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf">JASP Data Library</a> <span class="citation">(JASP Team, <a href="#ref-JASPTeam.2019" role="doc-biblioref">2019</a>)</span>.</p>
+<div id="eda-1" class="section level2">
+<h2>EDA</h2>
+<pre class="r"><code>eye_movement &lt;- read_csv(&quot;data/eye_movements.csv&quot;) %&gt;% 
+  janitor::clean_names()
+
+eye_movement &lt;- eye_movement %&gt;% 
+  mutate(condition = as_factor(condition))
+
+eye_movement</code></pre>
+<pre><code>## # A tibble: 49 x 3
+##    participant_number condition  critical_recall
+##                 &lt;dbl&gt; &lt;fct&gt;                &lt;dbl&gt;
+##  1                  1 Horizontal               4
+##  2                  3 Fixation                14
+##  3                  4 Horizontal              12
+##  4                  6 Fixation                 4
+##  5                  7 Horizontal              11
+##  6                  9 Fixation                23
+##  7                 10 Horizontal              16
+##  8                 12 Fixation                22
+##  9                 13 Horizontal               9
+## 10                 15 Fixation                16
+## # ... with 39 more rows</code></pre>
+<p>Wenn wir die Daten einlesen, lassen wir uns die Variablennamen direkt mit der Funktion <code>clean_names()</code> aus dem Paket <code>janitor</code> bereinigen. Nach dem Import haben wir festgestellt, dass die Variable <code>condition</code> als Zeichenfolge (<code>&lt;chr&gt;</code>) und nicht als Faktor eingelesen wurde. Das kann ganz leicht mit dem Befehl <code>as_factor()</code> behoben werden. Die Variable <code>participant_number</code> gibt die Nummer des Probanden an und ist uninteressant. In der Variable <code>condition</code> wird hinterlegt, welcher Proband welcher Bedingung (Horizontal vs. Fixation) zugeteilt wurde und <code>critical_recall</code> ist schließlich unsere abhängige Variable, die Anzahl der abgerufenen Worte. Den nun bereinigten Datensatz schauen wir uns genauer an.</p>
+<pre class="r"><code>eye_movement %&gt;% 
+  skim(condition)</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">Piped data</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">49</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">factor</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: factor</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="left">ordered</th>
+<th align="right">n_unique</th>
+<th align="left">top_counts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">condition</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">FALSE</td>
+<td align="right">2</td>
+<td align="left">Hor: 25, Fix: 24</td>
+</tr>
+</tbody>
+</table>
+<p>Dieser ersten Übersicht können wir entnehmen, dass 25 Probanden ihre Augen horizontal bewegten und 24 einen Punkt fixierten.</p>
+<pre class="r"><code>eye_movement %&gt;% 
+  group_by(condition) %&gt;% 
+  skim(critical_recall)</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">Piped data</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">49</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">numeric</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Group variables</td>
+<td align="left">condition</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="left">condition</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">critical_recall</td>
+<td align="left">Horizontal</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">10.88</td>
+<td align="right">4.32</td>
+<td align="right">3</td>
+<td align="right">9.00</td>
+<td align="right">11</td>
+<td align="right">13.00</td>
+<td align="right">22</td>
+<td align="left">▃▅▇▃▁</td>
+</tr>
+<tr class="even">
+<td align="left">critical_recall</td>
+<td align="left">Fixation</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">15.29</td>
+<td align="right">6.38</td>
+<td align="right">4</td>
+<td align="right">10.75</td>
+<td align="right">15</td>
+<td align="right">22.25</td>
+<td align="right">25</td>
+<td align="left">▂▇▃▃▇</td>
+</tr>
+</tbody>
+</table>
+<p>Dem ersten Eindruck nach, scheint der Abruf in der Gruppe mit horizontalen Augenbewegungen schlechter zu sein. Im Durchschnitt haben die Probanden dieser experimentellen Bedingung <span class="math inline">\(M = 10.88, SD = 4.32\)</span> Wörter abgerufen, Probanden, die einen Punkt fixierten jedoch <span class="math inline">\(M = 15.29, SD = 6.38\)</span> Worte. Den gleichen Effekt können wir ganz gut im Violin-Plot<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> (C) erkennt. In beiden Bedingungen hatten wir auf jeden Fall auch richtige Brains sitzen, die maximalen abgerufenen Worte sind hier 22 und 25. Allerdings gab es auch Probanden, die nur 3 oder 4 Worte abrufen konnten. Da wir eine ziemlich kleine Stichprobe haben (in beiden Bedingungen jeweils <span class="math inline">\(n &lt; 30\)</span>), sollten wir die Daten tatsächlich auf Normalverteilung und Varianzhomogenität prüfen und uns entsprechende Abbildungen zur Beurteilung ansehen.</p>
+<p><img src="t-test-unabhaengig_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Argh! Anhand der Kerndichteschätzungen (A) und den QQ-Plots (B) können wir festhalten: Normalverteilung sieht anders aus… So ist das mit den empirischen Daten, kaum etwas erhoben, sofort nur Probleme. Die Daten der Bedingung “Horizontal” gehen noch, aber bei den Daten der Bedingung “Fixation” haben wir ernstzunehmende Probleme. Was sagen uns der Shapiro-Wilk- und der Levene-Test?</p>
+<pre class="r"><code># Shapiro-Wilk-Test
+eye_movement %&gt;% 
+  group_by(condition) %&gt;% 
+  shapiro_test(critical_recall)</code></pre>
+<pre><code>## # A tibble: 2 x 4
+##   condition  variable        statistic      p
+##   &lt;fct&gt;      &lt;chr&gt;               &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Horizontal critical_recall     0.959 0.396 
+## 2 Fixation   critical_recall     0.926 0.0794</code></pre>
+<pre class="r"><code># Levene-Test
+eye_movement %&gt;% 
+  levene_test(critical_recall ~ condition)</code></pre>
+<pre><code>## # A tibble: 1 x 4
+##     df1   df2 statistic       p
+##   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1     1    47      7.50 0.00867</code></pre>
+<p>Der Shapiro-Wilk-Test bestätigt unsere Vermutung, die wir bereits aus den Abbildungen getroffen haben. Bei der “Fixation”-Bedingung wurde es eng, aber – wie das bei Nullhypothesen-Signifikanztests halt so ist – <span class="math inline">\(p = .079\)</span>, also über <span class="math inline">\(.05\)</span>, was für uns erst einmal gut ist. Der Levene-Test haut uns mit seinem Ergebnis (<span class="math inline">\(p = .009\)</span>) in Kombination mit Abbildung C allerdings völlig aus den Socken. Wir können keine Varianzhomogenität mehr annehmen, also dürfen wir keinen klassischen <span class="math inline">\(t\)</span>-Test rechnen! Allerdings habe ich weiter oben erwähnt, dass wir bei dieser Fragestellung auch einfach direkt den Welch-Test rechnen dürfen, der in R sowieso voreingestellt ist.</p>
+</div>
+<div id="durchführung-1" class="section level2">
+<h2>Durchführung</h2>
+<p>Die eigentliche Analyse ist kurz und schmerzlos.</p>
+<pre class="r"><code># Welch-Test
+eye_movement %&gt;% 
+  t_test(critical_recall ~ condition)</code></pre>
+<pre><code>## # A tibble: 1 x 8
+##   .y.             group1     group2      n1    n2 statistic    df       p
+## * &lt;chr&gt;           &lt;chr&gt;      &lt;chr&gt;    &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1 critical_recall Horizontal Fixation    25    24     -2.82  40.3 0.00735</code></pre>
+<pre class="r"><code># Hedges&#39; g
+eye_movement %&gt;% 
+  cohens_d(critical_recall ~ condition, hedges.correction = TRUE)</code></pre>
+<pre><code>## # A tibble: 1 x 7
+##   .y.             group1     group2   effsize    n1    n2 magnitude
+## * &lt;chr&gt;           &lt;chr&gt;      &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;ord&gt;    
+## 1 critical_recall Horizontal Fixation  -0.797    25    24 moderate</code></pre>
+<p>Der Unterschied in der Menge der abgerufenen Worte unterscheidet sich zwischen den Experimental-Bedingungen signifikant.</p>
+</div>
+<div id="berichten-1" class="section level2">
+<h2>Berichten</h2>
+<p>We found that moving eyes horizontally during the retention interval reduced the amount of recalled words significantly, <span class="math inline">\(t(40.3) = -2.82, g = -0.80\)</span>, with amoderate to large effect size.</p>
+</div>
 </div>
 <div id="literatur" class="section level1 unnumbered">
 <h1>Literatur</h1>
 <div id="refs" class="references">
 <div id="ref-Hedges.1985">
 <p>Hedges, L. V., &amp; Olkin, I. (1985). <em>Statistical Methods for Meta-Analysis</em>. Academic Press.</p>
+</div>
+<div id="ref-JASPTeam.2019">
+<p>JASP Team. (2019). <em>The JASP Data Library: Version 2</em>. JASP Publishing. <a href="https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf">https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf</a></p>
+</div>
+<div id="ref-Matzke.2015">
+<p>Matzke, D., Nieuwenhuis, S., van Rijn, H., Slagter, H. A., van der Molen, M. W., &amp; Wagenmakers, E.-J. (2015). The effect of horizontal eye movements on free recall: a preregistered adversarial collaboration. <em>Journal of experimental psychology. General</em>, <em>144</em>(1), e1–15. <a href="https://doi.org/10.1037/xge0000038">https://doi.org/10.1037/xge0000038</a></p>
 </div>
 <div id="ref-Rasch.2011">
 <p>Rasch, D., Kubinger, K. D., &amp; Moder, K. (2011). The two-sample t test: pre-testing its assumptions does not pay off. <em>Statistical Papers</em>, <em>52</em>(1), 219–231. <a href="https://doi.org/10.1007/s00362-009-0224-x">https://doi.org/10.1007/s00362-009-0224-x</a></p>
@@ -685,6 +913,12 @@ chivalry_data</code></pre>
 <p>Ruxton, G. D. (2006). The unequal variance t-test is an underused alternative to Student’s t-test and the Mann–Whitney U test. <em>Behavioral Ecology</em>, <em>17</em>(4), 688–690. <a href="https://doi.org/10.1093/beheco/ark016">https://doi.org/10.1093/beheco/ark016</a></p>
 </div>
 </div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Der Violin-Plot ist im Prinzip nichts anderes als ein detaillierterer Boxplot. Die Breite des Körpers gibt die relative Menge an Datenpunkten wieder; ist der Körper an einer Stelle also breit, sind dort viele Datenpunkte. Die schwarze Linie kennzeichnet auch hier wieder den Median.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
 </div>
 
 

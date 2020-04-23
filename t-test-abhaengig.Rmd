@@ -96,7 +96,7 @@ patience_line <- patience_data %>%
 
 Diesen leichten Trend finden wir auch in der entsprechenden Abbildung (C) wieder. Bezüglich der Voraussetzungen können wir anhand der Kerndichteschätzung (= "geglättetes" Histogramm in A) und dem QQ-Plot (B) davon ausgehen, dass die Unterschiede in den Messwerten annähernd normalverteilt sind. Aufgrund des zentralen Grenzwertsatzes können wir jedoch in jedem Fall davon ausgehen, dass die Voraussetzung der Normalverteilung (der Stichprobenkennwerteverteilung) erfüllt ist.
 
-Wer seine Voraussetzungen gegen [ausdrückliche Empfehlung](voraussetzungen.html) dennoch statistisch prüfen will, kann das natürlich trotzdem machen.
+Wer seine Voraussetzungen gegen [ausdrückliche Empfehlung](voraussetzungen.html) in großen Stichproben dennoch statistisch prüfen will, kann das natürlich trotzdem machen.
 ```{r}
 patience_data %>% 
   pivot_wider(

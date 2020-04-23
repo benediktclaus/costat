@@ -79,13 +79,15 @@ chivalry_box <- chivalry_data %>%
 ((chivalry_dens / chivalry_qq) | chivalry_box) + plot_annotation(tag_levels = "A") & theme(legend.position = "bottom")
 ```
 
-Wer auf Tests zur Überprüfung der Voraussetzungen besteht, also dem Vorgehen, von dem ich wieder [entschieden abrate](voraussetzungen.html)), der kann diese natürlich durchführen. Wichtig ist dabei zu beachten, dass der Test der Daten "auf Normalverteilung" pro Haus, bzw. pro Gruppe, durchgeführt werden muss.
+Wer auf Tests zur Überprüfung der Voraussetzungen besteht, also dem Vorgehen, von dem ich bei großen Stichproben wieder [entschieden abrate](voraussetzungen.html)), der kann diese natürlich durchführen. Wichtig ist dabei zu beachten, dass der Test der Daten "auf Normalverteilung" pro Haus, bzw. pro Gruppe, durchgeführt werden muss.
 
 ```{r}
+# Shapiro-Wilk-Test
 chivalry_data %>% 
   group_by(house) %>% 
   shapiro_test(chivalry)
 
+# Levene-Test
 chivalry_data %>% 
   levene_test(chivalry ~ house)
 ```
@@ -120,7 +122,91 @@ Members of the Hogwarts house "Gryffindor" yielded greater scores on a test esti
 Folgen.
 
 # Aus der Praxis
-Praxis-Beispiele folgen.
+@Matzke.2015 ließen eine Reihe von Probanden neutrale Worte auswendig lernen. Die Autoren teilten ihre Probanden unter anderem nun in zwei Gruppen ein: die eine Gruppe ließen sie nun nach dem Lernen und vor dem Abruf (im *retention interval*) ihre Augen horizontal  bewegen, die andere Gruppe ließen sie einen Punkt fixieren. Anschließend sollten die Probanden so viele gelernte Worte wie möglich abrufen. Die Frage war nun, ob die Augenbewegung den Abruf verbessert oder verschlechtert. Die Daten aus der Original-Studie sind in der Datei `eye_movements.csv` und stammen aus der [JASP Data Library](https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf) [@JASPTeam.2019].
+
+## EDA
+```{r message=FALSE}
+eye_movement <- read_csv("data/eye_movements.csv") %>% 
+  janitor::clean_names()
+
+eye_movement <- eye_movement %>% 
+  mutate(condition = as_factor(condition))
+
+eye_movement
+```
+
+Wenn wir die Daten einlesen, lassen wir uns die Variablennamen direkt mit der Funktion `clean_names()` aus dem Paket `janitor` bereinigen. Nach dem Import haben wir festgestellt, dass die Variable `condition` als Zeichenfolge (`<chr>`) und nicht als Faktor eingelesen wurde. Das kann ganz leicht mit dem Befehl `as_factor()` behoben werden. Die Variable `participant_number` gibt die Nummer des Probanden an und ist uninteressant. In der Variable `condition` wird hinterlegt, welcher Proband welcher Bedingung (Horizontal vs. Fixation) zugeteilt wurde und `critical_recall` ist schließlich unsere abhängige Variable, die Anzahl der abgerufenen Worte.  Den nun bereinigten Datensatz schauen wir uns genauer an.
+
+```{r}
+eye_movement %>% 
+  skim(condition)
+```
+
+Dieser ersten Übersicht können wir entnehmen, dass 25 Probanden ihre Augen horizontal bewegten und 24 einen Punkt fixierten.
+
+```{r}
+eye_movement %>% 
+  group_by(condition) %>% 
+  skim(critical_recall)
+```
+
+Dem ersten Eindruck nach, scheint der Abruf in der Gruppe mit horizontalen Augenbewegungen schlechter zu sein. Im Durchschnitt haben die Probanden dieser experimentellen Bedingung $M = 10.88, SD = 4.32$ Wörter abgerufen, Probanden, die einen Punkt fixierten jedoch $M = 15.29, SD = 6.38$ Worte. Den gleichen Effekt können wir ganz gut im Violin-Plot^[Der Violin-Plot ist im Prinzip nichts anderes als ein detaillierterer Boxplot. Die Breite des Körpers gibt die relative Menge an Datenpunkten wieder; ist der Körper an einer Stelle also breit, sind dort viele Datenpunkte. Die schwarze Linie kennzeichnet auch hier wieder den Median.] (C) erkennt. In beiden Bedingungen hatten wir auf jeden Fall auch richtige Brains sitzen, die maximalen abgerufenen Worte sind hier 22 und 25. Allerdings gab es auch Probanden, die nur 3 oder 4 Worte abrufen konnten. Da wir eine ziemlich kleine Stichprobe haben (in beiden Bedingungen jeweils $n < 30$), sollten wir die Daten tatsächlich auf Normalverteilung und Varianzhomogenität prüfen und uns entsprechende Abbildungen zur Beurteilung ansehen.
+
+```{r echo=FALSE}
+eye_movement_dens <- eye_movement %>% 
+  ggplot(aes(x = critical_recall, fill = condition, color = condition)) +
+  geom_density(alpha = 0.5) +
+  labs(x = "Recall", y = "Dichte", color = "Bedingung", fill = "Bedingung")
+
+eye_movement_qq <- eye_movement %>% 
+  ggplot(aes(sample = critical_recall)) +
+  stat_qq() +
+  stat_qq_line() +
+  facet_wrap(~ condition) +
+  labs(x = "Theoretisch", y = "Beobachtet")
+
+eye_movement_boxplot <- eye_movement %>% 
+  ggplot(aes(x = condition, y = critical_recall)) +
+  geom_violin(draw_quantiles = 0.5) +
+  geom_jitter(width = 0.03) +
+  expand_limits(y = 0) +
+  labs(x = "Bedingung", y = "Recall")
+
+((eye_movement_dens / eye_movement_qq) | eye_movement_boxplot) + plot_annotation(tag_levels = "A") & theme(legend.position = "bottom")
+```
+
+Argh! Anhand der Kerndichteschätzungen (A) und den QQ-Plots (B) können wir festhalten: Normalverteilung sieht anders aus... So ist das mit den empirischen Daten, kaum etwas erhoben, sofort nur Probleme. Die Daten der Bedingung "Horizontal" gehen noch, aber bei den Daten der Bedingung "Fixation" haben wir ernstzunehmende Probleme. Was sagen uns der Shapiro-Wilk- und der Levene-Test?
+
+```{r}
+# Shapiro-Wilk-Test
+eye_movement %>% 
+  group_by(condition) %>% 
+  shapiro_test(critical_recall)
+
+# Levene-Test
+eye_movement %>% 
+  levene_test(critical_recall ~ condition)
+```
+
+Der Shapiro-Wilk-Test bestätigt unsere Vermutung, die wir bereits aus den Abbildungen getroffen haben. Bei der "Fixation"-Bedingung wurde es eng, aber -- wie das bei Nullhypothesen-Signifikanztests halt so ist -- $p = .079$, also über $.05$, was für uns erst einmal gut ist. Der Levene-Test haut uns mit seinem Ergebnis ($p = .009$) in Kombination mit Abbildung C allerdings völlig aus den Socken. Wir können keine Varianzhomogenität mehr annehmen, also dürfen wir keinen klassischen $t$-Test rechnen! Allerdings habe ich weiter oben erwähnt, dass wir bei dieser Fragestellung auch einfach direkt den Welch-Test rechnen dürfen, der in R sowieso voreingestellt ist.
+
+## Durchführung
+Die eigentliche Analyse ist kurz und schmerzlos.
+
+```{r}
+# Welch-Test
+eye_movement %>% 
+  t_test(critical_recall ~ condition)
+
+# Hedges' g
+eye_movement %>% 
+  cohens_d(critical_recall ~ condition, hedges.correction = TRUE)
+```
+
+Der Unterschied in der Menge der abgerufenen Worte unterscheidet sich zwischen den Experimental-Bedingungen signifikant.
+
+## Berichten
+We found that moving eyes horizontally during the retention interval reduced the amount of recalled words significantly, $t(40.3) = -2.82, g = -0.80$, with amoderate to large effect size.
 
 # Literatur
 
