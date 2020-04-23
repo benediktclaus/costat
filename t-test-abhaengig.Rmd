@@ -137,7 +137,98 @@ Folgen.
 
 
 # Aus der Praxis
-Praxis-Beispiele folgen.
+@Moore.2017 stellen uns Daten von Patienten mit Demenz zur Verfügung. Sie haben im Rahmen einer größeren Studie erfasst, ob sich diese Patienten mit Demenz in bestimmten Situationen störender Verhalten als üblich. Genauer gesagt sollte das störende Verhalten in Abhängigkeit verschiedener Phasen des Mondzyklus betrachtet werden. Die Daten sind aus der [JASP Data Library](https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf) [@JASPTeam.2019] und in der Datei `moon_and_aggression.csv`.
 
+Der Datensatz besteht auch zwei Spalten, einmal `moon` und einmal `other`. In der ersten Spalte steht die Anzahl der störenden Verhaltensweisen eines Patienten während einer Mondphase, in der zweiten die Anzahl der störenden Verhaltens *desselben* Patienten in anderen Phasen. Höhere Werte bedeuten hier mehr störendes Verhalten.
+
+## EDA
+```{r message=FALSE}
+moon <- read_csv("data/moon_and_aggression.csv") %>% 
+  janitor::clean_names()
+
+moon
+```
+
+Die Daten kommen im wide format, mit dem wir in R ungerne, bzw. selten arbeiten. Die meisten longitudinalen Daten sind im wide format, weil sie so intuitiv einzutragen sind, aber so sind sie eben [nicht tidy](data-wrangling.html). Wir müssen die Daten zunächst ins long format überführen, also "länger machen". Damit wir den Überblick darüber behalten, von wem die Daten eigentlich sind, sollten wir auch Probanden IDs vergeben; dafür reicht eine fortlaufende Nummer. Das erreichen wir ganz unkompliziert mit der Funktion `rownames_to_column()`, der wir das Argument `var = "id"` mitgeben, so wird die neu erstellte Spalte direkt nach unseren Wünschen benannt.
+
+```{r}
+moon <- moon %>% 
+  rownames_to_column(var = "id") %>% 
+  pivot_longer(
+    cols = -id,
+    names_to = "cycle",
+    values_to = "aggressive_behavior"
+  )
+
+moon %>% 
+  group_by(cycle) %>% 
+  get_summary_stats()
+```
+
+Anhand der deskriptiven Kennwerte können wir die Tendenz erahnen, dass sich die untersuchten Patienten mit Demenz in Mondphasen störender verhielten ($M = 3.02, SD = 1.50$) als in anderen Mondphasen ($M = 0.59, SD = 0.45$). Wir haben eine sehr kleine Stichprobe von $n = 15$ Probanden mit zwei Messungen. Wir sollten unsere Voraussetzungen also auf jeden Fall gründlich prüfen. Bei dem $t$-Test mit verbundenen Stichproben müssen die Differenzen normalverteilt sein.
+
+```{r echo=FALSE}
+moon_dens <- moon %>% 
+  pivot_wider(
+    names_from = "cycle",
+    values_from = "aggressive_behavior"
+  ) %>% 
+  mutate(difference = other - moon) %>% 
+  ggplot(aes(x = difference)) +
+  geom_density() +
+  labs(x = "Differenz", y = "Dichte")
+
+moon_qq <- moon %>% 
+  pivot_wider(
+    names_from = "cycle",
+    values_from = "aggressive_behavior"
+  ) %>% 
+  mutate(difference = other - moon) %>% 
+  ggplot(aes(sample = difference)) +
+  stat_qq() +
+  stat_qq_line() +
+  labs(x = "Theoretisch", y = "Beobachtet")
+
+moon_diff <- moon %>% 
+  ggplot(aes(x = cycle, y = aggressive_behavior)) +
+  stat_summary(fun.data = "mean_sdl", geom = "errorbar", fun.args = list(mult = 1), width = 0.2) +
+  stat_summary(fun = "mean", geom = "point") +
+  stat_summary(fun = "mean", geom = "line", aes(group = 1)) +
+  labs(x = "Mondzyklus", y = "Störendes Verhalten")
+
+((moon_dens / moon_qq) | moon_diff) + plot_annotation(tag_levels = "A") & theme(legend.position = "bottom")
+```
+
+Aus Abbildungen A (der Kerndichteschätzung der Differenzen) und B (dem QQ-Plot der Differenzen) können wir entnehmen, dass das ganz gut aussieht. Bis auf einen kleinen bumper am Ende sehen die Daten recht normalverteilt aus. Was sagt der Shapiro-Wilk-Test?
+
+```{r}
+moon %>% 
+  pivot_wider(
+    names_from = "cycle",
+    values_from = "aggressive_behavior"
+  ) %>% 
+  mutate(difference = other - moon) %>%
+  shapiro_test(difference)
+```
+
+Da $p = .148$ und somit über $.05$, sehen wir hier erstmal kein Problem. Wir dürfen den $t$-Test für gepaarte/abhängige Stichproben berechnen.
+
+## Durchführung
+Die eigentliche Durchführung ist auch hier wieder kurz und schmerzlos.
+
+```{r}
+# t-test
+moon %>% 
+  t_test(aggressive_behavior ~ cycle, paired = TRUE)
+
+# Hedges' g
+moon %>% 
+  cohens_d(aggressive_behavior ~ cycle, paired = TRUE, hedges.correction = TRUE)
+```
+
+Laut $t$-Test ist die Häufigkeit von störendem Verhalten von Patienten mit Demenz während Mondphasen signifikant höher als während anderer Phasen ($p < .001$); und das mit einem relativ großen Effekt ($g = 1.57$).
+
+## Berichten
+We found patients with dementia to show significantly more disruptive behavior during moon phases of the lunar cycle ($M = 3.02, SD = 1.50$) than in other phases ($M = 0.59, SD = 0.45$), $t(14) = 6.45, p < .001$ with a large effect of $g = 1.57$.
 
 # Literatur
