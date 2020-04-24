@@ -1,0 +1,53 @@
+---
+title: "Zentraler Grenzwertsatz"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(fig.align = "center")
+ggplot2::theme_set(ggplot2::theme_light())
+```
+
+> Wenn man hinreichend große Stichproben $(n>30)$ untersucht, muss man die Daten nicht auf Normalverteilung prüfen.
+
+Das sage ich so leicht, aber warum bin ich mir da so sicher? Im allgemeinen linearen Modell (GLM) und den meisten Analysen, die aus diesem entstanden sind (z.B. $t$-Tests und ANOVAs), gelten gleiche [Voraussetzungen](voraussetzungen.html). Die Voraussetzung der Normalverteilung bezieht sich, wie wir bereits kennengelernt haben, nicht auf die Daten an sich, sondern auf die Stichprobenkennwerteverteilung [@Field.2018; @Bortz.2010; @Eid.2017]. Der Stichprobenkennwert, den wir mit am häufigsten untersuchen, ist der Mittelwert. Gemeint ist also, dass die *Verteilung dieser Mittelwerte* normalverteilt sein muss.
+
+Stellen wir uns einmal eine Grundgesamtheit vor, z.B. "die Europäer". Wollen wir jetzt bspw. die durchschnittliche Attraktivität der Europäer einschätzen, stoßen wir schnell an unsere Grenzen, weil wir natürlich nicht *alle* Europäer beurteilen können. Wir bedienen uns dem nützlichen Mittel der **Stichprobe**. Wir beurteilen also einen Teil der Europäer und versuchen eine Aussage zu treffen. Wir ziehen uns also ein paar Deutsche, Engländer, Italiener, Franzosen, Dänen, Polen, etc. und beurteilen deren Attraktivität. Das machen wir *einmal* und haben folglich *einen* Mittelwert. Wo ist jetzt also die Verteilung der Mittelwerte? Nun, wir sind vielleicht nicht die einzige Forschergruppe, die sich für diese Fragestellung interessiert. Irgendwo misst auch jemand anderes die durchschnittliche Attraktivität seiner europäischen Stichprobe. Stellen wir uns jetzt vor, dass es hunderte dieser Messungen gibt und schon haben wir hunderte Stichproben und hunderte Mittelwerte. Für die Voraussetzung der Normalverteiung sollen **diese hunderte Mittelwerte nun normalverteilt sein**.
+
+Die Verteilung dieser Mittelwerte werden wir nie empirisch erfassen können, weil unsere Fragestellung nicht hunderte Male untersucht wird. An dieser Stelle kommt nun jedoch der zentrale Grenzwertsatz ins Spiel, denn dieser besagt, dass die Stichprobenkennwerteverteilung *immer* annähernd normalverteilt ist, egal, wie krumm und schief die Ausgangsverteilung ist, *wenn die gezogene Stichprobe hinreichend groß ist*. Aufgrund dieser Aussage ist heißt er auch "zentraler" Grenzwertsatz, weil er unglaublich wichtig ist.
+
+Und das stimmt jetzt? Simulieren wir doch einfach ein paar Daten und prüfen diese Aussage.
+
+# Simulation der Grundgesamtheit
+```{r message=FALSE}
+library(tidyverse)
+library(sn)
+```
+
+
+```{r}
+set.seed(20200425)
+population <- tibble(
+  attractiveness = rsn(n = 10000, xi = 20, omega = 6)
+  )
+
+population %>% 
+  ggplot(aes(x = attractiveness)) +
+  geom_density(fill = "limegreen", color = "limegreen", alpha = 0.1)
+
+tibble(
+  populations = rep(list(population), 3000)
+)
+```
+
+
+
+# Literatur
+
+```{r echo=FALSE}
+remove(list = ls())
+```
