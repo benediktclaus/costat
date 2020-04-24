@@ -3,6 +3,9 @@ title: "Chamber of Statistics"
 output:
   html_document:
     toc: false
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
 ---
 
 ![](images/spooky_r.jpg)
@@ -18,4 +21,9 @@ Nach einem kurzen Blick auf die Themen-Seiten sollte klar werden, dass ich vor a
 Stehen Forschungsprojekte, Haus-, Bachelor- oder Masterarbeiten auf Deinem Abgabe-Kalender und zittern Deine Hände schon beim Gedanken an die dunkle Kammer der Statistik? Dann bist Du hier genau richtig. Wir gehen jedes Verfahren Schritt für Schritt anhand von konkreten Beispielen durch. Wir ziehen hier keine drei Kugeln aus einer Urne, werfen danach Münzen und ergötzen uns am Anblick von Spielkarten.
 
 # Gibt's noch mehr?
-Ja! Diese Website wird über ein [GitHub-Repository](https://github.com/benediktclaus/costat.git) gespeist. Dort findest du alle Ressourcen, auch die Beispieldaten, die Du zum Mitmachen brauchst. Dort können auch Fehler gemeldet werden, insofern sich welche eingeschlichen haben.
+Ja! Diese Website wird über ein [GitHub-Repository](https://github.com/benediktclaus/costat.git) gespeist. Dort findest Du alle Ressourcen, auch die Beispieldaten, die Du zum Mitmachen brauchst. Dort können auch Fehler gemeldet werden, insofern sich welche eingeschlichen haben.
+
+# Gibt's auch etwas zum Nachschlagen?
+Natürlich! *Das* Standardwerk sollte für den interessierten Leser "der @Field.2018" sein. Wer mehr in die Welt der Formeln und Details eintacuhen möchte sei auf @Eid.2017 verwiesen. Ein weiterer Klassiker, jedoch schwere Kost, findest du bei @Bortz.2010.
+
+# Literatur

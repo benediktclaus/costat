@@ -441,9 +441,11 @@ div.tocify {
 </div>
 
 
-<div id="t-tests" class="section level1">
-<h1><span class="math inline">\(t\)</span>-Tests</h1>
-<p>Der <span class="math inline">\(t\)</span>-Test, oder besser gesagt die <span class="math inline">\(t\)</span>-Tests, sind eine kleine Gruppe von statistischen Signifikanztests, mit denen man Gruppenunterschiede untersuchen kann. Meistens unterscheidet man zwischen dem</p>
+<div id="parametrische-verfahren" class="section level1">
+<h1>Parametrische Verfahren</h1>
+<div id="t-tests" class="section level2">
+<h2><span class="math inline">\(t\)</span>-Tests</h2>
+<p>Der <span class="math inline">\(t\)</span>-Test, oder besser gesagt die <span class="math inline">\(t\)</span>-Tests, sind eine kleine Gruppe von statistischen Signifikanztests, mit denen man Gruppenunterschiede zwischen <strong>zwei Gruppen</strong> untersuchen kann. Meistens unterscheidet man zwischen dem</p>
 <ul>
 <li>Einstichproben-<span class="math inline">\(t\)</span>-Test, dem</li>
 <li><span class="math inline">\(t\)</span>-Test mit unabhängigen Stichproben und dem</li>
@@ -458,8 +460,31 @@ div.tocify {
 <a href="t-test-ahaengig.html">Hier geht’s zur Anleitung</a></p>
 <p>Die <strong>Daten zum fleißigen Mitrechnen</strong> findest Du wie immer im <a href="https://github.com/benediktclaus/costat/tree/master/data">Git-Repository</a>.</p>
 </div>
-<div id="anovas" class="section level1">
-<h1>ANOVAs</h1>
+<div id="anovas" class="section level2">
+<h2>ANOVAs</h2>
+<p>Die <span class="math inline">\(t\)</span>-Tests sind gut und einfach nachzuvollziehen. Mit ihnen können wir zwei Gruppen anhand kontinuierlicher Variablen ganz gut miteinander vergleichen. In den meisten Fällen hat man aber nicht nur zwei Gruppen (oder auch zwei Messzeitpunkte). Möchte man <strong>zwei oder mehr</strong> Mittelwerte nun vergleichen, muss man sich Varianzanalysen (<strong>An</strong>alysis <strong>o</strong>f <strong>Va</strong>riance, ANOVA) genauer anschauen, denn die sind genau für diesen Fall gemacht. Hier behandeln wir verschiedene ANOVAs, nämlich die</p>
+<ul>
+<li>Einfaktorielle ANOVA; deren generalisierte Form, also die</li>
+<li>Faktorielle ANOVA, die</li>
+<li>Kovarianzanalyse (kurz ANCOVA), die</li>
+<li>ANOVA für Messwiederholungen und schließlich</li>
+<li>Mixed ANOVAs für gemischte Designs</li>
+</ul>
+<p>Die ANOVA ist ein sehr mächtiges Werkzeug, da sehr breit in ihren Möglichkeiten. Um sich für eines der Verfahren zu entscheiden, muss man erst einmal festlegen, was genau man machen möchte und etwas “ANOVA-Sprache” lernen.</p>
+<p>Das erste neue Wort ist <strong>Faktor</strong>; durch Faktoren werden die Gruppen, die wir miteinander vergleichen möchten, definiert. Ein Fakto kann beispielsweise “Geschlecht” sein, das zwei Gruppen umfasst. Ein anderer Faktor könnte “Experimentalbedingung” sein, der dann so viele Gruppen wie Bedingungen umfasst, usw. Etwas komplizierter wird es, wenn wir die Faktoren noch weiter differenzieren. Es gibt nämlich <strong>Zwischensubjekt</strong>-Faktoren (<em>between-subjects factors</em>) und <strong>Innersubjekt</strong>-Faktoren (<em>within-subjects factors</em>). Mit Zwischensubjekt-Faktoren werden die Probanden, oder was auch sonst getestet wurde, einfach gesagt in Gruppen eingeteilt. “Geschlecht” ist so ein klassischer Zwischensubjekt-Faktor, denn das Geschlecht lässt mich <em>zwischen</em> den Probanden differenzieren. Mit Innersubjekt-Faktoren werden Bedingungen <em>innerhalb</em> einer Probanden, oder was auch sonst getestet wurde, unterschieden. Ein klassischer Innersubject-Faktor ist beispielweise “Zeit”, wenn ein Proband mehrmals getestet wird. <em>Innerhalb</em> des Probanden gibt es also verschiedene Bedingungen, deren Unterschied man ebenfalls beziffern möchte.</p>
+<p>ANOVAs, die ausschließlich Zwischensubjekt-Faktoren berücksichtigen, werden schlicht faktorielle ANOVAs bezeichnet. Wenn man die statistischen Methoden berichten will, ist es immer eine gute Idee, die Anzahl der Faktoren anzugeben. Der Sonderfall einer faktoriellen ANOVA ist eine mit nur einem Faktor; diese heißt dann “einfaktorielle ANOVA” (<em>one-way anova</em>). Eine ANOVA mit zwei Faktoren ist “zweifaktoriell” (<em>two-way</em>), eine mit drei Faktorien “dreifaktoriell” (<em>three-way</em>) – an dieser Stelle sollte die Idee klar sein.</p>
+<p>ANOVAs mit ausschließlich Innersubjekt-Faktoren werden meißtens als ANOVAs mit Messwiederholungen bezeichnet (<em>repeated measures ANOVA</em>), weil ein Proband, oder was auch immer, mehrmals getestet wurde. Die Menge der Faktoren gibt man wie bei der faktoriellen ANOVA an: eine ANOVA mit Messwiederholung und einem Faktor nennt man also “einfaktorielle ANOVA mit Messwiederholung” (<em>one-way repeated measures ANOVA</em>).</p>
+<p>ANOVAs, in denen man Zwischen- und Innersubjekt-Faktoren gleichzeitig verwendet, werden “Mixed ANOVAs” genannt, weil hier beide Faktorarten gemischt werden “mischen”. Die Benennung folgt demselben Schema: Unabhängig davon, welcher Art die Faktoren sind (zwischen- oder innersubjekt), wird wieder die Anzahl der Faktoren angegeben. Das einfachste gemischte Design ist eine ANOVA mit einem Zwischen- und einem Innersubjektfaktor. In der Summe sind das zwei und somit berechnen wir eine “zweifaktorielle gemischte ANOVA” (<em>two-way mixed ANOVA</em>).</p>
+<p>Möchte man noch genauer sein, was sehr empfehlenswert ist, sollte man am besten auch direkt die Anzahl der Faktorstufen angeben. Die Faktorstufen geben an, wie viele Gruppen ein Faktor umfasst. Der Faktor “Geschlecht” hat so zwei Faktorstufen (nämlich “männlich” und “weiblich”). Wenn man Probanden über drei Messzeitpunkte beobachtet, hat dieser Innersubjekt-Faktor drei Faktorstufen (<span class="math inline">\(t_1\)</span>, <span class="math inline">\(t_2\)</span> und <span class="math inline">\(t_3\)</span>). Analysieren wir beispielweise die Daten einer Studie, in der Geschlecht (männlich vs. weiblich) und Experimentalbedingung (Kontrollgruppe vs. Experimentalgruppe) berücksichtigt wurden, dann können wir eine 2 <span class="math inline">\(\times\)</span> 2 faktorielle ANOVA berechnen. So hätte man auf kurze Weise beschrieben, wie viele Faktoren mit wie vielen Faktorstufen man in die Analyse mit einbezieht.</p>
+<p>Die ausführlichste Darstellung des Designs umfasst die eben eingeführte Schreibweise unter Angabe der Faktorarten und -stufen. Betrachten wir zur Veranschaulichung eine Studie, in der eine neue Intervention im Vergleich zu einer Kontrollgruppe untersucht wurde. Beide Gruppen wurden über 3 Messzeitpunkte beobachtet. Wir haben somit einen Zwischensubjektfator “Gruppenzugehörigkeit” und einen Innersubjektfaktor “Messzeitpunkt”. Berichten kann man das als:</p>
+<blockquote>
+<p>2 <span class="math inline">\(\times\)</span> 3 faktorielle gemischte ANOVA mit dem Zwischensubjekt-Faktor “Gruppenzugehörigkeit” mit zwei Faktorstufen (Kontrollgruppe vs. Interventionsgruppe) und einem Innersubjektfaktor mit drei Faktorstufen (<span class="math inline">\(t_1\)</span>, <span class="math inline">\(t_2\)</span> und <span class="math inline">\(t_3\)</span>).</p>
+</blockquote>
+<p>Wenn man das liest, weiß man sofort, worum es geht.</p>
+</div>
+</div>
+<div id="nicht-parametrische-verfahren" class="section level1">
+<h1>Nicht-parametrische Verfahren</h1>
 </div>
 <div id="literatur" class="section level1">
 <h1>Literatur</h1>

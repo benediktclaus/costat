@@ -11,9 +11,9 @@ editor_options:
 knitr::opts_chunk$set(fig.align = "center")
 ```
 
-
-# $t$-Tests
-Der $t$-Test, oder besser gesagt die $t$-Tests, sind eine kleine Gruppe von statistischen Signifikanztests, mit denen man Gruppenunterschiede untersuchen kann. Meistens unterscheidet man zwischen dem
+# Parametrische Verfahren
+## $t$-Tests
+Der $t$-Test, oder besser gesagt die $t$-Tests, sind eine kleine Gruppe von statistischen Signifikanztests, mit denen man Gruppenunterschiede zwischen **zwei Gruppen** untersuchen kann. Meistens unterscheidet man zwischen dem
 
 * Einstichproben-$t$-Test, dem
 * $t$-Test mit unabhängigen Stichproben und dem
@@ -32,6 +32,33 @@ Der $t$-Test für abhängige, oder verbundene, Stichproben kommt zutragen, wenn 
 
 Die **Daten zum fleißigen Mitrechnen** findest Du wie immer im [Git-Repository](https://github.com/benediktclaus/costat/tree/master/data).
 
-# ANOVAs
+## ANOVAs
+Die $t$-Tests sind gut und einfach nachzuvollziehen. Mit ihnen können wir zwei Gruppen anhand kontinuierlicher Variablen ganz gut miteinander vergleichen. In den meisten Fällen hat man aber nicht nur zwei Gruppen (oder auch zwei Messzeitpunkte). Möchte man **zwei oder mehr** Mittelwerte nun vergleichen, muss man sich Varianzanalysen (**An**alysis **o**f **Va**riance, ANOVA) genauer anschauen, denn die sind genau für diesen Fall gemacht. Hier behandeln wir verschiedene ANOVAs, nämlich die
+
+* Einfaktorielle ANOVA; deren generalisierte Form, also die
+* Faktorielle ANOVA, die
+* Kovarianzanalyse (kurz ANCOVA), die
+* ANOVA für Messwiederholungen und schließlich
+* Mixed ANOVAs für gemischte Designs
+
+Die ANOVA ist ein sehr mächtiges Werkzeug, da sehr breit in ihren Möglichkeiten. Um sich für eines der Verfahren zu entscheiden, muss man erst einmal festlegen, was genau man machen möchte und etwas "ANOVA-Sprache" lernen.
+
+Das erste neue Wort ist **Faktor**; durch Faktoren werden die Gruppen, die wir miteinander vergleichen möchten, definiert. Ein Fakto kann beispielsweise "Geschlecht" sein, das zwei Gruppen umfasst. Ein anderer Faktor könnte "Experimentalbedingung" sein, der dann so viele Gruppen wie Bedingungen umfasst, usw. Etwas komplizierter wird es, wenn wir die Faktoren noch weiter differenzieren. Es gibt nämlich **Zwischensubjekt**-Faktoren (*between-subjects factors*) und **Innersubjekt**-Faktoren (*within-subjects factors*). Mit Zwischensubjekt-Faktoren werden die Probanden, oder was auch sonst getestet wurde, einfach gesagt in Gruppen eingeteilt. "Geschlecht" ist so ein klassischer Zwischensubjekt-Faktor, denn das Geschlecht lässt mich *zwischen* den Probanden differenzieren. Mit Innersubjekt-Faktoren werden Bedingungen *innerhalb* einer Probanden, oder was auch sonst getestet wurde, unterschieden. Ein klassischer Innersubject-Faktor ist beispielweise "Zeit", wenn ein Proband mehrmals getestet wird. *Innerhalb* des Probanden gibt es also verschiedene Bedingungen, deren Unterschied man ebenfalls beziffern möchte.
+
+ANOVAs, die ausschließlich Zwischensubjekt-Faktoren berücksichtigen, werden schlicht faktorielle ANOVAs bezeichnet. Wenn man die statistischen Methoden berichten will, ist es immer eine gute Idee, die Anzahl der Faktoren anzugeben. Der Sonderfall einer faktoriellen ANOVA ist eine mit nur einem Faktor; diese heißt dann "einfaktorielle ANOVA" (*one-way anova*). Eine ANOVA mit zwei Faktoren ist "zweifaktoriell" (*two-way*), eine mit drei Faktorien "dreifaktoriell" (*three-way*) -- an dieser Stelle sollte die Idee klar sein.
+
+ANOVAs mit ausschließlich Innersubjekt-Faktoren werden meißtens als ANOVAs mit Messwiederholungen bezeichnet (*repeated measures ANOVA*), weil ein Proband, oder was auch immer, mehrmals getestet wurde. Die Menge der Faktoren gibt man wie bei der faktoriellen ANOVA an: eine ANOVA mit Messwiederholung und einem Faktor nennt man also "einfaktorielle ANOVA mit Messwiederholung" (*one-way repeated measures ANOVA*).
+
+ANOVAs, in denen man Zwischen- und Innersubjekt-Faktoren gleichzeitig verwendet, werden "Mixed ANOVAs" genannt, weil hier beide Faktorarten gemischt werden "mischen". Die Benennung folgt demselben Schema: Unabhängig davon, welcher Art die Faktoren sind (zwischen- oder innersubjekt), wird wieder die Anzahl der Faktoren angegeben. Das einfachste gemischte Design ist eine ANOVA mit einem Zwischen- und einem Innersubjektfaktor. In der Summe sind das zwei und somit berechnen wir eine "zweifaktorielle gemischte ANOVA" (*two-way mixed ANOVA*).
+
+Möchte man noch genauer sein, was sehr empfehlenswert ist, sollte man am besten auch direkt die Anzahl der Faktorstufen angeben. Die Faktorstufen geben an, wie viele Gruppen ein Faktor umfasst. Der Faktor "Geschlecht" hat so zwei Faktorstufen (nämlich "männlich" und "weiblich"). Wenn man Probanden über drei Messzeitpunkte beobachtet, hat dieser Innersubjekt-Faktor drei Faktorstufen ($t_1$, $t_2$ und $t_3$). Analysieren wir beispielweise die Daten einer Studie, in der Geschlecht  (männlich vs. weiblich) und Experimentalbedingung (Kontrollgruppe vs. Experimentalgruppe) berücksichtigt wurden, dann können wir eine 2 $\times$ 2 faktorielle ANOVA berechnen. So hätte man auf kurze Weise beschrieben, wie viele Faktoren mit wie vielen Faktorstufen man in die Analyse mit einbezieht.
+
+Die ausführlichste Darstellung des Designs umfasst die eben eingeführte Schreibweise unter Angabe der Faktorarten und -stufen. Betrachten wir zur Veranschaulichung eine Studie, in der eine neue Intervention im Vergleich zu einer Kontrollgruppe untersucht wurde. Beide Gruppen wurden über 3 Messzeitpunkte beobachtet. Wir haben somit einen Zwischensubjektfator "Gruppenzugehörigkeit" und einen Innersubjektfaktor "Messzeitpunkt". Berichten kann man das als:  
+
+> 2 $\times$ 3 faktorielle gemischte ANOVA mit dem Zwischensubjekt-Faktor "Gruppenzugehörigkeit" mit zwei Faktorstufen (Kontrollgruppe vs. Interventionsgruppe) und einem Innersubjektfaktor mit drei Faktorstufen ($t_1$, $t_2$ und $t_3$).  
+
+Wenn man das liest, weiß man sofort, worum es geht.
+
+# Nicht-parametrische Verfahren
 
 # Literatur
