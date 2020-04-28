@@ -40,6 +40,7 @@ navbar:
         - text: "Voraussetzungen im GLM"
           href: voraussetzungen.html
         - text: "Zentraler Grenzwertsatz"
+          href: zentraler-grenzwertsatz.html
     - icon: fa-info
       href: about.html
 output:

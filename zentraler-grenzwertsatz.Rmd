@@ -25,25 +25,47 @@ Und das stimmt jetzt? Simulieren wir doch einfach ein paar Daten und prüfen die
 # Simulation der Grundgesamtheit
 ```{r message=FALSE}
 library(tidyverse)
-library(sn)
 ```
 
-
-```{r}
+```{r message=FALSE}
+# Generate 10000 data points of a not normal distribution
 set.seed(20200425)
 population <- tibble(
-  attractiveness = rsn(n = 10000, xi = 20, omega = 6)
+  attractiveness = rchisq(n = 1e4, df = 4)
   )
 
 population %>% 
   ggplot(aes(x = attractiveness)) +
-  geom_density(fill = "limegreen", color = "limegreen", alpha = 0.1)
-
-tibble(
-  populations = rep(list(population), 3000)
-)
+  geom_histogram()
 ```
 
+
+# Stichprobenziehung
+Die Ausgangsverteilung ist eine richtig schön nicht normale Chi-Quadrat-Verteilung mit 4 Freiheitsgraden. der zentrale Grenzwertsatz besagt nun folgendes: Wenn ich aus dieser Population zufällig Stichproben mit einigermaßen großer Größe ziehe ($n > 30$) ziehe, dann ist die Stichprobenkennwerteverteilung automatisch annähernd normalverteilt. Für diesen Zweck habe ich eine kleine Funktion geschrieben, die zufällig Stichproben in gewünschter Größe zieht und den Mittelwert dieser einzelnen  Stichproben berechnet. Das ganze wird für Stichprobengrößen von 5, 10, 30 und 50 ausgeführt und anschließend lassen wir uns die Verteilungen der Mittelwerte als Histogramme ausgeben.
+
+```{r}
+# Helper Function that pulls a sample of size n, computes the mean of that
+# sample and returns it
+pull_sample_mean <- function(n) {
+  sample <-  population %>%
+    sample_n(size = n) %>%
+    summarise(mean = mean(attractiveness)) %>%
+    pull("mean")
+}
+
+# Pull 500 samples with varying sample sizes
+set.seed(20200425)
+clt_data <- crossing(id = 1:500, n = c(5, 10, 30, 50)) %>% 
+  mutate(means = map_dbl(n, pull_sample_mean))
+
+# Plot a histogram of the data
+clt_data %>% 
+  ggplot(aes(x = means)) +
+  geom_histogram(binwidth = 0.2) +
+  facet_wrap(~ n)
+```
+
+Und siehe da: Der zentrale Grenzwertsatz scheint zu stimmen. Mit immer größerer Größe der Sticprobe sehen die Stichprobenkennwerteverteilungen immer "normaler" aus. Wir können also festhalten: Nutzt man Methoden aus dem GLM (z.B. $t$-Tests oder ANOVAs) gilt die Voraussetzung der Normalverteilung der Stichprobenkennwerteverteilung. Diese kann ab einer hinreichend großen Stichprobengröße (ca. $n > 30$) automatisch angenommen werden. Hat man jedoch kleinere Stichproben, greift der zentrale Grenzwertsatz nicht automatisch und man sollte die Daten auf Normalverteilung prüfen. Denn sind die Daten bei kleinen Stichproben annähernd normalverteilt, können wir auch annehmen, dass die Stichprobenkennwerteverteilung annähernd normalverteilt ist.
 
 
 # Literatur

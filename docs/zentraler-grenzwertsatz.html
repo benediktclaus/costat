@@ -418,7 +418,9 @@ div.tocify {
     <li>
       <a href="voraussetzungen.html">Voraussetzungen im GLM</a>
     </li>
-    <li class="dropdown-header">Zentraler Grenzwertsatz</li>
+    <li>
+      <a href="zentraler-grenzwertsatz.html">Zentraler Grenzwertsatz</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -448,6 +450,45 @@ div.tocify {
 <p>Stellen wir uns einmal eine Grundgesamtheit vor, z.B. “die Europäer”. Wollen wir jetzt bspw. die durchschnittliche Attraktivität der Europäer einschätzen, stoßen wir schnell an unsere Grenzen, weil wir natürlich nicht <em>alle</em> Europäer beurteilen können. Wir bedienen uns dem nützlichen Mittel der <strong>Stichprobe</strong>. Wir beurteilen also einen Teil der Europäer und versuchen eine Aussage zu treffen. Wir ziehen uns also ein paar Deutsche, Engländer, Italiener, Franzosen, Dänen, Polen, etc. und beurteilen deren Attraktivität. Das machen wir <em>einmal</em> und haben folglich <em>einen</em> Mittelwert. Wo ist jetzt also die Verteilung der Mittelwerte? Nun, wir sind vielleicht nicht die einzige Forschergruppe, die sich für diese Fragestellung interessiert. Irgendwo misst auch jemand anderes die durchschnittliche Attraktivität seiner europäischen Stichprobe. Stellen wir uns jetzt vor, dass es hunderte dieser Messungen gibt und schon haben wir hunderte Stichproben und hunderte Mittelwerte. Für die Voraussetzung der Normalverteiung sollen <strong>diese hunderte Mittelwerte nun normalverteilt sein</strong>.</p>
 <p>Die Verteilung dieser Mittelwerte werden wir nie empirisch erfassen können, weil unsere Fragestellung nicht hunderte Male untersucht wird. An dieser Stelle kommt nun jedoch der zentrale Grenzwertsatz ins Spiel, denn dieser besagt, dass die Stichprobenkennwerteverteilung <em>immer</em> annähernd normalverteilt ist, egal, wie krumm und schief die Ausgangsverteilung ist, <em>wenn die gezogene Stichprobe hinreichend groß ist</em>. Aufgrund dieser Aussage ist heißt er auch “zentraler” Grenzwertsatz, weil er unglaublich wichtig ist.</p>
 <p>Und das stimmt jetzt? Simulieren wir doch einfach ein paar Daten und prüfen diese Aussage.</p>
+<div id="simulation-der-grundgesamtheit" class="section level1">
+<h1>Simulation der Grundgesamtheit</h1>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre class="r"><code># Generate 10000 data points of a not normal distribution
+set.seed(20200425)
+population &lt;- tibble(
+  attractiveness = rchisq(n = 1e4, df = 4)
+  )
+
+population %&gt;% 
+  ggplot(aes(x = attractiveness)) +
+  geom_histogram()</code></pre>
+<p><img src="zentraler-grenzwertsatz_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="stichprobenziehung" class="section level1">
+<h1>Stichprobenziehung</h1>
+<p>Die Ausgangsverteilung ist eine richtig schön nicht normale Chi-Quadrat-Verteilung mit 4 Freiheitsgraden. der zentrale Grenzwertsatz besagt nun folgendes: Wenn ich aus dieser Population zufällig Stichproben mit einigermaßen großer Größe ziehe (<span class="math inline">\(n &gt; 30\)</span>) ziehe, dann ist die Stichprobenkennwerteverteilung automatisch annähernd normalverteilt. Für diesen Zweck habe ich eine kleine Funktion geschrieben, die zufällig Stichproben in gewünschter Größe zieht und den Mittelwert dieser einzelnen Stichproben berechnet. Das ganze wird für Stichprobengrößen von 5, 10, 30 und 50 ausgeführt und anschließend lassen wir uns die Verteilungen der Mittelwerte als Histogramme ausgeben.</p>
+<pre class="r"><code># Helper Function that pulls a sample of size n, computes the mean of that
+# sample and returns it
+pull_sample_mean &lt;- function(n) {
+  sample &lt;-  population %&gt;%
+    sample_n(size = n) %&gt;%
+    summarise(mean = mean(attractiveness)) %&gt;%
+    pull(&quot;mean&quot;)
+}
+
+# Pull 500 samples with varying sample sizes
+set.seed(20200425)
+clt_data &lt;- crossing(id = 1:500, n = c(5, 10, 30, 50)) %&gt;% 
+  mutate(means = map_dbl(n, pull_sample_mean))
+
+# Plot a histogram of the data
+clt_data %&gt;% 
+  ggplot(aes(x = means)) +
+  geom_histogram(binwidth = 0.2) +
+  facet_wrap(~ n)</code></pre>
+<p><img src="zentraler-grenzwertsatz_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Und siehe da: Der zentrale Grenzwertsatz scheint zu stimmen. Mit immer größerer Größe der Sticprobe sehen die Stichprobenkennwerteverteilungen immer “normaler” aus. Wir können also festhalten: Nutzt man Methoden aus dem GLM (z.B. <span class="math inline">\(t\)</span>-Tests oder ANOVAs) gilt die Voraussetzung der Normalverteilung der Stichprobenkennwerteverteilung. Diese kann ab einer hinreichend großen Stichprobengröße (ca. <span class="math inline">\(n &gt; 30\)</span>) automatisch angenommen werden. Hat man jedoch kleinere Stichproben, greift der zentrale Grenzwertsatz nicht automatisch und man sollte die Daten auf Normalverteilung prüfen. Denn sind die Daten bei kleinen Stichproben annähernd normalverteilt, können wir auch annehmen, dass die Stichprobenkennwerteverteilung annähernd normalverteilt ist.</p>
+</div>
 <div id="literatur" class="section level1 unnumbered">
 <h1>Literatur</h1>
 <div id="refs" class="references">
