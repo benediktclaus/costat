@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Einfaktorielle ANOVA</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Chamber of Statistics</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Allgemeines
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="software.html">Software</a>
+    </li>
+    <li>
+      <a href="r-basics.html">R Basics</a>
+    </li>
+    <li>
+      <a href="stil.html">Stil</a>
+    </li>
+    <li>
+      <a href="pakete.html">Pakete</a>
+    </li>
+    <li>
+      <a href="data-wrangling.html">Data Wrangling</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Mittelwerte vergleichen
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="mittelwerte-vergleichen.html">Überblick</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">t-Tests</li>
+    <li>
+      <a href="t-test-einstichprobe.html">Bei einer Stichprobe</a>
+    </li>
+    <li>
+      <a href="t-test-unabhaengig.html">Bei unabhängigen Stichproben</a>
+    </li>
+    <li>
+      <a href="t-test-abhaengig.html">Bei abhängigen Stichproben</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">ANOVAs</li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-question"></span>
+     
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="voraussetzungen.html">Voraussetzungen im GLM</a>
+    </li>
+    <li>
+      <a href="zentraler-grenzwertsatz.html">Zentraler Grenzwertsatz</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">
+    <span class="fa fa-info"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Einfaktorielle ANOVA</h1>
+
+</div>
+
+
+<p><img src="images/roller-coaster_r.jpg" /></p>
+<p>Begeben wir uns ins <a href="https://www.phantasialand.de/de/">Phantasialand</a> in Brühl bei Köln. Auch Forscher brauchen mal Spaß – und wo könnte man sich den besser holen? Natürlich lässt sich das Bestreben nach wissenschaftlichem Fortschritt auch bei Besuchen von Freizeitparks nicht abstellen. So fällt uns beispielsweise auf, dass selbst im Phantasialand, nicht alle Besucher gleich viel Spaß haben. Es gibt sehr viele, die mit lachenden Gesichtern durch den Park laufen, doch auch jene, die ihre Mundwinkel der Schwerkraft hingeben. Woran könnte das liegen? Eine Hypothese könnte doch das Gewicht des Handgepäcks sein. Vielleicht haben Besucher mit wenig Handgepäck mehr Spaß, weil sie weniger zu tragen haben? Und vielleicht gilt dann auch, dass Besucher, die viel schleppen müssen, einfach fertig sind und deshalb gar keinen Spaß haben? Wie man das untersuchen könnte, wird hier erläutert.</p>
+<div id="pakete" class="section level1">
+<h1>Pakete</h1>
+<p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien, <code>rstatix</code> für statistische Analysen und <code>skimr</code> für schnelle deskriptive Statistiken.</p>
+<pre class="r"><code>library(tidyverse)
+library(haven)
+library(rstatix)
+library(skimr)</code></pre>
+</div>
+<div id="beispiel" class="section level1">
+<h1>Beispiel</h1>
+<p>Wir sind im Phantasialand und möchten untersuchen, ob die Größe des Handgepäcks einen Einfluss auf die Freude der Besucher hat. Dazu haben wir viele Besucher mit vier unterschiedlichen Arten von Handgepäck nach ihrer derzeitigen empfundenen Freude gefragt. Die Daten dieser kleinen Erhebung sind in der Datei <code>phantasialand.sav</code>. Die Spalte <code>id</code> ist die ID des Besuchers, in der Spalte <code>bagpack</code> ist angegeben, mit welchem Handgepäck der Besucher oder die Besucherin unterwegs war. Wir unterscheiden vier Faktorstufen: “None” = kein Handgepäck, “Light” = leichtes, “Heavy” steht für schweres und “Handcart” steht für Bollerwagen. In der Spalte <code>joy</code> wurde die zu dem Zeitpunkt empfundene Freude des Besuchers eingetragen.</p>
+<pre class="r"><code>phantasialand &lt;- read_spss(&quot;data/phantasialand.sav&quot;)
+
+phantasialand &lt;- phantasialand %&gt;% 
+  mutate(bagpack = as_factor(bagpack))
+
+phantasialand</code></pre>
+<pre><code>## # A tibble: 186 x 3
+##    id    bagpack    joy
+##    &lt;chr&gt; &lt;fct&gt;    &lt;dbl&gt;
+##  1 1     Light        5
+##  2 2     Light        7
+##  3 3     Handcart     3
+##  4 4     Heavy        6
+##  5 5     Heavy        3
+##  6 6     Heavy        6
+##  7 7     Handcart     4
+##  8 8     None        10
+##  9 9     None         9
+## 10 10    Handcart     5
+## # ... with 176 more rows</code></pre>
+<p>Wie immer, wenn wir SPSS-Daten mit vergebenen Werte-Labels importieren, schützt das Paket <code>haven</code> für uns die Information der Levels und der Labels. In der Variable <code>bagpack</code> haben wir also direkt nach dem Import sowohl die Levels (Zahlen) als auch die Labels (Bezeichnungen). Wir arbeiten auch hier, wie immer, mit ordentlichen Faktoren weiter und überführen alle Werte dieser Variablen mit der Funktion <code>as_factor()</code> in Faktoren.</p>
+<p>Wir haben also vier Grupen, deren Unterschiede in der mittlere Freude wir untersuchen wollen. Dazu nutzen wir eine einfaktorielle Varianzanalyse mit dem Zwischensubjektfaktor “bagpack” mit vier Faktorstufen (“None”, “Light”, “Heavy” und “Handcart”) und der abhängigen Variable “joy”.</p>
+<div id="voraussetzungen" class="section level2">
+<h2>Voraussetzungen</h2>
+<p>Es gelten die üblichen <a href="voraussetzungen.html">Voraussetzungen des GLM</a>.</p>
+</div>
+<div id="eda" class="section level2">
+<h2>EDA</h2>
+<p>Auch hier betrachten wir die Daten erstmal, bevor wir irgendwelche Analysen durchführen. Beobachtet man verschiedene Gruppen, macht es Sinn, die Ausgabe der statistischen Kennwerte für jede Gruppe durchzuführen.</p>
+<pre class="r"><code>phantasialand %&gt;% 
+  group_by(bagpack) %&gt;% 
+  get_summary_stats()</code></pre>
+<pre><code>## # A tibble: 4 x 14
+##   bagpack variable     n   min   max median    q1    q3   iqr   mad  mean    sd
+##   &lt;fct&gt;   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 None    joy         42     6    10    9.5     8 10     2    0.741  9.07  1.14
+## 2 Light   joy         53     3    10    7       6  8     2    1.48   7.06  1.57
+## 3 Heavy   joy         56     3    10    6.5     6  7.25  1.25 0.741  6.46  1.63
+## 4 Handca~ joy         35     0     5    3       2  4     2    1.48   2.63  1.40
+## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+<p>Wir bekommen den ersten Wind in den Segeln unserer Hypothese. Im Mittel scheinen Besucher des Phantasialands mehr Spaß zu haben, wenn sie weniger Gepäck tragen müssen. Aufgrund der Gruppengröße (jeweils <span class="math inline">\(n &gt; 30\)</span>) und des zentralen Grenzwertsatzes, müssen wir uns um die <a href="voraussetzungen.html">Voraussetzung der Normalverteilung</a> keine Gedanken machen. Im Boxplot der Date sind leicht unterschiedliche Varianzen pro Faktorstufe zu erkennen. Um sicherzugehen, dass wir die Voraussetzung der Varianzhomogenität nicht verletzen, können wir einen Levene-Test berechnen.</p>
+<p><img src="einfaktorielle-anova_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>## # A tibble: 1 x 4
+##     df1   df2 statistic     p
+##   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1     3   182      1.36 0.256</code></pre>
+<p>Da der Levene-Test nicht signifikant ist (<span class="math inline">\(p = .256\)</span>), gehen wir davon aus, dass sich die Varianzen der Faktorstufen nicht signifikant voneinander unterscheiden. Wir dürfen also eine ganz normale einfaktorielle ANOVA berechnen.</p>
+</div>
+<div id="durchführung" class="section level2">
+<h2>Durchführung</h2>
+<p>Die eigentliche Durchführung ist kurz und schmerzlos und wird mit der Funktion <code>anova_test()</code> durchgeführt. Wir haben hier zwei Möglichkeiten unser gewünschtes Modell zu definieren. Zum einen können wir es als Regressions-Formel definieren. Dabei steht die abhängige Variable auf der linken Seite und die unabhängige(n) auf der rechten; getrennt durch eine <code>~</code> (Tilde). Zum anderen können wir die abhängige und unabhängige Variable direkt als Funktionsargumente angeben. Dieses Vorgehen bietet sich vor allem bei komplexeren Versuchsdesigns an, wie etwa ANOVAs mit Messwiederholungen oder gemischte ANOVAs. Egal, für welche Möglichkeit man sich entscheidet, die Ergebnisse sind immer gleich.</p>
+<pre class="r"><code># Formelschreibweise
+phantasialand %&gt;% 
+  anova_test(joy ~ bagpack)
+
+# Funktionsargumente
+phantasialand %&gt;% 
+  anova_test(dv = joy, between = bagpack)</code></pre>
+<p>Ich entscheide mich bei einfachen Designs immer für die Formelschreibweise, weil sie wesentlich schneller getippt ist.</p>
+<pre class="r"><code>phantasialand %&gt;% 
+  anova_test(joy ~ bagpack)</code></pre>
+<pre><code>## Coefficient covariances computed by hccm()</code></pre>
+<pre><code>## ANOVA Table (type II tests)
+## 
+##    Effect DFn DFd       F        p p&lt;.05   ges
+## 1 bagpack   3 182 126.164 3.14e-44     * 0.675</code></pre>
+<p>Da <span class="math inline">\(p &lt; .05\)</span> ist das Ergebis signifikant. An dieser Stelle können wir also die Aussage treffen, dass sich die mittlere von den Besuchern empfundene Freude zwischen den Faktorstufen signifikant voneinander unterscheidet. Jetzt haben wir nur ein Problem: Welche Gruppe unterscheidet sich denn von welcher? Die ANOVA ist erstmal nur ein <strong>Omnibus-Test</strong>, d.h., dass wir eine Aussage darüber treffen, ob sich die Mittelwerte der Gruppen überhaupt irgendwo unterscheiden. Wo genau, dass kann man auf zwei Arten klären:</p>
+<ol style="list-style-type: decimal">
+<li>mit Post-hoc-Tests und</li>
+<li>mit geplanten Kontrasten</li>
+</ol>
+<p>Post-hoc-Tests setzt man in der Regel ein, wenn man noch keine Hypothese dazu hat, wo sich die Gruppen unterscheiden. Es werden dann, vereinfacht gesagt, alle Gruppen paarweise miteinander verglichen und die <span class="math inline">\(p\)</span>-Werte auf die Art des jeweiligen Post-hoc-Tests korrigiert. Hat man vorab eine Vermutung darüber, welche Gruppen sich unterscheiden könnten, kann man das vor der Analyse als einen <strong>Kontrast</strong> festlegen und diesen während der Analyse prüfen lassen.</p>
+<p>Einen Überblick über viele Post-hoc-Tests gibt <span class="citation">Toothaker (<a href="#ref-Toothaker.1993" role="doc-biblioref">1993</a>)</span>. Ein guter Post-hoc-Test bei gleich großen Gruppengrößen und angenommener Varianzhomogenität ist der Tukey-HSD (Tukey Honest Significance Difference).</p>
+<pre class="r"><code>phantasialand %&gt;% 
+  tukey_hsd(joy ~ bagpack)</code></pre>
+<pre><code>## # A tibble: 6 x 8
+##   term    group1 group2   estimate conf.low conf.high    p.adj p.adj.signif
+## * &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
+## 1 bagpack None   Light      -2.01     -2.80    -1.23  2.20e- 9 ****        
+## 2 bagpack None   Heavy      -2.61     -3.39    -1.83  6.93e-14 ****        
+## 3 bagpack None   Handcart   -6.44     -7.32    -5.57  1.73e-14 ****        
+## 4 bagpack Light  Heavy      -0.592    -1.32     0.139 1.57e- 1 ns          
+## 5 bagpack Light  Handcart   -4.43     -5.26    -3.60  1.73e-14 ****        
+## 6 bagpack Heavy  Handcart   -3.84     -4.66    -3.01  2.01e-14 ****</code></pre>
+<p>Aus den vielen paarweisen Vergleichen geht hervor, dass sich die Gruppe derer, die ohne Handgepäck unterwegs ist, signifikant von allen anderen Gruppen unterscheidet. Das betrifft auch die Gruppe derjenigen, die mit einem Bollerwagen (“Handcart”) unterwegs sind. Interessant ist, dass sich die Besucher mit leichtem und schwerem Handgepäck <em>nicht</em> signifikant voneinander unterscheiden. Um die ganzen Vergeliche zu durchdringen, nimmt man sich am besten den Boxplot von oben und zeichnet alle signifikanten Unterschiede ein. Man wird dann feststellen, dass wir drei homogene Gruppen haben. In der einen Gruppe sind die Besucher ohne Handgepäck (die glücklichsten), dann kommt die Gruppe derjenigen mit leichtem oder schwerem Handgepäck (etwas weniger glücklich) und “zum Schluss” diejenigen, die einen Bollerwagen ziehen müssen. Die letzte Gruppe hat mit Abstand am wenigsten Freude.</p>
+</div>
+<div id="berichten" class="section level2">
+<h2>Berichten</h2>
+<p>We found the mean experienced joy of visitors of Phantasialand to decrease with increasing weight of bagpack. Those with no bagpack at all had a mean joy of <span class="math inline">\(M = 9.07, SD = 1.14\)</span>. The mean joy for those with light, heavy bagpack, or handcart were <span class="math inline">\(M = 7.06, SD = 1.57\)</span>, <span class="math inline">\(M = 6.46, Sd = 1.63\)</span>, and <span class="math inline">\(M = 2.63, SD = 1.40\)</span> respectively. A one-way revealed the means to differ significantly, <span class="math inline">\(F(3, 182) = 126.16, p &lt; .001, \eta_G^2 = .675\)</span>. Post-hoc Tukey HSD tests revealed three homogeneous subgroups, namely those with no bagpacks, those with light and heavy bagpacks and those pulling a handcart.</p>
+</div>
+</div>
+<div id="robuste-alternativen" class="section level1">
+<h1>Robuste Alternativen</h1>
+<p>Folgen.</p>
+</div>
+<div id="aus-der-praxis" class="section level1">
+<h1>Aus der Praxis</h1>
+<div id="eda-1" class="section level2">
+<h2>EDA</h2>
+</div>
+<div id="durchführung-1" class="section level2">
+<h2>Durchführung</h2>
+</div>
+<div id="berichten-1" class="section level2">
+<h2>Berichten</h2>
+</div>
+</div>
+<div id="literatur" class="section level1 unnumbered">
+<h1>Literatur</h1>
+<div id="refs" class="references">
+<div id="ref-Toothaker.1993">
+<p>Toothaker, L. E. (1993). <em>Multiple Comparison Procedures</em>. SAGE.</p>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

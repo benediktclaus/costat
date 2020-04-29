@@ -29,3 +29,18 @@ patience <- tibble(
   unnest(patience) %>% 
   add_column(id = as.character(rep(1:53, 2)), .before = "measurement") %>% 
   write_sav(path = "data/patience.sav")
+
+
+# ANOVAs ------------------------------------------------------------------
+# Einfaktorielle ANOVA
+set.seed(20200428)
+tibble(
+  bagpack = as_factor(c("None", "Light", "Heavy", "Handcart")),
+  joy = list(round(rnorm(42, 9, 1.3)), round(rnorm(53, 7, 1.5)), round(rnorm(56, 6.5, 1.5)), round(rnorm(35, 3, 1.7)))
+) %>% 
+  unnest(joy) %>% 
+  mutate(joy = pmin(joy, 10),
+         joy = pmax(joy, 0)) %>% 
+  sample_n(size = nrow(.)) %>% 
+  rownames_to_column(var = "id") %>% 
+  write_sav(path = "data/phantasialand.sav")

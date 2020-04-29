@@ -59,6 +59,12 @@ Die ausführlichste Darstellung des Designs umfasst die eben eingeführte Schrei
 
 Wenn man das liest, weiß man sofort, worum es geht.
 
+### Post-hoc-Tests
+Folgen.
+
+### Kontraste
+Folgen.
+
 # Nicht-parametrische Verfahren
 
 # Literatur

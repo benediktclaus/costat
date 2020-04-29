@@ -1,0 +1,133 @@
+---
+title: "Einfaktorielle ANOVA"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(fig.align = "center")
+ggplot2::theme_set(ggplot2::theme_light())
+```
+
+![](images/roller-coaster_r.jpg)
+
+Begeben wir uns ins [Phantasialand](https://www.phantasialand.de/de/) in Brühl bei Köln. Auch Forscher brauchen mal Spaß -- und wo könnte man sich den besser holen? Natürlich lässt sich das Bestreben nach wissenschaftlichem Fortschritt auch bei Besuchen von Freizeitparks nicht abstellen. So fällt uns beispielsweise auf, dass selbst im Phantasialand, nicht alle Besucher gleich viel Spaß haben. Es gibt sehr viele, die mit lachenden Gesichtern durch den Park laufen, doch auch jene, die ihre Mundwinkel der Schwerkraft hingeben. Woran könnte das liegen? Eine Hypothese könnte doch das Gewicht des Handgepäcks sein. Vielleicht haben Besucher mit wenig Handgepäck mehr Spaß, weil sie weniger zu tragen haben? Und vielleicht gilt dann auch, dass Besucher, die viel schleppen müssen, einfach fertig sind und deshalb gar keinen Spaß haben? Wie man das untersuchen könnte, wird hier erläutert.
+
+
+# Pakete
+Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien, `rstatix` für statistische Analysen und `skimr` für schnelle deskriptive Statistiken.
+
+```{r message=FALSE}
+library(tidyverse)
+library(haven)
+library(rstatix)
+library(skimr)
+```
+
+```{r echo=FALSE}
+library(patchwork)
+```
+
+# Beispiel
+Wir sind im Phantasialand und möchten untersuchen, ob die Größe des Handgepäcks einen Einfluss auf die Freude der Besucher hat. Dazu haben wir viele Besucher mit vier unterschiedlichen Arten von Handgepäck nach ihrer derzeitigen empfundenen Freude gefragt. Die Daten dieser kleinen Erhebung sind in der Datei `phantasialand.sav`. Die Spalte `id` ist die ID des Besuchers, in der Spalte `bagpack` ist angegeben, mit welchem Handgepäck der Besucher oder die Besucherin unterwegs war. Wir unterscheiden vier Faktorstufen: "None" = kein Handgepäck, "Light" = leichtes, "Heavy" steht für schweres und "Handcart" steht für Bollerwagen. In der Spalte `joy` wurde die zu dem Zeitpunkt empfundene Freude des Besuchers eingetragen.
+
+```{r}
+phantasialand <- read_spss("data/phantasialand.sav")
+
+phantasialand <- phantasialand %>% 
+  mutate(bagpack = as_factor(bagpack))
+
+phantasialand
+```
+
+Wie immer, wenn wir SPSS-Daten mit vergebenen Werte-Labels importieren, schützt das Paket `haven` für uns die Information der Levels und der Labels. In der Variable `bagpack` haben wir also direkt nach dem Import sowohl die Levels (Zahlen) als auch die  Labels (Bezeichnungen). Wir arbeiten auch hier, wie immer, mit ordentlichen Faktoren weiter und überführen alle Werte dieser Variablen mit der Funktion `as_factor()` in Faktoren.
+
+Wir haben also vier Grupen, deren Unterschiede in der mittlere Freude wir untersuchen wollen. Dazu nutzen wir eine einfaktorielle Varianzanalyse mit dem Zwischensubjektfaktor "bagpack" mit vier Faktorstufen ("None", "Light", "Heavy" und "Handcart") und der abhängigen Variable "joy".
+
+## Voraussetzungen
+Es gelten die üblichen [Voraussetzungen des GLM](voraussetzungen.html).
+
+## EDA
+Auch hier betrachten wir die Daten erstmal, bevor wir irgendwelche Analysen durchführen. Beobachtet man verschiedene Gruppen, macht es Sinn, die Ausgabe der statistischen Kennwerte für jede Gruppe durchzuführen. 
+
+```{r}
+phantasialand %>% 
+  group_by(bagpack) %>% 
+  get_summary_stats()
+```
+
+Wir bekommen den ersten Wind in den Segeln unserer Hypothese. Im Mittel scheinen Besucher des Phantasialands mehr Spaß zu haben, wenn sie weniger Gepäck tragen müssen. Aufgrund der Gruppengröße (jeweils $n > 30$) und des zentralen Grenzwertsatzes, müssen wir uns um die [Voraussetzung der Normalverteilung](voraussetzungen.html) keine Gedanken machen. Im Boxplot der Date sind leicht unterschiedliche Varianzen pro Faktorstufe zu erkennen. Um sicherzugehen, dass wir die Voraussetzung der Varianzhomogenität nicht verletzen, können wir einen Levene-Test berechnen.
+
+```{r echo=FALSE}
+phantasialand %>% 
+  ggplot(aes(x = bagpack, y = joy)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.1, alpha = 0.2) +
+  labs(x = "Handgepäck", y = "Freude")
+
+# Levene-Test
+phantasialand %>% 
+  levene_test(joy ~ bagpack)
+```
+
+Da der Levene-Test nicht signifikant ist ($p = .256$), gehen wir davon aus, dass sich die Varianzen der Faktorstufen nicht signifikant voneinander unterscheiden. Wir dürfen also eine ganz normale einfaktorielle ANOVA berechnen.
+
+## Durchführung
+Die eigentliche Durchführung ist kurz und schmerzlos und wird mit der Funktion `anova_test()` durchgeführt. Wir haben hier zwei Möglichkeiten unser gewünschtes Modell zu definieren. Zum einen können wir es als Regressions-Formel definieren. Dabei steht die abhängige Variable auf der linken Seite und die unabhängige(n) auf der rechten; getrennt durch eine `~` (Tilde). Zum anderen können wir die abhängige und unabhängige Variable direkt als Funktionsargumente angeben. Dieses Vorgehen bietet sich vor allem bei komplexeren Versuchsdesigns an, wie etwa ANOVAs mit Messwiederholungen oder gemischte ANOVAs. Egal, für welche Möglichkeit man sich entscheidet, die Ergebnisse sind immer gleich.
+
+```{r eval=FALSE}
+# Formelschreibweise
+phantasialand %>% 
+  anova_test(joy ~ bagpack)
+
+# Funktionsargumente
+phantasialand %>% 
+  anova_test(dv = joy, between = bagpack)
+```
+
+Ich entscheide mich bei einfachen Designs immer für die Formelschreibweise, weil sie wesentlich schneller getippt ist.
+
+```{r}
+phantasialand %>% 
+  anova_test(joy ~ bagpack)
+```
+
+Da $p < .05$ ist das Ergebis signifikant. An dieser Stelle können wir also die Aussage treffen, dass sich die mittlere von den Besuchern empfundene Freude zwischen den Faktorstufen signifikant voneinander unterscheidet. Jetzt haben wir nur ein Problem: Welche Gruppe unterscheidet sich denn von welcher? Die ANOVA ist erstmal nur ein **Omnibus-Test**, d.h., dass wir eine Aussage darüber treffen, ob sich die Mittelwerte der Gruppen überhaupt irgendwo unterscheiden. Wo genau, dass kann man auf zwei Arten klären:
+
+1. mit Post-hoc-Tests und 
+2. mit geplanten Kontrasten
+
+Post-hoc-Tests setzt man in der Regel ein, wenn man noch keine Hypothese dazu hat, wo sich die Gruppen unterscheiden. Es werden dann, vereinfacht gesagt, alle Gruppen paarweise miteinander verglichen und die $p$-Werte auf die Art des jeweiligen Post-hoc-Tests korrigiert. Hat man vorab eine Vermutung darüber, welche Gruppen sich unterscheiden könnten, kann man das vor der Analyse als einen **Kontrast** festlegen und diesen während der Analyse prüfen lassen.
+
+Einen Überblick über viele Post-hoc-Tests gibt @Toothaker.1993. Ein guter Post-hoc-Test bei gleich großen Gruppengrößen und angenommener Varianzhomogenität ist der Tukey-HSD (Tukey Honest Significance Difference).
+
+```{r}
+phantasialand %>% 
+  tukey_hsd(joy ~ bagpack)
+```
+
+Aus den vielen paarweisen Vergleichen geht hervor, dass sich die Gruppe derer, die ohne Handgepäck unterwegs ist, signifikant von allen anderen Gruppen unterscheidet. Das betrifft auch die Gruppe derjenigen, die mit einem Bollerwagen ("Handcart") unterwegs sind. Interessant ist, dass sich die Besucher mit leichtem und schwerem Handgepäck *nicht* signifikant voneinander unterscheiden. Um die ganzen Vergeliche zu durchdringen, nimmt man sich am besten den Boxplot von oben und zeichnet alle signifikanten Unterschiede ein. Man wird dann feststellen, dass wir drei homogene Gruppen haben. In der einen Gruppe sind die Besucher ohne Handgepäck (die glücklichsten), dann kommt die Gruppe derjenigen mit leichtem oder schwerem Handgepäck (etwas weniger glücklich) und "zum Schluss" diejenigen, die einen Bollerwagen ziehen müssen. Die letzte Gruppe hat mit Abstand am wenigsten Freude.
+
+## Berichten
+We found the mean experienced joy of visitors of Phantasialand to decrease with increasing weight of bagpack. Those with no bagpack at all had a mean joy of $M = 9.07, SD = 1.14$. The mean joy for those with light, heavy bagpack, or handcart were $M = 7.06, SD = 1.57$, $M = 6.46, SD = 1.63$, and $M = 2.63, SD = 1.40$ respectively.  A one-way revealed the means to differ significantly, $F(3, 182) = 126.16, p < .001, \eta_G^2 = .675$. Post-hoc Tukey HSD tests revealed three homogeneous subgroups, namely those with no bagpacks, those with light and heavy bagpacks and those pulling a handcart.
+
+# Robuste Alternativen
+Folgen.
+
+# Aus der Praxis
+
+## EDA
+
+## Durchführung
+
+
+## Berichten
+
+# Literatur
+
+```{r echo=FALSE}
+remove(list = ls())
+```
