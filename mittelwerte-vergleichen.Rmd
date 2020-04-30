@@ -60,10 +60,10 @@ Wenn man das liest, weiß man sofort, worum es geht.
 Eine ANOVA ist ein **Omnibus-Test**, d.h., dass uns ein signifikantes Ergebnis erstmal nur sagt, dass sich die Gruppenmittelwerte (die Mittelwerte der unterschiedlichen Faktorstufen) voneinander unterscheiden. Wir wissen aber noch nicht *wo genau*. Im Grunde ist ein signifikantes Ergebnis einer ANOVA eine Aufforderung dazu, weitere Untersuchungen anzustellen. An dieser Stelle hat man nun zwei Möglichkeiten; entweder man hat bereits eine Hypohese oder Ahnung, wo die Unterschiede liegen könnten. In diesem Fall kann man vorab **Kontrase** (also geplante Kontraste) definieren und diese Unterschiede prüfen. Hat man noch keine Hypothesen, darf man sich überraschen lassen und **Post-hoc-Tests** berechnen. Dabei werden alle Gruppen paarweise miteinander verglichen und die $p$-Werte, je nach Methode, für die $\alpha$-Feler-Kumulierung korrigiert.  
 Hier gehts zur weiteren Informationen zu [Kontrasten](kontraste.html) und [Post-hoc-Tests](post-hoc-tests-html).
 
-# Nicht-parametrische Verfahren
+# Robuste Verfahren
 Folgen.
 
-# Robuste Verfahren
+# Nicht-parametrische Verfahren
 Folgen.
 
 # Literatur

@@ -114,10 +114,9 @@ Aus den vielen paarweisen Vergleichen geht hervor, dass sich die Gruppe derer, d
 ## Berichten
 We found the mean experienced joy of visitors of Phantasialand to decrease with increasing weight of backpack. Those with no backpack at all had a mean joy of $M = 9.07, SD = 1.14$. The mean joy for those with light, heavy backpack, or handcart were $M = 7.06, SD = 1.57$, $M = 6.46, SD = 1.63$, and $M = 2.63, SD = 1.40$ respectively.  A one-way revealed the means to differ significantly, $F(3, 182) = 126.16, p < .001, \eta_G^2 = .675$. Post-hoc Tukey HSD tests revealed three homogeneous subgroups, namely those with no backpacks, those with light and heavy backpacks and those pulling a handcart.
 
-# Non-parametrische Alternativen
 
 # Robuste Alternativen
-Auch für einfaktorielle ANOVAs hat Rand @Wilcox.2012 natürlich wieder ein robustes Verfahren entwickelt und im Paket `WRS2` [@Mair.2020] implementiert. Die entsprechende Funktion ist für einfaktorielle Varianzanalysen `t1way()`.
+Auch für einfaktorielle ANOVAs hat Rand @Wilcox.2012 natürlich wieder ein robustes Verfahren entwickelt und im Paket `WRS2` [@Mair.2020] implementiert. Die entsprechende Funktion ist für einfaktorielle Varianzanalysen `t1waybt()`.
 
 ```{r}
 library(WRS2)
@@ -135,6 +134,9 @@ Auch hier sind die Ergebnisse wieder identisch mit der normalen ANOVA. Es besteh
 
 # Aus der Praxis
 @Gallup.2003 hatten sehr viel Spaß im Labor als sie untersuchten, ob die Penisform einen evolutionären Vorteil mit sich bringt. Genauer gesagt haben sie sich die Frage gestellt, ob die Form der Eichel als "Sperma-Schieber" funktionieren könnte. Mit einer Eichel, die eine ausgeprägte "Kante" hat, könnte Mann B während des Geschlechtsverkehrs die Hinterlassenschaften von Mann A "rauskratzen" und so relativ mehr von seinem eigenen Sperma zurücklassen. Dafür haben sie sich das Modell einer Vagina und drei Dildos besorgt. In das Vagina-Modell füllten sie künstliches Sperma und penetrierten diese dann mit den drei Dildos. Anschließend haben sie gemessen, wie viel Sperma der Dildo "rausgeschabt" hat. Was man so alles publizieren kann. Die Daten zu ihrer Versuchsreihe finden sich in der Datei `gallup.sav` und stammen von der [begleitenden Website](https://edge.sagepub.com/field5e) von @Field.2018. der Datensatz umfasst zwei Variablen, einmal die Form des Phallus (`phallus`) mit drei Faktorstufen ("No Coronal Ridge" = keine Eichel-Kante, "Minimal Corona Ridge" = kleine Kante, "Coronal Ridge" = normale Kante) und die Menge an "rausgeschabtem" Sperma (`displace`).
+
+# Non-parametrische Alternativen
+
 
 ## EDA
 ```{r}

@@ -561,12 +561,9 @@ phantasialand %&gt;%
 <p>We found the mean experienced joy of visitors of Phantasialand to decrease with increasing weight of backpack. Those with no backpack at all had a mean joy of <span class="math inline">\(M = 9.07, SD = 1.14\)</span>. The mean joy for those with light, heavy backpack, or handcart were <span class="math inline">\(M = 7.06, SD = 1.57\)</span>, <span class="math inline">\(M = 6.46, SD = 1.63\)</span>, and <span class="math inline">\(M = 2.63, SD = 1.40\)</span> respectively. A one-way revealed the means to differ significantly, <span class="math inline">\(F(3, 182) = 126.16, p &lt; .001, \eta_G^2 = .675\)</span>. Post-hoc Tukey HSD tests revealed three homogeneous subgroups, namely those with no backpacks, those with light and heavy backpacks and those pulling a handcart.</p>
 </div>
 </div>
-<div id="non-parametrische-alternativen" class="section level1">
-<h1>Non-parametrische Alternativen</h1>
-</div>
 <div id="robuste-alternativen" class="section level1">
 <h1>Robuste Alternativen</h1>
-<p>Auch für einfaktorielle ANOVAs hat Rand <span class="citation">Wilcox (<a href="#ref-Wilcox.2012" role="doc-biblioref">2012</a>)</span> natürlich wieder ein robustes Verfahren entwickelt und im Paket <code>WRS2</code> <span class="citation">(Mair &amp; Wilcox, <a href="#ref-Mair.2020" role="doc-biblioref">2020</a>)</span> implementiert. Die entsprechende Funktion ist für einfaktorielle Varianzanalysen <code>t1way()</code>.</p>
+<p>Auch für einfaktorielle ANOVAs hat Rand <span class="citation">Wilcox (<a href="#ref-Wilcox.2012" role="doc-biblioref">2012</a>)</span> natürlich wieder ein robustes Verfahren entwickelt und im Paket <code>WRS2</code> <span class="citation">(Mair &amp; Wilcox, <a href="#ref-Mair.2020" role="doc-biblioref">2020</a>)</span> implementiert. Die entsprechende Funktion ist für einfaktorielle Varianzanalysen <code>t1waybt()</code>.</p>
 <pre class="r"><code>library(WRS2)
 
 t1way(joy ~ backpack, data = phantasialand)</code></pre>
@@ -578,7 +575,7 @@ t1way(joy ~ backpack, data = phantasialand)</code></pre>
 ## Degrees of freedom 2: 55.94 
 ## p-value: 0 
 ## 
-## Explanatory measure of effect size: 0.91</code></pre>
+## Explanatory measure of effect size: 0.92</code></pre>
 <p>Wir erhalten ein signifikantes Ergebnis, was uns auch hier wieder sagt, dass sich die Gruppenmittelwerte unterscheiden, <span class="math inline">\(F_t(3, 55.94)= 91.24, p &lt; .001, \xi = .91\)</span>. Robuste Post-hoc-Tests gibt es natürlich auch wieder. Bei einfaktoriellen Varianzanalysen nutzt man die Funktion <code>lincon()</code>.</p>
 <pre class="r"><code>lincon(joy ~ backpack, data = phantasialand)</code></pre>
 <pre><code>## Call:
@@ -596,6 +593,9 @@ t1way(joy ~ backpack, data = phantasialand)</code></pre>
 <div id="aus-der-praxis" class="section level1">
 <h1>Aus der Praxis</h1>
 <p><span class="citation">Gallup et al. (<a href="#ref-Gallup.2003" role="doc-biblioref">2003</a>)</span> hatten sehr viel Spaß im Labor als sie untersuchten, ob die Penisform einen evolutionären Vorteil mit sich bringt. Genauer gesagt haben sie sich die Frage gestellt, ob die Form der Eichel als “Sperma-Schieber” funktionieren könnte. Mit einer Eichel, die eine ausgeprägte “Kante” hat, könnte Mann B während des Geschlechtsverkehrs die Hinterlassenschaften von Mann A “rauskratzen” und so relativ mehr von seinem eigenen Sperma zurücklassen. Dafür haben sie sich das Modell einer Vagina und drei Dildos besorgt. In das Vagina-Modell füllten sie künstliches Sperma und penetrierten diese dann mit den drei Dildos. Anschließend haben sie gemessen, wie viel Sperma der Dildo “rausgeschabt” hat. Was man so alles publizieren kann. Die Daten zu ihrer Versuchsreihe finden sich in der Datei <code>gallup.sav</code> und stammen von der <a href="https://edge.sagepub.com/field5e">begleitenden Website</a> von <span class="citation">Field (<a href="#ref-Field.2018" role="doc-biblioref">2018</a>)</span>. der Datensatz umfasst zwei Variablen, einmal die Form des Phallus (<code>phallus</code>) mit drei Faktorstufen (“No Coronal Ridge” = keine Eichel-Kante, “Minimal Corona Ridge” = kleine Kante, “Coronal Ridge” = normale Kante) und die Menge an “rausgeschabtem” Sperma (<code>displace</code>).</p>
+</div>
+<div id="non-parametrische-alternativen" class="section level1">
+<h1>Non-parametrische Alternativen</h1>
 <div id="eda-1" class="section level2">
 <h2>EDA</h2>
 <pre class="r"><code>penis &lt;- read_spss(&quot;data/gallup.sav&quot;) %&gt;% janitor::clean_names()
