@@ -11,7 +11,7 @@
 
 
 
-<title>Stil</title>
+<title>Post-hoc-Tests</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -448,62 +448,14 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Stil</h1>
+<h1 class="title toc-ignore">Post-hoc-Tests</h1>
 
 </div>
 
 
-<p><img src="images/style_r.jpg" /></p>
-<p>Um Code möglichst lesbar und verständlich zu gestalten, muss man sich einen gewissen Stil angewöhnen. Warum mus mein Code verständlich sein? Natürlich für andere, wenn jemand eine Berechnung nachvollziehen will. Aber auch für Dich, denn früher oder später wirst du noch einmal in deine Analyse gucken und wissen wollen, was Du warum gemacht hast.</p>
-<p>Man ist beim Coden in vielen Dingen frei, aber genau das kann Inkonsistenzen fördern. Deswegen gibt’s einige Richtlinien von <span class="citation">Wickham (<a href="#ref-Wickham.2019" role="doc-biblioref">2019</a>)</span>, die das Arbeiten einfach einfacher machen.</p>
-<div id="objektnamen" class="section level1">
-<h1>Objektnamen</h1>
-<p>Nutze nur Kleinbuchstaben und trenne Wörter und Zahlen mit einem <code>_</code> (“snake case”-Schreibweise):</p>
-<pre class="r"><code># Gut
-bdi_one
-bdi_1
-
-# Schlecht
-BdiOne
-bdione</code></pre>
-<p>Halte dich kurz, sei präzise und einheitlich:</p>
-<pre class="r"><code># Gut
-bdi_1
-bdi_total_1
-
-# Schlecht
-bdi_at_day_one_of_study
-bdi_total_score_1_measurement
-bdi_t_m_dkms_1</code></pre>
-<p>In welcher Sprache du deine Objektbeschreibungen verfasst, ist dir überlassen, aber sei das ganze Projekt einheitlich! Ich persönlich rechne mit englischen Publikationen, also findet man bei mir auch englische Scripts.</p>
-<p>Selbes gilt übrigens auch für <strong>Variablennamen</strong>. Gehe davon aus, dass Du sie in R eingeben muss, um mit ihnen zu arbeiten. Durch eine kurze und einheitliche Benennung kannst du dir also Zeit sparen und machst deinen Code verständlich! Es spricht beispielsweise nichts dagegen, die durchschnittliche Schmerzintensität eines Probanden zum Messzeitpunkt 1 als <code>mean_pain_1</code> zu bezeichnen, anstatt <code>DurchschnIntensität_Schmerz.1.zeitpunkt</code>.</p>
-<p>Vermeide unbedingt Umlaute! Nutze am besten den Buchstaben ohne Punkte, also “ä” zu “a”, usw.</p>
-<p>Benutze ausgiebig <strong>Kommentare</strong>, diese kannst du nach einem <code>#</code> einfach in dein Script schreiben. Alles, was nach einem <code>#</code> kommt, wird von R nicht ausgewertet. Warum genau hast Du hier diese eine Analyse gemacht? Was soll sie prüfen? Was kam dabei grob heraus? Warum hast du deine Daten hier gefiltert? Diese Angaben helfen Dir, dich in deinem Script zurechtzufinden.</p>
-</div>
-<div id="spacing" class="section level1">
-<h1>Spacing</h1>
-<p>Nach einem Komma kommt immer ein Leerzeichen, vor einem Komma nicht:</p>
-<pre class="r"><code># Gut
-function(x, y)
-
-# Schlecht
-function(x,y)
-function(x , y)</code></pre>
-<p>Klammern werden immer direkt um einen Ausruck gesetzt (keine Leerzeichen):</p>
-<pre class="r"><code># Gut
-function(x, y)
-  
-# Schlecht
-function( x, y )</code></pre>
-<p>Benutze einfach Deinen gesunden Menschenverstand. Mit ein bisschen Übung und Erfahrung wirst du sehen, ob und wo du klarer sein kannst, oder mehr kommentieren musst.</p>
-</div>
-<div id="literatur" class="section level1 unnumbered">
+<p><img src="" /></p>
+<div id="literatur" class="section level1">
 <h1>Literatur</h1>
-<div id="refs" class="references">
-<div id="ref-Wickham.2019">
-<p>Wickham, H. (2019). <em>The tidyverse style guide</em>. <a href="https://style.tidyverse.org/">https://style.tidyverse.org/</a></p>
-</div>
-</div>
 </div>
 
 

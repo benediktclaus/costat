@@ -403,6 +403,16 @@ div.tocify {
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">ANOVAs</li>
+    <li class="dropdown-header">Einfaktorielle ANOVA</li>
+    <li class="dropdown-header">Faktorielle ANOVA</li>
+    <li class="dropdown-header">ANCOVA</li>
+    <li class="dropdown-header">Repeated Measures ANOVA</li>
+    <li class="dropdown-header">Mixed ANOVA</li>
+    <li>
+      <a href="kontraste.html">Geplante Kontraste</a>
+    </li>
+    <li class="dropdown-header">Post-hoc-Tests</li>
+    <li class="divider"></li>
   </ul>
 </li>
       </ul>
@@ -527,8 +537,8 @@ phantasialand %&gt;%
 <li>mit Post-hoc-Tests und</li>
 <li>mit geplanten Kontrasten</li>
 </ol>
-<p>Post-hoc-Tests setzt man in der Regel ein, wenn man noch keine Hypothese dazu hat, wo sich die Gruppen unterscheiden. Es werden dann, vereinfacht gesagt, alle Gruppen paarweise miteinander verglichen und die <span class="math inline">\(p\)</span>-Werte auf die Art des jeweiligen Post-hoc-Tests korrigiert. Hat man vorab eine Vermutung darüber, welche Gruppen sich unterscheiden könnten, kann man das vor der Analyse als einen <strong>Kontrast</strong> festlegen und diesen während der Analyse prüfen lassen.</p>
-<p>Einen Überblick über viele Post-hoc-Tests gibt <span class="citation">Toothaker (<a href="#ref-Toothaker.1993" role="doc-biblioref">1993</a>)</span>. Ein guter Post-hoc-Test bei gleich großen Gruppengrößen und angenommener Varianzhomogenität ist der Tukey-HSD (Tukey Honest Significance Difference).</p>
+<p>Post-hoc-Tests setzt man in der Regel ein, wenn man noch keine Hypothese dazu hat, wo die Gruppen sich unterscheiden. Es werden dann, vereinfacht gesagt, alle Gruppen paarweise miteinander verglichen und die <span class="math inline">\(p\)</span>-Werte auf die Art des jeweiligen Post-hoc-Tests korrigiert. Hat man vorab eine Vermutung darüber, welche Gruppen sich unterscheiden könnten, kann man das vor der Analyse als einen <strong>Kontrast</strong> festlegen und diesen während der Analyse prüfen lassen.</p>
+<p>Einen Überblick über und Empfehlungen zu Einsatzsituationen vieler Post-hoc-Tests gibt <span class="citation">Toothaker (<a href="#ref-Toothaker.1993" role="doc-biblioref">1993</a>)</span>. Ein guter Post-hoc-Test bei gleich großen Gruppengrößen und angenommener Varianzhomogenität ist der Tukey-HSD (Tukey Honest Significance Difference).</p>
 <pre class="r"><code>phantasialand %&gt;% 
   tukey_hsd(joy ~ bagpack)</code></pre>
 <pre><code>## # A tibble: 6 x 8
@@ -544,7 +554,7 @@ phantasialand %&gt;%
 </div>
 <div id="berichten" class="section level2">
 <h2>Berichten</h2>
-<p>We found the mean experienced joy of visitors of Phantasialand to decrease with increasing weight of bagpack. Those with no bagpack at all had a mean joy of <span class="math inline">\(M = 9.07, SD = 1.14\)</span>. The mean joy for those with light, heavy bagpack, or handcart were <span class="math inline">\(M = 7.06, SD = 1.57\)</span>, <span class="math inline">\(M = 6.46, Sd = 1.63\)</span>, and <span class="math inline">\(M = 2.63, SD = 1.40\)</span> respectively. A one-way revealed the means to differ significantly, <span class="math inline">\(F(3, 182) = 126.16, p &lt; .001, \eta_G^2 = .675\)</span>. Post-hoc Tukey HSD tests revealed three homogeneous subgroups, namely those with no bagpacks, those with light and heavy bagpacks and those pulling a handcart.</p>
+<p>We found the mean experienced joy of visitors of Phantasialand to decrease with increasing weight of bagpack. Those with no bagpack at all had a mean joy of <span class="math inline">\(M = 9.07, SD = 1.14\)</span>. The mean joy for those with light, heavy bagpack, or handcart were <span class="math inline">\(M = 7.06, SD = 1.57\)</span>, <span class="math inline">\(M = 6.46, SD = 1.63\)</span>, and <span class="math inline">\(M = 2.63, SD = 1.40\)</span> respectively. A one-way revealed the means to differ significantly, <span class="math inline">\(F(3, 182) = 126.16, p &lt; .001, \eta_G^2 = .675\)</span>. Post-hoc Tukey HSD tests revealed three homogeneous subgroups, namely those with no bagpacks, those with light and heavy bagpacks and those pulling a handcart.</p>
 </div>
 </div>
 <div id="robuste-alternativen" class="section level1">

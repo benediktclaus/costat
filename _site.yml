@@ -34,6 +34,15 @@ navbar:
          href: t-test-abhaengig.html
        - text: "--------"
        - text: "ANOVAs"
+       - text: "Einfaktorielle ANOVA"
+       - text: "Faktorielle ANOVA"
+       - text: "ANCOVA"
+       - text: "Repeated Measures ANOVA"
+       - text: "Mixed ANOVA"
+       - text: "Geplante Kontraste"
+         href: kontraste.html
+       - text: "Post-hoc-Tests"
+       - text: "--------"
   right:
     - icon: fa-question
       menu:

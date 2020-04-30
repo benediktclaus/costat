@@ -23,6 +23,6 @@ Stehen Forschungsprojekte, Haus-, Bachelor- oder Masterarbeiten auf Deinem Abgab
 Ja! Diese Website wird über ein [GitHub-Repository](https://github.com/benediktclaus/costat.git) gespeist. Dort findest Du alle Ressourcen, auch die Beispieldaten, die Du zum Mitmachen brauchst. Die Kammer ist *work in progress*; dort können also auch Fehler gemeldet werden, insofern sich welche eingeschlichen haben.
 
 # Gibt's auch etwas zum Nachschlagen?
-Natürlich! *Das* Standardwerk sollte für den interessierten Leser "der Field" [@Field.2018] sein. Wer mehr in die Welt der Formeln und Details eintauchen möchte, sei auf @Eid.2017 verwiesen. Einen weiteren Klassiker, jedoch schwere Kost, findest du bei @Bortz.2010.
+Natürlich! *Das* Standardwerk sollte für den interessierten Leser "der Field" [@Field.2018] sein. Wer mehr in die Welt der Formeln und Details eintauchen möchte, sei auf @Eid.2017 verwiesen. Einen weiteren Klassiker, jedoch schwere Kost, findest Du bei @Bortz.2010.
 
 # Literatur

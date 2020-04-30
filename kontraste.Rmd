@@ -1,0 +1,151 @@
+---
+title: "Kontraste"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(fig.align = "center")
+ggplot2::theme_set(ggplot2::theme_light())
+
+library(tidyverse)
+library(rstatix)
+library(haven)
+```
+
+![](images/contrast_r.jpg)
+
+Eine ANOVA ist ein **Omnibus-Test**, d.h., dass uns ein signifikanter $F$-Wert erstmal nur sagt, dass sich die Gruppenmittelwerte (die Mittelwerte der unterschiedlichen Faktorstufen) voneinander unterscheiden. Wir wissen aber noch nicht *wo*. Im Grunde ist ein signifikantes Ergebnis einer ANOVA eine Aufforderung dazu, weitere Untersuchungen anzustellen. An dieser Stelle hat man nun zwei Möglichkeiten; entweder man hat bereits eine Hypohese oder Ahnung, wo die Unterschiede liegen könnten. In diesem Fall kann man vorab **Kontrase** (also geplante Kontraste) definieren und diese Unterschiede prüfen. Hat man keine Hypothesen und will "sich überraschen lassen", macht man einen **Post-hoc-Test**.
+
+Die Grundidee von Kontrasten ist, die Varianz, die durch unsere Faktoren erklärt wird, weiter aufzuschlüsseln. Die ANOVA an sich hat die Gesamtvarianz der Daten in eine Modell-Varianz und eine Residual-Varianz zerlegt, also Anteile der Streuung, die durch unser Modell (unsere Faktoren) erklärt werden kann und jene die übrig bleibt. Diese Modell-Varianz können wir nun weiter "aufsplitten", bzw. weiter untersuchen. Am besten stellt man sich das wie einen Kuchen vor: Wir haben bereits ein Stück vom Kuchen abgeschnitten (die Residual-Varianz) und haben einen großen Teil vom Kuchen übrig. Wir wissen nun, dass irgendwo in diesem übrig gebliebenen Kuchen ein Unterschied steckt, den wir weiter aufklären wollen. Dazu teilen wir diesen Rest in weitere Teile und vergleichen diese miteinander.
+
+# Kontraste definieren
+Man darf natürlich nicht wild drauf los raten und irgendwelche Gruppen miteinander vergleichen; das Vorgehen muss eine gewisse Struktur haben, damit sinnvolle -- und vor allem interpretierbare -- Berechnungen durchgeführt werden. Um ein Stück vom Kuchen (s.o.) mit einem anderen Stück zu vergleichen, nutzt man **Gewichte**, die wir gleich näher erläutern. Außerdem muss man, wenn man $k$ Gruppen miteinander vergleicht, $k-1$ Kontraste definieren. @Field.2018 hat zur Definition von Kontrasten fünf Regeln aufgestellt, an die man sich halten sollte:
+
+1. Wähle sinnvolle Vergleiche. Es dürfen immer nur zwei Stücke miteinander verglichen werden; wurde ein Stück bereits verwendet, darf es in weiteren Kontrasten nicht mehr verwendet werden.
+2. Stücke mit positiven Gewichten werden mit Stücken mit negativen Gewichten verglichen.
+3. Die Summe der Gewichte eines Kontrasts sollte 0 sein.
+4. Stücke, die in einem Kontrast nicht berücksichtigt werden sollen, erhalten ein Gewicht von 0.
+5. Für einen einzelnen Kontrast sollten die Gewichte der Gruppen in einem Stück gleich der Anzahl der Gruppen im anderen Stück sein.
+
+Deutlich wird das, wenn wir uns dazu ein Beispiel anschauen.
+
+# Beispiel
+Für das Beispiel der einfaktoriellen ANOVA hatten wir uns einen fiktiven Datensatz zu Besuchern des Phantasialandes angeschaut. In diesem Datensatz finden wir die empfundene Freude von 186 Besuchern des Phantasialandes (Variable `joy`), eingeteilt in Gruppen von Handgepäck-Typ. Wir haben Besucher ohne Handgepäck, mit leichtem und schwerem Rucksack und jenen, die einen Bollerwagen ziehen müssen. Mit der einfaktoriellen ANOVA haben wir bereits herausgefunden, dass sich diese Gruppen hinsichtlich ihrer Freude signifikant unterscheiden.
+
+```{r message=FALSE}
+phantasialand <- read_spss("data/phantasialand.sav") %>%
+  mutate_if(is.labelled, as_factor)
+
+# Datensatz
+phantasialand
+
+# Boxplot
+phantasialand %>% 
+  ggplot(aes(x = bagpack, y = joy)) +
+  geom_boxplot(outlier.color = NA) +
+  geom_jitter(width = 0.1, alpha = 0.2) +
+  labs(x = "Gepäck", y = "Freude")
+
+# ANOVA
+phantasialand %>% 
+  anova_test(joy ~ bagpack)
+```
+
+Nun interressieren wir uns dafür, *wo* die Unterschiede sind. Wir müssen $k-1$ Kontraste definieren -- und dann noch anhand der oben dargestellten Regeln. Zuerst haben wir hier $k = 4$ Gruppen, also müssen wir $4-1 = 3$ Kontraste definieren. Wir dürfen immer nur zwei Stücke vom Kuchen miteinander vergleichen Als erstes könnte uns bspw. interessieren, ob sich die Gruppe derer ohne Handgepäck (die glücklichsten) von allen anderen Gruppen unterscheidet. Die Gewichte würden dann so verteilt werden:
+
+Gruppe  |  Kontrast 1
+--------|-----------
+None    |  -3
+Light   |  1
+Heavy   |  1
+Handcart|  1
+Summe   |  0
+
+Für diesen ersten Kontrast sind alle Regeln erfüllt. Wir vergleichen nur zwei Stücke miteinander ("None" und alle anderen; Regel 1), was wir durch ein negatives und drei positive Gewichte kenntlich gemacht haben (Regel 2). Die Summe der Gewichte ist 0 ($-3 + 1 + 1 + 1 = 0$; Regel 3) und Regel 5 ist auch erfüllt: Das negative Gewicht, das wir der Gruppe "None" zugewisen haben entspricht der Anzahl der Gruppen im Stück mit den positiven Gewichten (3). Auch die Gewichte im Stück mit den positiven Gewichten (jeweils 1) entsprechen der Anzahl der Gruppen im Stück mit den negativen Regressionsgewichten (hier nur die Gruppe "None", also eine Gruppe). In diesem Kontrast werden alle Gruppen einbezogen, also findet Regel 4 noch keine Anwendung.
+
+Machen wir uns an die übrigen Kontraste. Im nächsten Schritt würden wir vergleichen, ob sich die Gruppe dere mit leichtem Handgepäck von jenen unterscheidet, die schweres Handgepäck tragen oder einen Bollerwagen ziehen müssen.
+
+Gruppe  |  Kontrast 1 |  Kontrast 2
+--------|-------------|-------------
+None    |  -3         | 0
+Light   |  1          | -2
+Heavy   |  1          | 1
+Handcart|  1          | 1
+Summe   |  0          | 0
+
+Hier sind wieder alle Regeln erfüllt; sogar Regel 4, indem die Gruppe "None" ein Gewicht von 0 abbekommen hat. Wir haben diese Gruppe als solche nämlich bereits in Kontrast 1 genutzt, also sollten wie sie nun nicht mehr verwenden (Regel 1). Der letzte Kontrast vergleicht jene mit schwerem Handgepäck mit denen, die einen Bollerwagen ziehen.
+
+Gruppe  |  Kontrast 1 |  Kontrast 2 |  Kontrast 3
+--------|-------------|-------------|-------------
+None    |  -3         | 0           | 0
+Light   |  1          | -2          | 0
+Heavy   |  1          | 1           | -1
+Handcart|  1          | 1           | 1
+Summe   |  0          | 0           | 0
+
+Und so einfach haben wir die drei Kontraste definiert. Wenn wir Kontraste so definieren, haben wir **orthogonale (oder unabhängige) Kontraste**, die die Interpretation erleichtern. Ob Kontraste orthogonal oder unabhängig sind, kann man auch wieder errechnen, indem man die Produkte der Kontrast-Gewichte addiert; kommt am Ende 0 bei raus, sind sie orthogonal.
+
+Gruppe  |  Kontrast 1 |  Kontrast 2 |  Kontrast 3 | Produkt
+--------|-------------|-------------|-------------|---------
+None    |  -3         | 0           | 0           | 0
+Light   |  1          | -2          | 0           | 0
+Heavy   |  1          | 1           | -1          | -1
+Handcart|  1          | 1           | 1           | 1
+Summe   |  0          | 0           | 0           | 0
+
+Nicht orthogonale Kontrast an für sich sind nicht falsch, man sollte bei der Interpretation nur sehr vorsichtig sein, weil die Vergleiche nicht mehr unabhängig sind und die $p$-Werte der Kontraste miteinander korrelieren könnten (und alleine diese Aussage sollte bei jedem Leser einen Schwall von Unbehagen auslösen).
+
+# Durchführung
+Unsere Kontraste können wir nun manuell definieren. Vorher sollten wir uns aber die Reihenfolge der Faktorlevels anschauen, nur um sicherzugehen, dass wir den Gruppen die richtigen Gewichte geben.
+
+```{r}
+phantasialand %>% 
+  pull(bagpack) %>% 
+  levels()
+```
+
+Die Reihenfolge ist wie gedacht, also können wir auch die Kontraste wie in der obigen Tabelle definieren.
+
+```{r}
+contrast_1 <- c(-3, 1, 1, 1)
+contrast_2 <- c(0, -2, 1, 1)
+contrast_3 <- c(0, 0, -1, 1)
+
+my_contrasts <- cbind(contrast_1, contrast_2, contrast_3)
+
+contrasts(phantasialand$bagpack) <- my_contrasts
+
+phantasialand %>% pull(bagpack)
+```
+
+Wenn wir uns nun die Variable im Datensatz ansehen, stellen wir fest, dass ein Attribut hinzugefügt wurde, nämlich unsere Kontraste. Eigentlich wurde dieses Attribut nicht hinzugefügt, R hat nämlich einen Standard-Kontrast hinterlegt, den wir jetzt einfach überschrieben haben. Um die Kontraste nun zu berechnen, formulieren wir unser Modell in der hauseigenen ANOVA-Funktion von R, `aov()`, und speichern die Ergebnisse in einem neuen Objekt, das wir in diesem Fall `model_results` genannt haben.
+
+```{r}
+model_results <- aov(joy ~ bagpack, data = phantasialand)
+```
+
+Um nun Informationen aus diesem Objekt zu ziehen, müssen wir uns die Zusammenfassung, also die `summary()` dieses Objektes anschauen.
+
+```{r}
+summary(model_results)
+```
+
+An dieser Stelle ist klar, dass die Funktion `aov()` aus Base R nichts anderes macht als die Funktion `anova_test()` aus dem Paket `rstatix`; die Ergebnisse sind nämlich identisch. Ursprünglich habe ich diese Funktion bewusst vorgestellt, da sie super in das Tidyverse passt -- Kontraste kann man damit jedoch (noch) nicht berechnen. Dafür müssen wir zu Base R ausweichen.
+
+Wo sind denn jetzt die Kontraste? Da wir uns im GLM, also im allgemeinen linearen Modell bewegen, und eine ANOVA auch nichts anderes als eine lineare Regression ist, müssen wir uns die Zusammenfassung "durch die Brille" einer linearen Regression ansehen. Das ist mit der Funktion `summary.lm()` möglich.
+
+```{r}
+summary.lm(model_results)
+```
+
+Hier sind unsere einzelnen Kontraste nun als Prädiktorvariablen (mit Dummy-Codierung) im Rahmen einer linearen Regression aufgelistet, mit entsprechenden $p$-Werten. Alle Kontraste sind signifikant, d.h., dass sich die Gruppe der Besucher ohne Handgepäck signifikant von allen anderen mit Handgepäck unterscheidet. Außerdem unterscheiden sich diejenigen mit leichtem Rucksack signifikant von allen mit schwerem Rucksack und Bollerwagen-Ziehern. Als letztes unterscheiden sich jene mit schwerem Rucksack signifikant von Bollerwagen-Ziehern.
+
+# Literatur
+
+```{r echo=FALSE}
+remove(list = ls())
+```
