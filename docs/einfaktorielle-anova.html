@@ -27,6 +27,7 @@
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link rel="shortcut icon" href="images/broom.ico">
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -575,7 +576,7 @@ t1way(joy ~ backpack, data = phantasialand)</code></pre>
 ## Degrees of freedom 2: 55.94 
 ## p-value: 0 
 ## 
-## Explanatory measure of effect size: 0.92</code></pre>
+## Explanatory measure of effect size: 0.91</code></pre>
 <p>Wir erhalten ein signifikantes Ergebnis, was uns auch hier wieder sagt, dass sich die Gruppenmittelwerte unterscheiden, <span class="math inline">\(F_t(3, 55.94)= 91.24, p &lt; .001, \xi = .91\)</span>. Robuste Post-hoc-Tests gibt es natürlich auch wieder. Bei einfaktoriellen Varianzanalysen nutzt man die Funktion <code>lincon()</code>.</p>
 <pre class="r"><code>lincon(joy ~ backpack, data = phantasialand)</code></pre>
 <pre><code>## Call:

@@ -61,3 +61,5 @@ output:
     smooth_scroll: true
     theme: flatly
     highlight: default
+    includes:
+      in_header: "favicon.html"
