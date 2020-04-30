@@ -132,11 +132,11 @@ lincon(joy ~ backpack, data = phantasialand)
 
 Auch hier sind die Ergebnisse wieder identisch mit der normalen ANOVA. Es besteht zwischen allen Gruppen ein signifikanter Unterschied, außer zwischen den Besuchern mit leichtem oder schwerem Rucksack.
 
+# Non-parametrische Alternativen
+Folgen.
+
 # Aus der Praxis
 @Gallup.2003 hatten sehr viel Spaß im Labor als sie untersuchten, ob die Penisform einen evolutionären Vorteil mit sich bringt. Genauer gesagt haben sie sich die Frage gestellt, ob die Form der Eichel als "Sperma-Schieber" funktionieren könnte. Mit einer Eichel, die eine ausgeprägte "Kante" hat, könnte Mann B während des Geschlechtsverkehrs die Hinterlassenschaften von Mann A "rauskratzen" und so relativ mehr von seinem eigenen Sperma zurücklassen. Dafür haben sie sich das Modell einer Vagina und drei Dildos besorgt. In das Vagina-Modell füllten sie künstliches Sperma und penetrierten diese dann mit den drei Dildos. Anschließend haben sie gemessen, wie viel Sperma der Dildo "rausgeschabt" hat. Was man so alles publizieren kann. Die Daten zu ihrer Versuchsreihe finden sich in der Datei `gallup.sav` und stammen von der [begleitenden Website](https://edge.sagepub.com/field5e) von @Field.2018. der Datensatz umfasst zwei Variablen, einmal die Form des Phallus (`phallus`) mit drei Faktorstufen ("No Coronal Ridge" = keine Eichel-Kante, "Minimal Corona Ridge" = kleine Kante, "Coronal Ridge" = normale Kante) und die Menge an "rausgeschabtem" Sperma (`displace`).
-
-# Non-parametrische Alternativen
-
 
 ## EDA
 ```{r}
@@ -227,7 +227,7 @@ penis_results <- aov(displace ~ phallus, data = penis)
 summary.lm(penis_results)
 ```
 
-Unsere Kontraste bestätigen, was wir uns anhand der Abbildung vielleicht schon gedacht haben. Es gibt im Hinblick auf die Menge des entfernten Spermas einen signifikanten Unterschied zwischen dem Dildo ohne Eichel-Kante und jenen mit einer solchen Kante. Darüber hinaus unterscheiden sich die beiden Dildos mit Eichel-Kante nicht voneinander; beide entfernten ähnlich viel Sperma aus der Modell-Vagina. Die Efet^2}kt^2 + dftstärke können wir berechnen als $$r_\text{Kontrast} = \sqrt{\dfrac{t^2}{t^2 + df}}$$
+Unsere Kontraste bestätigen, was wir uns anhand der Abbildung vielleicht schon gedacht haben. Es gibt im Hinblick auf die Menge des entfernten Spermas einen signifikanten Unterschied zwischen dem Dildo ohne Eichel-Kante und jenen mit einer solchen Kante. Darüber hinaus unterscheiden sich die beiden Dildos mit Eichel-Kante nicht voneinander; beide entfernten ähnlich viel Sperma aus der Modell-Vagina. Die Effektstärke können wir berechnen als $$r_\text{Kontrast} = \sqrt{\dfrac{t^2}{t^2 + df}}$$
 
 ```{r eval=FALSE, echo=FALSE}
 r_contrast <- function(t, df) {

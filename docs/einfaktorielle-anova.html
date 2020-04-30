@@ -591,12 +591,13 @@ t1way(joy ~ backpack, data = phantasialand)</code></pre>
 ## Heavy vs. Handcart 3.86275  2.72189  5.00360 0.00000</code></pre>
 <p>Auch hier sind die Ergebnisse wieder identisch mit der normalen ANOVA. Es besteht zwischen allen Gruppen ein signifikanter Unterschied, außer zwischen den Besuchern mit leichtem oder schwerem Rucksack.</p>
 </div>
+<div id="non-parametrische-alternativen" class="section level1">
+<h1>Non-parametrische Alternativen</h1>
+<p>Folgen.</p>
+</div>
 <div id="aus-der-praxis" class="section level1">
 <h1>Aus der Praxis</h1>
 <p><span class="citation">Gallup et al. (<a href="#ref-Gallup.2003" role="doc-biblioref">2003</a>)</span> hatten sehr viel Spaß im Labor als sie untersuchten, ob die Penisform einen evolutionären Vorteil mit sich bringt. Genauer gesagt haben sie sich die Frage gestellt, ob die Form der Eichel als “Sperma-Schieber” funktionieren könnte. Mit einer Eichel, die eine ausgeprägte “Kante” hat, könnte Mann B während des Geschlechtsverkehrs die Hinterlassenschaften von Mann A “rauskratzen” und so relativ mehr von seinem eigenen Sperma zurücklassen. Dafür haben sie sich das Modell einer Vagina und drei Dildos besorgt. In das Vagina-Modell füllten sie künstliches Sperma und penetrierten diese dann mit den drei Dildos. Anschließend haben sie gemessen, wie viel Sperma der Dildo “rausgeschabt” hat. Was man so alles publizieren kann. Die Daten zu ihrer Versuchsreihe finden sich in der Datei <code>gallup.sav</code> und stammen von der <a href="https://edge.sagepub.com/field5e">begleitenden Website</a> von <span class="citation">Field (<a href="#ref-Field.2018" role="doc-biblioref">2018</a>)</span>. der Datensatz umfasst zwei Variablen, einmal die Form des Phallus (<code>phallus</code>) mit drei Faktorstufen (“No Coronal Ridge” = keine Eichel-Kante, “Minimal Corona Ridge” = kleine Kante, “Coronal Ridge” = normale Kante) und die Menge an “rausgeschabtem” Sperma (<code>displace</code>).</p>
-</div>
-<div id="non-parametrische-alternativen" class="section level1">
-<h1>Non-parametrische Alternativen</h1>
 <div id="eda-1" class="section level2">
 <h2>EDA</h2>
 <pre class="r"><code>penis &lt;- read_spss(&quot;data/gallup.sav&quot;) %&gt;% janitor::clean_names()
@@ -738,7 +739,7 @@ summary.lm(penis_results)</code></pre>
 ## Residual standard error: 11.18 on 12 degrees of freedom
 ## Multiple R-squared:  0.8738, Adjusted R-squared:  0.8528 
 ## F-statistic: 41.56 on 2 and 12 DF,  p-value: 4.032e-06</code></pre>
-<p>Unsere Kontraste bestätigen, was wir uns anhand der Abbildung vielleicht schon gedacht haben. Es gibt im Hinblick auf die Menge des entfernten Spermas einen signifikanten Unterschied zwischen dem Dildo ohne Eichel-Kante und jenen mit einer solchen Kante. Darüber hinaus unterscheiden sich die beiden Dildos mit Eichel-Kante nicht voneinander; beide entfernten ähnlich viel Sperma aus der Modell-Vagina. Die Efet<sup>2}kt</sup>2 + dftstärke können wir berechnen als <span class="math display">\[r_\text{Kontrast} = \sqrt{\dfrac{t^2}{t^2 + df}}\]</span></p>
+<p>Unsere Kontraste bestätigen, was wir uns anhand der Abbildung vielleicht schon gedacht haben. Es gibt im Hinblick auf die Menge des entfernten Spermas einen signifikanten Unterschied zwischen dem Dildo ohne Eichel-Kante und jenen mit einer solchen Kante. Darüber hinaus unterscheiden sich die beiden Dildos mit Eichel-Kante nicht voneinander; beide entfernten ähnlich viel Sperma aus der Modell-Vagina. Die Effektstärke können wir berechnen als <span class="math display">\[r_\text{Kontrast} = \sqrt{\dfrac{t^2}{t^2 + df}}\]</span></p>
 <p>Alternativ hätten wir Post-hoc-Tests berechnen können, mit denen wir auf das identische Ergebnis gekommen wären.</p>
 <pre class="r"><code>penis %&gt;% 
   tukey_hsd(displace ~ phallus)</code></pre>
