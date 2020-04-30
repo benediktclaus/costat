@@ -35,7 +35,7 @@ patience <- tibble(
 # Einfaktorielle ANOVA
 set.seed(20200428)
 tibble(
-  bagpack = as_factor(c("None", "Light", "Heavy", "Handcart")),
+  backpack = as_factor(c("None", "Light", "Heavy", "Handcart")),
   joy = list(round(rnorm(42, 9, 1.3)), round(rnorm(53, 7, 1.5)), round(rnorm(56, 6.5, 1.5)), round(rnorm(35, 3, 1.7)))
 ) %>% 
   unnest(joy) %>% 

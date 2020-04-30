@@ -7,13 +7,105 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r echo=FALSE}
+```{r echo=FALSE, message=FALSE}
 knitr::opts_chunk$set(fig.align = "center")
 ggplot2::theme_set(ggplot2::theme_light())
+
+library(tidyverse)
+library(haven)
+library(rstatix)
+library(WRS2)
 ```
 
-![]()
+![](images/sprint_r.jpg)
 
+Eine ANOVA ist ein **Omnibus-Test**, d.h., dass uns ein signifikanter $F$-Wert erstmal nur sagt, dass sich die Gruppenmittelwerte (die Mittelwerte der unterschiedlichen Faktorstufen) voneinander unterscheiden. Wir wissen aber noch nicht *wo*. Im Grunde ist ein signifikantes Ergebnis einer ANOVA eine Aufforderung dazu, weitere Untersuchungen anzustellen. An dieser Stelle hat man nun zwei Möglichkeiten; entweder man hat bereits eine Hypohese oder Ahnung, wo die Unterschiede liegen könnten. In diesem Fall kann man vorab **Kontrase** (also geplante Kontraste) definieren und diese Unterschiede prüfen. Hat man keine Hypothesen und will "sich überraschen lassen", macht man einen **Post-hoc-Test**. Wir jagen unseren potenziellen Unterschieden also hinterher.
+
+# Grundidee
+Im Gegensatz zu den auf unseren Hypothesen fundierenden [geplanten Kontrasten](kontraste.html) sind Post-hoc-Tests relativ brutal und einfallslos. Sie nehmen sich alle Gruppen der von uns definierten Faktoren vor und berechnen paarweise Vergleiche; also werden im Prinzip ganz viele $t$-Tests berechnet. Das hört sich nach einer ganz dummen Idee an und ist es ohne spezielle Vorkehrungen auch, denn durch die vielen Tests auf einmal, kommt es zur $\alpha$-Fehler-Kumulierung. Was ist denn das jetzt schon wieder?
+
+Irgendwann wurde willkürlich festgelegt, dass ein $p < 0.05$ ein statistisch signifikantes Ergebnis bedeutet.  Mit diesem Signifikanzniveau von $\alpha = 0.05$ gehen wir vorab also immer davon aus, dass die Wahrscheinlichkeit einen Fehler 1. Art ($\alpha$-Fehler) zu begehen 5% ist. Ein Fehler 1. Art tritt ein, wenn wir uns dafür entscheiden, einen Effekt gefunden zu haben, obwohl es eigentlich keinen gibt. Gibt es also wirklich *keinen* Effekt in einer Population, und führen wir unser Experiment 100 Mal immer auf dieselbe Art und Weise durch, gehen wir davon aus, dass wir fälschlicherweise trotzdem 5 Mal ein signifikantes Ergenis erhalten. Macht man jetzt mehrere Tests, wie es bei den Post-hoc-Tests nun gemacht werden soll, erhöht sich auch die Wahrscheinlichkeit einen Fehler 1. Art zu begehen. Diese Wahrscheinlichkeit eines Fehlers 1. Art lässt sich berechnen durch $$\text{Fehler} = 1 - (0.95)^n$$
+
+Führen wir einen Test durch, ist die Wahrscheinlichkeit eines $\alpha$-Fehlers $1 - (0.95)^1 = 0.05$, also 5%, wie ursprünglich definert. Mit der Anzahl unserer Tests steigt die Wahrscheinlichkeit eines Fehlers jedoch rapide. Bei drei Tests sind es schon $1-(0.95)^3 = 14.3\,\%$ und bei 5 Tests $1-(0.95)^5 = 22.6\,\%$. Bei fünf paarweisen Vergleichen gehen wir also schon vorab davon aus, dass mindestens einer fälschlicherweise signifikant ist. Na super. Und jetzt?
+
+# Implementierung
+Es gab und gibt viele kluge Köpfe, die sich dem Problem angenommen haben. Ihre Idee war nun, das Signifikanzniveau von $\alpha = 0.05$ zu reduzieren, um so die Schwelle, ab wann ein Ergebnis statistisch signifikant ist, niedriger zu legen. Clever! Es gibt mittlerweile viele Möglichkeiten, den $p$-Wert bei Post-hoc-Tests zu korrigieren, deshalb haben @Toothaker.1993 und @Field.2018 diese für uns im Bereich der ANOVA-Designs zusammengefasst:
+
+Gruppengröße          | Populations-Varianzen | Verfahren    | Referenz
+----------------------|-----------------------|--------------|----------
+Gleichgroß            | Homogen               | Tukey HSD    | @Tukey.1949
+Leicht unterschiedlich| Homogen               | Gabriel      | @Gabriel.1969
+Sehr unterschiedlich  | Homogen               | Hochbergs GT2| @Hochberg.1974, @Hochberg.1975
+Egal                  | Unterschiedlich       | Games-Howell | @Games.1976
+
+Die Methode, die alle kennen (Bonferroni) wird nicht mehr empfohlen, weil sie zu konservativ ist. Möchte man jedoch eine ähnliche Methode durchführen, sollte man die (Bonferroni-)Holm-Methode [@Holm.1979] in Betracht ziehen, da diese mehr Power hat.
+
+Tukey HSD und Bonferroni-Holm können mit Funktionen aus dem Paket `rstatix` durchgeführt werden. Für letztere muss jedoch das Paket `emmeans` [@Lenth.2020] installiert sein.
+
+```{r eval=FALSE}
+# Tukey HSD
+<DATA> %>% tukey_hsd(<DV> ~ <PRED>)
+
+# Bonferroni-Holm
+<DATA> %>% emmeans_test(<DV> ~ <PRED>, p.adjust.method = "holm")
+```
+
+Für die anderen Tests sieht es in R schlecht aus. Dafür bietet R viele weitere Tests, die stattdessen eingesetzt werden können. Weitere Informationen dazu findet man bei @Field.2018.
+
+# Beispiel
+Für das Beispiel der [einfaktoriellen ANOVA](einfaktorielle-anova.html) hatten wir uns einen fiktiven Datensatz zu Besuchern des Phantasialandes angeschaut. In diesem Datensatz finden wir die empfundene Freude von 186 Besuchern des Phantasialandes (Variable `joy`), eingeteilt in Gruppen von Handgepäck-Typ. Wir haben Besucher ohne Handgepäck, mit leichtem und schwerem Rucksack und jenen, die einen Bollerwagen ziehen müssen. Mit der einfaktoriellen ANOVA haben wir bereits herausgefunden, dass sich diese Gruppen hinsichtlich ihrer Freude signifikant unterscheiden.
+
+```{r message=FALSE}
+phantasialand <- read_spss("data/phantasialand.sav") %>%
+  mutate_if(is.labelled, as_factor)
+
+# Datensatz
+phantasialand
+
+# Boxplot
+phantasialand %>% 
+  ggplot(aes(x = backpack, y = joy)) +
+  geom_boxplot(outlier.color = NA) +
+  geom_jitter(width = 0.1, alpha = 0.2) +
+  labs(x = "Gepäck", y = "Freude")
+
+# ANOVA
+phantasialand %>% 
+  anova_test(joy ~ backpack)
+```
+
+An dieser Stelle könnten wir entweder den Tukey HSD durchführen oder paarweise Vergleiche mit Bonferroni-Holm-Korrektur durchführen.
+
+```{r}
+# Tukey HSD
+phantasialand %>% 
+  tukey_hsd(joy ~ backpack)
+
+# Bonferroni-Holm
+phantasialand %>% 
+  emmeans_test(joy ~ backpack, p.adjust.method = "holm")
+```
+
+In diesem Fall liefern die beiden Verfahren unterschiedliche Ergebnisse. Nach der Tukey-Methode finden wir signifikante Unterschiede zwischen allen Gruppen, jedoch keinen signifikanten Unterschied zwischen jenen Besuchern mit leichten und schweren Rucksäcken. Nach der Bonferroni-Holm-Methode hingegen finden ir einen signifikanten Unterschied, da $p = .037$. Das ist zwar "nur knapp" unter unserem Signifikanzniveau von $\alpha = 0.05$, aber bei der Signifikanz ist das wie bei einer Schwangerschaft: Man ist entweder schwanger oder nicht. Es gibt kein "bisschen" schwanger oder "gerade so schwanger". Es gibt auch kein "schwangerer" oder "gerade nicht schwanger"/"marginal schwanger"; man sollte bei solchen Formulierungen in Bezug auf statistische Signifikanz berechtigterweise kritisch sein. In den meisten Fällen hat der Autor einfach selbst keine Ahnung.
+
+Die unterschiedlichen Ergebnisse von zwei unterschiedlichen Test bei identischer Datenlage ist jedenfalls nicht ungewöhnlich. Auf der sicheren Seite ist man, wenn man sich *vor* der Analyse auf Basis der Literatur für ein Verfahren entscheidet und dann *nur* dieses Verfahren durchführt.
+
+
+# Robuste Methoden
+Auch für Post-hoc-Tests hat Rand @Wilcox.2012 natürlich robuste Alternativen entwickelt und im Paket `WRS2` [@Mair.2020] umgesetzt. Für einfaktorielle Varianzanalysen ist das die Funktion `lincon()`.
+
+```{r eval=FALSE}
+lincon(<DV> ~ <PRED>, data = <DATA>)
+```
+
+## Beispiel
+Bei unserem Beispiel aus dem Phantasialand sähe das folgendermaßen aus.
+
+```{r}
+lincon(joy ~ backpack, data = phantasialand)
+```
+
+Hier sind die Ergebnisse in Einklang mit der Tukey-HSD-Methode, es gibt keinenen statitistisch signifikanten Unterschied zwischen jenen Besuchern mit leichten und schweren Rucksäcken.
 
 
 # Literatur

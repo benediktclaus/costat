@@ -15,27 +15,24 @@ knitr::opts_chunk$set(fig.align = "center")
 ## $t$-Tests
 Der $t$-Test, oder besser gesagt die $t$-Tests, sind eine kleine Gruppe von statistischen Signifikanztests, mit denen man Gruppenunterschiede zwischen **zwei Gruppen** untersuchen kann. Meistens unterscheidet man zwischen dem
 
-* Einstichproben-$t$-Test, dem
-* $t$-Test mit unabhängigen Stichproben und dem
-* $t$-Test mit abhängigen (oder verbundenen) Stichproben.
+* [Einstichproben-$t$-Test](t-test-einstichprobe.html), dem
+* [$t$-Test mit unabhängigen Stichproben](t-test-unabhaengig.html) und dem
+* [$t$-Test mit abhängigen (oder verbundenen) Stichproben](t-test-ahaengig.html).
 
 Na super, drei Tests -- aber ich wollte doch nur einen Test machen! Welchen nehme ich denn jetzt?!
 
-Den Einstichproben-$t$-Test benutzt man, wenn man eine Aussage darüber treffen will, ob sich eine Population im Mittelwert von einem bereits bekannten Wert unterscheidet. Stell Dir vor, Du hast zufällig die Größe von 80 Leuten in der Dortmunder Innenstadt gemessen, die im Schnitt 181 cm groß sind. Nun möchtest Du wissen, ob sich diese mittlere Größe von Dortmundern von beispielweise 170 cm signifikant unterscheidet. Das kannst du mit einem Einstichproben-$t$-Test überprüfen (auch wenn man diese Fragestellung "in der freien Wildbahn" eigentlich nicht findet).  
-[Hier geht's zur Anleitung](t-test-einstichprobe.html).
+Den Einstichproben-$t$-Test benutzt man, wenn man eine Aussage darüber treffen will, ob sich eine Population im Mittelwert von einem bereits bekannten Wert unterscheidet. Stell Dir vor, Du hast zufällig die Größe von 80 Leuten in der Dortmunder Innenstadt gemessen, die im Schnitt 181 cm groß sind. Nun möchtest Du wissen, ob sich diese mittlere Größe von Dortmundern von beispielweise 170 cm signifikant unterscheidet. Das kannst du mit einem Einstichproben-$t$-Test überprüfen (auch wenn man diese Fragestellung "in der freien Wildbahn" eigentlich nicht findet).
 
-Der $t$-Test mit unabhängigen Stichproben ist in der Regel schon etwas anwendungsnäher, denn bei diesem wird untersucht, ob sich **zwei Gruppen**  in ihrem Mittelwert unterscheiden. Beispielsweise möchtest Du untersuchen, ob sich die Kontrollgruppe am Ende einer Interventions-Studie signifikant von Deiner Interventionsgruppe unterscheidet. Im Gegensatz zum vorherigen Test, werden hier beide Mittelwerte erst einmal anhand der Probanden in den Gruppen bestimmt. Sollen also zwei Gruppen anhand einer kontinuierlichen Variable miteinander verglichen werden, ist das ein valider Ansatz. Liegen mehrere Gruppen vor, deren Mittelwerte Du anhand einer Variable auf signifikante Unterschiede vergleichen möchtest, dann solltest du über ein anderes Verfahren, wie die ANOVA (s.u.) nachdenken.  
-[Hier geht's zur Anleitung](t-test-unabhaengig.html).
+Der $t$-Test mit unabhängigen Stichproben ist in der Regel schon etwas anwendungsnäher, denn bei diesem wird untersucht, ob sich **zwei Gruppen**  in ihrem Mittelwert unterscheiden. Beispielsweise möchtest Du untersuchen, ob sich die Kontrollgruppe am Ende einer Interventions-Studie signifikant von Deiner Interventionsgruppe unterscheidet. Im Gegensatz zum vorherigen Test, werden hier beide Mittelwerte erst einmal anhand der Probanden in den Gruppen bestimmt. Sollen also zwei Gruppen anhand einer kontinuierlichen Variable miteinander verglichen werden, ist das ein valider Ansatz. Liegen mehrere Gruppen vor, deren Mittelwerte Du anhand einer Variable auf signifikante Unterschiede vergleichen möchtest, dann solltest du über ein anderes Verfahren, wie die ANOVA (s.u.) nachdenken.
 
-Der $t$-Test für abhängige, oder verbundene, Stichproben kommt zutragen, wenn die Unabhängigkeitsannahme (siehe [Voraussetzungen im GLM](voraussetzungen.html)) verletzt ist. Ein einfaches Beispiel wärst Du, der/die eine tolle Therapie für Patienten mit depressiver Störung entwickelt hat. Nun hast Du ein paar Patienten gefunden, die deine Therapie ausprobieren wollen und erhebst vor und nach der Therapie die mittlere "Depressivität". Im Anschluss daran möchtest Du jetzt herausfinden, ob sich die Werte über die Zeit signifikant verbessert haben. Pro Proband hast du einen Prä- und einen Post-Wert (= vor und nach der Therapie). Das bedeutet jedoch, dass die Unabhängigkeitsannahme verletzt ist, weil mehrere Datenpunkte von einer Person kommen. Kein Problem, bei **zwei Messungen** nutzt Du einfach den $t$-Test für verbundene Stichproben.  
-[Hier geht's zur Anleitung](t-test-ahaengig.html)
+Der $t$-Test für abhängige, oder verbundene, Stichproben kommt zutragen, wenn die Unabhängigkeitsannahme (siehe [Voraussetzungen im GLM](voraussetzungen.html)) verletzt ist. Ein einfaches Beispiel wärst Du, der/die eine tolle Therapie für Patienten mit depressiver Störung entwickelt hat. Nun hast Du ein paar Patienten gefunden, die deine Therapie ausprobieren wollen und erhebst vor und nach der Therapie die mittlere "Depressivität". Im Anschluss daran möchtest Du jetzt herausfinden, ob sich die Werte über die Zeit signifikant verbessert haben. Pro Proband hast du einen Prä- und einen Post-Wert (= vor und nach der Therapie). Das bedeutet jedoch, dass die Unabhängigkeitsannahme verletzt ist, weil mehrere Datenpunkte von einer Person kommen. Kein Problem, bei **zwei Messungen** nutzt Du einfach den $t$-Test für verbundene Stichproben.
 
 Die **Daten zum fleißigen Mitrechnen** findest Du wie immer im [Git-Repository](https://github.com/benediktclaus/costat/tree/master/data).
 
 ## ANOVAs
 Die $t$-Tests sind gut und einfach nachzuvollziehen. Mit ihnen können wir zwei Gruppen anhand kontinuierlicher Variablen ganz gut miteinander vergleichen. In den meisten Fällen hat man aber nicht nur zwei Gruppen (oder auch zwei Messzeitpunkte). Möchte man **zwei oder mehr** Mittelwerte nun vergleichen, muss man sich Varianzanalysen (**An**alysis **o**f **Va**riance, ANOVA) genauer anschauen, denn die sind genau für diesen Fall gemacht. Hier behandeln wir verschiedene ANOVAs, nämlich die
 
-* Einfaktorielle ANOVA; deren generalisierte Form, also die
+* [Einfaktorielle ANOVA](einfaktorielle-anova.html); deren generalisierte Form, also die
 * Faktorielle ANOVA, die
 * Kovarianzanalyse (kurz ANCOVA), die
 * ANOVA für Messwiederholungen und schließlich
@@ -61,9 +58,10 @@ Wenn man das liest, weiß man sofort, worum es geht.
 
 ### Kontraste und Post-hoc-Tests
 Eine ANOVA ist ein **Omnibus-Test**, d.h., dass uns ein signifikantes Ergebnis erstmal nur sagt, dass sich die Gruppenmittelwerte (die Mittelwerte der unterschiedlichen Faktorstufen) voneinander unterscheiden. Wir wissen aber noch nicht *wo genau*. Im Grunde ist ein signifikantes Ergebnis einer ANOVA eine Aufforderung dazu, weitere Untersuchungen anzustellen. An dieser Stelle hat man nun zwei Möglichkeiten; entweder man hat bereits eine Hypohese oder Ahnung, wo die Unterschiede liegen könnten. In diesem Fall kann man vorab **Kontrase** (also geplante Kontraste) definieren und diese Unterschiede prüfen. Hat man noch keine Hypothesen, darf man sich überraschen lassen und **Post-hoc-Tests** berechnen. Dabei werden alle Gruppen paarweise miteinander verglichen und die $p$-Werte, je nach Methode, für die $\alpha$-Feler-Kumulierung korrigiert.  
-Hier gehts zur Anleitung für [Kontraste](kontraste.html) und Post-hoc-Tests.
+Hier gehts zur weiteren Informationen zu [Kontrasten](kontraste.html) und [Post-hoc-Tests](post-hoc-tests-html).
 
 # Nicht-parametrische Verfahren
+Folgen.
 
 # Robuste Verfahren
 Folgen.

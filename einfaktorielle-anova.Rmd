@@ -32,20 +32,20 @@ library(patchwork)
 ```
 
 # Beispiel
-Wir sind im Phantasialand und möchten untersuchen, ob die Größe des Handgepäcks einen Einfluss auf die Freude der Besucher hat. Dazu haben wir viele Besucher mit vier unterschiedlichen Arten von Handgepäck nach ihrer derzeitigen empfundenen Freude gefragt. Die Daten dieser kleinen Erhebung sind in der Datei `phantasialand.sav`. Die Spalte `id` ist die ID des Besuchers, in der Spalte `bagpack` ist angegeben, mit welchem Handgepäck der Besucher oder die Besucherin unterwegs war. Wir unterscheiden vier Faktorstufen: "None" = kein Handgepäck, "Light" = leichtes, "Heavy" steht für schweres und "Handcart" steht für Bollerwagen. In der Spalte `joy` wurde die zu dem Zeitpunkt empfundene Freude des Besuchers eingetragen.
+Wir sind im Phantasialand und möchten untersuchen, ob die Größe des Handgepäcks einen Einfluss auf die Freude der Besucher hat. Dazu haben wir viele Besucher mit vier unterschiedlichen Arten von Handgepäck nach ihrer derzeitigen empfundenen Freude gefragt. Die Daten dieser kleinen Erhebung sind in der Datei `phantasialand.sav`. Die Spalte `id` ist die ID des Besuchers, in der Spalte `backpack` ist angegeben, mit welchem Handgepäck der Besucher oder die Besucherin unterwegs war. Wir unterscheiden vier Faktorstufen: "None" = kein Handgepäck, "Light" = leichtes, "Heavy" steht für schweres und "Handcart" steht für Bollerwagen. In der Spalte `joy` wurde die zu dem Zeitpunkt empfundene Freude des Besuchers eingetragen.
 
 ```{r}
 phantasialand <- read_spss("data/phantasialand.sav")
 
 phantasialand <- phantasialand %>% 
-  mutate(bagpack = as_factor(bagpack))
+  mutate(backpack = as_factor(backpack))
 
 phantasialand
 ```
 
-Wie immer, wenn wir SPSS-Daten mit vergebenen Werte-Labels importieren, schützt das Paket `haven` für uns die Information der Levels und der Labels. In der Variable `bagpack` haben wir also direkt nach dem Import sowohl die Levels (Zahlen) als auch die  Labels (Bezeichnungen). Wir arbeiten auch hier, wie immer, mit ordentlichen Faktoren weiter und überführen alle Werte dieser Variablen mit der Funktion `as_factor()` in Faktoren.
+Wie immer, wenn wir SPSS-Daten mit vergebenen Werte-Labels importieren, schützt das Paket `haven` für uns die Information der Levels und der Labels. In der Variable `backpack` haben wir also direkt nach dem Import sowohl die Levels (Zahlen) als auch die  Labels (Bezeichnungen). Wir arbeiten auch hier, wie immer, mit ordentlichen Faktoren weiter und überführen alle Werte dieser Variablen mit der Funktion `as_factor()` in Faktoren.
 
-Wir haben also vier Grupen, deren Unterschiede in der mittlere Freude wir untersuchen wollen. Dazu nutzen wir eine einfaktorielle Varianzanalyse mit dem Zwischensubjektfaktor "bagpack" mit vier Faktorstufen ("None", "Light", "Heavy" und "Handcart") und der abhängigen Variable "joy".
+Wir haben also vier Grupen, deren Unterschiede in der mittlere Freude wir untersuchen wollen. Dazu nutzen wir eine einfaktorielle Varianzanalyse mit dem Zwischensubjektfaktor "backpack" mit vier Faktorstufen ("None", "Light", "Heavy" und "Handcart") und der abhängigen Variable "joy".
 
 ## Voraussetzungen
 Es gelten die üblichen [Voraussetzungen des GLM](voraussetzungen.html).
@@ -55,7 +55,7 @@ Auch hier betrachten wir die Daten erstmal, bevor wir irgendwelche Analysen durc
 
 ```{r}
 phantasialand %>% 
-  group_by(bagpack) %>% 
+  group_by(backpack) %>% 
   get_summary_stats()
 ```
 
@@ -63,14 +63,14 @@ Wir bekommen den ersten Wind in den Segeln unserer Hypothese. Im Mittel scheinen
 
 ```{r echo=FALSE}
 phantasialand %>% 
-  ggplot(aes(x = bagpack, y = joy)) +
-  geom_boxplot() +
+  ggplot(aes(x = backpack, y = joy)) +
+  geom_boxplot(outlier.color = NA) +
   geom_jitter(width = 0.1, alpha = 0.2) +
   labs(x = "Handgepäck", y = "Freude")
 
 # Levene-Test
 phantasialand %>% 
-  levene_test(joy ~ bagpack)
+  levene_test(joy ~ backpack)
 ```
 
 Da der Levene-Test nicht signifikant ist ($p = .256$), gehen wir davon aus, dass sich die Varianzen der Faktorstufen nicht signifikant voneinander unterscheiden. Wir dürfen also eine ganz normale einfaktorielle ANOVA berechnen.
@@ -81,18 +81,18 @@ Die eigentliche Durchführung ist kurz und schmerzlos und wird mit der Funktion 
 ```{r eval=FALSE}
 # Formelschreibweise
 phantasialand %>% 
-  anova_test(joy ~ bagpack)
+  anova_test(joy ~ backpack)
 
 # Funktionsargumente
 phantasialand %>% 
-  anova_test(dv = joy, between = bagpack)
+  anova_test(dv = joy, between = backpack)
 ```
 
 Ich entscheide mich bei einfachen Designs immer für die Formelschreibweise, weil sie wesentlich schneller getippt ist.
 
 ```{r}
 phantasialand %>% 
-  anova_test(joy ~ bagpack)
+  anova_test(joy ~ backpack)
 ```
 
 Da $p < .05$ ist das Ergebis signifikant. An dieser Stelle können wir also die Aussage treffen, dass sich die mittlere von den Besuchern empfundene Freude zwischen den Faktorstufen signifikant voneinander unterscheidet. Jetzt haben wir nur ein Problem: Welche Gruppe unterscheidet sich denn von welcher? Die ANOVA ist erstmal nur ein **Omnibus-Test**, d.h., dass wir eine Aussage darüber treffen, ob sich die Mittelwerte der Gruppen überhaupt irgendwo unterscheiden. Wo genau, dass kann man auf zwei Arten klären:
@@ -106,25 +106,149 @@ Einen Überblick über und Empfehlungen zu Einsatzsituationen vieler Post-hoc-Te
 
 ```{r}
 phantasialand %>% 
-  tukey_hsd(joy ~ bagpack)
+  tukey_hsd(joy ~ backpack)
 ```
 
 Aus den vielen paarweisen Vergleichen geht hervor, dass sich die Gruppe derer, die ohne Handgepäck unterwegs ist, signifikant von allen anderen Gruppen unterscheidet. Das betrifft auch die Gruppe derjenigen, die mit einem Bollerwagen ("Handcart") unterwegs sind. Interessant ist, dass sich die Besucher mit leichtem und schwerem Handgepäck *nicht* signifikant voneinander unterscheiden. Um die ganzen Vergeliche zu durchdringen, nimmt man sich am besten den Boxplot von oben und zeichnet alle signifikanten Unterschiede ein. Man wird dann feststellen, dass wir drei homogene Gruppen haben. In der einen Gruppe sind die Besucher ohne Handgepäck (die glücklichsten), dann kommt die Gruppe derjenigen mit leichtem oder schwerem Handgepäck (etwas weniger glücklich) und "zum Schluss" diejenigen, die einen Bollerwagen ziehen müssen. Die letzte Gruppe hat mit Abstand am wenigsten Freude.
 
 ## Berichten
-We found the mean experienced joy of visitors of Phantasialand to decrease with increasing weight of bagpack. Those with no bagpack at all had a mean joy of $M = 9.07, SD = 1.14$. The mean joy for those with light, heavy bagpack, or handcart were $M = 7.06, SD = 1.57$, $M = 6.46, SD = 1.63$, and $M = 2.63, SD = 1.40$ respectively.  A one-way revealed the means to differ significantly, $F(3, 182) = 126.16, p < .001, \eta_G^2 = .675$. Post-hoc Tukey HSD tests revealed three homogeneous subgroups, namely those with no bagpacks, those with light and heavy bagpacks and those pulling a handcart.
+We found the mean experienced joy of visitors of Phantasialand to decrease with increasing weight of backpack. Those with no backpack at all had a mean joy of $M = 9.07, SD = 1.14$. The mean joy for those with light, heavy backpack, or handcart were $M = 7.06, SD = 1.57$, $M = 6.46, SD = 1.63$, and $M = 2.63, SD = 1.40$ respectively.  A one-way revealed the means to differ significantly, $F(3, 182) = 126.16, p < .001, \eta_G^2 = .675$. Post-hoc Tukey HSD tests revealed three homogeneous subgroups, namely those with no backpacks, those with light and heavy backpacks and those pulling a handcart.
+
+# Non-parametrische Alternativen
 
 # Robuste Alternativen
-Folgen.
+Auch für einfaktorielle ANOVAs hat Rand @Wilcox.2012 natürlich wieder ein robustes Verfahren entwickelt und im Paket `WRS2` [@Mair.2020] implementiert. Die entsprechende Funktion ist für einfaktorielle Varianzanalysen `t1way()`.
+
+```{r}
+library(WRS2)
+
+t1way(joy ~ backpack, data = phantasialand)
+```
+
+Wir erhalten ein signifikantes Ergebnis, was uns auch hier wieder sagt, dass sich die Gruppenmittelwerte unterscheiden, $F_t(3, 55.94)= 91.24, p < .001, \xi = .91$. Robuste Post-hoc-Tests gibt es natürlich auch wieder. Bei einfaktoriellen Varianzanalysen nutzt man die Funktion `lincon()`.
+
+```{r}
+lincon(joy ~ backpack, data = phantasialand)
+```
+
+Auch hier sind die Ergebnisse wieder identisch mit der normalen ANOVA. Es besteht zwischen allen Gruppen ein signifikanter Unterschied, außer zwischen den Besuchern mit leichtem oder schwerem Rucksack.
 
 # Aus der Praxis
+@Gallup.2003 hatten sehr viel Spaß im Labor als sie untersuchten, ob die Penisform einen evolutionären Vorteil mit sich bringt. Genauer gesagt haben sie sich die Frage gestellt, ob die Form der Eichel als "Sperma-Schieber" funktionieren könnte. Mit einer Eichel, die eine ausgeprägte "Kante" hat, könnte Mann B während des Geschlechtsverkehrs die Hinterlassenschaften von Mann A "rauskratzen" und so relativ mehr von seinem eigenen Sperma zurücklassen. Dafür haben sie sich das Modell einer Vagina und drei Dildos besorgt. In das Vagina-Modell füllten sie künstliches Sperma und penetrierten diese dann mit den drei Dildos. Anschließend haben sie gemessen, wie viel Sperma der Dildo "rausgeschabt" hat. Was man so alles publizieren kann. Die Daten zu ihrer Versuchsreihe finden sich in der Datei `gallup.sav` und stammen von der [begleitenden Website](https://edge.sagepub.com/field5e) von @Field.2018. der Datensatz umfasst zwei Variablen, einmal die Form des Phallus (`phallus`) mit drei Faktorstufen ("No Coronal Ridge" = keine Eichel-Kante, "Minimal Corona Ridge" = kleine Kante, "Coronal Ridge" = normale Kante) und die Menge an "rausgeschabtem" Sperma (`displace`).
 
 ## EDA
+```{r}
+penis <- read_spss("data/gallup.sav") %>% janitor::clean_names()
+
+penis <- penis %>% mutate_if(is.labelled, as_factor)
+
+penis
+```
+
+Wir haben insgesamt 15 Beobachtungen und 5 pro Faktorstufe.
+
+```{r}
+penis %>%
+  group_by(phallus) %>% 
+  get_summary_stats()
+```
+
+Aufgrund der deskriptiven Statistiken könnten wir vermuten, dass die Form des Phallus tatsächlich einen Einfluss darauf hat, wie viel Sperma aus der Vagina entfernt werden kann. Ein Dildo ohne Eichel-Kante entfernt im Mittel $M = 35.3, SD = 16.3$ Prozent des enthaltenen Spermas. Die beiden anderen Dildos schaffen beide über 90%. Der Unterschied wird vor allem in der Abbildung schön deutlich.
+
+```{r echo=FALSE}
+penis %>% 
+  ggplot(aes(x = phallus, y = displace)) +
+  geom_boxplot(outlier.color = NA) +
+  geom_jitter(width = 0.2, alpha = 0.2) +
+  expand_limits(y = 0) +
+  labs(x = "Phallus", y = "Entferntes Sperma [%]")
+```
+
+Da wir relativ wening Datenpunkte haben, sollten wir die Voraussetzungen prüfen.
+
+```{r}
+# Shapiro-Wilk-Test
+penis %>% 
+  group_by(phallus) %>% 
+  shapiro_test(displace)
+
+# Levene-Test
+penis %>% 
+  levene_test(displace ~ phallus)
+```
 
 ## Durchführung
+Beide Tests fallen nicht signifikant aus, was für uns gut ist, da wir die ANOVA nun rechnen dürfen.
+
+```{r message=FALSE}
+penis %>% 
+  anova_test(displace ~ phallus)
+```
+
+$p < .05$ und so können wir festhalten, dass sich die Mittelwerte irgendwo signifikant voneinander unterscheiden. Da wir eine Hypothese darüber haben, welche Gruppen besonders viel oder wenig Sperma entfernen, können wir geplante Kontraste berechnen. Wir vermuten, dass der Dildo ohne Eichel-Kante weniger Sperma entfernt als die Dildos mit Kante. Des Weiteren könnten wir vermuten, dass der Dildo mit normaler Kante mehr Sperma entfernt als der Dildo mit kleiner Kante. Da wir $k = 3$ Gruppen haben, müssen wir $3-1 = 2$ Kontraste [entsprechend unserer bekannten Regeln](kontraste.html) definieren.
+
+Gruppe        |  Kontrast 1 |  Kontrast 2
+--------------|-------------|-------------
+No Ridge      |  -2         | 0
+Minimal Ridge |  1          | -1
+Normal Ridge  |  1          | 1
+Summe         |  0          | 0
+
+Zu Beginn vergewissern wir uns noch einmal, dass unsere Faktorstufen auch in der gewünschten Reihenfolge sind.
+
+```{r}
+penis %>% 
+  pull(phallus) %>% 
+  levels()
+```
+
+Das sieht gut aus, die Reihenfolge der Faktorstufen ist wie in der Tabelle. Wir können nun unsere gewichte vergeben.
+
+```{r}
+contrast_1 <- c(-2, 1, 1)
+contrast_2 <- c(0, -1, 1)
+
+my_contrasts <- cbind(contrast_1, contrast_2)
+
+contrasts(penis$phallus) <- my_contrasts
+
+penis %>% 
+  pull(phallus) %>% 
+  contrasts()
+```
+
+Unsere Kontraste sind nun ordentlich hinterlegt und wir können die Analyse durchführen.
+
+```{r}
+penis_results <- aov(displace ~ phallus, data = penis)
+
+summary.lm(penis_results)
+```
+
+Unsere Kontraste bestätigen, was wir uns anhand der Abbildung vielleicht schon gedacht haben. Es gibt im Hinblick auf die Menge des entfernten Spermas einen signifikanten Unterschied zwischen dem Dildo ohne Eichel-Kante und jenen mit einer solchen Kante. Darüber hinaus unterscheiden sich die beiden Dildos mit Eichel-Kante nicht voneinander; beide entfernten ähnlich viel Sperma aus der Modell-Vagina. Die Efet^2}kt^2 + dftstärke können wir berechnen als $$r_\text{Kontrast} = \sqrt{\dfrac{t^2}{t^2 + df}}$$
+
+```{r eval=FALSE, echo=FALSE}
+r_contrast <- function(t, df) {
+  sqrt(
+    t^2 / (t^2 + df)
+  )
+}
+
+r_contrast(9.117, 12)
+r_contrast(0.016, 12)
+```
+
+Alternativ hätten wir Post-hoc-Tests berechnen können, mit denen wir auf das identische Ergebnis gekommen wären.
+
+```{r}
+penis %>% 
+  tukey_hsd(displace ~ phallus)
+```
 
 
 ## Berichten
+We found the shape of the phallus to have a significant influence on the amount of displaced sperm, $F(2,12) = 41.56, p < .001, \eta_G^2 = .874$. A priori defined contrasts revealed a significant difference between phalli with a coronal ridge and those without, $t(12) = 9.12, p < .001, r_\text{contrast} = 0.93$. If there was a coronal ridge, its size didn't affect the amount of displaced sperm, $t(12)=0.02, p = .987, r_\text{contrast} = .005$.
+
 
 # Literatur
 

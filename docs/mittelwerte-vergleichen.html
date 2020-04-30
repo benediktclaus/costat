@@ -403,7 +403,9 @@ div.tocify {
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">ANOVAs</li>
-    <li class="dropdown-header">Einfaktorielle ANOVA</li>
+    <li>
+      <a href="einfaktorielle-anova.html">Einfaktorielle ANOVA</a>
+    </li>
     <li class="dropdown-header">Faktorielle ANOVA</li>
     <li class="dropdown-header">ANCOVA</li>
     <li class="dropdown-header">Repeated Measures ANOVA</li>
@@ -411,7 +413,9 @@ div.tocify {
     <li>
       <a href="kontraste.html">Geplante Kontraste</a>
     </li>
-    <li class="dropdown-header">Post-hoc-Tests</li>
+    <li>
+      <a href="post-hoc-tests.html">Post-hoc-Tests</a>
+    </li>
     <li class="divider"></li>
   </ul>
 </li>
@@ -459,24 +463,21 @@ div.tocify {
 <h2><span class="math inline">\(t\)</span>-Tests</h2>
 <p>Der <span class="math inline">\(t\)</span>-Test, oder besser gesagt die <span class="math inline">\(t\)</span>-Tests, sind eine kleine Gruppe von statistischen Signifikanztests, mit denen man Gruppenunterschiede zwischen <strong>zwei Gruppen</strong> untersuchen kann. Meistens unterscheidet man zwischen dem</p>
 <ul>
-<li>Einstichproben-<span class="math inline">\(t\)</span>-Test, dem</li>
-<li><span class="math inline">\(t\)</span>-Test mit unabhängigen Stichproben und dem</li>
-<li><span class="math inline">\(t\)</span>-Test mit abhängigen (oder verbundenen) Stichproben.</li>
+<li><a href="t-test-einstichprobe.html">Einstichproben-<span class="math inline">\(t\)</span>-Test</a>, dem</li>
+<li><a href="t-test-unabhaengig.html"><span class="math inline">\(t\)</span>-Test mit unabhängigen Stichproben</a> und dem</li>
+<li><a href="t-test-ahaengig.html"><span class="math inline">\(t\)</span>-Test mit abhängigen (oder verbundenen) Stichproben</a>.</li>
 </ul>
 <p>Na super, drei Tests – aber ich wollte doch nur einen Test machen! Welchen nehme ich denn jetzt?!</p>
-<p>Den Einstichproben-<span class="math inline">\(t\)</span>-Test benutzt man, wenn man eine Aussage darüber treffen will, ob sich eine Population im Mittelwert von einem bereits bekannten Wert unterscheidet. Stell Dir vor, Du hast zufällig die Größe von 80 Leuten in der Dortmunder Innenstadt gemessen, die im Schnitt 181 cm groß sind. Nun möchtest Du wissen, ob sich diese mittlere Größe von Dortmundern von beispielweise 170 cm signifikant unterscheidet. Das kannst du mit einem Einstichproben-<span class="math inline">\(t\)</span>-Test überprüfen (auch wenn man diese Fragestellung “in der freien Wildbahn” eigentlich nicht findet).<br />
-<a href="t-test-einstichprobe.html">Hier geht’s zur Anleitung</a>.</p>
-<p>Der <span class="math inline">\(t\)</span>-Test mit unabhängigen Stichproben ist in der Regel schon etwas anwendungsnäher, denn bei diesem wird untersucht, ob sich <strong>zwei Gruppen</strong> in ihrem Mittelwert unterscheiden. Beispielsweise möchtest Du untersuchen, ob sich die Kontrollgruppe am Ende einer Interventions-Studie signifikant von Deiner Interventionsgruppe unterscheidet. Im Gegensatz zum vorherigen Test, werden hier beide Mittelwerte erst einmal anhand der Probanden in den Gruppen bestimmt. Sollen also zwei Gruppen anhand einer kontinuierlichen Variable miteinander verglichen werden, ist das ein valider Ansatz. Liegen mehrere Gruppen vor, deren Mittelwerte Du anhand einer Variable auf signifikante Unterschiede vergleichen möchtest, dann solltest du über ein anderes Verfahren, wie die ANOVA (s.u.) nachdenken.<br />
-<a href="t-test-unabhaengig.html">Hier geht’s zur Anleitung</a>.</p>
-<p>Der <span class="math inline">\(t\)</span>-Test für abhängige, oder verbundene, Stichproben kommt zutragen, wenn die Unabhängigkeitsannahme (siehe <a href="voraussetzungen.html">Voraussetzungen im GLM</a>) verletzt ist. Ein einfaches Beispiel wärst Du, der/die eine tolle Therapie für Patienten mit depressiver Störung entwickelt hat. Nun hast Du ein paar Patienten gefunden, die deine Therapie ausprobieren wollen und erhebst vor und nach der Therapie die mittlere “Depressivität”. Im Anschluss daran möchtest Du jetzt herausfinden, ob sich die Werte über die Zeit signifikant verbessert haben. Pro Proband hast du einen Prä- und einen Post-Wert (= vor und nach der Therapie). Das bedeutet jedoch, dass die Unabhängigkeitsannahme verletzt ist, weil mehrere Datenpunkte von einer Person kommen. Kein Problem, bei <strong>zwei Messungen</strong> nutzt Du einfach den <span class="math inline">\(t\)</span>-Test für verbundene Stichproben.<br />
-<a href="t-test-ahaengig.html">Hier geht’s zur Anleitung</a></p>
+<p>Den Einstichproben-<span class="math inline">\(t\)</span>-Test benutzt man, wenn man eine Aussage darüber treffen will, ob sich eine Population im Mittelwert von einem bereits bekannten Wert unterscheidet. Stell Dir vor, Du hast zufällig die Größe von 80 Leuten in der Dortmunder Innenstadt gemessen, die im Schnitt 181 cm groß sind. Nun möchtest Du wissen, ob sich diese mittlere Größe von Dortmundern von beispielweise 170 cm signifikant unterscheidet. Das kannst du mit einem Einstichproben-<span class="math inline">\(t\)</span>-Test überprüfen (auch wenn man diese Fragestellung “in der freien Wildbahn” eigentlich nicht findet).</p>
+<p>Der <span class="math inline">\(t\)</span>-Test mit unabhängigen Stichproben ist in der Regel schon etwas anwendungsnäher, denn bei diesem wird untersucht, ob sich <strong>zwei Gruppen</strong> in ihrem Mittelwert unterscheiden. Beispielsweise möchtest Du untersuchen, ob sich die Kontrollgruppe am Ende einer Interventions-Studie signifikant von Deiner Interventionsgruppe unterscheidet. Im Gegensatz zum vorherigen Test, werden hier beide Mittelwerte erst einmal anhand der Probanden in den Gruppen bestimmt. Sollen also zwei Gruppen anhand einer kontinuierlichen Variable miteinander verglichen werden, ist das ein valider Ansatz. Liegen mehrere Gruppen vor, deren Mittelwerte Du anhand einer Variable auf signifikante Unterschiede vergleichen möchtest, dann solltest du über ein anderes Verfahren, wie die ANOVA (s.u.) nachdenken.</p>
+<p>Der <span class="math inline">\(t\)</span>-Test für abhängige, oder verbundene, Stichproben kommt zutragen, wenn die Unabhängigkeitsannahme (siehe <a href="voraussetzungen.html">Voraussetzungen im GLM</a>) verletzt ist. Ein einfaches Beispiel wärst Du, der/die eine tolle Therapie für Patienten mit depressiver Störung entwickelt hat. Nun hast Du ein paar Patienten gefunden, die deine Therapie ausprobieren wollen und erhebst vor und nach der Therapie die mittlere “Depressivität”. Im Anschluss daran möchtest Du jetzt herausfinden, ob sich die Werte über die Zeit signifikant verbessert haben. Pro Proband hast du einen Prä- und einen Post-Wert (= vor und nach der Therapie). Das bedeutet jedoch, dass die Unabhängigkeitsannahme verletzt ist, weil mehrere Datenpunkte von einer Person kommen. Kein Problem, bei <strong>zwei Messungen</strong> nutzt Du einfach den <span class="math inline">\(t\)</span>-Test für verbundene Stichproben.</p>
 <p>Die <strong>Daten zum fleißigen Mitrechnen</strong> findest Du wie immer im <a href="https://github.com/benediktclaus/costat/tree/master/data">Git-Repository</a>.</p>
 </div>
 <div id="anovas" class="section level2">
 <h2>ANOVAs</h2>
 <p>Die <span class="math inline">\(t\)</span>-Tests sind gut und einfach nachzuvollziehen. Mit ihnen können wir zwei Gruppen anhand kontinuierlicher Variablen ganz gut miteinander vergleichen. In den meisten Fällen hat man aber nicht nur zwei Gruppen (oder auch zwei Messzeitpunkte). Möchte man <strong>zwei oder mehr</strong> Mittelwerte nun vergleichen, muss man sich Varianzanalysen (<strong>An</strong>alysis <strong>o</strong>f <strong>Va</strong>riance, ANOVA) genauer anschauen, denn die sind genau für diesen Fall gemacht. Hier behandeln wir verschiedene ANOVAs, nämlich die</p>
 <ul>
-<li>Einfaktorielle ANOVA; deren generalisierte Form, also die</li>
+<li><a href="einfaktorielle-anova.html">Einfaktorielle ANOVA</a>; deren generalisierte Form, also die</li>
 <li>Faktorielle ANOVA, die</li>
 <li>Kovarianzanalyse (kurz ANCOVA), die</li>
 <li>ANOVA für Messwiederholungen und schließlich</li>
@@ -496,12 +497,13 @@ div.tocify {
 <div id="kontraste-und-post-hoc-tests" class="section level3">
 <h3>Kontraste und Post-hoc-Tests</h3>
 <p>Eine ANOVA ist ein <strong>Omnibus-Test</strong>, d.h., dass uns ein signifikantes Ergebnis erstmal nur sagt, dass sich die Gruppenmittelwerte (die Mittelwerte der unterschiedlichen Faktorstufen) voneinander unterscheiden. Wir wissen aber noch nicht <em>wo genau</em>. Im Grunde ist ein signifikantes Ergebnis einer ANOVA eine Aufforderung dazu, weitere Untersuchungen anzustellen. An dieser Stelle hat man nun zwei Möglichkeiten; entweder man hat bereits eine Hypohese oder Ahnung, wo die Unterschiede liegen könnten. In diesem Fall kann man vorab <strong>Kontrase</strong> (also geplante Kontraste) definieren und diese Unterschiede prüfen. Hat man noch keine Hypothesen, darf man sich überraschen lassen und <strong>Post-hoc-Tests</strong> berechnen. Dabei werden alle Gruppen paarweise miteinander verglichen und die <span class="math inline">\(p\)</span>-Werte, je nach Methode, für die <span class="math inline">\(\alpha\)</span>-Feler-Kumulierung korrigiert.<br />
-Hier gehts zur Anleitung für <a href="kontraste.html">Kontraste</a> und Post-hoc-Tests.</p>
+Hier gehts zur weiteren Informationen zu <a href="kontraste.html">Kontrasten</a> und <a href="post-hoc-tests-html">Post-hoc-Tests</a>.</p>
 </div>
 </div>
 </div>
 <div id="nicht-parametrische-verfahren" class="section level1">
 <h1>Nicht-parametrische Verfahren</h1>
+<p>Folgen.</p>
 </div>
 <div id="robuste-verfahren" class="section level1">
 <h1>Robuste Verfahren</h1>

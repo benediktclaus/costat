@@ -403,7 +403,9 @@ div.tocify {
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">ANOVAs</li>
-    <li class="dropdown-header">Einfaktorielle ANOVA</li>
+    <li>
+      <a href="einfaktorielle-anova.html">Einfaktorielle ANOVA</a>
+    </li>
     <li class="dropdown-header">Faktorielle ANOVA</li>
     <li class="dropdown-header">ANCOVA</li>
     <li class="dropdown-header">Repeated Measures ANOVA</li>
@@ -411,7 +413,9 @@ div.tocify {
     <li>
       <a href="kontraste.html">Geplante Kontraste</a>
     </li>
-    <li class="dropdown-header">Post-hoc-Tests</li>
+    <li>
+      <a href="post-hoc-tests.html">Post-hoc-Tests</a>
+    </li>
     <li class="divider"></li>
   </ul>
 </li>
@@ -477,7 +481,7 @@ div.tocify {
 # Datensatz
 phantasialand</code></pre>
 <pre><code>## # A tibble: 186 x 3
-##    id    bagpack    joy
+##    id    backpack   joy
 ##    &lt;chr&gt; &lt;fct&gt;    &lt;dbl&gt;
 ##  1 1     Light        5
 ##  2 2     Light        7
@@ -492,18 +496,18 @@ phantasialand</code></pre>
 ## # ... with 176 more rows</code></pre>
 <pre class="r"><code># Boxplot
 phantasialand %&gt;% 
-  ggplot(aes(x = bagpack, y = joy)) +
+  ggplot(aes(x = backpack, y = joy)) +
   geom_boxplot(outlier.color = NA) +
   geom_jitter(width = 0.1, alpha = 0.2) +
   labs(x = &quot;Gepäck&quot;, y = &quot;Freude&quot;)</code></pre>
 <p><img src="kontraste_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code># ANOVA
 phantasialand %&gt;% 
-  anova_test(joy ~ bagpack)</code></pre>
+  anova_test(joy ~ backpack)</code></pre>
 <pre><code>## ANOVA Table (type II tests)
 ## 
-##    Effect DFn DFd       F        p p&lt;.05   ges
-## 1 bagpack   3 182 126.164 3.14e-44     * 0.675</code></pre>
+##     Effect DFn DFd       F        p p&lt;.05   ges
+## 1 backpack   3 182 126.164 3.14e-44     * 0.675</code></pre>
 <p>Nun interressieren wir uns dafür, <em>wo</em> die Unterschiede sind. Wir müssen <span class="math inline">\(k-1\)</span> Kontraste definieren – und dann noch anhand der oben dargestellten Regeln. Zuerst haben wir hier <span class="math inline">\(k = 4\)</span> Gruppen, also müssen wir <span class="math inline">\(4-1 = 3\)</span> Kontraste definieren. Wir dürfen immer nur zwei Stücke vom Kuchen miteinander vergleichen Als erstes könnte uns bspw. interessieren, ob sich die Gruppe derer ohne Handgepäck (die glücklichsten) von allen anderen Gruppen unterscheidet. Die Gewichte würden dann so verteilt werden:</p>
 <table>
 <thead>
@@ -671,7 +675,7 @@ phantasialand %&gt;%
 <h1>Durchführung</h1>
 <p>Unsere Kontraste können wir nun manuell definieren. Vorher sollten wir uns aber die Reihenfolge der Faktorlevels anschauen, nur um sicherzugehen, dass wir den Gruppen die richtigen Gewichte geben.</p>
 <pre class="r"><code>phantasialand %&gt;% 
-  pull(bagpack) %&gt;% 
+  pull(backpack) %&gt;% 
   levels()</code></pre>
 <pre><code>## [1] &quot;None&quot;     &quot;Light&quot;    &quot;Heavy&quot;    &quot;Handcart&quot;</code></pre>
 <p>Die Reihenfolge ist wie gedacht, also können wir auch die Kontraste wie in der obigen Tabelle definieren.</p>
@@ -681,9 +685,9 @@ contrast_3 &lt;- c(0, 0, -1, 1)
 
 my_contrasts &lt;- cbind(contrast_1, contrast_2, contrast_3)
 
-contrasts(phantasialand$bagpack) &lt;- my_contrasts
+contrasts(phantasialand$backpack) &lt;- my_contrasts
 
-phantasialand %&gt;% pull(bagpack)</code></pre>
+phantasialand %&gt;% pull(backpack)</code></pre>
 <pre><code>##   [1] Light    Light    Handcart Heavy    Heavy    Heavy    Handcart None    
 ##   [9] None     Handcart None     None     None     None     Handcart None    
 ##  [17] Light    None     Light    Heavy    Heavy    None     Heavy    Heavy   
@@ -716,11 +720,11 @@ phantasialand %&gt;% pull(bagpack)</code></pre>
 ## Handcart          1          1          1
 ## Levels: None Light Heavy Handcart</code></pre>
 <p>Wenn wir uns nun die Variable im Datensatz ansehen, stellen wir fest, dass ein Attribut hinzugefügt wurde, nämlich unsere Kontraste. Eigentlich wurde dieses Attribut nicht hinzugefügt, R hat nämlich einen Standard-Kontrast hinterlegt, den wir jetzt einfach überschrieben haben. Um die Kontraste nun zu berechnen, formulieren wir unser Modell in der hauseigenen ANOVA-Funktion von R, <code>aov()</code>, und speichern die Ergebnisse in einem neuen Objekt, das wir in diesem Fall <code>model_results</code> genannt haben.</p>
-<pre class="r"><code>model_results &lt;- aov(joy ~ bagpack, data = phantasialand)</code></pre>
+<pre class="r"><code>model_results &lt;- aov(joy ~ backpack, data = phantasialand)</code></pre>
 <p>Um nun Informationen aus diesem Objekt zu ziehen, müssen wir uns die Zusammenfassung, also die <code>summary()</code> dieses Objektes anschauen.</p>
 <pre class="r"><code>summary(model_results)</code></pre>
 <pre><code>##              Df Sum Sq Mean Sq F value Pr(&gt;F)    
-## bagpack       3  818.8  272.93   126.2 &lt;2e-16 ***
+## backpack      3  818.8  272.93   126.2 &lt;2e-16 ***
 ## Residuals   182  393.7    2.16                   
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
@@ -729,18 +733,18 @@ phantasialand %&gt;% pull(bagpack)</code></pre>
 <pre class="r"><code>summary.lm(model_results)</code></pre>
 <pre><code>## 
 ## Call:
-## aov(formula = joy ~ bagpack, data = phantasialand)
+## aov(formula = joy ~ backpack, data = phantasialand)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
 ## -4.0566 -1.0566 -0.0566  0.9286  3.5357 
 ## 
 ## Coefficients:
-##                   Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)        6.30522    0.10976  57.445   &lt;2e-16 ***
-## bagpackcontrast_1 -0.92207    0.06481 -14.228   &lt;2e-16 ***
-## bagpackcontrast_2 -0.83673    0.08559  -9.776   &lt;2e-16 ***
-## bagpackcontrast_3 -1.91786    0.15846 -12.103   &lt;2e-16 ***
+##                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)         6.30522    0.10976  57.445   &lt;2e-16 ***
+## backpackcontrast_1 -0.92207    0.06481 -14.228   &lt;2e-16 ***
+## backpackcontrast_2 -0.83673    0.08559  -9.776   &lt;2e-16 ***
+## backpackcontrast_3 -1.91786    0.15846 -12.103   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 

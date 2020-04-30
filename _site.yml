@@ -35,6 +35,7 @@ navbar:
        - text: "--------"
        - text: "ANOVAs"
        - text: "Einfaktorielle ANOVA"
+         href: einfaktorielle-anova.html
        - text: "Faktorielle ANOVA"
        - text: "ANCOVA"
        - text: "Repeated Measures ANOVA"
@@ -42,6 +43,7 @@ navbar:
        - text: "Geplante Kontraste"
          href: kontraste.html
        - text: "Post-hoc-Tests"
+         href: post-hoc-tests.html
        - text: "--------"
   right:
     - icon: fa-question

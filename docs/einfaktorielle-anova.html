@@ -403,7 +403,9 @@ div.tocify {
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">ANOVAs</li>
-    <li class="dropdown-header">Einfaktorielle ANOVA</li>
+    <li>
+      <a href="einfaktorielle-anova.html">Einfaktorielle ANOVA</a>
+    </li>
     <li class="dropdown-header">Faktorielle ANOVA</li>
     <li class="dropdown-header">ANCOVA</li>
     <li class="dropdown-header">Repeated Measures ANOVA</li>
@@ -411,7 +413,9 @@ div.tocify {
     <li>
       <a href="kontraste.html">Geplante Kontraste</a>
     </li>
-    <li class="dropdown-header">Post-hoc-Tests</li>
+    <li>
+      <a href="post-hoc-tests.html">Post-hoc-Tests</a>
+    </li>
     <li class="divider"></li>
   </ul>
 </li>
@@ -465,15 +469,15 @@ library(skimr)</code></pre>
 </div>
 <div id="beispiel" class="section level1">
 <h1>Beispiel</h1>
-<p>Wir sind im Phantasialand und möchten untersuchen, ob die Größe des Handgepäcks einen Einfluss auf die Freude der Besucher hat. Dazu haben wir viele Besucher mit vier unterschiedlichen Arten von Handgepäck nach ihrer derzeitigen empfundenen Freude gefragt. Die Daten dieser kleinen Erhebung sind in der Datei <code>phantasialand.sav</code>. Die Spalte <code>id</code> ist die ID des Besuchers, in der Spalte <code>bagpack</code> ist angegeben, mit welchem Handgepäck der Besucher oder die Besucherin unterwegs war. Wir unterscheiden vier Faktorstufen: “None” = kein Handgepäck, “Light” = leichtes, “Heavy” steht für schweres und “Handcart” steht für Bollerwagen. In der Spalte <code>joy</code> wurde die zu dem Zeitpunkt empfundene Freude des Besuchers eingetragen.</p>
+<p>Wir sind im Phantasialand und möchten untersuchen, ob die Größe des Handgepäcks einen Einfluss auf die Freude der Besucher hat. Dazu haben wir viele Besucher mit vier unterschiedlichen Arten von Handgepäck nach ihrer derzeitigen empfundenen Freude gefragt. Die Daten dieser kleinen Erhebung sind in der Datei <code>phantasialand.sav</code>. Die Spalte <code>id</code> ist die ID des Besuchers, in der Spalte <code>backpack</code> ist angegeben, mit welchem Handgepäck der Besucher oder die Besucherin unterwegs war. Wir unterscheiden vier Faktorstufen: “None” = kein Handgepäck, “Light” = leichtes, “Heavy” steht für schweres und “Handcart” steht für Bollerwagen. In der Spalte <code>joy</code> wurde die zu dem Zeitpunkt empfundene Freude des Besuchers eingetragen.</p>
 <pre class="r"><code>phantasialand &lt;- read_spss(&quot;data/phantasialand.sav&quot;)
 
 phantasialand &lt;- phantasialand %&gt;% 
-  mutate(bagpack = as_factor(bagpack))
+  mutate(backpack = as_factor(backpack))
 
 phantasialand</code></pre>
 <pre><code>## # A tibble: 186 x 3
-##    id    bagpack    joy
+##    id    backpack   joy
 ##    &lt;chr&gt; &lt;fct&gt;    &lt;dbl&gt;
 ##  1 1     Light        5
 ##  2 2     Light        7
@@ -486,8 +490,8 @@ phantasialand</code></pre>
 ##  9 9     None         9
 ## 10 10    Handcart     5
 ## # ... with 176 more rows</code></pre>
-<p>Wie immer, wenn wir SPSS-Daten mit vergebenen Werte-Labels importieren, schützt das Paket <code>haven</code> für uns die Information der Levels und der Labels. In der Variable <code>bagpack</code> haben wir also direkt nach dem Import sowohl die Levels (Zahlen) als auch die Labels (Bezeichnungen). Wir arbeiten auch hier, wie immer, mit ordentlichen Faktoren weiter und überführen alle Werte dieser Variablen mit der Funktion <code>as_factor()</code> in Faktoren.</p>
-<p>Wir haben also vier Grupen, deren Unterschiede in der mittlere Freude wir untersuchen wollen. Dazu nutzen wir eine einfaktorielle Varianzanalyse mit dem Zwischensubjektfaktor “bagpack” mit vier Faktorstufen (“None”, “Light”, “Heavy” und “Handcart”) und der abhängigen Variable “joy”.</p>
+<p>Wie immer, wenn wir SPSS-Daten mit vergebenen Werte-Labels importieren, schützt das Paket <code>haven</code> für uns die Information der Levels und der Labels. In der Variable <code>backpack</code> haben wir also direkt nach dem Import sowohl die Levels (Zahlen) als auch die Labels (Bezeichnungen). Wir arbeiten auch hier, wie immer, mit ordentlichen Faktoren weiter und überführen alle Werte dieser Variablen mit der Funktion <code>as_factor()</code> in Faktoren.</p>
+<p>Wir haben also vier Grupen, deren Unterschiede in der mittlere Freude wir untersuchen wollen. Dazu nutzen wir eine einfaktorielle Varianzanalyse mit dem Zwischensubjektfaktor “backpack” mit vier Faktorstufen (“None”, “Light”, “Heavy” und “Handcart”) und der abhängigen Variable “joy”.</p>
 <div id="voraussetzungen" class="section level2">
 <h2>Voraussetzungen</h2>
 <p>Es gelten die üblichen <a href="voraussetzungen.html">Voraussetzungen des GLM</a>.</p>
@@ -496,15 +500,15 @@ phantasialand</code></pre>
 <h2>EDA</h2>
 <p>Auch hier betrachten wir die Daten erstmal, bevor wir irgendwelche Analysen durchführen. Beobachtet man verschiedene Gruppen, macht es Sinn, die Ausgabe der statistischen Kennwerte für jede Gruppe durchzuführen.</p>
 <pre class="r"><code>phantasialand %&gt;% 
-  group_by(bagpack) %&gt;% 
+  group_by(backpack) %&gt;% 
   get_summary_stats()</code></pre>
 <pre><code>## # A tibble: 4 x 14
-##   bagpack variable     n   min   max median    q1    q3   iqr   mad  mean    sd
-##   &lt;fct&gt;   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 None    joy         42     6    10    9.5     8 10     2    0.741  9.07  1.14
-## 2 Light   joy         53     3    10    7       6  8     2    1.48   7.06  1.57
-## 3 Heavy   joy         56     3    10    6.5     6  7.25  1.25 0.741  6.46  1.63
-## 4 Handca~ joy         35     0     5    3       2  4     2    1.48   2.63  1.40
+##   backpack variable     n   min   max median    q1    q3   iqr   mad  mean    sd
+##   &lt;fct&gt;    &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 None     joy         42     6    10    9.5     8 10     2    0.741  9.07  1.14
+## 2 Light    joy         53     3    10    7       6  8     2    1.48   7.06  1.57
+## 3 Heavy    joy         56     3    10    6.5     6  7.25  1.25 0.741  6.46  1.63
+## 4 Handcart joy         35     0     5    3       2  4     2    1.48   2.63  1.40
 ## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
 <p>Wir bekommen den ersten Wind in den Segeln unserer Hypothese. Im Mittel scheinen Besucher des Phantasialands mehr Spaß zu haben, wenn sie weniger Gepäck tragen müssen. Aufgrund der Gruppengröße (jeweils <span class="math inline">\(n &gt; 30\)</span>) und des zentralen Grenzwertsatzes, müssen wir uns um die <a href="voraussetzungen.html">Voraussetzung der Normalverteilung</a> keine Gedanken machen. Im Boxplot der Date sind leicht unterschiedliche Varianzen pro Faktorstufe zu erkennen. Um sicherzugehen, dass wir die Voraussetzung der Varianzhomogenität nicht verletzen, können wir einen Levene-Test berechnen.</p>
 <p><img src="einfaktorielle-anova_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -519,19 +523,19 @@ phantasialand</code></pre>
 <p>Die eigentliche Durchführung ist kurz und schmerzlos und wird mit der Funktion <code>anova_test()</code> durchgeführt. Wir haben hier zwei Möglichkeiten unser gewünschtes Modell zu definieren. Zum einen können wir es als Regressions-Formel definieren. Dabei steht die abhängige Variable auf der linken Seite und die unabhängige(n) auf der rechten; getrennt durch eine <code>~</code> (Tilde). Zum anderen können wir die abhängige und unabhängige Variable direkt als Funktionsargumente angeben. Dieses Vorgehen bietet sich vor allem bei komplexeren Versuchsdesigns an, wie etwa ANOVAs mit Messwiederholungen oder gemischte ANOVAs. Egal, für welche Möglichkeit man sich entscheidet, die Ergebnisse sind immer gleich.</p>
 <pre class="r"><code># Formelschreibweise
 phantasialand %&gt;% 
-  anova_test(joy ~ bagpack)
+  anova_test(joy ~ backpack)
 
 # Funktionsargumente
 phantasialand %&gt;% 
-  anova_test(dv = joy, between = bagpack)</code></pre>
+  anova_test(dv = joy, between = backpack)</code></pre>
 <p>Ich entscheide mich bei einfachen Designs immer für die Formelschreibweise, weil sie wesentlich schneller getippt ist.</p>
 <pre class="r"><code>phantasialand %&gt;% 
-  anova_test(joy ~ bagpack)</code></pre>
+  anova_test(joy ~ backpack)</code></pre>
 <pre><code>## Coefficient covariances computed by hccm()</code></pre>
 <pre><code>## ANOVA Table (type II tests)
 ## 
-##    Effect DFn DFd       F        p p&lt;.05   ges
-## 1 bagpack   3 182 126.164 3.14e-44     * 0.675</code></pre>
+##     Effect DFn DFd       F        p p&lt;.05   ges
+## 1 backpack   3 182 126.164 3.14e-44     * 0.675</code></pre>
 <p>Da <span class="math inline">\(p &lt; .05\)</span> ist das Ergebis signifikant. An dieser Stelle können wir also die Aussage treffen, dass sich die mittlere von den Besuchern empfundene Freude zwischen den Faktorstufen signifikant voneinander unterscheidet. Jetzt haben wir nur ein Problem: Welche Gruppe unterscheidet sich denn von welcher? Die ANOVA ist erstmal nur ein <strong>Omnibus-Test</strong>, d.h., dass wir eine Aussage darüber treffen, ob sich die Mittelwerte der Gruppen überhaupt irgendwo unterscheiden. Wo genau, dass kann man auf zwei Arten klären:</p>
 <ol style="list-style-type: decimal">
 <li>mit Post-hoc-Tests und</li>
@@ -540,44 +544,232 @@ phantasialand %&gt;%
 <p>Post-hoc-Tests setzt man in der Regel ein, wenn man noch keine Hypothese dazu hat, wo die Gruppen sich unterscheiden. Es werden dann, vereinfacht gesagt, alle Gruppen paarweise miteinander verglichen und die <span class="math inline">\(p\)</span>-Werte auf die Art des jeweiligen Post-hoc-Tests korrigiert. Hat man vorab eine Vermutung darüber, welche Gruppen sich unterscheiden könnten, kann man das vor der Analyse als einen <strong>Kontrast</strong> festlegen und diesen während der Analyse prüfen lassen.</p>
 <p>Einen Überblick über und Empfehlungen zu Einsatzsituationen vieler Post-hoc-Tests gibt <span class="citation">Toothaker (<a href="#ref-Toothaker.1993" role="doc-biblioref">1993</a>)</span>. Ein guter Post-hoc-Test bei gleich großen Gruppengrößen und angenommener Varianzhomogenität ist der Tukey-HSD (Tukey Honest Significance Difference).</p>
 <pre class="r"><code>phantasialand %&gt;% 
-  tukey_hsd(joy ~ bagpack)</code></pre>
+  tukey_hsd(joy ~ backpack)</code></pre>
 <pre><code>## # A tibble: 6 x 8
-##   term    group1 group2   estimate conf.low conf.high    p.adj p.adj.signif
-## * &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
-## 1 bagpack None   Light      -2.01     -2.80    -1.23  2.20e- 9 ****        
-## 2 bagpack None   Heavy      -2.61     -3.39    -1.83  6.93e-14 ****        
-## 3 bagpack None   Handcart   -6.44     -7.32    -5.57  1.73e-14 ****        
-## 4 bagpack Light  Heavy      -0.592    -1.32     0.139 1.57e- 1 ns          
-## 5 bagpack Light  Handcart   -4.43     -5.26    -3.60  1.73e-14 ****        
-## 6 bagpack Heavy  Handcart   -3.84     -4.66    -3.01  2.01e-14 ****</code></pre>
+##   term     group1 group2   estimate conf.low conf.high    p.adj p.adj.signif
+## * &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
+## 1 backpack None   Light      -2.01     -2.80    -1.23  2.20e- 9 ****        
+## 2 backpack None   Heavy      -2.61     -3.39    -1.83  6.93e-14 ****        
+## 3 backpack None   Handcart   -6.44     -7.32    -5.57  1.73e-14 ****        
+## 4 backpack Light  Heavy      -0.592    -1.32     0.139 1.57e- 1 ns          
+## 5 backpack Light  Handcart   -4.43     -5.26    -3.60  1.73e-14 ****        
+## 6 backpack Heavy  Handcart   -3.84     -4.66    -3.01  2.01e-14 ****</code></pre>
 <p>Aus den vielen paarweisen Vergleichen geht hervor, dass sich die Gruppe derer, die ohne Handgepäck unterwegs ist, signifikant von allen anderen Gruppen unterscheidet. Das betrifft auch die Gruppe derjenigen, die mit einem Bollerwagen (“Handcart”) unterwegs sind. Interessant ist, dass sich die Besucher mit leichtem und schwerem Handgepäck <em>nicht</em> signifikant voneinander unterscheiden. Um die ganzen Vergeliche zu durchdringen, nimmt man sich am besten den Boxplot von oben und zeichnet alle signifikanten Unterschiede ein. Man wird dann feststellen, dass wir drei homogene Gruppen haben. In der einen Gruppe sind die Besucher ohne Handgepäck (die glücklichsten), dann kommt die Gruppe derjenigen mit leichtem oder schwerem Handgepäck (etwas weniger glücklich) und “zum Schluss” diejenigen, die einen Bollerwagen ziehen müssen. Die letzte Gruppe hat mit Abstand am wenigsten Freude.</p>
 </div>
 <div id="berichten" class="section level2">
 <h2>Berichten</h2>
-<p>We found the mean experienced joy of visitors of Phantasialand to decrease with increasing weight of bagpack. Those with no bagpack at all had a mean joy of <span class="math inline">\(M = 9.07, SD = 1.14\)</span>. The mean joy for those with light, heavy bagpack, or handcart were <span class="math inline">\(M = 7.06, SD = 1.57\)</span>, <span class="math inline">\(M = 6.46, SD = 1.63\)</span>, and <span class="math inline">\(M = 2.63, SD = 1.40\)</span> respectively. A one-way revealed the means to differ significantly, <span class="math inline">\(F(3, 182) = 126.16, p &lt; .001, \eta_G^2 = .675\)</span>. Post-hoc Tukey HSD tests revealed three homogeneous subgroups, namely those with no bagpacks, those with light and heavy bagpacks and those pulling a handcart.</p>
+<p>We found the mean experienced joy of visitors of Phantasialand to decrease with increasing weight of backpack. Those with no backpack at all had a mean joy of <span class="math inline">\(M = 9.07, SD = 1.14\)</span>. The mean joy for those with light, heavy backpack, or handcart were <span class="math inline">\(M = 7.06, SD = 1.57\)</span>, <span class="math inline">\(M = 6.46, SD = 1.63\)</span>, and <span class="math inline">\(M = 2.63, SD = 1.40\)</span> respectively. A one-way revealed the means to differ significantly, <span class="math inline">\(F(3, 182) = 126.16, p &lt; .001, \eta_G^2 = .675\)</span>. Post-hoc Tukey HSD tests revealed three homogeneous subgroups, namely those with no backpacks, those with light and heavy backpacks and those pulling a handcart.</p>
 </div>
+</div>
+<div id="non-parametrische-alternativen" class="section level1">
+<h1>Non-parametrische Alternativen</h1>
 </div>
 <div id="robuste-alternativen" class="section level1">
 <h1>Robuste Alternativen</h1>
-<p>Folgen.</p>
+<p>Auch für einfaktorielle ANOVAs hat Rand <span class="citation">Wilcox (<a href="#ref-Wilcox.2012" role="doc-biblioref">2012</a>)</span> natürlich wieder ein robustes Verfahren entwickelt und im Paket <code>WRS2</code> <span class="citation">(Mair &amp; Wilcox, <a href="#ref-Mair.2020" role="doc-biblioref">2020</a>)</span> implementiert. Die entsprechende Funktion ist für einfaktorielle Varianzanalysen <code>t1way()</code>.</p>
+<pre class="r"><code>library(WRS2)
+
+t1way(joy ~ backpack, data = phantasialand)</code></pre>
+<pre><code>## Call:
+## t1way(formula = joy ~ backpack, data = phantasialand)
+## 
+## Test statistic: F = 91.2352 
+## Degrees of freedom 1: 3 
+## Degrees of freedom 2: 55.94 
+## p-value: 0 
+## 
+## Explanatory measure of effect size: 0.91</code></pre>
+<p>Wir erhalten ein signifikantes Ergebnis, was uns auch hier wieder sagt, dass sich die Gruppenmittelwerte unterscheiden, <span class="math inline">\(F_t(3, 55.94)= 91.24, p &lt; .001, \xi = .91\)</span>. Robuste Post-hoc-Tests gibt es natürlich auch wieder. Bei einfaktoriellen Varianzanalysen nutzt man die Funktion <code>lincon()</code>.</p>
+<pre class="r"><code>lincon(joy ~ backpack, data = phantasialand)</code></pre>
+<pre><code>## Call:
+## lincon(formula = joy ~ backpack, data = phantasialand)
+## 
+##                     psihat ci.lower ci.upper p.value
+## None vs. Light     2.36830  1.55112  3.18548 0.00000
+## None vs. Heavy     2.77828  1.87293  3.68364 0.00000
+## None vs. Handcart  6.64103  5.53054  7.75151 0.00000
+## Light vs. Heavy    0.40998 -0.44968  1.26964 0.20021
+## Light vs. Handcart 4.27273  3.19526  5.35019 0.00000
+## Heavy vs. Handcart 3.86275  2.72189  5.00360 0.00000</code></pre>
+<p>Auch hier sind die Ergebnisse wieder identisch mit der normalen ANOVA. Es besteht zwischen allen Gruppen ein signifikanter Unterschied, außer zwischen den Besuchern mit leichtem oder schwerem Rucksack.</p>
 </div>
 <div id="aus-der-praxis" class="section level1">
 <h1>Aus der Praxis</h1>
+<p><span class="citation">Gallup et al. (<a href="#ref-Gallup.2003" role="doc-biblioref">2003</a>)</span> hatten sehr viel Spaß im Labor als sie untersuchten, ob die Penisform einen evolutionären Vorteil mit sich bringt. Genauer gesagt haben sie sich die Frage gestellt, ob die Form der Eichel als “Sperma-Schieber” funktionieren könnte. Mit einer Eichel, die eine ausgeprägte “Kante” hat, könnte Mann B während des Geschlechtsverkehrs die Hinterlassenschaften von Mann A “rauskratzen” und so relativ mehr von seinem eigenen Sperma zurücklassen. Dafür haben sie sich das Modell einer Vagina und drei Dildos besorgt. In das Vagina-Modell füllten sie künstliches Sperma und penetrierten diese dann mit den drei Dildos. Anschließend haben sie gemessen, wie viel Sperma der Dildo “rausgeschabt” hat. Was man so alles publizieren kann. Die Daten zu ihrer Versuchsreihe finden sich in der Datei <code>gallup.sav</code> und stammen von der <a href="https://edge.sagepub.com/field5e">begleitenden Website</a> von <span class="citation">Field (<a href="#ref-Field.2018" role="doc-biblioref">2018</a>)</span>. der Datensatz umfasst zwei Variablen, einmal die Form des Phallus (<code>phallus</code>) mit drei Faktorstufen (“No Coronal Ridge” = keine Eichel-Kante, “Minimal Corona Ridge” = kleine Kante, “Coronal Ridge” = normale Kante) und die Menge an “rausgeschabtem” Sperma (<code>displace</code>).</p>
 <div id="eda-1" class="section level2">
 <h2>EDA</h2>
+<pre class="r"><code>penis &lt;- read_spss(&quot;data/gallup.sav&quot;) %&gt;% janitor::clean_names()
+
+penis &lt;- penis %&gt;% mutate_if(is.labelled, as_factor)
+
+penis</code></pre>
+<pre><code>## # A tibble: 15 x 2
+##    phallus               displace
+##    &lt;fct&gt;                    &lt;dbl&gt;
+##  1 No Coronal Ridge          21.5
+##  2 No Coronal Ridge          35.8
+##  3 No Coronal Ridge          61.7
+##  4 No Coronal Ridge          22.0
+##  5 No Coronal Ridge          35.5
+##  6 Minimal Coronal Ridge     93.1
+##  7 Minimal Coronal Ridge     80.8
+##  8 Minimal Coronal Ridge     91.1
+##  9 Minimal Coronal Ridge     97.4
+## 10 Minimal Coronal Ridge     93.2
+## 11 Coronal Ridge             99.2
+## 12 Coronal Ridge             79.7
+## 13 Coronal Ridge             91.0
+## 14 Coronal Ridge             99.2
+## 15 Coronal Ridge             86.9</code></pre>
+<p>Wir haben insgesamt 15 Beobachtungen und 5 pro Faktorstufe.</p>
+<pre class="r"><code>penis %&gt;%
+  group_by(phallus) %&gt;% 
+  get_summary_stats()</code></pre>
+<pre><code>## # A tibble: 3 x 14
+##   phallus variable     n   min   max median    q1    q3   iqr   mad  mean    sd
+##   &lt;fct&gt;   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 No Cor~ displace     5  21.5  61.7   35.5  22.0  35.8 13.8  20.0   35.3 16.3 
+## 2 Minima~ displace     5  80.8  97.4   93.1  91.1  93.2  2.11  3.06  91.1  6.23
+## 3 Corona~ displace     5  79.7  99.2   91.0  86.9  99.2 12.3  12.2   91.2  8.35
+## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+<p>Aufgrund der deskriptiven Statistiken könnten wir vermuten, dass die Form des Phallus tatsächlich einen Einfluss darauf hat, wie viel Sperma aus der Vagina entfernt werden kann. Ein Dildo ohne Eichel-Kante entfernt im Mittel <span class="math inline">\(M = 35.3, SD = 16.3\)</span> Prozent des enthaltenen Spermas. Die beiden anderen Dildos schaffen beide über 90%. Der Unterschied wird vor allem in der Abbildung schön deutlich.</p>
+<p><img src="einfaktorielle-anova_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Da wir relativ wening Datenpunkte haben, sollten wir die Voraussetzungen prüfen.</p>
+<pre class="r"><code># Shapiro-Wilk-Test
+penis %&gt;% 
+  group_by(phallus) %&gt;% 
+  shapiro_test(displace)</code></pre>
+<pre><code>## # A tibble: 3 x 4
+##   phallus               variable statistic     p
+##   &lt;fct&gt;                 &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
+## 1 No Coronal Ridge      displace     0.849 0.190
+## 2 Minimal Coronal Ridge displace     0.865 0.246
+## 3 Coronal Ridge         displace     0.911 0.472</code></pre>
+<pre class="r"><code># Levene-Test
+penis %&gt;% 
+  levene_test(displace ~ phallus)</code></pre>
+<pre><code>## # A tibble: 1 x 4
+##     df1   df2 statistic     p
+##   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1     2    12      1.15 0.349</code></pre>
 </div>
 <div id="durchführung-1" class="section level2">
 <h2>Durchführung</h2>
+<p>Beide Tests fallen nicht signifikant aus, was für uns gut ist, da wir die ANOVA nun rechnen dürfen.</p>
+<pre class="r"><code>penis %&gt;% 
+  anova_test(displace ~ phallus)</code></pre>
+<pre><code>## ANOVA Table (type II tests)
+## 
+##    Effect DFn DFd      F        p p&lt;.05   ges
+## 1 phallus   2  12 41.559 4.03e-06     * 0.874</code></pre>
+<p><span class="math inline">\(p &lt; .05\)</span> und so können wir festhalten, dass sich die Mittelwerte irgendwo signifikant voneinander unterscheiden. Da wir eine Hypothese darüber haben, welche Gruppen besonders viel oder wenig Sperma entfernen, können wir geplante Kontraste berechnen. Wir vermuten, dass der Dildo ohne Eichel-Kante weniger Sperma entfernt als die Dildos mit Kante. Des Weiteren könnten wir vermuten, dass der Dildo mit normaler Kante mehr Sperma entfernt als der Dildo mit kleiner Kante. Da wir <span class="math inline">\(k = 3\)</span> Gruppen haben, müssen wir <span class="math inline">\(3-1 = 2\)</span> Kontraste <a href="kontraste.html">entsprechend unserer bekannten Regeln</a> definieren.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Gruppe</th>
+<th>Kontrast 1</th>
+<th>Kontrast 2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>No Ridge</td>
+<td>-2</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>Minimal Ridge</td>
+<td>1</td>
+<td>-1</td>
+</tr>
+<tr class="odd">
+<td>Normal Ridge</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>Summe</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Zu Beginn vergewissern wir uns noch einmal, dass unsere Faktorstufen auch in der gewünschten Reihenfolge sind.</p>
+<pre class="r"><code>penis %&gt;% 
+  pull(phallus) %&gt;% 
+  levels()</code></pre>
+<pre><code>## [1] &quot;No Coronal Ridge&quot;      &quot;Minimal Coronal Ridge&quot; &quot;Coronal Ridge&quot;</code></pre>
+<p>Das sieht gut aus, die Reihenfolge der Faktorstufen ist wie in der Tabelle. Wir können nun unsere gewichte vergeben.</p>
+<pre class="r"><code>contrast_1 &lt;- c(-2, 1, 1)
+contrast_2 &lt;- c(0, -1, 1)
+
+my_contrasts &lt;- cbind(contrast_1, contrast_2)
+
+contrasts(penis$phallus) &lt;- my_contrasts
+
+penis %&gt;% 
+  pull(phallus) %&gt;% 
+  contrasts()</code></pre>
+<pre><code>##                       contrast_1 contrast_2
+## No Coronal Ridge              -2          0
+## Minimal Coronal Ridge          1         -1
+## Coronal Ridge                  1          1</code></pre>
+<p>Unsere Kontraste sind nun ordentlich hinterlegt und wir können die Analyse durchführen.</p>
+<pre class="r"><code>penis_results &lt;- aov(displace ~ phallus, data = penis)
+
+summary.lm(penis_results)</code></pre>
+<pre><code>## 
+## Call:
+## aov(formula = displace ~ phallus, data = penis)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -13.8276  -7.3288   0.1826   4.1917  26.4298 
+## 
+## Coefficients:
+##                   Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)       72.54891    2.88784  25.122 9.60e-12 ***
+## phalluscontrast_1 18.61686    2.04201   9.117 9.63e-07 ***
+## phalluscontrast_2  0.05679    3.53686   0.016    0.987    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 11.18 on 12 degrees of freedom
+## Multiple R-squared:  0.8738, Adjusted R-squared:  0.8528 
+## F-statistic: 41.56 on 2 and 12 DF,  p-value: 4.032e-06</code></pre>
+<p>Unsere Kontraste bestätigen, was wir uns anhand der Abbildung vielleicht schon gedacht haben. Es gibt im Hinblick auf die Menge des entfernten Spermas einen signifikanten Unterschied zwischen dem Dildo ohne Eichel-Kante und jenen mit einer solchen Kante. Darüber hinaus unterscheiden sich die beiden Dildos mit Eichel-Kante nicht voneinander; beide entfernten ähnlich viel Sperma aus der Modell-Vagina. Die Efet<sup>2}kt</sup>2 + dftstärke können wir berechnen als <span class="math display">\[r_\text{Kontrast} = \sqrt{\dfrac{t^2}{t^2 + df}}\]</span></p>
+<p>Alternativ hätten wir Post-hoc-Tests berechnen können, mit denen wir auf das identische Ergebnis gekommen wären.</p>
+<pre class="r"><code>penis %&gt;% 
+  tukey_hsd(displace ~ phallus)</code></pre>
+<pre><code>## # A tibble: 3 x 8
+##   term   group1      group2     estimate conf.low conf.high   p.adj p.adj.signif
+## * &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;       
+## 1 phall~ No Coronal~ Minimal C~   55.8       36.9      74.7 1.21e-5 ****        
+## 2 phall~ No Coronal~ Coronal R~   55.9       37.0      74.8 1.18e-5 ****        
+## 3 phall~ Minimal Co~ Coronal R~    0.114    -18.8      19.0 1.00e+0 ns</code></pre>
 </div>
 <div id="berichten-1" class="section level2">
 <h2>Berichten</h2>
+<p>We found the shape of the phallus to have a significant influence on the amount of displaced sperm, <span class="math inline">\(F(2,12) = 41.56, p &lt; .001, \eta_G^2 = .874\)</span>. A priori defined contrasts revealed a significant difference between phalli with a coronal ridge and those without, <span class="math inline">\(t(12) = 9.12, p &lt; .001, r_\text{contrast} = 0.93\)</span>. If there was a coronal ridge, its size didn’t affect the amount of displaced sperm, <span class="math inline">\(t(12)=0.02, p = .987, r_\text{contrast} = .005\)</span>.</p>
 </div>
 </div>
 <div id="literatur" class="section level1 unnumbered">
 <h1>Literatur</h1>
 <div id="refs" class="references">
+<div id="ref-Field.2018">
+<p>Field, A. P. (2018). <em>Discovering Statistics using IBM SPSS Statistics</em> (5th ed.). SAGE.</p>
+</div>
+<div id="ref-Gallup.2003">
+<p>Gallup, G., Burch, R. L., Zappieri, M. L., Parvez, R. A., Stockwell, M. L., &amp; Davis, J. A. (2003). The human penis as a semen displacement device. <em>Evolution and Human Behavior</em>, <em>24</em>(4), 277–289. <a href="https://doi.org/10.1016/S1090-5138(03)00016-3">https://doi.org/10.1016/S1090-5138(03)00016-3</a></p>
+</div>
+<div id="ref-Mair.2020">
+<p>Mair, P., &amp; Wilcox, R. R. (2020). Robust statistical methods in R using the WRS2 package. <em>Behavior Research Methods</em>, <em>52</em>(2), 464–488. <a href="https://doi.org/10.3758/s13428-019-01246-w">https://doi.org/10.3758/s13428-019-01246-w</a></p>
+</div>
 <div id="ref-Toothaker.1993">
 <p>Toothaker, L. E. (1993). <em>Multiple Comparison Procedures</em>. SAGE.</p>
+</div>
+<div id="ref-Wilcox.2012">
+<p>Wilcox, R. R. (2012). <em>Introduction to robust estimation and hypothesis testing</em> (3. ed.). Elsevier/Academic Press. <a href="http://site.ebrary.com/lib/alltitles/docDetail.action?docID=10521171">http://site.ebrary.com/lib/alltitles/docDetail.action?docID=10521171</a></p>
 </div>
 </div>
 </div>

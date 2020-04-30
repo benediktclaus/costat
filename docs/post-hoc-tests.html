@@ -403,7 +403,9 @@ div.tocify {
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">ANOVAs</li>
-    <li class="dropdown-header">Einfaktorielle ANOVA</li>
+    <li>
+      <a href="einfaktorielle-anova.html">Einfaktorielle ANOVA</a>
+    </li>
     <li class="dropdown-header">Faktorielle ANOVA</li>
     <li class="dropdown-header">ANCOVA</li>
     <li class="dropdown-header">Repeated Measures ANOVA</li>
@@ -411,7 +413,9 @@ div.tocify {
     <li>
       <a href="kontraste.html">Geplante Kontraste</a>
     </li>
-    <li class="dropdown-header">Post-hoc-Tests</li>
+    <li>
+      <a href="post-hoc-tests.html">Post-hoc-Tests</a>
+    </li>
     <li class="divider"></li>
   </ul>
 </li>
@@ -453,9 +457,184 @@ div.tocify {
 </div>
 
 
-<p><img src="" /></p>
-<div id="literatur" class="section level1">
+<p><img src="images/sprint_r.jpg" /></p>
+<p>Eine ANOVA ist ein <strong>Omnibus-Test</strong>, d.h., dass uns ein signifikanter <span class="math inline">\(F\)</span>-Wert erstmal nur sagt, dass sich die Gruppenmittelwerte (die Mittelwerte der unterschiedlichen Faktorstufen) voneinander unterscheiden. Wir wissen aber noch nicht <em>wo</em>. Im Grunde ist ein signifikantes Ergebnis einer ANOVA eine Aufforderung dazu, weitere Untersuchungen anzustellen. An dieser Stelle hat man nun zwei Möglichkeiten; entweder man hat bereits eine Hypohese oder Ahnung, wo die Unterschiede liegen könnten. In diesem Fall kann man vorab <strong>Kontrase</strong> (also geplante Kontraste) definieren und diese Unterschiede prüfen. Hat man keine Hypothesen und will “sich überraschen lassen”, macht man einen <strong>Post-hoc-Test</strong>. Wir jagen unseren potenziellen Unterschieden also hinterher.</p>
+<div id="grundidee" class="section level1">
+<h1>Grundidee</h1>
+<p>Im Gegensatz zu den auf unseren Hypothesen fundierenden <a href="kontraste.html">geplanten Kontrasten</a> sind Post-hoc-Tests relativ brutal und einfallslos. Sie nehmen sich alle Gruppen der von uns definierten Faktoren vor und berechnen paarweise Vergleiche; also werden im Prinzip ganz viele <span class="math inline">\(t\)</span>-Tests berechnet. Das hört sich nach einer ganz dummen Idee an und ist es ohne spezielle Vorkehrungen auch, denn durch die vielen Tests auf einmal, kommt es zur <span class="math inline">\(\alpha\)</span>-Fehler-Kumulierung. Was ist denn das jetzt schon wieder?</p>
+<p>Irgendwann wurde willkürlich festgelegt, dass ein <span class="math inline">\(p &lt; 0.05\)</span> ein statistisch signifikantes Ergebnis bedeutet. Mit diesem Signifikanzniveau von <span class="math inline">\(\alpha = 0.05\)</span> gehen wir vorab also immer davon aus, dass die Wahrscheinlichkeit einen Fehler 1. Art (<span class="math inline">\(\alpha\)</span>-Fehler) zu begehen 5% ist. Ein Fehler 1. Art tritt ein, wenn wir uns dafür entscheiden, einen Effekt gefunden zu haben, obwohl es eigentlich keinen gibt. Gibt es also wirklich <em>keinen</em> Effekt in einer Population, und führen wir unser Experiment 100 Mal immer auf dieselbe Art und Weise durch, gehen wir davon aus, dass wir fälschlicherweise trotzdem 5 Mal ein signifikantes Ergenis erhalten. Macht man jetzt mehrere Tests, wie es bei den Post-hoc-Tests nun gemacht werden soll, erhöht sich auch die Wahrscheinlichkeit einen Fehler 1. Art zu begehen. Diese Wahrscheinlichkeit eines Fehlers 1. Art lässt sich berechnen durch <span class="math display">\[\text{Fehler} = 1 - (0.95)^n\]</span></p>
+<p>Führen wir einen Test durch, ist die Wahrscheinlichkeit eines <span class="math inline">\(\alpha\)</span>-Fehlers <span class="math inline">\(1 - (0.95)^1 = 0.05\)</span>, also 5%, wie ursprünglich definert. Mit der Anzahl unserer Tests steigt die Wahrscheinlichkeit eines Fehlers jedoch rapide. Bei drei Tests sind es schon <span class="math inline">\(1-(0.95)^3 = 14.3\,\%\)</span> und bei 5 Tests <span class="math inline">\(1-(0.95)^5 = 22.6\,\%\)</span>. Bei fünf paarweisen Vergleichen gehen wir also schon vorab davon aus, dass mindestens einer fälschlicherweise signifikant ist. Na super. Und jetzt?</p>
+</div>
+<div id="implementierung" class="section level1">
+<h1>Implementierung</h1>
+<p>Es gab und gibt viele kluge Köpfe, die sich dem Problem angenommen haben. Ihre Idee war nun, das Signifikanzniveau von <span class="math inline">\(\alpha = 0.05\)</span> zu reduzieren, um so die Schwelle, ab wann ein Ergebnis statistisch signifikant ist, niedriger zu legen. Clever! Es gibt mittlerweile viele Möglichkeiten, den <span class="math inline">\(p\)</span>-Wert bei Post-hoc-Tests zu korrigieren, deshalb haben <span class="citation">Toothaker (<a href="#ref-Toothaker.1993" role="doc-biblioref">1993</a>)</span> und <span class="citation">Field (<a href="#ref-Field.2018" role="doc-biblioref">2018</a>)</span> diese für uns im Bereich der ANOVA-Designs zusammengefasst:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Gruppengröße</th>
+<th>Populations-Varianzen</th>
+<th>Verfahren</th>
+<th>Referenz</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Gleichgroß</td>
+<td>Homogen</td>
+<td>Tukey HSD</td>
+<td><span class="citation">Tukey (<a href="#ref-Tukey.1949" role="doc-biblioref">1949</a>)</span></td>
+</tr>
+<tr class="even">
+<td>Leicht unterschiedlich</td>
+<td>Homogen</td>
+<td>Gabriel</td>
+<td><span class="citation">Gabriel (<a href="#ref-Gabriel.1969" role="doc-biblioref">1969</a>)</span></td>
+</tr>
+<tr class="odd">
+<td>Sehr unterschiedlich</td>
+<td>Homogen</td>
+<td>Hochbergs GT2</td>
+<td><span class="citation">Hochberg (<a href="#ref-Hochberg.1974" role="doc-biblioref">1974</a>)</span>, <span class="citation">Hochberg (<a href="#ref-Hochberg.1975" role="doc-biblioref">1975</a>)</span></td>
+</tr>
+<tr class="even">
+<td>Egal</td>
+<td>Unterschiedlich</td>
+<td>Games-Howell</td>
+<td><span class="citation">Games &amp; Howell (<a href="#ref-Games.1976" role="doc-biblioref">1976</a>)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Die Methode, die alle kennen (Bonferroni) wird nicht mehr empfohlen, weil sie zu konservativ ist. Möchte man jedoch eine ähnliche Methode durchführen, sollte man die (Bonferroni-)Holm-Methode <span class="citation">(Holm, <a href="#ref-Holm.1979" role="doc-biblioref">1979</a>)</span> in Betracht ziehen, da diese mehr Power hat.</p>
+<p>Tukey HSD und Bonferroni-Holm können mit Funktionen aus dem Paket <code>rstatix</code> durchgeführt werden. Für letztere muss jedoch das Paket <code>emmeans</code> <span class="citation">(Lenth, <a href="#ref-Lenth.2020" role="doc-biblioref">2020</a>)</span> installiert sein.</p>
+<pre class="r"><code># Tukey HSD
+&lt;DATA&gt; %&gt;% tukey_hsd(&lt;DV&gt; ~ &lt;PRED&gt;)
+
+# Bonferroni-Holm
+&lt;DATA&gt; %&gt;% emmeans_test(&lt;DV&gt; ~ &lt;PRED&gt;, p.adjust.method = &quot;holm&quot;)</code></pre>
+<p>Für die anderen Tests sieht es in R schlecht aus. Dafür bietet R viele weitere Tests, die stattdessen eingesetzt werden können. Weitere Informationen dazu findet man bei <span class="citation">Field (<a href="#ref-Field.2018" role="doc-biblioref">2018</a>)</span>.</p>
+</div>
+<div id="beispiel" class="section level1">
+<h1>Beispiel</h1>
+<p>Für das Beispiel der <a href="einfaktorielle-anova.html">einfaktoriellen ANOVA</a> hatten wir uns einen fiktiven Datensatz zu Besuchern des Phantasialandes angeschaut. In diesem Datensatz finden wir die empfundene Freude von 186 Besuchern des Phantasialandes (Variable <code>joy</code>), eingeteilt in Gruppen von Handgepäck-Typ. Wir haben Besucher ohne Handgepäck, mit leichtem und schwerem Rucksack und jenen, die einen Bollerwagen ziehen müssen. Mit der einfaktoriellen ANOVA haben wir bereits herausgefunden, dass sich diese Gruppen hinsichtlich ihrer Freude signifikant unterscheiden.</p>
+<pre class="r"><code>phantasialand &lt;- read_spss(&quot;data/phantasialand.sav&quot;) %&gt;%
+  mutate_if(is.labelled, as_factor)
+
+# Datensatz
+phantasialand</code></pre>
+<pre><code>## # A tibble: 186 x 3
+##    id    backpack   joy
+##    &lt;chr&gt; &lt;fct&gt;    &lt;dbl&gt;
+##  1 1     Light        5
+##  2 2     Light        7
+##  3 3     Handcart     3
+##  4 4     Heavy        6
+##  5 5     Heavy        3
+##  6 6     Heavy        6
+##  7 7     Handcart     4
+##  8 8     None        10
+##  9 9     None         9
+## 10 10    Handcart     5
+## # ... with 176 more rows</code></pre>
+<pre class="r"><code># Boxplot
+phantasialand %&gt;% 
+  ggplot(aes(x = backpack, y = joy)) +
+  geom_boxplot(outlier.color = NA) +
+  geom_jitter(width = 0.1, alpha = 0.2) +
+  labs(x = &quot;Gepäck&quot;, y = &quot;Freude&quot;)</code></pre>
+<p><img src="post-hoc-tests_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># ANOVA
+phantasialand %&gt;% 
+  anova_test(joy ~ backpack)</code></pre>
+<pre><code>## ANOVA Table (type II tests)
+## 
+##     Effect DFn DFd       F        p p&lt;.05   ges
+## 1 backpack   3 182 126.164 3.14e-44     * 0.675</code></pre>
+<p>An dieser Stelle könnten wir entweder den Tukey HSD durchführen oder paarweise Vergleiche mit Bonferroni-Holm-Korrektur durchführen.</p>
+<pre class="r"><code># Tukey HSD
+phantasialand %&gt;% 
+  tukey_hsd(joy ~ backpack)</code></pre>
+<pre><code>## # A tibble: 6 x 8
+##   term     group1 group2   estimate conf.low conf.high    p.adj p.adj.signif
+## * &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
+## 1 backpack None   Light      -2.01     -2.80    -1.23  2.20e- 9 ****        
+## 2 backpack None   Heavy      -2.61     -3.39    -1.83  6.93e-14 ****        
+## 3 backpack None   Handcart   -6.44     -7.32    -5.57  1.73e-14 ****        
+## 4 backpack Light  Heavy      -0.592    -1.32     0.139 1.57e- 1 ns          
+## 5 backpack Light  Handcart   -4.43     -5.26    -3.60  1.73e-14 ****        
+## 6 backpack Heavy  Handcart   -3.84     -4.66    -3.01  2.01e-14 ****</code></pre>
+<pre class="r"><code># Bonferroni-Holm
+phantasialand %&gt;% 
+  emmeans_test(joy ~ backpack, p.adjust.method = &quot;holm&quot;)</code></pre>
+<pre><code>## # A tibble: 6 x 8
+##   .y.   group1 group2      df statistic        p    p.adj p.adj.signif
+## * &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
+## 1 joy   None   Light      182      6.63 3.67e-10 7.35e-10 ****        
+## 2 joy   None   Heavy      182      8.68 2.15e-15 6.44e-15 ****        
+## 3 joy   None   Handcart   182     19.1  1.87e-45 1.12e-44 ****        
+## 4 joy   Light  Heavy      182      2.10 3.70e- 2 3.70e- 2 *           
+## 5 joy   Light  Handcart   182     13.8  3.54e-30 1.77e-29 ****        
+## 6 joy   Heavy  Handcart   182     12.1  4.05e-25 1.62e-24 ****</code></pre>
+<p>In diesem Fall liefern die beiden Verfahren unterschiedliche Ergebnisse. Nach der Tukey-Methode finden wir signifikante Unterschiede zwischen allen Gruppen, jedoch keinen signifikanten Unterschied zwischen jenen Besuchern mit leichten und schweren Rucksäcken. Nach der Bonferroni-Holm-Methode hingegen finden ir einen signifikanten Unterschied, da <span class="math inline">\(p = .037\)</span>. Das ist zwar “nur knapp” unter unserem Signifikanzniveau von <span class="math inline">\(\alpha = 0.05\)</span>, aber bei der Signifikanz ist das wie bei einer Schwangerschaft: Man ist entweder schwanger oder nicht. Es gibt kein “bisschen” schwanger oder “gerade so schwanger”. Es gibt auch kein “schwangerer” oder “gerade nicht schwanger”/“marginal schwanger”; man sollte bei solchen Formulierungen in Bezug auf statistische Signifikanz berechtigterweise kritisch sein. In den meisten Fällen hat der Autor einfach selbst keine Ahnung.</p>
+<p>Die unterschiedlichen Ergebnisse von zwei unterschiedlichen Test bei identischer Datenlage ist jedenfalls nicht ungewöhnlich. Auf der sicheren Seite ist man, wenn man sich <em>vor</em> der Analyse auf Basis der Literatur für ein Verfahren entscheidet und dann <em>nur</em> dieses Verfahren durchführt.</p>
+</div>
+<div id="robuste-methoden" class="section level1">
+<h1>Robuste Methoden</h1>
+<p>Auch für Post-hoc-Tests hat Rand <span class="citation">Wilcox (<a href="#ref-Wilcox.2012" role="doc-biblioref">2012</a>)</span> natürlich robuste Alternativen entwickelt und im Paket <code>WRS2</code> <span class="citation">(Mair &amp; Wilcox, <a href="#ref-Mair.2020" role="doc-biblioref">2020</a>)</span> umgesetzt. Für einfaktorielle Varianzanalysen ist das die Funktion <code>lincon()</code>.</p>
+<pre class="r"><code>lincon(&lt;DV&gt; ~ &lt;PRED&gt;, data = &lt;DATA&gt;)</code></pre>
+<div id="beispiel-1" class="section level2">
+<h2>Beispiel</h2>
+<p>Bei unserem Beispiel aus dem Phantasialand sähe das folgendermaßen aus.</p>
+<pre class="r"><code>lincon(joy ~ backpack, data = phantasialand)</code></pre>
+<pre><code>## Call:
+## lincon(formula = joy ~ backpack, data = phantasialand)
+## 
+##                     psihat ci.lower ci.upper p.value
+## None vs. Light     2.36830  1.55112  3.18548 0.00000
+## None vs. Heavy     2.77828  1.87293  3.68364 0.00000
+## None vs. Handcart  6.64103  5.53054  7.75151 0.00000
+## Light vs. Heavy    0.40998 -0.44968  1.26964 0.20021
+## Light vs. Handcart 4.27273  3.19526  5.35019 0.00000
+## Heavy vs. Handcart 3.86275  2.72189  5.00360 0.00000</code></pre>
+<p>Hier sind die Ergebnisse in Einklang mit der Tukey-HSD-Methode, es gibt keinenen statitistisch signifikanten Unterschied zwischen jenen Besuchern mit leichten und schweren Rucksäcken.</p>
+</div>
+</div>
+<div id="literatur" class="section level1 unnumbered">
 <h1>Literatur</h1>
+<div id="refs" class="references">
+<div id="ref-Field.2018">
+<p>Field, A. P. (2018). <em>Discovering Statistics using IBM SPSS Statistics</em> (5th ed.). SAGE.</p>
+</div>
+<div id="ref-Gabriel.1969">
+<p>Gabriel, K. R. (1969). Simultaneous Test Procedures - Some Theory of Multiple Comparisons. <em>The Annals of Mathematical Statistics</em>, <em>40</em>(1), 224–250.</p>
+</div>
+<div id="ref-Games.1976">
+<p>Games, P. A., &amp; Howell, J. F. (1976). Pairwise Multiple Comparison Procedures with Unequal N’s and/or Variances: A Monte Carlo Study. <em>Journal of Educational Statistics</em>, <em>1</em>(2), 113–125. <a href="https://doi.org/10.3102/10769986001002113">https://doi.org/10.3102/10769986001002113</a></p>
+</div>
+<div id="ref-Hochberg.1974">
+<p>Hochberg, Y. (1974). <em>Some generalizations of the T-method in simultaneous inference</em>. <em>4</em>(2), 224–234.</p>
+</div>
+<div id="ref-Hochberg.1975">
+<p>Hochberg, Y. (1975). <em>An Extension of the T-Method to General Unbalanced Models of Fixed Effects</em>. <em>37</em>(3), 426–433.</p>
+</div>
+<div id="ref-Holm.1979">
+<p>Holm, S. (1979). A Simple Sequentially Rejective Multiple Test Procedure. <em>Scandinavian Journal of Statistics</em>, <em>6</em>(2), 65–70.</p>
+</div>
+<div id="ref-Lenth.2020">
+<p>Lenth, R. (2020). <em>emmeans: Estimated Marginal Means, aka Least-Squares Means</em>. <a href="https://CRAN.R-project.org/package=emmeans">https://CRAN.R-project.org/package=emmeans</a></p>
+</div>
+<div id="ref-Mair.2020">
+<p>Mair, P., &amp; Wilcox, R. R. (2020). Robust statistical methods in R using the WRS2 package. <em>Behavior Research Methods</em>, <em>52</em>(2), 464–488. <a href="https://doi.org/10.3758/s13428-019-01246-w">https://doi.org/10.3758/s13428-019-01246-w</a></p>
+</div>
+<div id="ref-Toothaker.1993">
+<p>Toothaker, L. E. (1993). <em>Multiple Comparison Procedures</em>. SAGE.</p>
+</div>
+<div id="ref-Tukey.1949">
+<p>Tukey, J. W. (1949). Comparing Individual Means in the Analysis of Variance. <em>Biometrics</em>, <em>5</em>(2), 99. <a href="https://doi.org/10.2307/3001913">https://doi.org/10.2307/3001913</a></p>
+</div>
+<div id="ref-Wilcox.2012">
+<p>Wilcox, R. R. (2012). <em>Introduction to robust estimation and hypothesis testing</em> (3. ed.). Elsevier/Academic Press. <a href="http://site.ebrary.com/lib/alltitles/docDetail.action?docID=10521171">http://site.ebrary.com/lib/alltitles/docDetail.action?docID=10521171</a></p>
+</div>
+</div>
 </div>
 
 
