@@ -14,17 +14,15 @@ ggplot2::theme_set(ggplot2::theme_light())
 
 ![](images/roller-coaster_r.jpg)
 
-Begeben wir uns ins [Phantasialand](https://www.phantasialand.de/de/) in Brühl bei Köln. Auch Forscher brauchen mal Spaß -- und wo könnte man sich den besser holen? Natürlich lässt sich das Bestreben nach wissenschaftlichem Fortschritt auch bei Besuchen von Freizeitparks nicht abstellen. So fällt uns beispielsweise auf, dass selbst im Phantasialand, nicht alle Besucher gleich viel Spaß haben. Es gibt sehr viele, die mit lachenden Gesichtern durch den Park laufen, doch auch jene, die ihre Mundwinkel der Schwerkraft hingeben. Woran könnte das liegen? Eine Hypothese könnte doch das Gewicht des Handgepäcks sein. Vielleicht haben Besucher mit wenig Handgepäck mehr Spaß, weil sie weniger zu tragen haben? Und vielleicht gilt dann auch, dass Besucher, die viel schleppen müssen, einfach fertig sind und deshalb gar keinen Spaß haben? Wie man das untersuchen könnte, wird hier erläutert.
+Mit einer einfaktoriellen Varianlzanalyse (ANOVA) kann man die Mittelwerte von mehr als zwei Gruppen miteinander vergleichen. Da die einfaktorielle ANOVA ein Omnibus-Test ist, und so nur anzeigt, ob irgendwo ein signifikanter Unterschied zwischen den betrachteten Mittelwerten besteht, nutzt man entweder Kontraste oder Post-hoc-Tests, um herauszufinden, welche Mittelwerte sich letztendlich signifikant voneinander unterscheiden.
 
-
-# Pakete
-Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien, `rstatix` für statistische Analysen und `skimr` für schnelle deskriptive Statistiken.
+# Pakete 
+Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen.
 
 ```{r message=FALSE}
 library(tidyverse)
 library(haven)
 library(rstatix)
-library(skimr)
 ```
 
 ```{r echo=FALSE}
@@ -32,7 +30,10 @@ library(patchwork)
 ```
 
 # Beispiel
-Wir sind im Phantasialand und möchten untersuchen, ob die Größe des Handgepäcks einen Einfluss auf die Freude der Besucher hat. Dazu haben wir viele Besucher mit vier unterschiedlichen Arten von Handgepäck nach ihrer derzeitigen empfundenen Freude gefragt. Die Daten dieser kleinen Erhebung sind in der Datei `phantasialand.sav`. Die Spalte `id` ist die ID des Besuchers, in der Spalte `backpack` ist angegeben, mit welchem Handgepäck der Besucher oder die Besucherin unterwegs war. Wir unterscheiden vier Faktorstufen: "None" = kein Handgepäck, "Light" = leichtes, "Heavy" steht für schweres und "Handcart" steht für Bollerwagen. In der Spalte `joy` wurde die zu dem Zeitpunkt empfundene Freude des Besuchers eingetragen.
+Begeben wir uns ins [Phantasialand](https://www.phantasialand.de/de/) in Brühl bei Köln. Auch Forscher brauchen mal Spaß -- und wo könnte man sich den besser holen? Natürlich lässt sich das Bestreben nach wissenschaftlichem Fortschritt auch bei Besuchen von Freizeitparks nicht abstellen. So fällt uns beispielsweise auf, dass selbst im Phantasialand, nicht alle Besucher gleich viel Spaß haben. Es gibt sehr viele, die mit lachenden Gesichtern durch den Park laufen, doch auch jene, die ihre Mundwinkel der Schwerkraft hingeben. Woran könnte das liegen? Eine Hypothese könnte doch das Gewicht des Handgepäcks sein. Vielleicht haben Besucher mit wenig Handgepäck mehr Spaß, weil sie weniger zu tragen haben? Wir möchten also untersuchen, ob die Größe des Handgepäcks einen Einfluss auf die Freude der Besucher hat. Dazu haben wir viele Besucher mit vier unterschiedlichen Arten von Handgepäck nach ihrer derzeitigen empfundenen Freude gefragt.
+
+## Klassisch
+Die Daten dieser kleinen Erhebung sind in der Datei `phantasialand.sav`. Die Spalte `id` ist die ID des Besuchers, in der Spalte `backpack` ist angegeben, mit welchem Handgepäck der Besucher oder die Besucherin unterwegs war. Wir unterscheiden vier Faktorstufen: "None" = kein Handgepäck, "Light" = leichtes, "Heavy" steht für schweres und "Handcart" steht für Bollerwagen. In der Spalte `joy` wurde die zu dem Zeitpunkt empfundene Freude des Besuchers eingetragen.
 
 ```{r}
 phantasialand <- read_spss("data/phantasialand.sav")
@@ -47,10 +48,10 @@ Wie immer, wenn wir SPSS-Daten mit vergebenen Werte-Labels importieren, schützt
 
 Wir haben also vier Grupen, deren Unterschiede in der mittlere Freude wir untersuchen wollen. Dazu nutzen wir eine einfaktorielle Varianzanalyse mit dem Zwischensubjektfaktor "backpack" mit vier Faktorstufen ("None", "Light", "Heavy" und "Handcart") und der abhängigen Variable "joy".
 
-## Voraussetzungen
+### Voraussetzungen
 Es gelten die üblichen [Voraussetzungen des GLM](voraussetzungen.html).
 
-## EDA
+### EDA
 Auch hier betrachten wir die Daten erstmal, bevor wir irgendwelche Analysen durchführen. Beobachtet man verschiedene Gruppen, macht es Sinn, die Ausgabe der statistischen Kennwerte für jede Gruppe durchzuführen. 
 
 ```{r}
@@ -59,23 +60,25 @@ phantasialand %>%
   get_summary_stats()
 ```
 
-Wir bekommen den ersten Wind in den Segeln unserer Hypothese. Im Mittel scheinen Besucher des Phantasialands mehr Spaß zu haben, wenn sie weniger Gepäck tragen müssen. Aufgrund der Gruppengröße (jeweils $n > 30$) und des zentralen Grenzwertsatzes, müssen wir uns um die [Voraussetzung der Normalverteilung](voraussetzungen.html) keine Gedanken machen. Im Boxplot der Date sind leicht unterschiedliche Varianzen pro Faktorstufe zu erkennen. Um sicherzugehen, dass wir die Voraussetzung der Varianzhomogenität nicht verletzen, können wir einen Levene-Test berechnen.
-
 ```{r echo=FALSE}
 phantasialand %>% 
   ggplot(aes(x = backpack, y = joy)) +
   geom_boxplot(outlier.color = NA) +
   geom_jitter(width = 0.1, alpha = 0.2) +
   labs(x = "Handgepäck", y = "Freude")
+```
 
-# Levene-Test
+
+Wir bekommen den ersten Wind in den Segeln unserer Hypothese. Im Mittel scheinen Besucher des Phantasialands mehr Spaß zu haben, wenn sie weniger Gepäck tragen müssen. Aufgrund der Gruppengröße (jeweils $n > 30$) und des zentralen Grenzwertsatzes, müssen wir uns um die [Voraussetzung der Normalverteilung](voraussetzungen.html) keine Gedanken machen. Im Boxplot der Daten sind leicht unterschiedliche Varianzen pro Faktorstufe zu erkennen. Um sicherzugehen, dass wir die Voraussetzung der Varianzhomogenität nicht verletzen, können wir einen Levene-Test berechnen.
+
+```{r}
 phantasialand %>% 
   levene_test(joy ~ backpack)
 ```
 
-Da der Levene-Test nicht signifikant ist ($p = .256$), gehen wir davon aus, dass sich die Varianzen der Faktorstufen nicht signifikant voneinander unterscheiden. Wir dürfen also eine ganz normale einfaktorielle ANOVA berechnen.
+Da der Levene-Test nicht signifikant ist ($p = .256$), gehen wir davon aus, dass sich die Varianzen der Faktorstufen nicht signifikant voneinander unterscheiden. Wir dürfen also eine ganz normale einfaktorielle ANOVA berechnen. Falls sich die Varianzen signifikant voneinander unterscheiden sollten, gibt es bei der einfaktoriellen Varianzanalyse mehrere Aletrnativen ([s.u.](#robust)).
 
-## Durchführung
+### Durchführung
 Die eigentliche Durchführung ist kurz und schmerzlos und wird mit der Funktion `anova_test()` durchgeführt. Wir haben hier zwei Möglichkeiten unser gewünschtes Modell zu definieren. Zum einen können wir es als Regressions-Formel definieren. Dabei steht die abhängige Variable auf der linken Seite und die unabhängige(n) auf der rechten; getrennt durch eine `~` (Tilde). Zum anderen können wir die abhängige und unabhängige Variable direkt als Funktionsargumente angeben. Dieses Vorgehen bietet sich vor allem bei komplexeren Versuchsdesigns an, wie etwa ANOVAs mit Messwiederholungen oder gemischte ANOVAs. Egal, für welche Möglichkeit man sich entscheidet, die Ergebnisse sind immer gleich.
 
 ```{r eval=FALSE}
@@ -90,7 +93,7 @@ phantasialand %>%
 
 Ich entscheide mich bei einfachen Designs immer für die Formelschreibweise, weil sie wesentlich schneller getippt ist.
 
-```{r}
+```{r message=FALSE}
 phantasialand %>% 
   anova_test(joy ~ backpack)
 ```
@@ -111,12 +114,21 @@ phantasialand %>%
 
 Aus den vielen paarweisen Vergleichen geht hervor, dass sich die Gruppe derer, die ohne Handgepäck unterwegs ist, signifikant von allen anderen Gruppen unterscheidet. Das betrifft auch die Gruppe derjenigen, die mit einem Bollerwagen ("Handcart") unterwegs sind. Interessant ist, dass sich die Besucher mit leichtem und schwerem Handgepäck *nicht* signifikant voneinander unterscheiden. Um die ganzen Vergeliche zu durchdringen, nimmt man sich am besten den Boxplot von oben und zeichnet alle signifikanten Unterschiede ein. Man wird dann feststellen, dass wir drei homogene Gruppen haben. In der einen Gruppe sind die Besucher ohne Handgepäck (die glücklichsten), dann kommt die Gruppe derjenigen mit leichtem oder schwerem Handgepäck (etwas weniger glücklich) und "zum Schluss" diejenigen, die einen Bollerwagen ziehen müssen. Die letzte Gruppe hat mit Abstand am wenigsten Freude.
 
-## Berichten
+### Berichten
 We found the mean experienced joy of visitors of Phantasialand to decrease with increasing weight of backpack. Those with no backpack at all had a mean joy of $M = 9.07, SD = 1.14$. The mean joy for those with light, heavy backpack, or handcart were $M = 7.06, SD = 1.57$, $M = 6.46, SD = 1.63$, and $M = 2.63, SD = 1.40$ respectively.  A one-way revealed the means to differ significantly, $F(3, 182) = 126.16, p < .001, \eta_G^2 = .675$. Post-hoc Tukey HSD tests revealed three homogeneous subgroups, namely those with no backpacks, those with light and heavy backpacks and those pulling a handcart.
 
 
-# Robuste Alternativen
-Auch für einfaktorielle ANOVAs hat Rand @Wilcox.2012 natürlich wieder ein robustes Verfahren entwickelt und im Paket `WRS2` [@Mair.2020] implementiert. Die entsprechende Funktion ist für einfaktorielle Varianzanalysen `t1waybt()`.
+## Robust {#robust}
+Wenn die Voraussetzung der Varianzhomogenität bei einfaktoriellen Varianzanalysen nicht erfüllt ist, dann kann man, ähnlich wie beim $t$-Test, die Freiheitsgrade der $F$-Statistik korrigieren. Beim $t$-Test hat das der Welch-Test gemacht, hier ist es dann die Welch-ANOVA.
+
+```{r}
+phantasialand %>% 
+  welch_anova_test(joy ~ backpack)
+```
+
+Hier erhalten wir ebenfalls ein signifikantes Ergebnis ($F(3, 96.7) = 159, p < .001$), wodurch wir davon ausgehen können, dass sich die Mittelwerte der Gruppen unterscheiden. Generell sind jedoch Wilcox' Methoden (s.u.) eine bessere und reliablere Alternative.
+
+Auch für einfaktorielle ANOVAs hat Rand @Wilcox.2017 natürlich wieder ein robustes Verfahren entwickelt und im Paket `WRS2` [@Mair.2020] implementiert. Die entsprechende Funktion ist für einfaktorielle Varianzanalysen `t1way()`.
 
 ```{r}
 library(WRS2)
@@ -124,7 +136,7 @@ library(WRS2)
 t1way(joy ~ backpack, data = phantasialand)
 ```
 
-Wir erhalten ein signifikantes Ergebnis, was uns auch hier wieder sagt, dass sich die Gruppenmittelwerte unterscheiden, $F_t(3, 55.94)= 91.24, p < .001, \xi = .91$. Robuste Post-hoc-Tests gibt es natürlich auch wieder. Bei einfaktoriellen Varianzanalysen nutzt man die Funktion `lincon()`.
+Wir erhalten ein signifikantes Ergebnis ($F_t(3, 55.94)= 91.24, p < .001, \xi = .91$), was uns auch hier wieder sagt, dass sich die Gruppenmittelwerte unterscheiden. Robuste Post-hoc-Tests gibt es natürlich auch wieder; bei einfaktoriellen Varianzanalysen nutzt man die Funktion `lincon()`.
 
 ```{r}
 lincon(joy ~ backpack, data = phantasialand)
@@ -132,13 +144,33 @@ lincon(joy ~ backpack, data = phantasialand)
 
 Auch hier sind die Ergebnisse wieder identisch mit der normalen ANOVA. Es besteht zwischen allen Gruppen ein signifikanter Unterschied, außer zwischen den Besuchern mit leichtem oder schwerem Rucksack.
 
-# Non-parametrische Alternativen
-Folgen.
+## Non-parametrisch
+Immer noch gelehrt, aber nicht mehr zur Anwendung gedacht, sind non-parametrische Verfahren, also jene, die keine Annahme bezüglich einer Normalverteilung haben. Ihre Anwendungsgebiete sind eng beschränkt und deshalb sollte man immer [robuste Verfahren](#robust) verwenden. Wer es dennoch falsch machen und sich in vorherige Statistik-Jahzente begeben möchte, der weicht bei einfaktoriellen Varianzanalysen mit kleinen Stichprobengrößen und Abweichungen von der Normalverteilung auf den Kruskal-Wallis-Test [@Kruskal.1952] aus.
+
+```{r}
+# Kruskal-Wallis-Test
+phantasialand %>% 
+  kruskal_test(joy ~ backpack)
+
+# Effektstärke
+phantasialand %>% 
+  kruskal_effsize(joy ~ backpack)
+```
+
+Der Kruskal-Wallis-Test ist signifikant ($H(3)=116, p < .001, \eta^2[H] = .62$) und zeigt uns so einen signifikanten Unterschied der Mittelwerte an. Üblicherweise nutzt man als Post-hoc-Test nach einem signifikanten Kruskal-Wallis-Test die Methode nach Dunn [@Dunn.1964].
+
+```{r}
+phantasialand %>% 
+  dunn_test(joy ~ backpack)
+```
+
+Nach dem Dunn-Test finden wir einen signifikanten Unterschied zwischen allen Gruppen, außer zwischen jenen Besuchern mit leichtem und schwerem Rucksack.
 
 # Aus der Praxis
 @Gallup.2003 hatten sehr viel Spaß im Labor als sie untersuchten, ob die Penisform einen evolutionären Vorteil mit sich bringt. Genauer gesagt haben sie sich die Frage gestellt, ob die Form der Eichel als "Sperma-Schieber" funktionieren könnte. Mit einer Eichel, die eine ausgeprägte "Kante" hat, könnte Mann B während des Geschlechtsverkehrs die Hinterlassenschaften von Mann A "rauskratzen" und so relativ mehr von seinem eigenen Sperma zurücklassen. Dafür haben sie sich das Modell einer Vagina und drei Dildos besorgt. In das Vagina-Modell füllten sie künstliches Sperma und penetrierten diese dann mit den drei Dildos. Anschließend haben sie gemessen, wie viel Sperma der Dildo "rausgeschabt" hat. Was man so alles publizieren kann. Die Daten zu ihrer Versuchsreihe finden sich in der Datei `gallup.sav` und stammen von der [begleitenden Website](https://edge.sagepub.com/field5e) von @Field.2018. der Datensatz umfasst zwei Variablen, einmal die Form des Phallus (`phallus`) mit drei Faktorstufen ("No Coronal Ridge" = keine Eichel-Kante, "Minimal Corona Ridge" = kleine Kante, "Coronal Ridge" = normale Kante) und die Menge an "rausgeschabtem" Sperma (`displace`).
 
-## EDA
+## Klassisch
+### EDA
 ```{r}
 penis <- read_spss("data/gallup.sav") %>% janitor::clean_names()
 
@@ -179,7 +211,7 @@ penis %>%
   levene_test(displace ~ phallus)
 ```
 
-## Durchführung
+### Durchführung
 Beide Tests fallen nicht signifikant aus, was für uns gut ist, da wir die ANOVA nun rechnen dürfen.
 
 ```{r message=FALSE}
@@ -248,9 +280,40 @@ penis %>%
 ```
 
 
-## Berichten
+### Berichten
 We found the shape of the phallus to have a significant influence on the amount of displaced sperm, $F(2,12) = 41.56, p < .001, \eta_G^2 = .874$. A priori defined contrasts revealed a significant difference between phalli with a coronal ridge and those without, $t(12) = 9.12, p < .001, r_\text{contrast} = 0.93$. If there was a coronal ridge, its size didn't affect the amount of displaced sperm, $t(12)=0.02, p = .987, r_\text{contrast} = .005$.
 
+## Robust
+Wären die Voraussetzungen an eine einfaktorielle Varianzanalyse nicht gegeben, z.B. durch kleine Stichprobengröße, gepaart mit signifikanten Shapiro-Wilk-Tests, dann könnten wir auch die vorgestellten robusten Verfahren von @Wilcox.2017 verwenden.
+
+```{r}
+# Der Test an sich
+t1way(displace ~ phallus, data = penis)
+
+# Post-hoc-Tests
+lincon(displace ~ phallus, data = penis)
+```
+
+Mit den robusten Tests würden wir auf dasselbe Ergebnis kommen: Es gibt einen signifikanten Unterschied zwischen den Dildos in Bezug auf die durchschnittliche Menge des entfernten Spermas, $F_t(2, 2.81) = 39.57, p = .009, \xi = .91$. Die Post-hoc-Tests zeigen, dass sich beide Dildos mit Eichel-Kante vom Dildo ohne Kante unterscheiden.
+
+## Non-parametrisch
+Wie immer rate ich davon ab, non-parametrische Tests zu berechnen, da die robusten Verfahren generell besser und breiter in ihrer Anwendung sind. Der Kruskal-Wallis-Test würde jedoch so durchgeführt.
+
+```{r}
+# Kruskal-Wallis-Test
+penis %>% 
+  kruskal_test(displace ~ phallus)
+
+# Effektstärke
+penis %>% 
+  kruskal_effsize(displace ~ phallus)
+
+# Post-hoc-Tests nach Dunn
+penis %>% 
+  dunn_test(displace ~ phallus)
+```
+
+Auch der Kruskal-Wallis-Test kommt zu dem Ergebnis, dass sich die Mittelwerte signifikant voneinander unterscheiden, $H(2) = 9.38, p = .009, \eta^2[H] = .62$. Die Post-hoc-Tests nach Dunn zeigten ebenfalls einen signifikanten Unterschied zwischen den Dildos mit Eichel-Kante und jenem ohne.
 
 # Literatur
 
