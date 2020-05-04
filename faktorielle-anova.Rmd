@@ -1,0 +1,65 @@
+---
+title: "Faktorielle ANOVA"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(fig.align = "center")
+ggplot2::theme_set(ggplot2::theme_light())
+```
+
+![]()
+
+# Pakete 
+Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen.
+
+```{r message=FALSE}
+library(tidyverse)
+library(haven)
+library(rstatix)
+```
+
+```{r echo=FALSE}
+library(patchwork)
+```
+
+# Beispiel
+## Klassisch
+### Voraussetzungen
+### EDA
+### Durchführung
+### Berichten
+
+## Robust
+### Voraussetzungen
+### EDA
+### Durchführung
+### Berichten
+
+## Non-parametrisch
+### Voraussetzungen
+### EDA
+### Durchführung
+### Berichten
+
+
+# Aus der Praxis {.tabset .tabset-fade .tabset-pills}
+## Klassisch
+### EDA
+### Durchführung
+### Berichten
+
+## Robust
+
+## Non-parametrisch
+
+
+# Literatur
+
+```{r echo=FALSE}
+remove(list = ls())
+```
