@@ -6,13 +6,13 @@ library(haven)
 # t-Tests -----------------------------------------------------------------
 # Einstichproben-t-Test
 set.seed(20200422)
-ravenclaw <- tibble("intelligence" = round(rnorm(48, 125, 15))) %>% 
+tibble("intelligence" = round(rnorm(48, 125, 15))) %>% 
   rownames_to_column(var = "id") %>% 
   write_sav(path = "data/ravenclav.sav")
 
 # t-Test für unabhängige Stichproben
 set.seed(20200422)
-chivalry <- tibble(
+tibble(
   house = as_factor(c("Gryffindor", "Slytherin")),
   chivalry = list(round(rnorm(n = 42, mean = 95, sd = 8)), round(rnorm(n = 38, mean = 45, sd = 9)))
 ) %>% 
@@ -22,7 +22,7 @@ chivalry <- tibble(
 
 # t-Test für verbundene Stichproben
 set.seed(20200422)
-patience <- tibble(
+tibble(
   measurement = as_factor(c("Begin", "End")),
   patience = list(round(rnorm(53, 44, 8)), round(rnorm(53, 46, 9)))
 ) %>% 
@@ -44,3 +44,23 @@ tibble(
   sample_n(size = nrow(.)) %>% 
   rownames_to_column(var = "id") %>% 
   write_sav(path = "data/phantasialand.sav")
+
+# Faktorielle ANOVA
+set.seed(20200504)
+crossing(flavor = as_factor(c("Vanilla", "Chocolate", "Cookie", "Champagne")),
+         sex = as_factor(c("Female", "Male"))) %>% 
+  add_column(yumminess = list(
+    round(rnorm(36, 17, 2)),
+    round(rnorm(38, 16, 2.1)),
+    round(rnorm(41, 17.5, 1.9)),
+    round(rnorm(40, 17.3, 1.7)),
+    round(rnorm(45, 16, 2.3)),
+    round(rnorm(35, 13, 2.4)),
+    round(rnorm(40, 15.5, 2.2)),
+    round(rnorm(20, 8, 2.4))
+    )) %>% 
+  unnest(yumminess) %>% 
+  mutate(yumminess = pmin(yumminess, 20)) %>% 
+  sample_n(size = nrow(.)) %>% 
+  rownames_to_column(var = "id") %>% 
+  write_sav("data/ice_cream.sav")

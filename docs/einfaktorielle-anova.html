@@ -513,7 +513,7 @@ phantasialand</code></pre>
 ## 3 Heavy    joy         56     3    10    6.5     6  7.25  1.25 0.741  6.46  1.63
 ## 4 Handcart joy         35     0     5    3       2  4     2    1.48   2.63  1.40
 ## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
-<p><img src="einfaktorielle-anova_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="einfaktorielle-anova_files/figure-html/unnamed-chunk-6-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Wir bekommen den ersten Wind in den Segeln unserer Hypothese. Im Mittel scheinen Besucher des Phantasialands mehr Spaß zu haben, wenn sie weniger Gepäck tragen müssen. Aufgrund der Gruppengröße (jeweils <span class="math inline">\(n &gt; 30\)</span>) und des zentralen Grenzwertsatzes, müssen wir uns um die <a href="voraussetzungen.html">Voraussetzung der Normalverteilung</a> keine Gedanken machen. Im Boxplot der Daten sind leicht unterschiedliche Varianzen pro Faktorstufe zu erkennen. Um sicherzugehen, dass wir die Voraussetzung der Varianzhomogenität nicht verletzen, können wir einen Levene-Test berechnen.</p>
 <pre class="r"><code>phantasialand %&gt;% 
   levene_test(joy ~ backpack)</code></pre>
@@ -676,7 +676,7 @@ penis</code></pre>
 ## 3 Corona~ displace     5  79.7  99.2   91.0  86.9  99.2 12.3  12.2   91.2  8.35
 ## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
 <p>Aufgrund der deskriptiven Statistiken könnten wir vermuten, dass die Form des Phallus tatsächlich einen Einfluss darauf hat, wie viel Sperma aus der Vagina entfernt werden kann. Ein Dildo ohne Eichel-Kante entfernt im Mittel <span class="math inline">\(M = 35.3, SD = 16.3\)</span> Prozent des enthaltenen Spermas. Die beiden anderen Dildos schaffen beide über 90%. Der Unterschied wird vor allem in der Abbildung schön deutlich.</p>
-<p><img src="einfaktorielle-anova_files/figure-html/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="einfaktorielle-anova_files/figure-html/unnamed-chunk-18-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Da wir relativ wening Datenpunkte haben, sollten wir die Voraussetzungen prüfen.</p>
 <pre class="r"><code># Shapiro-Wilk-Test
 penis %&gt;% 

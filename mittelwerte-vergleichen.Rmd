@@ -33,7 +33,7 @@ Die **Daten zum fleißigen Mitrechnen** findest Du wie immer im [Git-Repository]
 Die $t$-Tests sind gut und einfach nachzuvollziehen. Mit ihnen können wir zwei Gruppen anhand kontinuierlicher Variablen ganz gut miteinander vergleichen. In den meisten Fällen hat man aber nicht nur zwei Gruppen (oder auch zwei Messzeitpunkte). Möchte man **zwei oder mehr** Mittelwerte nun vergleichen, muss man sich Varianzanalysen (**An**alysis **o**f **Va**riance, ANOVA) genauer anschauen, denn die sind genau für diesen Fall gemacht. Hier behandeln wir verschiedene ANOVAs, nämlich die
 
 * [Einfaktorielle ANOVA](einfaktorielle-anova.html); deren generalisierte Form, also die
-* Faktorielle ANOVA, die
+* [Faktorielle ANOVA](faktorielle-anova.html), die
 * Kovarianzanalyse (kurz ANCOVA), die
 * ANOVA für Messwiederholungen und schließlich
 * Mixed ANOVAs für gemischte Designs

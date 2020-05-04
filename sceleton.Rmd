@@ -47,7 +47,7 @@ library(patchwork)
 ### Berichten
 
 
-# Aus der Praxis {.tabset .tabset-fade .tabset-pills}
+# Aus der Praxis
 ## Klassisch
 ### EDA
 ### Durchführung

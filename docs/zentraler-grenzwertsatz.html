@@ -477,7 +477,7 @@ population &lt;- tibble(
 population %&gt;% 
   ggplot(aes(x = attractiveness)) +
   geom_histogram()</code></pre>
-<p><img src="zentraler-grenzwertsatz_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="zentraler-grenzwertsatz_files/figure-html/unnamed-chunk-3-1.png" width="2450" style="display: block; margin: auto;" /></p>
 </div>
 <div id="stichprobenziehung" class="section level1">
 <h1>Stichprobenziehung</h1>
@@ -501,7 +501,7 @@ clt_data %&gt;%
   ggplot(aes(x = means)) +
   geom_histogram(binwidth = 0.2) +
   facet_wrap(~ n)</code></pre>
-<p><img src="zentraler-grenzwertsatz_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="zentraler-grenzwertsatz_files/figure-html/unnamed-chunk-4-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Und siehe da: Der zentrale Grenzwertsatz scheint zu stimmen. Mit immer größerer Größe der Sticprobe sehen die Stichprobenkennwerteverteilungen immer “normaler” aus. Wir können also festhalten: Nutzt man Methoden aus dem GLM (z.B. <span class="math inline">\(t\)</span>-Tests oder ANOVAs) gilt die Voraussetzung der Normalverteilung der Stichprobenkennwerteverteilung. Diese kann ab einer hinreichend großen Stichprobengröße (ca. <span class="math inline">\(n &gt; 30\)</span>) automatisch angenommen werden. Hat man jedoch kleinere Stichproben, greift der zentrale Grenzwertsatz nicht automatisch und man sollte die Daten auf Normalverteilung prüfen. Denn sind die Daten bei kleinen Stichproben annähernd normalverteilt, können wir auch annehmen, dass die Stichprobenkennwerteverteilung annähernd normalverteilt ist.</p>
 </div>
 <div id="literatur" class="section level1 unnumbered">

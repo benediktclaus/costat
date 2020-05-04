@@ -8,11 +8,13 @@ editor_options:
 ---
 
 ```{r echo=FALSE}
-knitr::opts_chunk$set(fig.align = "center")
+knitr::opts_chunk$set(fig.align = "center", dpi = 350)
 ggplot2::theme_set(ggplot2::theme_light())
 ```
 
-![]()
+![](images/ice-cream_r.jpg)
+
+Mit einer (allgemeinen) faktoriellen ANOVA kann man mehr als zwei Gruppenmittelwerte in Abhängigkeit von kategorialen Prädiktoren vergleichen. Da die ANOVA ein Omnibus-Test ist, und so nur anzeigt, ob irgendwo ein signifikanter Unterschied zwischen den betrachteten Mittelwerten besteht, nutzt man entweder Kontraste oder Post-hoc-Tests, um herauszufinden, welche Mittelwerte sich letztendlich signifikant voneinander unterscheiden. Zusätzlich kann eine *Simple Effects Analysis* dazu genutzt werden, Unterschiede auf einzelnen Faktorstufen festzustellen.
 
 # Pakete 
 Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen.
@@ -28,10 +30,64 @@ library(patchwork)
 ```
 
 # Beispiel
+Jeder liebt es, so viel ist klar. Aber mögen alle Personen jede Sorte Eis gleich gerne? Pfiffige Forscher haben sich an einem schönen Sommertag an einer Eisdile in der Dortmunder Innenstadt platziert und viele zufällig vorbeikommende Passanten vier Eissorten kosten lassen. Die Probanden konnten dann auf einer Skala von 0 -- 20 angeben, wie lecker sie die eben probierte Eissorte fanden. Ein höherer Wert bedeutet eine bessere Bewertung. Wir wollen herausfinden, ob die Sorte selbst und das Geschlecht des Verkosters einen Einfluss auf den Geschmack hat. Wichtig ist dabei zu bachten, dass jeder Passant nur *eine* Eissorte probiert hat.
+
 ## Klassisch
+ Die Daten zu diesem Experiment sind in der Datei `ice_cream.sav`. In der ersten Spalte (`flavor`) ist der Geschmack eingetragen, in der zweiten Spalte (`sex`) das Geschlecht des Verkosters. In der dritten Spalte finden wir unsere abhängige Variable `yumminess`. Wir berechnen hier also eine 4 $\times$ 2 faktorielle ANOVA mit den Zwischensubjektfaktoren "Eissorte" mit vier Fakorstufen ("Vanilla", "Chocolate", "Cookie" und "Champagne") und "Geschlecht" mit zwei Faktorstufen ("Female" und "Male").
+
+```{r}
+ice_cream <- read_spss("data/ice_cream.sav")
+
+ice_cream <- ice_cream %>% mutate_if(is.labelled, as_factor)
+
+ice_cream
+```
+
 ### Voraussetzungen
+Da wir uns im GLM bewegen, gelten die üblichen [Voraussetzungen](voraussetzungen.html).
+
 ### EDA
+```{r}
+# Deskriptive Statistiken zur Eissorte...
+ice_cream %>%
+  group_by(flavor) %>% 
+  get_summary_stats()
+
+# ...zur Verteilung der Geschlechter...
+ice_cream %>%
+  group_by(sex) %>% 
+  get_summary_stats()
+
+# ...und zu den Eissorten für jedes Geschlecht
+ice_cream %>%
+  group_by(flavor, sex) %>% 
+  get_summary_stats()
+```
+
+Wir haben Daten zu vier Eissorten. Verköstigt wurden am häufigsten Schokolade ($n = 81$) und Cookie ($n = 80$); bewertet wurden am besten Vanille ($M = 16.57, SD = 2.18$) und Schokolade ($M = 17.16, SD = 1.68$). Insgesamt haben $N = 295$ Passanten an der Untersuchung teilgenommen, wovon $n = 162$ Frauen und $n = 133$ Männer waren.
+
+```{r echo=FALSE}
+dodge_width <- 0.2
+
+ice_cream %>% 
+  ggplot(aes(x = flavor, y = yumminess, color = sex)) +
+  stat_summary(fun.data = "mean_sdl", geom = "errorbar", fun.args = list(mult = 1), width = 0.2, position = position_dodge(width = dodge_width), size = 1) +
+  stat_summary(fun = "mean", geom = "point", position = position_dodge(dodge_width)) +
+  stat_summary(fun = "mean", geom = "line", position = position_dodge(dodge_width), aes(group = sex), size = 1) +
+  labs(x = "Flavor", y = "Yumminess", color  = "Sex") +
+  expand_limits(y = c(0, 20)) +
+  theme(legend.position = "bottom")
+```
+
+Aufgrund der Abbildung bekommen wir eine grobe Idee davon, dass die untersuchten Frauen alle Eissorten in etwa gleich lecker fanden. Die Männer jedoch stehen weniger auf Cookie und überhaupt nicht auf Champagner. Bah! Jetzt ist die Frage, ob unsere Einschätzung, dass sich die Mittelwerte tatsächlich unterscheiden signifikant sind.
+
 ### Durchführung
+
+```{r}
+ice_cream %>% 
+  anova_test(yumminess ~ flavor*sex)
+```
+
 ### Berichten
 
 ## Robust
@@ -47,7 +103,7 @@ library(patchwork)
 ### Berichten
 
 
-# Aus der Praxis {.tabset .tabset-fade .tabset-pills}
+# Aus der Praxis
 ## Klassisch
 ### EDA
 ### Durchführung

@@ -632,7 +632,7 @@ chivalry_data</code></pre>
 </tbody>
 </table>
 <p>Wir sehen einen eindeutigen Trend dahingehend, dass sich die Mitglieder Griffyndors als deutlicher ritterlicher einschätzen (<span class="math inline">\(M = 92.3, SD = 6.86\)</span>) als die Mitglieder der Hauses Slytherin (<span class="math inline">\(M = 48.1, SD = 8.94\)</span>). Auch in der Abbildung sehen wir diesen Unterschied deutlich. Die Boxplots (C) zeigen uns insgesamt 4 Outlier, zwei in jedem Haus. Die könnte man bei Bedarf entfernen, wir belassen es jedoch dabei und fahren fort, auch weil die Varianz der Daten in beiden Häusern ähnlich zu sein scheint. Außerdem sehen die Daten gut normalverteilt aus, was wir anhand der Kerndichteschätzungen (= “geglättetes” Histogramm in A) und dem QQ-Plot (B) erkennen können.</p>
-<p><img src="t-test-unabhaengig_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="t-test-unabhaengig_files/figure-html/unnamed-chunk-6-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Wer auf Tests zur Überprüfung der Voraussetzungen besteht, also dem Vorgehen, von dem ich bei großen Stichproben wieder <a href="voraussetzungen.html">entschieden abrate</a>), der kann diese natürlich durchführen. Wichtig ist dabei zu beachten, dass der Test der Daten “auf Normalverteilung” pro Haus, bzw. pro Gruppe, durchgeführt werden muss.</p>
 <pre class="r"><code># Shapiro-Wilk-Test
 chivalry_data %&gt;% 
@@ -864,7 +864,7 @@ eye_movement</code></pre>
 </tbody>
 </table>
 <p>Dem ersten Eindruck nach, scheint der Abruf in der Gruppe mit horizontalen Augenbewegungen schlechter zu sein. Im Durchschnitt haben die Probanden dieser experimentellen Bedingung <span class="math inline">\(M = 10.88, SD = 4.32\)</span> Wörter abgerufen, Probanden, die einen Punkt fixierten jedoch <span class="math inline">\(M = 15.29, SD = 6.38\)</span> Worte. Den gleichen Effekt können wir ganz gut im Violin-Plot<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> (C) erkennt. In beiden Bedingungen hatten wir auf jeden Fall auch richtige Brains sitzen, die maximalen abgerufenen Worte sind hier 22 und 25. Allerdings gab es auch Probanden, die nur 3 oder 4 Worte abrufen konnten. Da wir eine ziemlich kleine Stichprobe haben (in beiden Bedingungen jeweils <span class="math inline">\(n &lt; 30\)</span>), sollten wir die Daten tatsächlich auf Normalverteilung und Varianzhomogenität prüfen und uns entsprechende Abbildungen zur Beurteilung ansehen.</p>
-<p><img src="t-test-unabhaengig_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="t-test-unabhaengig_files/figure-html/unnamed-chunk-14-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Argh! Anhand der Kerndichteschätzungen (A) und den QQ-Plots (B) können wir festhalten: Normalverteilung sieht anders aus… So ist das mit den empirischen Daten, kaum etwas erhoben, sofort nur Probleme. Die Daten der Bedingung “Horizontal” gehen noch, aber bei den Daten der Bedingung “Fixation” haben wir ernstzunehmende Probleme. Was sagen uns der Shapiro-Wilk- und der Levene-Test?</p>
 <pre class="r"><code># Shapiro-Wilk-Test
 eye_movement %&gt;% 
