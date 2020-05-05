@@ -407,7 +407,9 @@ div.tocify {
     <li>
       <a href="einfaktorielle-anova.html">Einfaktorielle ANOVA</a>
     </li>
-    <li class="dropdown-header">Faktorielle ANOVA</li>
+    <li>
+      <a href="faktorielle-anova.html">Faktorielle ANOVA</a>
+    </li>
     <li class="dropdown-header">ANCOVA</li>
     <li class="dropdown-header">Repeated Measures ANOVA</li>
     <li class="dropdown-header">Mixed ANOVA</li>
@@ -538,19 +540,101 @@ ice_cream %&gt;%
 ## # ... with 3 more variables: sd &lt;dbl&gt;, se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
 <p>Wir haben Daten zu vier Eissorten. Verköstigt wurden am häufigsten Schokolade (<span class="math inline">\(n = 81\)</span>) und Cookie (<span class="math inline">\(n = 80\)</span>); bewertet wurden am besten Vanille (<span class="math inline">\(M = 16.57, SD = 2.18\)</span>) und Schokolade (<span class="math inline">\(M = 17.16, SD = 1.68\)</span>). Insgesamt haben <span class="math inline">\(N = 295\)</span> Passanten an der Untersuchung teilgenommen, wovon <span class="math inline">\(n = 162\)</span> Frauen und <span class="math inline">\(n = 133\)</span> Männer waren.</p>
 <p><img src="faktorielle-anova_files/figure-html/unnamed-chunk-6-1.png" width="2450" style="display: block; margin: auto;" /></p>
-<p>Aufgrund der Abbildung bekommen wir eine grobe Idee davon, dass die untersuchten Frauen alle Eissorten in etwa gleich lecker fanden. Die Männer jedoch stehen weniger auf Cookie und überhaupt nicht auf Champagner. Bah! Jetzt ist die Frage, ob unsere Einschätzung, dass sich die Mittelwerte tatsächlich unterscheiden signifikant sind.</p>
+<p>Aufgrund der Abbildung bekommen wir eine grobe Idee davon, dass die untersuchten Frauen alle Eissorten in etwa gleich lecker fanden. Die Männer jedoch stehen weniger auf Cookie und überhaupt nicht auf Champagner. (Bah!) Jetzt ist die Frage, ob unsere Einschätzung, dass sich die Mittelwerte tatsächlich signifikant unterscheiden, richtig ist. Dafür berechnen wir die ANOVA.</p>
 </div>
 <div id="durchführung" class="section level3">
 <h3>Durchführung</h3>
+<p>Auch hier haben wir, wie bei der <a href="einfaktorielle-anova.html">einfaktoriellen ANOVA</a>, zwei Möglichkeiten, die Funktionsargumente einzugeben. Einmal als Formelschreibweise und einmal als Explizite Nennung in Form der Funktionsargumente. <a href="https://github.com/kassambara/rstatix/issues/40">Momentan sind die Ergebnisse für die Definition in Formelschreibweise falsch (CRAN-Version 0.5.0)</a>, deshalb sollte man die Faktoren explizit als Funktionsargumente angeben. Wichtig ist hierbei, dass das Funktionsargument <code>type = 3</code> angegeben wird. In der Psychologie (und generell in den Sozialwissenschaften und der Medizin) werden standardmäßig <a href="http://md.psych.bio.uni-goettingen.de/mv/unit/lm_cat/lm_cat_unbal_ss_explained.html">Quadratsummen vom Typ “III”</a> berechnet.</p>
+<pre class="r"><code># Formelschreibweise
+ice_cream %&gt;% 
+  anova_test(yumminess ~ flavor*sex, type = 3)
+
+# Funktionsargumente
+ice_cream %&gt;% 
+  anova_test(dv = yumminess, between = c(flavor, sex), type = 3)</code></pre>
+<p>Dieses Vorgehen liefert uns folgendes Resultat.</p>
 <pre class="r"><code>ice_cream %&gt;% 
-  anova_test(yumminess ~ flavor*sex)</code></pre>
-<pre><code>## Coefficient covariances computed by hccm()</code></pre>
-<pre><code>## ANOVA Table (type II tests)
+  anova_test(dv = yumminess, between = c(flavor, sex), type = 3)</code></pre>
+<pre><code>## ANOVA Table (type III tests)
 ## 
-##       Effect DFn DFd      F        p p&lt;.05   ges
-## 1     flavor   3 287 60.633 2.16e-30     * 0.388
-## 2        sex   1 287 86.118 4.29e-18     * 0.231
-## 3 flavor:sex   3 287 25.377 1.37e-14     * 0.210</code></pre>
+##       Effect DFn DFd       F        p p&lt;.05   ges
+## 1     flavor   3 287  73.263 3.28e-35     * 0.434
+## 2        sex   1 287 106.711 1.78e-21     * 0.271
+## 3 flavor:sex   3 287  25.377 1.37e-14     * 0.210</code></pre>
+<p>An dieser Stelle lohnt es sich etwas, auf die Interpretation der Ergebnisse einzugehen. In den Zeilen <code>flavor</code> und <code>sex</code> sind die Haupteffekte dieser beiden Faktoren zu finden. Hat der Faktor “flavor” (= Eissorte) allein einen Einfluss auf die Einschätzung der Probanden? Ja, der Haupteffekt für “flavor” ist signifikant, da <span class="math inline">\(p &lt; .05\)</span>. Das gleiche gilt für den Haupteffekt, und somit Einfluss, von “sex” (= Geschlecht); auch hier ist <span class="math inline">\(p &lt; .05\)</span>. In der dritten Zeile finden wir den <strong>Interaktionseffekt</strong> von “flavor” und “sex”. Mit diesem wird also angegeben, ob es zwischen den beiden Faktoren eine Interaktion gibt. Eine Interaktion würde bedeuten, dass der Faktor “flavor” die abhängige Variable “yumminess” nicht in allen Faktorstufen von “sex” gleich beeinflusst. Der Einfluss von “flavor” auf “yumminess” wäre also zwischen den Geschlechtern unterschiedlich. Man kann das natrülich auch andersrum sagen: Der Interaktionseffekt gibt an, ob der Einfluss des Faktors “sex” auf “yumminess” in allen Faktorstufen von “flavor” gleich ist. Hier ist der ebenfalls signifikant, da <span class="math inline">\(p &lt; .05\)</span>.</p>
+<p>Bei diesem Versuch einer Beschreibung des Interaktionseffekts kann einem der Kopf rauchen. Deshalb ist es immer sinnvoll, sich die Daten in Diagrammen anzuschauen. Unten findest du die Daten auf zwei unterschiedliche Weisen präsentiert: Einmal ist “flavor” auf der <span class="math inline">\(x\)</span>-Achse und die Linien sind getrennt nach “sex” (A; diese Abbildung sollte Dir bekannt vorkommen, weil sie identisch mit der oberen ist). Das andere Mal ist “sex” auf der <span class="math inline">\(x\)</span>-Achse und die Linien sind nach “flavor” getrennt (B).</p>
+<p><img src="faktorielle-anova_files/figure-html/unnamed-chunk-9-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p>Diese Abbildungen zeigen beide denselben Sachverhalt, nur “von einer anderen Seite”. Welche Seite man darstellen sollte, hängt von verschiedenen Faktoren ab. Einerseits natürlich von der untersuchten Fragestellung. In diesem Fall wollten wir untersuchen, ob sich die “yumminess” von Eissorten unterscheidet, also haben wir die Eissorten auf die <span class="math inline">\(x\)</span>-Achse gepackt. Zusätzlich dazu interessierte uns der Einfluss des Geschlechts, anhand dessen wir dann die Linien getrennt haben. Hätten wir uns jedoch eher gefragt, ob sich Frauen oder Männer generell in ihrer Einschätzung der Eissorten-“yumminess” unterscheiden, hätten wir wahrscheinlich “sex” auf die <span class="math inline">\(x\)</span>-Achse schmeißen können, genau wie in Abbildung B.</p>
+<p>Andererseits ist es wichtig auf dem Schirm zu haben, was das menschliche Gehirn noch verstehen und analysieren kann. Wir sind zwar mit einer großen rechenleistung ausgestattet, aber Bilder vermögen uns doch auch zu täuschen oder zu verwirren. Genrell kann man sagen, <strong>dass ein Interaktionseffekt vorliegt, wenn die eingezeichneten Linien nicht parallel verlaufen</strong>. Aus welcher Abbildung das besser hervorgeht, sollte man immer im Einzelfall entscheiden.</p>
+<p>Wir haben jetzt also geklärt, dass ein Interaktionseffekt vorliegt. Nun sind beide Haupteffekte signifikant und der Interaktionseffekt noch dazu. Was bedeutet das jetzt? Irgendwie haben also die Eissorte und das Geschlecht der Passanten (“flavor” und “sex”) einen Einfluss auf die “yumminess” (als Haupteffekte), aber dieser Einfluss variiert, je nach Geschmack oder Geschlecht (Interaktionseffekt)?! Im Prinzip kann man sagen: Jap, genau. Und an dieser Stelle wird deutlich, was viele falsch machen, denn <strong>die Interpretation von Haupteffekten bei einem signifikanten Interaktionseffekt ist sinnlos</strong>. Statistisch sind die Haupteffekte zwar signifikant (ignoriert man das Geschlecht, hat also die Eissorte im Mittel einen Einfluss auf die “yumminess” und ignoriert man die Eissorte, hat Geschlecht im Mittel einen Einfluss auf die “yumminess”), aber diese Effekte <em>variieren</em> ja gerade in Abhängigkeit von den jeweiligen Faktorstufen, was uns der signifikante Interaktionseffekt ja mitteilt. Bei einem signifikanten Interaktionseffekt konzentrieren wir uns also nur auf diesen.</p>
+<p>Aus Abbildung A können wir entnehmen, dass Frauen alle Eissorten ungefähr gleich gut einschätzten, die “yumminess” lag im Durchschnitt immer über 15. Männer hingegen hatten deutlichere Präferenzen: Bei Vanielle und Schokolade hielten sie noch mit und schätzten diese beiden Sorten ähnlich wie die Frauen ein, aber bei Cookie und spätestens bei Champagner war das Spiel vorbei. Diese beiden Sorten wurden von den Männern deutlich schlechter eingeschätzt als von den Frauen. Gibt es eine Möglichkeit herauszufinden, bei welcher Faktorstufe von “falvor” sich Frauen und Männer signifikant unterscheiden? Ja, die <em>Simple Effects Analysis</em>.</p>
+</div>
+<div id="simple-effects-analysis" class="section level3">
+<h3>Simple Effects Analysis</h3>
+<p>Hier unterscheiden sich alle bekannten Statistik-Programme erheblich darin, ob diese Analyse überhaupt durchgeführt werden kann. Natürlich können wir das in R machen. JASP-Nutzer können diese Analyse ebenfalls ausfählen. SPSS-Nutzer müssen sich mit der Syntax auskennen und ihn dort von Hand eintragen, weil der Befehl nicht in den Dialogfeldern zu finden ist.</p>
+<p>Bei der <em>Simple Effect Analysis</em> sollte beachtet werden, ob die Voraussetzung der Varianzhomogenität erfüllt ist. Einfach gesagt nehmen wir uns nämlich nun die Daten für jede einzelne Faktorstufe von “flavor”, berechnen eine ANOVA und untersuchen so, ob sich das Geschlecht für jede Faktorstufe unterscheidet. Ist die Voraussetzung der Varianzhomogenität gegeben, unterscheiden sich die Varianzen der Faktorstufen also nicht signifikant voneinander (= nicht signifikanter Levene-Test; wie in diesem Fall), dann sollten die Fehler des gesamten Modells einbezogen werden <span class="citation">(Bibby, <a href="#ref-Bibby.2010" role="doc-biblioref">2010</a>)</span>. Sind die Varianzen jedoch signifikant unterschiedlich, sollten getrennte ANOVAs pro Faktorstufe berechnet werden.</p>
+<div id="varianzhomogenität-angenommen" class="section level4">
+<h4>Varianzhomogenität angenommen</h4>
+<p>Bei angenommener Varianzhomogenität sollen wir also die “Fehler des Gesamtmodells” berücksichtigen. Zu Beginn müssen wir somit unser Gesamtmodell definieren. Da wir uns im GLM, also im allgemeinen linearen Modell bewegen, ist unser Modell immer eine Form des linearen Modells, das in R mit <code>lm()</code> definiert wird. Mit der Formelschreibweise setzen wir das so um.</p>
+<pre class="r"><code>main_model &lt;- lm(yumminess ~ flavor * sex, data = ice_cream)</code></pre>
+<p>Nun gehen wir genau so vor wie beschrieben und berechnen für jede Faktorstufe von “flavor” ganz normale ANOVAs, geben als Fehlerterme jedoch die des Gesamtmodells (<code>main_model</code>) an. Wir untersuchen an dieser Stelle also den Einfluss von “sex” auf “yumminess” für alle Faktorstufen von “flavor”.</p>
+<pre class="r"><code>ice_cream %&gt;% 
+  group_by(flavor) %&gt;% 
+  anova_test(yumminess ~ sex, error = main_model)</code></pre>
+<pre><code>## # A tibble: 4 x 8
+##   flavor    Effect   DFn   DFd       F        p `p&lt;.05`       ges
+##   &lt;fct&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
+## 1 Vanilla   sex        1   287   4.22  4.10e- 2 &quot;*&quot;     0.015    
+## 2 Chocolate sex        1   287   0.023 8.81e- 1 &quot;&quot;      0.0000785
+## 3 Cookie    sex        1   287  48.4   2.35e-11 &quot;*&quot;     0.144    
+## 4 Champagne sex        1   287 110.    6.18e-22 &quot;*&quot;     0.276</code></pre>
+<p>Damit erhalten wir eine Übersicht über alle vier durchgeführten ANOVAs, in denen der Einfluss von “sex” auf “yumminess” untersucht wurde. Die weiblichen und männlichen Verkoster unterschieden sich demnach in der Einschätzung der “yumminess” bei den Sorten Vanille, Cookie und Champagner.</p>
+</div>
+<div id="varianzhomogenität-nicht-angenommen" class="section level4">
+<h4>Varianzhomogenität nicht angenommen</h4>
+<p>Nehmen wir keine Varianzhomogenität an, berechnen wir wieder für die einzelnen Faktorstufen getrennte ANOVAs, verzichten jedoch auf die Angabe der Fehlerterme.</p>
+<pre class="r"><code>ice_cream %&gt;% 
+  group_by(flavor) %&gt;% 
+  anova_test(yumminess ~ sex)</code></pre>
+<pre><code>## # A tibble: 4 x 8
+##   flavor    Effect   DFn   DFd      F        p `p&lt;.05`      ges
+##   &lt;fct&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;
+## 1 Vanilla   sex        1    72  4.1   4.70e- 2 &quot;*&quot;     0.054   
+## 2 Chocolate sex        1    79  0.035 8.52e- 1 &quot;&quot;      0.000443
+## 3 Cookie    sex        1    78 40.0   1.48e- 8 &quot;*&quot;     0.339   
+## 4 Champagne sex        1    58 94.1   9.37e-14 &quot;*&quot;     0.619</code></pre>
+</div>
+<div id="effektstärke" class="section level4">
+<h4>Effektstärke</h4>
+<p>Auch für die <em>Simple Effects Analysis</em> lassen sich Effektstärken für die einzelnen Vergleiche berechnen. Diese ergeben sich, wenn innerhalb der Faktorstufen nur zwei Gruppen miteinander vergleichen werden, als <span class="math display">\[r = \sqrt{\dfrac{F(1, df_\text{d})}{F(1, df_\text{d}) + df_\text{d}}}\]</span> mit <span class="math inline">\(df_\text{d}\)</span> als Freiheitsgrade der Fehler.</p>
+<p>In diesem Beispiel haben wir Varianzhomogenität angenommen, da der Levene-Test nicht signifikant war. Die Effektstärke zwischen Frauen und Männern für den Geschmack Vanille ist somit <span class="math display">\[r = \sqrt{\dfrac{4.22}{4.22 + 287}}\]</span> also 0.12. Für die übrigen Faktorstufen von “flavor” finden wir</p>
+<table>
+<thead>
+<tr class="header">
+<th>Faktorstufe</th>
+<th><span class="math inline">\(r\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Vanille</td>
+<td>0.12</td>
+</tr>
+<tr class="even">
+<td>Schokolade</td>
+<td>0.01</td>
+</tr>
+<tr class="odd">
+<td>Cookie</td>
+<td>0.41</td>
+</tr>
+<tr class="even">
+<td>Champagner</td>
+<td>0.61</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div id="berichten" class="section level3">
 <h3>Berichten</h3>
@@ -558,9 +642,46 @@ ice_cream %&gt;%
 </div>
 <div id="robust" class="section level2">
 <h2>Robust</h2>
-<div id="voraussetzungen-1" class="section level3">
-<h3>Voraussetzungen</h3>
+<pre class="r"><code>library(WRS2)
+
+# Robuste zweifaktorielle ANOVA
+t2way(yumminess ~ flavor * sex, data = ice_cream)</code></pre>
+<pre><code>## Call:
+## t2way(formula = yumminess ~ flavor * sex, data = ice_cream)
+## 
+##               value p.value
+## flavor     251.7609   0.001
+## sex         86.2149   0.001
+## flavor:sex  82.1532   0.001</code></pre>
+<pre class="r"><code># Robuster Post-hoc-Test für eine zweifaktorielle ANOVA
+mcp2atm(yumminess ~ flavor * sex, data = ice_cream)</code></pre>
+<pre><code>## Call:
+## mcp2atm(formula = yumminess ~ flavor * sex, data = ice_cream)
+## 
+##                psihat ci.lower ci.upper p-value
+## flavor1      -0.25926 -0.88143  0.36291 0.24884
+## flavor2      -0.22222 -0.89690  0.45246 0.36767
+## flavor3       0.33333 -0.36461  1.03128 0.19534
+## flavor4       0.03704 -0.26093  0.33500 0.72777
+## flavor5       0.59259  0.23646  0.94873 0.00007
+## flavor6       0.55556  0.10689  1.00422 0.00138
+## sex1          0.88889  0.33913  1.43865 0.00204
+## flavor1:sex1  0.25926 -0.36291  0.88143 0.24884
+## flavor2:sex1  0.22222 -0.45246  0.89690 0.36767
+## flavor3:sex1 -0.33333 -1.03128  0.36461 0.19534
+## flavor4:sex1 -0.03704 -0.33500  0.26093 0.72777
+## flavor5:sex1 -0.59259 -0.94873 -0.23646 0.00007
+## flavor6:sex1 -0.55556 -1.00422 -0.10689 0.00138</code></pre>
 </div>
+<div id="non-parametrisch" class="section level2">
+<h2>Non-parametrisch</h2>
+<p>Gibbet nicht.</p>
+</div>
+</div>
+<div id="aus-der-praxis" class="section level1">
+<h1>Aus der Praxis</h1>
+<div id="klassisch-1" class="section level2">
+<h2>Klassisch</h2>
 <div id="eda-1" class="section level3">
 <h3>EDA</h3>
 </div>
@@ -571,36 +692,6 @@ ice_cream %&gt;%
 <h3>Berichten</h3>
 </div>
 </div>
-<div id="non-parametrisch" class="section level2">
-<h2>Non-parametrisch</h2>
-<div id="voraussetzungen-2" class="section level3">
-<h3>Voraussetzungen</h3>
-</div>
-<div id="eda-2" class="section level3">
-<h3>EDA</h3>
-</div>
-<div id="durchführung-2" class="section level3">
-<h3>Durchführung</h3>
-</div>
-<div id="berichten-2" class="section level3">
-<h3>Berichten</h3>
-</div>
-</div>
-</div>
-<div id="aus-der-praxis" class="section level1">
-<h1>Aus der Praxis</h1>
-<div id="klassisch-1" class="section level2">
-<h2>Klassisch</h2>
-<div id="eda-3" class="section level3">
-<h3>EDA</h3>
-</div>
-<div id="durchführung-3" class="section level3">
-<h3>Durchführung</h3>
-</div>
-<div id="berichten-3" class="section level3">
-<h3>Berichten</h3>
-</div>
-</div>
 <div id="robust-1" class="section level2">
 <h2>Robust</h2>
 </div>
@@ -608,8 +699,13 @@ ice_cream %&gt;%
 <h2>Non-parametrisch</h2>
 </div>
 </div>
-<div id="literatur" class="section level1">
+<div id="literatur" class="section level1 unnumbered">
 <h1>Literatur</h1>
+<div id="refs" class="references">
+<div id="ref-Bibby.2010">
+<p>Bibby, P. (2010). Simple Main Effects. In N. J. Salkind (Ed.), <em>Encyclopedia of Research Design</em>. SAGE. <a href="https://doi.org/10.4135/9781412961288.n421">https://doi.org/10.4135/9781412961288.n421</a></p>
+</div>
+</div>
 </div>
 
 

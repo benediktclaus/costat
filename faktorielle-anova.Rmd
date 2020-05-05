@@ -79,29 +79,134 @@ ice_cream %>%
   theme(legend.position = "bottom")
 ```
 
-Aufgrund der Abbildung bekommen wir eine grobe Idee davon, dass die untersuchten Frauen alle Eissorten in etwa gleich lecker fanden. Die Männer jedoch stehen weniger auf Cookie und überhaupt nicht auf Champagner. Bah! Jetzt ist die Frage, ob unsere Einschätzung, dass sich die Mittelwerte tatsächlich unterscheiden signifikant sind.
+Aufgrund der Abbildung bekommen wir eine grobe Idee davon, dass die untersuchten Frauen alle Eissorten in etwa gleich lecker fanden. Die Männer jedoch stehen weniger auf Cookie und überhaupt nicht auf Champagner. (Bah!) Jetzt ist die Frage, ob unsere Einschätzung, dass sich die Mittelwerte tatsächlich signifikant unterscheiden, richtig ist. Dafür berechnen wir die ANOVA.
 
 ### Durchführung
+Auch hier haben wir, wie bei der [einfaktoriellen ANOVA](einfaktorielle-anova.html), zwei Möglichkeiten, die Funktionsargumente einzugeben. Einmal als Formelschreibweise und einmal als Explizite Nennung in Form der Funktionsargumente. [Momentan sind die Ergebnisse für die Definition in Formelschreibweise falsch (CRAN-Version 0.5.0)](https://github.com/kassambara/rstatix/issues/40), deshalb sollte man die Faktoren explizit als Funktionsargumente angeben. Wichtig ist hierbei, dass das Funktionsargument `type = 3` angegeben wird. In der Psychologie (und generell in den Sozialwissenschaften und der Medizin) werden standardmäßig [Quadratsummen vom Typ "III"](http://md.psych.bio.uni-goettingen.de/mv/unit/lm_cat/lm_cat_unbal_ss_explained.html) berechnet.
+
+```{r eval=FALSE}
+# Formelschreibweise
+ice_cream %>% 
+  anova_test(yumminess ~ flavor*sex, type = 3)
+
+# Funktionsargumente
+ice_cream %>% 
+  anova_test(dv = yumminess, between = c(flavor, sex), type = 3)
+```
+
+Dieses Vorgehen liefert uns folgendes Resultat.
+
+```{r message=FALSE}
+ice_cream %>% 
+  anova_test(dv = yumminess, between = c(flavor, sex), type = 3)
+```
+
+An dieser Stelle lohnt es sich etwas, auf die Interpretation der Ergebnisse einzugehen. In den Zeilen `flavor` und `sex` sind die Haupteffekte dieser beiden Faktoren zu finden. Hat der Faktor "flavor" (= Eissorte) allein einen Einfluss auf die Einschätzung der Probanden? Ja, der Haupteffekt für "flavor" ist signifikant, da $p < .05$. Das gleiche gilt für den Haupteffekt, und somit Einfluss, von "sex" (= Geschlecht); auch hier ist $p < .05$. In der dritten Zeile finden wir den **Interaktionseffekt** von "flavor" und "sex". Mit diesem wird also angegeben, ob es zwischen den beiden Faktoren eine Interaktion gibt. Eine Interaktion würde bedeuten, dass der Faktor "flavor" die abhängige Variable "yumminess" nicht in allen Faktorstufen von "sex" gleich beeinflusst. Der Einfluss von "flavor" auf "yumminess" wäre also zwischen den Geschlechtern unterschiedlich. Man kann das natrülich auch andersrum sagen: Der Interaktionseffekt gibt an, ob der Einfluss des Faktors "sex" auf "yumminess" in allen Faktorstufen von "flavor" gleich ist. Hier ist der ebenfalls signifikant, da $p < .05$.
+
+Bei diesem Versuch einer Beschreibung des Interaktionseffekts kann einem der Kopf rauchen. Deshalb ist es immer sinnvoll, sich die Daten in Diagrammen anzuschauen. Unten findest du die Daten auf zwei unterschiedliche Weisen präsentiert: Einmal ist "flavor" auf der $x$-Achse und die Linien sind getrennt nach "sex" (A; diese Abbildung sollte Dir bekannt vorkommen, weil sie identisch mit der oberen ist). Das andere Mal ist "sex" auf der $x$-Achse und die Linien sind nach "flavor" getrennt (B).
+
+```{r echo=FALSE}
+dodge_width <- 0.2
+
+ice_flavor <- ice_cream %>% 
+  ggplot(aes(x = flavor, y = yumminess, color = sex)) +
+  stat_summary(fun.data = "mean_sdl", geom = "errorbar", fun.args = list(mult = 1), width = 0.2, position = position_dodge(width = dodge_width), size = 1) +
+  stat_summary(fun = "mean", geom = "point", position = position_dodge(dodge_width)) +
+  stat_summary(fun = "mean", geom = "line", position = position_dodge(dodge_width), aes(group = sex), size = 1) +
+  labs(x = "Flavor", y = "Yumminess", color  = "Sex") +
+  expand_limits(y = c(0, 20)) +
+  theme(legend.position = "bottom")
+
+ice_sex <- ice_cream %>%
+  ggplot(aes(x = sex, y = yumminess, color = flavor)) +
+  stat_summary(fun.data = "mean_sdl", geom = "errorbar", fun.args = list(mult = 1), width = 0.2, position = position_dodge(width = dodge_width), size = 1) +
+  stat_summary(fun = "mean", geom = "point", position = position_dodge(dodge_width)) +
+  stat_summary(fun = "mean", geom = "line", position = position_dodge(dodge_width), aes(group = flavor), size = 1) +
+  labs(x = "Sex", y = "Yumminess", color  = "Flavor") +
+  expand_limits(y = c(0, 20)) +
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 2))
+
+(ice_flavor | ice_sex) + plot_annotation(tag_levels = "A")
+```
+
+Diese Abbildungen zeigen beide denselben Sachverhalt, nur "von einer anderen Seite". Welche Seite man darstellen sollte, hängt von verschiedenen Faktoren ab. Einerseits natürlich von der untersuchten Fragestellung. In diesem Fall wollten wir untersuchen, ob sich die "yumminess" von Eissorten unterscheidet, also haben wir die Eissorten auf die $x$-Achse gepackt. Zusätzlich dazu interessierte uns der Einfluss des Geschlechts, anhand dessen wir dann die Linien getrennt haben. Hätten wir uns jedoch eher gefragt, ob sich Frauen oder Männer generell in ihrer Einschätzung der Eissorten-"yumminess" unterscheiden, hätten wir wahrscheinlich "sex" auf die $x$-Achse schmeißen können, genau wie in Abbildung B.
+
+Andererseits ist es wichtig auf dem Schirm zu haben, was das menschliche Gehirn noch verstehen und analysieren kann. Wir sind zwar mit einer großen rechenleistung ausgestattet, aber Bilder vermögen uns doch auch zu täuschen oder zu verwirren. Genrell kann man sagen, **dass ein Interaktionseffekt vorliegt, wenn die eingezeichneten Linien nicht parallel verlaufen**. Aus welcher Abbildung das besser hervorgeht, sollte man immer im Einzelfall entscheiden.
+
+Wir haben jetzt also geklärt, dass ein Interaktionseffekt vorliegt. Nun sind beide Haupteffekte signifikant und der Interaktionseffekt noch dazu. Was bedeutet das jetzt? Irgendwie haben also die Eissorte und das Geschlecht der Passanten ("flavor" und "sex") einen Einfluss auf die "yumminess" (als Haupteffekte), aber dieser Einfluss variiert, je nach Geschmack oder Geschlecht (Interaktionseffekt)?! Im Prinzip kann man sagen: Jap, genau. Und an dieser Stelle wird deutlich, was viele falsch machen, denn **die Interpretation von Haupteffekten bei einem signifikanten Interaktionseffekt ist sinnlos**. Statistisch sind die Haupteffekte zwar signifikant (ignoriert man das Geschlecht, hat also die Eissorte im Mittel einen Einfluss auf die "yumminess" und ignoriert man die Eissorte, hat Geschlecht im Mittel einen Einfluss auf die "yumminess"), aber diese Effekte *variieren* ja gerade in Abhängigkeit von den jeweiligen Faktorstufen, was uns der signifikante Interaktionseffekt ja mitteilt. Bei einem signifikanten Interaktionseffekt konzentrieren wir uns also nur auf diesen.
+
+Aus Abbildung A können wir entnehmen, dass Frauen alle Eissorten ungefähr gleich gut einschätzten, die "yumminess" lag im Durchschnitt immer über 15. Männer hingegen hatten deutlichere Präferenzen: Bei Vanielle und Schokolade hielten sie noch mit und schätzten diese beiden Sorten ähnlich wie die Frauen ein, aber bei Cookie und spätestens bei Champagner war das Spiel vorbei. Diese beiden Sorten wurden von den Männern deutlich schlechter eingeschätzt als von den Frauen. Gibt es eine Möglichkeit herauszufinden, bei welcher Faktorstufe von "falvor" sich Frauen und Männer signifikant unterscheiden? Ja, die *Simple Effects Analysis*.
+
+### Simple Effects Analysis
+Hier unterscheiden sich alle bekannten Statistik-Programme erheblich darin, ob diese Analyse überhaupt durchgeführt werden kann. Natürlich können wir das in R machen. JASP-Nutzer können diese Analyse ebenfalls ausfählen. SPSS-Nutzer müssen sich mit der Syntax auskennen und ihn dort von Hand eintragen, weil der Befehl nicht in den Dialogfeldern zu finden ist.
+
+Bei der *Simple Effect Analysis* sollte beachtet werden, ob die Voraussetzung der Varianzhomogenität erfüllt ist. Einfach gesagt nehmen wir uns nämlich nun die Daten für jede einzelne Faktorstufe von "flavor", berechnen eine ANOVA und untersuchen so, ob sich das Geschlecht für jede Faktorstufe unterscheidet. Ist die Voraussetzung der Varianzhomogenität gegeben, unterscheiden sich die Varianzen der Faktorstufen also nicht signifikant voneinander (= nicht signifikanter Levene-Test; wie in diesem Fall), dann sollten die Fehler des gesamten Modells einbezogen werden [@Bibby.2010]. Sind die Varianzen jedoch signifikant unterschiedlich, sollten getrennte ANOVAs pro Faktorstufe berechnet werden.
+
+#### Varianzhomogenität angenommen
+Bei angenommener Varianzhomogenität sollen wir also die "Fehler des Gesamtmodells" berücksichtigen. Zu Beginn müssen wir somit unser Gesamtmodell definieren. Da wir uns im GLM, also im allgemeinen linearen Modell bewegen, ist unser Modell immer eine Form des linearen Modells, das in R mit `lm()` definiert wird. Mit der Formelschreibweise setzen wir das so um.
 
 ```{r}
-ice_cream %>% 
-  anova_test(yumminess ~ flavor*sex)
+main_model <- lm(yumminess ~ flavor * sex, data = ice_cream)
 ```
+
+Nun gehen wir genau so vor wie beschrieben und berechnen für jede Faktorstufe von "flavor" ganz normale ANOVAs, geben als Fehlerterme jedoch die des Gesamtmodells (`main_model`) an. Wir untersuchen an dieser Stelle also den Einfluss von "sex" auf "yumminess" für alle Faktorstufen von "flavor".
+
+```{r message=FALSE}
+ice_cream %>% 
+  group_by(flavor) %>% 
+  anova_test(yumminess ~ sex, error = main_model)
+```
+
+```{r echo=FALSE, message=FALSE}
+sea_results <- ice_cream %>% 
+  group_by(flavor) %>% 
+  anova_test(yumminess ~ sex, error = main_model)
+
+f_statistics <- sea_results %>% pull("F")
+```
+
+
+Damit erhalten wir eine Übersicht über alle vier durchgeführten ANOVAs, in denen der Einfluss von "sex" auf "yumminess" untersucht wurde. Die weiblichen und männlichen Verkoster unterschieden sich demnach in der Einschätzung der "yumminess" bei den Sorten Vanille, Cookie und Champagner.
+
+#### Varianzhomogenität nicht angenommen
+Nehmen wir keine Varianzhomogenität an, berechnen wir wieder für die einzelnen Faktorstufen getrennte ANOVAs, verzichten jedoch auf die Angabe der Fehlerterme.
+
+```{r message=FALSE}
+ice_cream %>% 
+  group_by(flavor) %>% 
+  anova_test(yumminess ~ sex)
+```
+
+
+#### Effektstärke
+Auch für die *Simple Effects Analysis* lassen sich Effektstärken für die einzelnen Vergleiche berechnen. Diese ergeben sich, wenn innerhalb der Faktorstufen nur zwei Gruppen miteinander vergleichen werden, als $$r = \sqrt{\dfrac{F(1, df_\text{d})}{F(1, df_\text{d}) + df_\text{d}}}$$ mit $df_\text{d}$ als Freiheitsgrade der Fehler.
+
+In diesem Beispiel haben wir Varianzhomogenität angenommen, da der Levene-Test nicht signifikant war. Die Effektstärke zwischen Frauen und Männern für den Geschmack Vanille ist somit $$r = \sqrt{\dfrac{4.22}{4.22 + 287}}$$ also `r round(sqrt(4.22 / (4.22 + 287)), 2)`. Für die übrigen Faktorstufen von "flavor" finden wir
+
+Faktorstufe    |                                                $r$
+---------------|                                            -----------
+Vanille        |    `r round(sqrt(f_statistics %>% pluck(1) / (f_statistics %>% pluck(1) + 287)), 2)`
+Schokolade     |    `r round(sqrt(f_statistics %>% pluck(2) / (f_statistics %>% pluck(1) + 287)), 2)`
+Cookie         |    `r round(sqrt(f_statistics %>% pluck(3) / (f_statistics %>% pluck(1) + 287)), 2)`
+Champagner     |    `r round(sqrt(f_statistics %>% pluck(4) / (f_statistics %>% pluck(1) + 287)), 2)`
 
 ### Berichten
 
 ## Robust
-### Voraussetzungen
-### EDA
-### Durchführung
-### Berichten
+```{r message=FALSE}
+library(WRS2)
+
+# Robuste zweifaktorielle ANOVA
+t2way(yumminess ~ flavor * sex, data = ice_cream)
+
+# Robuster Post-hoc-Test für eine zweifaktorielle ANOVA
+mcp2atm(yumminess ~ flavor * sex, data = ice_cream)
+```
+
 
 ## Non-parametrisch
-### Voraussetzungen
-### EDA
-### Durchführung
-### Berichten
-
+Gibbet nicht.
 
 # Aus der Praxis
 ## Klassisch

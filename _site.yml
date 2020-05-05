@@ -37,6 +37,7 @@ navbar:
        - text: "Einfaktorielle ANOVA"
          href: einfaktorielle-anova.html
        - text: "Faktorielle ANOVA"
+         href: faktorielle-anova.html
        - text: "ANCOVA"
        - text: "Repeated Measures ANOVA"
        - text: "Mixed ANOVA"
