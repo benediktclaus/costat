@@ -539,7 +539,7 @@ ice_cream %&gt;%
 ## 8 Champ~ Male  yummine~    20     2    13     10  8.75    11  2.25  1.48   9.2
 ## # ... with 3 more variables: sd &lt;dbl&gt;, se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
 <p>Wir haben Daten zu vier Eissorten. Verköstigt wurden am häufigsten Schokolade (<span class="math inline">\(n = 81\)</span>) und Cookie (<span class="math inline">\(n = 80\)</span>); bewertet wurden am besten Vanille (<span class="math inline">\(M = 16.57, SD = 2.18\)</span>) und Schokolade (<span class="math inline">\(M = 17.16, SD = 1.68\)</span>). Insgesamt haben <span class="math inline">\(N = 295\)</span> Passanten an der Untersuchung teilgenommen, wovon <span class="math inline">\(n = 162\)</span> Frauen und <span class="math inline">\(n = 133\)</span> Männer waren.</p>
-<p><img src="faktorielle-anova_files/figure-html/unnamed-chunk-6-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="faktorielle-anova_files/figure-html/unnamed-chunk-7-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Aufgrund der Abbildung bekommen wir eine grobe Idee davon, dass die untersuchten Frauen alle Eissorten in etwa gleich lecker fanden. Die Männer jedoch stehen weniger auf Cookie und überhaupt nicht auf Champagner. (Bah!) Jetzt ist die Frage, ob unsere Einschätzung, dass sich die Mittelwerte tatsächlich signifikant unterscheiden, richtig ist. Dafür berechnen wir die ANOVA.</p>
 </div>
 <div id="durchführung" class="section level3">
@@ -563,7 +563,7 @@ ice_cream %&gt;%
 ## 3 flavor:sex   3 287  25.377 1.37e-14     * 0.210</code></pre>
 <p>An dieser Stelle lohnt es sich etwas, auf die Interpretation der Ergebnisse einzugehen. In den Zeilen <code>flavor</code> und <code>sex</code> sind die Haupteffekte dieser beiden Faktoren zu finden. Hat der Faktor “flavor” (= Eissorte) allein einen Einfluss auf die Einschätzung der Probanden? Ja, der Haupteffekt für “flavor” ist signifikant, da <span class="math inline">\(p &lt; .05\)</span>. Das gleiche gilt für den Haupteffekt, und somit Einfluss, von “sex” (= Geschlecht); auch hier ist <span class="math inline">\(p &lt; .05\)</span>. In der dritten Zeile finden wir den <strong>Interaktionseffekt</strong> von “flavor” und “sex”. Mit diesem wird also angegeben, ob es zwischen den beiden Faktoren eine Interaktion gibt. Eine Interaktion würde bedeuten, dass der Faktor “flavor” die abhängige Variable “yumminess” nicht in allen Faktorstufen von “sex” gleich beeinflusst. Der Einfluss von “flavor” auf “yumminess” wäre also zwischen den Geschlechtern unterschiedlich. Man kann das natrülich auch andersrum sagen: Der Interaktionseffekt gibt an, ob der Einfluss des Faktors “sex” auf “yumminess” in allen Faktorstufen von “flavor” gleich ist. Hier ist der ebenfalls signifikant, da <span class="math inline">\(p &lt; .05\)</span>.</p>
 <p>Bei diesem Versuch einer Beschreibung des Interaktionseffekts kann einem der Kopf rauchen. Deshalb ist es immer sinnvoll, sich die Daten in Diagrammen anzuschauen. Unten findest du die Daten auf zwei unterschiedliche Weisen präsentiert: Einmal ist “flavor” auf der <span class="math inline">\(x\)</span>-Achse und die Linien sind getrennt nach “sex” (A; diese Abbildung sollte Dir bekannt vorkommen, weil sie identisch mit der oberen ist). Das andere Mal ist “sex” auf der <span class="math inline">\(x\)</span>-Achse und die Linien sind nach “flavor” getrennt (B).</p>
-<p><img src="faktorielle-anova_files/figure-html/unnamed-chunk-9-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="faktorielle-anova_files/figure-html/unnamed-chunk-10-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Diese Abbildungen zeigen beide denselben Sachverhalt, nur “von einer anderen Seite”. Welche Seite man darstellen sollte, hängt von verschiedenen Faktoren ab. Einerseits natürlich von der untersuchten Fragestellung. In diesem Fall wollten wir untersuchen, ob sich die “yumminess” von Eissorten unterscheidet, also haben wir die Eissorten auf die <span class="math inline">\(x\)</span>-Achse gepackt. Zusätzlich dazu interessierte uns der Einfluss des Geschlechts, anhand dessen wir dann die Linien getrennt haben. Hätten wir uns jedoch eher gefragt, ob sich Frauen oder Männer generell in ihrer Einschätzung der Eissorten-“yumminess” unterscheiden, hätten wir wahrscheinlich “sex” auf die <span class="math inline">\(x\)</span>-Achse schmeißen können, genau wie in Abbildung B.</p>
 <p>Andererseits ist es wichtig auf dem Schirm zu haben, was das menschliche Gehirn noch verstehen und analysieren kann. Wir sind zwar mit einer großen rechenleistung ausgestattet, aber Bilder vermögen uns doch auch zu täuschen oder zu verwirren. Genrell kann man sagen, <strong>dass ein Interaktionseffekt vorliegt, wenn die eingezeichneten Linien nicht parallel verlaufen</strong>. Aus welcher Abbildung das besser hervorgeht, sollte man immer im Einzelfall entscheiden.</p>
 <p>Wir haben jetzt also geklärt, dass ein Interaktionseffekt vorliegt. Nun sind beide Haupteffekte signifikant und der Interaktionseffekt noch dazu. Was bedeutet das jetzt? Irgendwie haben also die Eissorte und das Geschlecht der Passanten (“flavor” und “sex”) einen Einfluss auf die “yumminess” (als Haupteffekte), aber dieser Einfluss variiert, je nach Geschmack oder Geschlecht (Interaktionseffekt)?! Im Prinzip kann man sagen: Jap, genau. Und an dieser Stelle wird deutlich, was viele falsch machen, denn <strong>die Interpretation von Haupteffekten bei einem signifikanten Interaktionseffekt ist sinnlos</strong>. Statistisch sind die Haupteffekte zwar signifikant (ignoriert man das Geschlecht, hat also die Eissorte im Mittel einen Einfluss auf die “yumminess” und ignoriert man die Eissorte, hat Geschlecht im Mittel einen Einfluss auf die “yumminess”), aber diese Effekte <em>variieren</em> ja gerade in Abhängigkeit von den jeweiligen Faktorstufen, was uns der signifikante Interaktionseffekt ja mitteilt. Bei einem signifikanten Interaktionseffekt konzentrieren wir uns also nur auf diesen.</p>
@@ -604,44 +604,383 @@ ice_cream %&gt;%
 ## 3 Cookie    sex        1    78 40.0   1.48e- 8 &quot;*&quot;     0.339   
 ## 4 Champagne sex        1    58 94.1   9.37e-14 &quot;*&quot;     0.619</code></pre>
 </div>
-<div id="effektstärke" class="section level4">
+<div id="effect_size" class="section level4">
 <h4>Effektstärke</h4>
 <p>Auch für die <em>Simple Effects Analysis</em> lassen sich Effektstärken für die einzelnen Vergleiche berechnen. Diese ergeben sich, wenn innerhalb der Faktorstufen nur zwei Gruppen miteinander vergleichen werden, als <span class="math display">\[r = \sqrt{\dfrac{F(1, df_\text{d})}{F(1, df_\text{d}) + df_\text{d}}}\]</span> mit <span class="math inline">\(df_\text{d}\)</span> als Freiheitsgrade der Fehler.</p>
 <p>In diesem Beispiel haben wir Varianzhomogenität angenommen, da der Levene-Test nicht signifikant war. Die Effektstärke zwischen Frauen und Männern für den Geschmack Vanille ist somit <span class="math display">\[r = \sqrt{\dfrac{4.22}{4.22 + 287}}\]</span> also 0.12. Für die übrigen Faktorstufen von “flavor” finden wir</p>
-<table>
-<thead>
-<tr class="header">
-<th>Faktorstufe</th>
-<th><span class="math inline">\(r\)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Vanille</td>
-<td>0.12</td>
-</tr>
-<tr class="even">
-<td>Schokolade</td>
-<td>0.01</td>
-</tr>
-<tr class="odd">
-<td>Cookie</td>
-<td>0.41</td>
-</tr>
-<tr class="even">
-<td>Champagner</td>
-<td>0.61</td>
-</tr>
-</tbody>
-</table>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#ppjsjwkjhs .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ppjsjwkjhs .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ppjsjwkjhs .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ppjsjwkjhs .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ppjsjwkjhs .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ppjsjwkjhs .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ppjsjwkjhs .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ppjsjwkjhs .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ppjsjwkjhs .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ppjsjwkjhs .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ppjsjwkjhs .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ppjsjwkjhs .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ppjsjwkjhs .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ppjsjwkjhs .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ppjsjwkjhs .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ppjsjwkjhs .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ppjsjwkjhs .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ppjsjwkjhs .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#ppjsjwkjhs .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppjsjwkjhs .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#ppjsjwkjhs .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppjsjwkjhs .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ppjsjwkjhs .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ppjsjwkjhs .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ppjsjwkjhs .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#ppjsjwkjhs .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ppjsjwkjhs .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#ppjsjwkjhs .gt_left {
+  text-align: left;
+}
+
+#ppjsjwkjhs .gt_center {
+  text-align: center;
+}
+
+#ppjsjwkjhs .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ppjsjwkjhs .gt_font_normal {
+  font-weight: normal;
+}
+
+#ppjsjwkjhs .gt_font_bold {
+  font-weight: bold;
+}
+
+#ppjsjwkjhs .gt_font_italic {
+  font-style: italic;
+}
+
+#ppjsjwkjhs .gt_super {
+  font-size: 65%;
+}
+
+#ppjsjwkjhs .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="ppjsjwkjhs" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">Faktorstufe</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">r</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_center">Vanilla</td>
+      <td class="gt_row gt_right">0.12</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_center">Chocolate</td>
+      <td class="gt_row gt_right">0.01</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_center">Cookie</td>
+      <td class="gt_row gt_right">0.38</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_center">Champagne</td>
+      <td class="gt_row gt_right">0.53</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
 </div>
 </div>
 <div id="berichten" class="section level3">
 <h3>Berichten</h3>
+<p>We found the yumminess of ice-cream to be dependent on both, flavor and sex, as the interaction effect was significant, <span class="math inline">\(F(3, 287) = 25.38, p &lt; .001, \eta_G^2 = .21\)</span>. To break down the interaction effect, we conducted a simple effects analysis and compared the estimated yumminess per flavor between sexes. The only non-significant difference between the sexes was found for the flavor “chocolate”, <span class="math inline">\(F(1, 287) = 0.02, p = .881, r = .01\)</span>. The sex differences for all other flavor were statistically significant (<span class="math inline">\(p \leq .041\)</span>) with a small effect vor “vanilla” (<span class="math inline">\(r = .12\)</span>) und large effects for “cookie” (<span class="math inline">\(r = .41\)</span>) and “champagne” (<span class="math inline">\(r = .61\)</span>).</p>
 </div>
 </div>
 <div id="robust" class="section level2">
 <h2>Robust</h2>
+<p>Auch für faktorielle ANOVAs hat <span class="citation">Wilcox (<a href="#ref-Wilcox.2017" role="doc-biblioref">2017</a>)</span> vorgesorgt. Für zweifaktorielle ANOVAs (wie in diesem Falle) dürfen wir uns aus dem Paket <code>WRS2</code> <span class="citation">(Mair &amp; Wilcox, <a href="#ref-Mair.2020" role="doc-biblioref">2020</a>)</span> der Funktion <code>t2way()</code> mit <code>mcp2atm()</code> als Post-hoc-Test bedienen, bei dreifaktoriellen ANOVAs dann jedoch <code>t3way()</code>. Höhere Designs werden derzeit nicht unterstützt, was aber kein Problem ist, da uns vier- oder mehrfaktorielle ANOVAs in der freien Wildbahn in der Regel nicht begegnen. Das hängt damit zusammen, dass die Modelle pro Faktor exponentiell komplizierter werden, und somit umso schwerer zu verstehen. Bei einer einfaktoriellen ANOVA wird ein für uns interessanter Effekt geschätzt: Der Haupteffelt des einen Faktors. Bei einer zweifaktoriellen ANOVA gibt es schon drei interessante Effekte: Jeweils den Haupteffekt der Faktoren und deren Interaktionseffekt. Bei dreifaktoriellen ANOVAs gibt es die drei Haupteffekte der Faktoren und alle möglichen Interaktionseffekte, also drei Interaktionseffekte zwischen jeweils zwei Faktoren und einen riesigen Interaktionseffekt zwischen llen drei Faktoren, was in der Summe 7 Effekte gibt. Das dann vernünftig zu interpretieren und darzustellen kann eine Herausforderung sein, die Forscher im Rahmen eines ungeschriebenen Gesetzes anscheinend nicht eingehen.</p>
 <pre class="r"><code>library(WRS2)
 
 # Robuste zweifaktorielle ANOVA
@@ -672,6 +1011,38 @@ mcp2atm(yumminess ~ flavor * sex, data = ice_cream)</code></pre>
 ## flavor4:sex1 -0.03704 -0.33500  0.26093 0.72777
 ## flavor5:sex1 -0.59259 -0.94873 -0.23646 0.00007
 ## flavor6:sex1 -0.55556 -1.00422 -0.10689 0.00138</code></pre>
+<p>Auch bei uns ist der Interaktionseffekt (neben den Haupteffekten) signifikant, <span class="math inline">\(\hat{\Psi} = 82.15, p = .001\)</span>. Der Output der Post-hoc-Tests ist allein für sich erstmal ziemlich kryptisch, welche Effekte wurden da getestet? Wenn wir den Befehl als Objekt abspeichern, können wir uns die Kontrastmatrix genauer ansehen.</p>
+<pre class="r"><code>ice_post_hocs &lt;- mcp2atm(yumminess ~ flavor * sex, data = ice_cream)
+
+ice_post_hocs$contrasts</code></pre>
+<pre><code>##                  flavor1 flavor2 flavor3 flavor4 flavor5 flavor6 sex1
+## Vanilla_Female         1       1       1       0       0       0    1
+## Vanilla_Male           1       1       1       0       0       0   -1
+## Chocolate_Female      -1       0       0       1       1       0    1
+## Chocolate_Male        -1       0       0       1       1       0   -1
+## Cookie_Female          0      -1       0      -1       0       1    1
+## Cookie_Male            0      -1       0      -1       0       1   -1
+## Champagne_Female       0       0      -1       0      -1      -1    1
+## Champagne_Male         0       0      -1       0      -1      -1   -1
+##                  flavor1:sex1 flavor2:sex1 flavor3:sex1 flavor4:sex1
+## Vanilla_Female              1            1            1            0
+## Vanilla_Male               -1           -1           -1            0
+## Chocolate_Female           -1            0            0            1
+## Chocolate_Male              1            0            0           -1
+## Cookie_Female               0           -1            0           -1
+## Cookie_Male                 0            1            0            1
+## Champagne_Female            0            0           -1            0
+## Champagne_Male              0            0            1            0
+##                  flavor5:sex1 flavor6:sex1
+## Vanilla_Female              0            0
+## Vanilla_Male                0            0
+## Chocolate_Female            1            0
+## Chocolate_Male             -1            0
+## Cookie_Female               0            1
+## Cookie_Male                 0           -1
+## Champagne_Female           -1           -1
+## Champagne_Male              1            1</code></pre>
+<p>Das sieht jetzt aufgrund der Anzahl der Kontraste und des geringen Platzes nicht gerade schön aus, ist aber informativ. Aus dem eigentlichen Funktionsaufruf können wir erkennen, dass der Effekt “flavor5” signifikant ist (<span class="math inline">\(\hat{\Psi} = 0.593, p &lt; .001\)</span>). Aus der Kontrastmatrix können wir aus der Spalte “flavor5” entnehmen, dass hier die Eissorten Schokolade und Champagner miteinander vergleichen wurden. Da dieser Kontrast signifikant ist, ist auch der “Unterschied zwischen diesen beiden Sorten sgnifikant.”yumminess“-Unterschied zwischen diesen beiden Sorten signifikant. Dasselbe trifft auf den Unterschied zwischen Cookie und Champagner zu (Kontrast”flavor 6“). Das sind im Prinzip die Post-hoc-Tests für den Haupteffekt”flavor“. Der Kontrast für den Haupteffekt”sex" (“sex1”) ist ebenfalls signifikant, also unterscheiden sich auch die Geschlechter in ihren “yumminess”-Einschätzungen signifikant voneinander. So viel wissen wir schon; die Ergebnisse sind identisch mit denen unserer klassischen ANOVA. Bezüglich der Interaktionseffekte gibt es nur zwei, die signifikant geworden sind, nämlich “flavor5:sex” (<span class="math inline">\(\hat{\Psi} = -0.593, p &lt;.001\)</span>) und “flavor6:sex” (<span class="math inline">\(\hat{\Psi} = -0.556, p = .001\)</span>). Der erste signifikante Kontrast sagt uns, dass sich der Unterschied zwischen Schokolade und Champagner zwischen den Geschlechtern signifikant unterscheidet. Frauen haben Schokolade und Chmpagner als weniger unterschiedlich eingeschätzt als die Männer (die Richtung dieses Kontrasts muss man sich aus den Abbildungen oder deskriptiven Statistiken fischen; der signifikanter Interaktionseffekt gibt nur an, dass etwas unterschiedlich ist). Dasselbe finden wir beim letzten Kontrast: Der Unterschied zwischen Cookie und Champagner wurde von beiden Geschlechtern ebenfalls unterschiedlich eingeschätzt. Auch hier wurde der Unterschied in der “yumminess” zwischen Cookie und Champagner von Frauen geringer eingeschätzt als von den Männern.</p>
 </div>
 <div id="non-parametrisch" class="section level2">
 <h2>Non-parametrisch</h2>
@@ -680,23 +1051,147 @@ mcp2atm(yumminess ~ flavor * sex, data = ice_cream)</code></pre>
 </div>
 <div id="aus-der-praxis" class="section level1">
 <h1>Aus der Praxis</h1>
+<p><span class="citation">Wood et al. (<a href="#ref-Wood.1977" role="doc-biblioref">1977</a>)</span> untersuchten Risikofaktoren für kardiovaskuläre Erkrankungen (also irgendwas was mit Herz). Unter anderem untersuchten sie hobbymäßige Läufer (mindestens 15 Meilen pro Woche) und den eher faulen Couch-Typ. Diese beiden Gruppen setzten sie für 6 Minuten auf einen Heimtrainer und maßen dann die Herzrate ind Schlägen pro Minute (bpm). <span class="citation">Moore et al. (<a href="#ref-Moore.2017" role="doc-biblioref">2017</a>)</span> haben die Daten aufbereitet und in der <a href="https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf">JASP Data Library</a> zur Verfügung gestellt. Hier findet Ihr sie in der Datei <code>heart_rate.csv</code>. In der ersten Spalte (<code>Gender</code>) ist das Geschlecht der Versuchspersonen eingetragen, in der zweiten Spalte (<code>Group</code>) die Angabe dazu, ob es sich bei dieser Versuchsperson um einen Läufer handelte, oder nicht. In der dritten Spalte (<code>Heart Rate</code>) ist die abhängige Variable “Herzrate” zu finden.</p>
+<p>Insgesamt wollen wir eine 2 <span class="math inline">\(\times\)</span> 2 faktorielle Varianzanalyse mit den Zwischensubjektfaktoren Geschlecht (weiblich vs. männlich) und Gruppe (Kontrollgruppe vs. Läufer) berechnen.</p>
+<p>Da wir echt unsaubere Variablennamen haben (teilweise mit Leerzeichen), beginnen wir damit, den Datensatz zu importieren und die Namen zu bereinigen. Zu Beginn sind sowohl <code>gender</code> als auch <code>group</code> noch Zeichenfolgen (Typ = <code>&lt;chr&gt;</code>), wir wollen diese jedoch als Faktoren, was wir mit <code>mutate()</code> umsetzen.</p>
+<pre class="r"><code>runners &lt;- read_csv(&quot;data/heart_rate.csv&quot;) %&gt;% janitor::clean_names()</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Gender = col_character(),
+##   Group = col_character(),
+##   `Heart Rate` = col_double()
+## )</code></pre>
+<pre class="r"><code>runners &lt;- runners %&gt;%
+  mutate_if(is_character, as_factor)
+
+runners</code></pre>
+<pre><code>## # A tibble: 800 x 3
+##    gender group   heart_rate
+##    &lt;fct&gt;  &lt;fct&gt;        &lt;dbl&gt;
+##  1 Female Runners        119
+##  2 Female Runners         84
+##  3 Female Runners         89
+##  4 Female Runners        119
+##  5 Female Runners        127
+##  6 Female Runners        111
+##  7 Female Runners        115
+##  8 Female Runners        109
+##  9 Female Runners        111
+## 10 Female Runners        120
+## # ... with 790 more rows</code></pre>
+<p>Dabei kommt mir ein kleiner, aber feiner Verdacht. Wenn wir uns die ersten paar Zeilen des Datensatzes anschauen, stellen wir fest, dass die ersten Probanden zur Gruppe der “Runners” gehörten. Die Funktion <code>as_factor()</code> wandelt diese Zeichenfolge in einen ordentlichen Faktor um und ordnet die Faktorlevels nach erstmaligem Auftreten dieses Faktors. Die Variable <code>group</code> hat nur zwei Level: “Runners” und “Control”. Da “Runners” direkt zu Beginn unseres Datensatzes kam, sind diese wahrscheinlich auch das erste Level. Wir können das schnell überprüfen, indem wir uns die Faktorlevels für die Variable <code>group</code> ausgeben lassen.</p>
+<pre class="r"><code>runners %&gt;% 
+  pull(group) %&gt;% 
+  levels()</code></pre>
+<pre><code>## [1] &quot;Runners&quot; &quot;Control&quot;</code></pre>
+<p>Siehe da, die “Runners” kommen in der Reienfolge der Faktorlevels zuerst und erst danach die “Controls”. Das ist kein großes Problem, alle Analysen können wir durchführen, ohne an der Reihenfolge der Faktoren irgendetwas zu ändern, aber zu einem guten Stil sollte es gehören, die Level – insofern möglich – logisch zu ordnen. R behandelt das erste Faktorlevel in der Regel als Kontrollgruppe, z.B. bei Kontrasten. Deshalb ist es eine gute Idee, jegliche Form von Kontrollgruppe immer als erstes Faktorlevel zu definieren. Da wir in diesem Fall nur zwei Faktorlevel haben, können wir das einfach mit der Funktion <code>fct_rev()</code> bewerkställigen, die die Reihenvolge der Level einfach umkehrt<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>.</p>
+<pre class="r"><code>runners &lt;- runners %&gt;% 
+  mutate(group = fct_rev(group))
+
+runners %&gt;% 
+  pull(group) %&gt;% 
+  levels()</code></pre>
+<pre><code>## [1] &quot;Control&quot; &quot;Runners&quot;</code></pre>
+<p>Nach diesem Schritt können wir uns die Daten etwas genauer anschauen.</p>
 <div id="klassisch-1" class="section level2">
 <h2>Klassisch</h2>
 <div id="eda-1" class="section level3">
 <h3>EDA</h3>
+<pre class="r"><code>runners %&gt;% 
+  group_by(gender) %&gt;% 
+  get_summary_stats()</code></pre>
+<pre><code>## # A tibble: 2 x 14
+##   gender variable     n   min   max median    q1    q3   iqr   mad  mean    sd
+##   &lt;fct&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Female heart_r~   400    78   196    132  115    148  33    25.2  132.  22.7
+## 2 Male   heart_r~   400    69   172    115  102.   130  28.2  22.2  117.  19.8
+## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+<pre class="r"><code>runners %&gt;% 
+  group_by(group) %&gt;% 
+  get_summary_stats()</code></pre>
+<pre><code>## # A tibble: 2 x 14
+##   group variable     n   min   max median    q1    q3   iqr   mad  mean    sd
+##   &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Cont~ heart_r~   400    77   196    139   127   152    25  19.3  139   19.0
+## 2 Runn~ heart_r~   400    69   164    109    98   120    22  16.3  110.  15.5
+## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+<pre class="r"><code>runners %&gt;% 
+  group_by(gender, group) %&gt;% 
+  get_summary_stats()</code></pre>
+<pre><code>## # A tibble: 4 x 15
+##   gender group variable     n   min   max median    q1    q3   iqr   mad  mean
+##   &lt;fct&gt;  &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Female Cont~ heart_r~   200   105   196    147   137   160    23  16.3  148 
+## 2 Female Runn~ heart_r~   200    78   164    116   106   126    20  14.8  116.
+## 3 Male   Cont~ heart_r~   200    77   172    130   119   142    23  16.3  130 
+## 4 Male   Runn~ heart_r~   200    69   146    103    96   112    16  11.9  104.
+## # ... with 3 more variables: sd &lt;dbl&gt;, se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+<pre class="r"><code>runners</code></pre>
+<pre><code>## # A tibble: 800 x 3
+##    gender group   heart_rate
+##    &lt;fct&gt;  &lt;fct&gt;        &lt;dbl&gt;
+##  1 Female Runners        119
+##  2 Female Runners         84
+##  3 Female Runners         89
+##  4 Female Runners        119
+##  5 Female Runners        127
+##  6 Female Runners        111
+##  7 Female Runners        115
+##  8 Female Runners        109
+##  9 Female Runners        111
+## 10 Female Runners        120
+## # ... with 790 more rows</code></pre>
+<p>Insgesamt wurden unglaubliche <span class="math inline">\(N = 800\)</span> Probanden getestet. Diese teilten sich auf in jeweils <span class="math inline">\(n = 400\)</span> Männer und Frauen und jeweils <span class="math inline">\(n = 400\)</span> Läufer und Kontroll-Probanden, wodurch jede “Zelle” (Kombination aus Geschlecht und Gruppe) aus <span class="math inline">\(n = 200\)</span> Probanden bestand.</p>
+<p><img src="faktorielle-anova_files/figure-html/unnamed-chunk-22-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p>Wir sehen schon bestimmte Trends dahingehend, dass Frauen nach einem kurzen Heimtrainer-Training generell eine höhere Herzrate haben als Männer. Außerdem scheinen die Sportler darüberhinaus eine geringere Herzrate als Stubenhocker (die Kontrollgruppe) zu haben. Zur Varianzhomogenität können wir aus der Abbildung wenig entnehmen, wir sollten also den Levene-Test berechnen. Bei <span class="math inline">\(N = 800\)</span> Probanden können wir jedoch vorab eine gute Schätzung dazu abgeben, ob dieser signifikant sein wird, oder nicht…</p>
+<pre class="r"><code>runners %&gt;% 
+  levene_test(heart_rate ~ gender * group)</code></pre>
+<pre><code>## # A tibble: 1 x 4
+##     df1   df2 statistic        p
+##   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1     3   796      5.73 0.000697</code></pre>
+<p>Oh Wunder, er ist signifikant, da <span class="math inline">\(p &lt; .05\)</span>. Der Spaß mit der klassischen ANOVA wäre hier somit vorbei (da wir eigentlich Varianzhomogenität und somit einen <em>nicht</em> signifikanten Levene-Test bräuchten) und wir müssten robust weiterrechnen, <a href="#beispiel_robust">was wir unten auch tun</a>. Rebellen, wie wir sind, rechnen wir trotzdem einfach mal weiter und schauen, ob die Zivilisation um uns zusammenbricht.</p>
 </div>
 <div id="durchführung-1" class="section level3">
 <h3>Durchführung</h3>
+<p>Die Durchführung ist wie immer kurz und schmerzlos.</p>
+<pre class="r"><code>runners %&gt;% 
+  anova_test(dv = heart_rate, between = c(gender, group), type = 3)</code></pre>
+<pre><code>## Coefficient covariances computed by hccm()</code></pre>
+<pre><code>## ANOVA Table (type III tests)
+## 
+##         Effect DFn DFd       F         p p&lt;.05   ges
+## 1       gender   1 796 185.980  3.29e-38     * 0.189
+## 2        group   1 796 695.647 1.15e-110     * 0.466
+## 3 gender:group   1 796   7.409  7.00e-03     * 0.009</code></pre>
+<p>Sowohl beide Haupteffekte als auch der Interaktionseffekt (<span class="math inline">\(F(1, 796) = 7.41, p = .007\)</span>) sind signifikant. Im Falle eines signifikanten Interaktionseffekts, beschränken wir unsere Interpretation immer auf diesen. Der Unterschied zwischen der Kontrollgruppe und den Läufern ist also zwischen den Geschlechtern signifikant verschieden. Anders gesagt: Die Linien in der Abbildung verlaufen (signifikant) nicht parallel. Um diesen weiter nachzuvollziehen, können wir eine <em>Simple Effects Analysis</em> berechnen. Da die Voraussetzung der Varianzhomogenität nicht gegeben ist, empfiehlt uns <span class="citation">Bibby (<a href="#ref-Bibby.2010" role="doc-biblioref">2010</a>)</span>, pro Faktorstufe eine einfaktorielle ANOVA zu berechnen. Wir können uns entscheiden, anhand welchen Faktors wir die Daten gruppieren sollen; am einfachsten ist es immer, wenn man sich an seiner erstellten Abbildung orientiert. In dieser war der Unterschied zwischen Läufern und der Kontrollgruppe auf der <span class="math inline">\(x\)</span>-Achse, also gruppieren wir anhand dieses Faktors und untersuchen so den Einfluss von Geschlecht auf die Herzrate pro Faktorstufe von “Gruppe”.</p>
+<pre class="r"><code>runners %&gt;% 
+  group_by(group) %&gt;% 
+  anova_test(heart_rate ~ gender, type = 3)</code></pre>
+<pre><code>## # A tibble: 2 x 8
+##   group   Effect   DFn   DFd     F        p `p&lt;.05`   ges
+##   &lt;fct&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
+## 1 Control gender     1   398 116.  5.82e-24 *       0.226
+## 2 Runners gender     1   398  70.1 9.57e-16 *       0.15</code></pre>
+<p>Durch die <em>Simple Effects Analysis</em> haben wir nun herausgefunden, dass sich Männer und Frauen in beiden Gruppen signifikant voneinander unterscheiden. Die Effektstärken geben Aufschluss darüber, dass der Unterschied zwischen den Geschlechtern in der Kontrollgruppe größer ist (<span class="math inline">\(r = .48\)</span>)<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> als in der Gruppe der Läufer (<span class="math inline">\(.39\)</span>).</p>
 </div>
 <div id="berichten-1" class="section level3">
 <h3>Berichten</h3>
+<p>We found the subjects’ heart rate after a six minute workout to be dependent on both, gender and group membership. Generally, the control group had higher heart rates than the runners’ group and women had higher heart rates than men. The interaction effect was significant, <span class="math inline">\(F(1, 796) = 7.41, p = .007\)</span>, indicating a greater difference between genders in the control group (<span class="math inline">\(r = .48\)</span>) than in the runners’ group (<span class="math inline">\(r = .39\)</span>).</p>
 </div>
 </div>
-<div id="robust-1" class="section level2">
+<div id="beispiel_robust" class="section level2">
 <h2>Robust</h2>
-</div>
-<div id="non-parametrisch-1" class="section level2">
-<h2>Non-parametrisch</h2>
+<p>Da die Voraussetzung der Varianzhomogenität aufgrund des signifikanten Levene-Tests nicht gegeben ist, sollten wir robuste Methoden zur Auswertung der Daten nutzen.</p>
+<pre class="r"><code>t2way(heart_rate ~ gender * group, data = runners)</code></pre>
+<pre><code>## Call:
+## t2way(formula = heart_rate ~ gender * group, data = runners)
+## 
+##                 value p.value
+## gender       173.6615   0.001
+## group        646.4237   0.001
+## gender:group   5.1151   0.025</code></pre>
+<p>Auch auf Basis getrimmter Mittelwerte ist der Interaktionseffekt signifikant, <span class="math inline">\(\hat{\Psi} = 5.12, p = .025\)</span>. Post-hoc-Tests entfallen hier, weil wir durch unser 2 <span class="math inline">\(\times\)</span> 2 Versuchs-Design bereits sagen können, dass es einen Interaktionseffekt gibt (der robuste Post-hoc-Test würde nur bestätigen, was wir schon wissen.)</p>
 </div>
 </div>
 <div id="literatur" class="section level1 unnumbered">
@@ -705,7 +1200,26 @@ mcp2atm(yumminess ~ flavor * sex, data = ice_cream)</code></pre>
 <div id="ref-Bibby.2010">
 <p>Bibby, P. (2010). Simple Main Effects. In N. J. Salkind (Ed.), <em>Encyclopedia of Research Design</em>. SAGE. <a href="https://doi.org/10.4135/9781412961288.n421">https://doi.org/10.4135/9781412961288.n421</a></p>
 </div>
+<div id="ref-Mair.2020">
+<p>Mair, P., &amp; Wilcox, R. R. (2020). Robust statistical methods in R using the WRS2 package. <em>Behavior Research Methods</em>, <em>52</em>(2), 464–488. <a href="https://doi.org/10.3758/s13428-019-01246-w">https://doi.org/10.3758/s13428-019-01246-w</a></p>
 </div>
+<div id="ref-Moore.2017">
+<p>Moore, D. S., McCabe, G. P., &amp; Craig, B. A. (2017). <em>Introduction to the practice of statistics</em> (9th ed.). W. H. Freeman.</p>
+</div>
+<div id="ref-Wilcox.2017">
+<p>Wilcox, R. R. (2017). <em>Introduction to Robust Estimation and Hypothesis Testing</em> (4th ed.). Elsevier Academic Press.</p>
+</div>
+<div id="ref-Wood.1977">
+<p>Wood, P. D., Haskell, W. L., Stern, M. P., Lewis, S., &amp; Perry, C. (1977). Plasma lipoprotein distributions in male and female runners. <em>Annals of the New York Academy of Sciences</em>, <em>301</em>, 748–763. <a href="https://doi.org/10.1111/j.1749-6632.1977.tb38244.x">https://doi.org/10.1111/j.1749-6632.1977.tb38244.x</a></p>
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Hätten wir mehrere Faktorlevel und müssten nur eine Gruppe “nach ganz vorne bringen”, können wir das mit <code>fct_relevel(&lt;VARIABLE&gt;, "&lt;CONTROLGROUP&gt;")</code> erreichen.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>Berechnet mit der Formel <a href="#effect_size">oben</a><a href="#fnref2" class="footnote-back">↩</a></p></li>
+</ol>
 </div>
 
 

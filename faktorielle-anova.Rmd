@@ -10,6 +10,10 @@ editor_options:
 ```{r echo=FALSE}
 knitr::opts_chunk$set(fig.align = "center", dpi = 350)
 ggplot2::theme_set(ggplot2::theme_light())
+
+sea_effect_size <- function(f = F, df = DFd) {
+  round(sqrt(f / (f + df)), 2)
+}
 ```
 
 ![](images/ice-cream_r.jpg)
@@ -66,6 +70,35 @@ ice_cream %>%
 
 Wir haben Daten zu vier Eissorten. Verköstigt wurden am häufigsten Schokolade ($n = 81$) und Cookie ($n = 80$); bewertet wurden am besten Vanille ($M = 16.57, SD = 2.18$) und Schokolade ($M = 17.16, SD = 1.68$). Insgesamt haben $N = 295$ Passanten an der Untersuchung teilgenommen, wovon $n = 162$ Frauen und $n = 133$ Männer waren.
 
+```{r eval=FALSE, echo=FALSE, fig.height=6}
+ice_dens <- ice_cream %>% 
+  ggplot(aes(x = yumminess, color = flavor, fill = flavor)) +
+  geom_density(alpha = 0.2) +
+  facet_wrap(~ sex) +
+  labs(x = "Yumminess", y = "Dichte", fill = "Flavor", color = "Flavor")
+
+ice_qq <- ice_cream %>% 
+  ggplot(aes(sample = yumminess)) +
+  geom_qq() +
+  geom_qq_line() +
+  facet_grid(sex ~ flavor) +
+  labs(x = "Theoretisch", y = "Beobachtet")
+
+
+dodge_width <- 0.2
+
+ice_line <- ice_cream %>% 
+  ggplot(aes(x = flavor, y = yumminess, color = sex)) +
+  stat_summary(fun.data = "mean_sdl", geom = "errorbar", fun.args = list(mult = 1), width = 0.2, position = position_dodge(width = dodge_width), size = 1) +
+  stat_summary(fun = "mean", geom = "point", position = position_dodge(dodge_width)) +
+  stat_summary(fun = "mean", geom = "line", position = position_dodge(dodge_width), aes(group = sex), size = 1) +
+  labs(x = "Flavor", y = "Yumminess", color  = "Sex") +
+  expand_limits(y = c(0, 20)) +
+  theme(legend.position = "bottom")
+
+ice_qq / (ice_dens | ice_line) + plot_layout(guides = "collect") + plot_annotation(tag_levels = "A") & theme(legend.position = "right")
+```
+
 ```{r echo=FALSE}
 dodge_width <- 0.2
 
@@ -78,6 +111,7 @@ ice_cream %>%
   expand_limits(y = c(0, 20)) +
   theme(legend.position = "bottom")
 ```
+
 
 Aufgrund der Abbildung bekommen wir eine grobe Idee davon, dass die untersuchten Frauen alle Eissorten in etwa gleich lecker fanden. Die Männer jedoch stehen weniger auf Cookie und überhaupt nicht auf Champagner. (Bah!) Jetzt ist die Frage, ob unsere Einschätzung, dass sich die Mittelwerte tatsächlich signifikant unterscheiden, richtig ist. Dafür berechnen wir die ANOVA.
 
@@ -162,8 +196,6 @@ ice_cream %>%
 sea_results <- ice_cream %>% 
   group_by(flavor) %>% 
   anova_test(yumminess ~ sex, error = main_model)
-
-f_statistics <- sea_results %>% pull("F")
 ```
 
 
@@ -179,21 +211,27 @@ ice_cream %>%
 ```
 
 
-#### Effektstärke
+#### Effektstärke {#effect_size}
 Auch für die *Simple Effects Analysis* lassen sich Effektstärken für die einzelnen Vergleiche berechnen. Diese ergeben sich, wenn innerhalb der Faktorstufen nur zwei Gruppen miteinander vergleichen werden, als $$r = \sqrt{\dfrac{F(1, df_\text{d})}{F(1, df_\text{d}) + df_\text{d}}}$$ mit $df_\text{d}$ als Freiheitsgrade der Fehler.
 
-In diesem Beispiel haben wir Varianzhomogenität angenommen, da der Levene-Test nicht signifikant war. Die Effektstärke zwischen Frauen und Männern für den Geschmack Vanille ist somit $$r = \sqrt{\dfrac{4.22}{4.22 + 287}}$$ also `r round(sqrt(4.22 / (4.22 + 287)), 2)`. Für die übrigen Faktorstufen von "flavor" finden wir
+In diesem Beispiel haben wir Varianzhomogenität angenommen, da der Levene-Test nicht signifikant war. Die Effektstärke zwischen Frauen und Männern für den Geschmack Vanille ist somit $$r = \sqrt{\dfrac{4.22}{4.22 + 287}}$$ also `r sea_effect_size(4.22, 287)`. Für die übrigen Faktorstufen von "flavor" finden wir
 
-Faktorstufe    |                                                $r$
----------------|                                            -----------
-Vanille        |    `r round(sqrt(f_statistics %>% pluck(1) / (f_statistics %>% pluck(1) + 287)), 2)`
-Schokolade     |    `r round(sqrt(f_statistics %>% pluck(2) / (f_statistics %>% pluck(1) + 287)), 2)`
-Cookie         |    `r round(sqrt(f_statistics %>% pluck(3) / (f_statistics %>% pluck(1) + 287)), 2)`
-Champagner     |    `r round(sqrt(f_statistics %>% pluck(4) / (f_statistics %>% pluck(1) + 287)), 2)`
+```{r echo=FALSE, message=FALSE}
+ice_cream %>% 
+  group_by(flavor) %>% 
+  anova_test(yumminess ~ sex, error = main_model) %>% 
+  mutate(r = sea_effect_size(f = F, df = DFd)) %>% 
+  select(Faktorstufe = flavor, r) %>% 
+  gt::gt()
+```
+
 
 ### Berichten
+We found the yumminess of ice-cream to be dependent on both, flavor and sex, as the interaction effect was significant, $F(3, 287) = 25.38, p < .001, \eta_G^2 = .21$. To break down the interaction effect, we conducted a simple effects analysis and compared the estimated yumminess per flavor between sexes. The only non-significant difference between the sexes was found for the flavor "chocolate", $F(1, 287) = 0.02, p = .881, r = .01$. The sex differences for all other flavor were statistically significant ($p \leq .041$) with a small effect vor "vanilla" ($r = .12$) und large effects for "cookie" ($r = .41$) and "champagne" ($r = .61$).
 
 ## Robust
+Auch für faktorielle ANOVAs hat @Wilcox.2017 vorgesorgt. Für zweifaktorielle ANOVAs (wie in diesem Falle) dürfen wir uns aus dem Paket `WRS2` [@Mair.2020] der Funktion `t2way()` mit `mcp2atm()` als Post-hoc-Test bedienen, bei dreifaktoriellen ANOVAs dann jedoch `t3way()`. Höhere Designs werden derzeit nicht unterstützt, was aber kein Problem ist, da uns vier- oder mehrfaktorielle ANOVAs in der freien Wildbahn in der Regel nicht begegnen. Das hängt damit zusammen, dass die Modelle pro Faktor exponentiell komplizierter werden, und somit umso schwerer zu verstehen. Bei einer einfaktoriellen ANOVA wird ein für uns interessanter Effekt geschätzt: Der Haupteffelt des einen Faktors. Bei einer zweifaktoriellen ANOVA gibt es schon drei interessante Effekte: Jeweils den Haupteffekt der Faktoren und deren Interaktionseffekt. Bei dreifaktoriellen ANOVAs gibt es die drei Haupteffekte der Faktoren und alle möglichen Interaktionseffekte, also drei Interaktionseffekte zwischen jeweils zwei Faktoren und einen riesigen Interaktionseffekt zwischen llen drei Faktoren, was in der Summe 7 Effekte gibt. Das dann vernünftig zu interpretieren und darzustellen kann eine Herausforderung sein, die Forscher im Rahmen eines ungeschriebenen Gesetzes anscheinend nicht eingehen.
+
 ```{r message=FALSE}
 library(WRS2)
 
@@ -204,19 +242,125 @@ t2way(yumminess ~ flavor * sex, data = ice_cream)
 mcp2atm(yumminess ~ flavor * sex, data = ice_cream)
 ```
 
+Auch bei uns ist der Interaktionseffekt (neben den Haupteffekten) signifikant, $\hat{\Psi} = 82.15, p = .001$. Der Output der Post-hoc-Tests ist allein für sich erstmal ziemlich kryptisch, welche Effekte wurden da getestet? Wenn wir den Befehl als Objekt abspeichern, können wir uns die Kontrastmatrix genauer ansehen.
+
+```{r message=FALSE}
+ice_post_hocs <- mcp2atm(yumminess ~ flavor * sex, data = ice_cream)
+
+ice_post_hocs$contrasts
+```
+
+Das sieht jetzt aufgrund der Anzahl der Kontraste und des geringen Platzes nicht gerade schön aus, ist aber informativ. Aus dem eigentlichen Funktionsaufruf können wir erkennen, dass der Effekt "flavor5" signifikant ist ($\hat{\Psi} = 0.593, p < .001$). Aus der Kontrastmatrix können wir aus der Spalte "flavor5" entnehmen, dass hier die Eissorten Schokolade und Champagner miteinander vergleichen wurden. Da dieser Kontrast signifikant ist, ist auch der "Unterschied zwischen diesen beiden Sorten sgnifikant."yumminess"-Unterschied zwischen diesen beiden Sorten signifikant. Dasselbe trifft auf den Unterschied zwischen Cookie und Champagner zu (Kontrast "flavor 6"). Das sind im Prinzip die Post-hoc-Tests für den Haupteffekt "flavor". Der Kontrast für den Haupteffekt "sex" ("sex1") ist ebenfalls signifikant, also unterscheiden sich auch die Geschlechter in ihren "yumminess"-Einschätzungen signifikant voneinander. So viel wissen wir schon; die Ergebnisse sind identisch mit denen unserer klassischen ANOVA. Bezüglich der Interaktionseffekte gibt es nur zwei, die signifikant geworden sind, nämlich "flavor5:sex" ($\hat{\Psi} = -0.593, p <.001$) und "flavor6:sex" ($\hat{\Psi} = -0.556, p = .001$). Der erste signifikante Kontrast sagt uns, dass sich der Unterschied zwischen Schokolade und Champagner zwischen den Geschlechtern signifikant unterscheidet. Frauen haben Schokolade und Chmpagner als weniger unterschiedlich eingeschätzt als die Männer (die Richtung dieses Kontrasts muss man sich aus den Abbildungen oder deskriptiven Statistiken fischen; der signifikanter Interaktionseffekt gibt nur an, dass etwas unterschiedlich ist). Dasselbe finden wir beim letzten Kontrast: Der Unterschied zwischen Cookie und Champagner wurde von beiden Geschlechtern ebenfalls unterschiedlich eingeschätzt. Auch hier wurde der Unterschied in der "yumminess" zwischen Cookie und Champagner von Frauen geringer eingeschätzt als von den Männern.
 
 ## Non-parametrisch
 Gibbet nicht.
 
 # Aus der Praxis
+@Wood.1977 untersuchten Risikofaktoren für kardiovaskuläre Erkrankungen (also irgendwas was mit Herz). Unter anderem untersuchten sie hobbymäßige Läufer (mindestens 15 Meilen pro Woche) und den eher faulen Couch-Typ. Diese beiden Gruppen setzten sie für 6 Minuten auf einen Heimtrainer und maßen dann die Herzrate ind Schlägen pro Minute (bpm). @Moore.2017 haben die Daten aufbereitet und in der [JASP Data Library](https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf) zur Verfügung gestellt. Hier findet Ihr sie in der Datei `heart_rate.csv`. In der ersten Spalte (`Gender`) ist das Geschlecht der Versuchspersonen eingetragen, in der zweiten Spalte (`Group`) die Angabe dazu, ob es sich bei dieser Versuchsperson um einen Läufer handelte, oder nicht. In der dritten Spalte (`Heart Rate`) ist die abhängige Variable "Herzrate" zu finden.
+
+Insgesamt wollen wir eine 2 $\times$ 2 faktorielle Varianzanalyse mit den Zwischensubjektfaktoren Geschlecht (weiblich vs. männlich) und Gruppe (Kontrollgruppe vs. Läufer) berechnen.
+
+Da wir echt unsaubere Variablennamen haben (teilweise mit Leerzeichen), beginnen wir damit, den Datensatz zu importieren und die Namen zu bereinigen. Zu Beginn sind sowohl `gender` als auch `group` noch Zeichenfolgen (Typ = `<chr>`), wir wollen diese jedoch als Faktoren, was wir mit `mutate()` umsetzen.
+
+```{r}
+runners <- read_csv("data/heart_rate.csv") %>% janitor::clean_names()
+
+runners <- runners %>%
+  mutate_if(is_character, as_factor)
+
+runners
+```
+
+Dabei kommt mir ein kleiner, aber feiner Verdacht. Wenn wir uns die ersten paar Zeilen des Datensatzes anschauen, stellen wir fest, dass die ersten Probanden zur Gruppe der "Runners" gehörten. Die Funktion `as_factor()` wandelt diese Zeichenfolge in einen ordentlichen Faktor um und ordnet die Faktorlevels nach erstmaligem Auftreten dieses Faktors. Die Variable `group` hat nur zwei Level: "Runners" und "Control". Da "Runners" direkt zu Beginn unseres Datensatzes kam, sind diese wahrscheinlich auch das erste Level. Wir können das schnell überprüfen, indem wir uns die Faktorlevels für die Variable `group` ausgeben lassen.
+
+```{r}
+runners %>% 
+  pull(group) %>% 
+  levels()
+```
+
+Siehe da, die "Runners" kommen in der Reienfolge der Faktorlevels zuerst und erst danach die "Controls". Das ist kein großes Problem, alle Analysen können wir durchführen, ohne an der Reihenfolge der Faktoren irgendetwas zu ändern, aber zu einem guten Stil sollte es gehören, die Level -- insofern möglich -- logisch zu ordnen. R behandelt das erste Faktorlevel in der Regel als Kontrollgruppe, z.B. bei Kontrasten. Deshalb ist es eine gute Idee, jegliche Form von Kontrollgruppe immer als erstes Faktorlevel zu definieren. Da wir in diesem Fall nur zwei Faktorlevel haben, können wir das einfach mit der Funktion `fct_rev()` bewerkställigen, die die Reihenvolge der Level einfach umkehrt^[Hätten wir mehrere Faktorlevel und müssten nur eine Gruppe "nach ganz vorne bringen", können wir das mit `fct_relevel(<VARIABLE>, "<CONTROLGROUP>")` erreichen.].
+
+```{r}
+runners <- runners %>% 
+  mutate(group = fct_rev(group))
+
+runners %>% 
+  pull(group) %>% 
+  levels()
+```
+
+Nach diesem Schritt können wir uns die Daten etwas genauer anschauen.
+
 ## Klassisch
 ### EDA
+```{r}
+runners %>% 
+  group_by(gender) %>% 
+  get_summary_stats()
+
+runners %>% 
+  group_by(group) %>% 
+  get_summary_stats()
+
+runners %>% 
+  group_by(gender, group) %>% 
+  get_summary_stats()
+
+runners
+```
+
+Insgesamt wurden unglaubliche $N = 800$ Probanden getestet. Diese teilten sich auf in jeweils $n = 400$ Männer und Frauen und jeweils $n = 400$ Läufer und Kontroll-Probanden, wodurch jede "Zelle" (Kombination aus Geschlecht und Gruppe) aus $n = 200$ Probanden bestand.
+
+```{r echo=FALSE}
+runners %>% 
+  ggplot(aes(x = group, y = heart_rate, color = gender)) +
+  stat_summary(fun = "mean", geom = "point", position = position_dodge(dodge_width)) +
+  stat_summary(fun = "mean", geom = "line", position = position_dodge(dodge_width), aes(group = gender)) +
+  stat_summary(fun.data = "mean_se", geom = "errorbar", width = 0.1, position = position_dodge(dodge_width)) +
+  expand_limits(y = 0) +
+  labs(x = "Group", y = "Heart Rate", color = "Gender") +
+  theme(legend.position = "bottom")
+```
+
+Wir sehen schon bestimmte Trends dahingehend, dass Frauen nach einem kurzen Heimtrainer-Training generell eine höhere Herzrate haben als Männer. Außerdem scheinen die Sportler darüberhinaus eine geringere Herzrate als Stubenhocker (die Kontrollgruppe) zu haben. Zur Varianzhomogenität können wir aus der Abbildung wenig entnehmen, wir sollten also den Levene-Test berechnen. Bei $N = 800$ Probanden können wir jedoch vorab eine gute Schätzung dazu abgeben, ob dieser signifikant sein wird, oder nicht...
+
+```{r}
+runners %>% 
+  levene_test(heart_rate ~ gender * group)
+```
+
+Oh Wunder, er ist signifikant, da $p < .05$. Der Spaß mit der klassischen ANOVA wäre hier somit vorbei (da wir eigentlich Varianzhomogenität und somit einen *nicht* signifikanten Levene-Test bräuchten) und wir müssten robust weiterrechnen, [was wir unten auch tun](#beispiel_robust). Rebellen, wie wir sind, rechnen wir trotzdem einfach mal weiter und schauen, ob die Zivilisation um uns zusammenbricht.
+
 ### Durchführung
+Die Durchführung ist wie immer kurz und schmerzlos.
+
+```{r}
+runners %>% 
+  anova_test(dv = heart_rate, between = c(gender, group), type = 3)
+```
+
+Sowohl beide Haupteffekte als auch der Interaktionseffekt ($F(1, 796) = 7.41, p = .007$) sind signifikant. Im Falle eines signifikanten Interaktionseffekts, beschränken wir unsere Interpretation immer auf diesen. Der Unterschied zwischen der Kontrollgruppe und den Läufern ist also zwischen den Geschlechtern signifikant verschieden. Anders gesagt: Die Linien in der Abbildung verlaufen (signifikant) nicht parallel. Um diesen weiter nachzuvollziehen, können wir eine *Simple Effects Analysis* berechnen. Da die Voraussetzung der Varianzhomogenität nicht gegeben ist, empfiehlt uns @Bibby.2010, pro Faktorstufe eine einfaktorielle ANOVA zu berechnen. Wir können uns entscheiden, anhand welchen Faktors wir die Daten gruppieren sollen; am einfachsten ist es immer, wenn man sich an seiner erstellten Abbildung orientiert. In dieser war der Unterschied zwischen Läufern und der Kontrollgruppe auf der $x$-Achse, also gruppieren wir anhand dieses Faktors und untersuchen so den Einfluss von Geschlecht auf die Herzrate pro Faktorstufe von "Gruppe".
+
+```{r message=FALSE}
+runners %>% 
+  group_by(group) %>% 
+  anova_test(heart_rate ~ gender, type = 3)
+```
+
+Durch die *Simple Effects Analysis* haben wir nun herausgefunden, dass sich Männer und Frauen in beiden Gruppen signifikant voneinander unterscheiden. Die Effektstärken geben Aufschluss darüber, dass der Unterschied zwischen den Geschlechtern in der Kontrollgruppe größer ist ($r = .48$)^[Berechnet mit der Formel [oben](#effect_size)] als in der Gruppe der Läufer ($.39$).
+
 ### Berichten
+We found the subjects' heart rate after a six minute workout to be dependent on both, gender and group membership. Generally, the control group had higher heart rates than the runners' group and women had higher heart rates than men. The interaction effect was significant, $F(1, 796) = 7.41, p = .007$, indicating a greater difference between genders in the control group ($r = .48$) than in the runners' group ($r = .39$).
 
-## Robust
+## Robust {#beispiel_robust}
+Da die Voraussetzung der Varianzhomogenität aufgrund des signifikanten Levene-Tests nicht gegeben ist, sollten wir robuste Methoden zur Auswertung der Daten nutzen.
 
-## Non-parametrisch
+```{r}
+t2way(heart_rate ~ gender * group, data = runners)
+```
+
+Auch auf Basis getrimmter Mittelwerte ist der Interaktionseffekt signifikant, $\hat{\Psi} = 5.12, p = .025$. Post-hoc-Tests entfallen hier, weil wir durch unser 2 $\times$ 2 Versuchs-Design bereits sagen können, dass es einen Interaktionseffekt gibt (der robuste Post-hoc-Test würde nur bestätigen, was wir schon wissen.)
 
 
 # Literatur
