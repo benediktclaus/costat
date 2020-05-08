@@ -46,6 +46,8 @@ navbar:
        - text: "Post-hoc-Tests"
          href: post-hoc-tests.html
        - text: "--------"
+    - text: "Effektstärken"
+      href: effektstaerken.html
   right:
     - icon: fa-question
       menu:
