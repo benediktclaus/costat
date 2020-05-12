@@ -23,28 +23,103 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="shortcut icon" href="images/broom.ico">
 
+
 <style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
   }
 </style>
-<script type="text/javascript">
-if (window.hljs) {
-  hljs.configure({languages: []});
-  hljs.initHighlightingOnLoad();
-  if (document.readyState && document.readyState === "complete") {
-    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
-  }
-}
-</script>
-
 
 
 <style type="text/css">
@@ -422,6 +497,9 @@ div.tocify {
     <li class="divider"></li>
   </ul>
 </li>
+<li>
+  <a href="effektstaerken.html">Effektstärken</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
@@ -465,9 +543,9 @@ div.tocify {
 <div id="pakete" class="section level1">
 <h1>Pakete</h1>
 <p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien und <code>rstatix</code> für statistische Analysen.</p>
-<pre class="r"><code>library(tidyverse)
-library(haven)
-library(rstatix)</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(haven)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rstatix)</span></code></pre></div>
 </div>
 <div id="beispiel" class="section level1">
 <h1>Beispiel</h1>
@@ -475,11 +553,11 @@ library(rstatix)</code></pre>
 <div id="klassisch" class="section level2">
 <h2>Klassisch</h2>
 <p>Die Daten zu diesem Experiment sind in der Datei <code>ice_cream.sav</code>. In der ersten Spalte (<code>flavor</code>) ist der Geschmack eingetragen, in der zweiten Spalte (<code>sex</code>) das Geschlecht des Verkosters. In der dritten Spalte finden wir unsere abhängige Variable <code>yumminess</code>. Wir berechnen hier also eine 4 <span class="math inline">\(\times\)</span> 2 faktorielle ANOVA mit den Zwischensubjektfaktoren “Eissorte” mit vier Fakorstufen (“Vanilla”, “Chocolate”, “Cookie” und “Champagne”) und “Geschlecht” mit zwei Faktorstufen (“Female” und “Male”).</p>
-<pre class="r"><code>ice_cream &lt;- read_spss(&quot;data/ice_cream.sav&quot;)
-
-ice_cream &lt;- ice_cream %&gt;% mutate_if(is.labelled, as_factor)
-
-ice_cream</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>ice_cream &lt;-<span class="st"> </span><span class="kw">read_spss</span>(<span class="st">&quot;data/ice_cream.sav&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a>ice_cream &lt;-<span class="st"> </span>ice_cream <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate_if</span>(is.labelled, as_factor)</span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a>ice_cream</span></code></pre></div>
 <pre><code>## # A tibble: 295 x 4
 ##    id    flavor    sex    yumminess
 ##    &lt;chr&gt; &lt;fct&gt;     &lt;fct&gt;      &lt;dbl&gt;
@@ -500,10 +578,10 @@ ice_cream</code></pre>
 </div>
 <div id="eda" class="section level3">
 <h3>EDA</h3>
-<pre class="r"><code># Deskriptive Statistiken zur Eissorte...
-ice_cream %&gt;%
-  group_by(flavor) %&gt;% 
-  get_summary_stats()</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Deskriptive Statistiken zur Eissorte...</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>ice_cream <span class="op">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="st">  </span><span class="kw">group_by</span>(flavor) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 14
 ##   flavor variable     n   min   max median    q1    q3   iqr   mad  mean    sd
 ##   &lt;fct&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -512,20 +590,20 @@ ice_cream %&gt;%
 ## 3 Cookie yummine~    80     8    20   14.5  12.8    17  4.25  3.71  14.6  2.83
 ## 4 Champ~ yummine~    60     2    20   14    11      15  4     2.96  13.2  3.64
 ## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
-<pre class="r"><code># ...zur Verteilung der Geschlechter...
-ice_cream %&gt;%
-  group_by(sex) %&gt;% 
-  get_summary_stats()</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># ...zur Verteilung der Geschlechter...</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>ice_cream <span class="op">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span><span class="kw">group_by</span>(sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 14
 ##   sex   variable     n   min   max median    q1    q3   iqr   mad  mean    sd
 ##   &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1 Fema~ yummine~   162    10    20     17    15    18     3  2.96  16.4  2.21
 ## 2 Male  yummine~   133     2    20     15    12    17     5  4.45  14.5  3.51
 ## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
-<pre class="r"><code># ...und zu den Eissorten für jedes Geschlecht
-ice_cream %&gt;%
-  group_by(flavor, sex) %&gt;% 
-  get_summary_stats()</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># ...und zu den Eissorten für jedes Geschlecht</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>ice_cream <span class="op">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw">group_by</span>(flavor, sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 8 x 15
 ##   flavor sex   variable     n   min   max median    q1    q3   iqr   mad  mean
 ##   &lt;fct&gt;  &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -545,16 +623,16 @@ ice_cream %&gt;%
 <div id="durchführung" class="section level3">
 <h3>Durchführung</h3>
 <p>Auch hier haben wir, wie bei der <a href="einfaktorielle-anova.html">einfaktoriellen ANOVA</a>, zwei Möglichkeiten, die Funktionsargumente einzugeben. Einmal als Formelschreibweise und einmal als Explizite Nennung in Form der Funktionsargumente. <a href="https://github.com/kassambara/rstatix/issues/40">Momentan sind die Ergebnisse für die Definition in Formelschreibweise falsch (CRAN-Version 0.5.0)</a>, deshalb sollte man die Faktoren explizit als Funktionsargumente angeben. Wichtig ist hierbei, dass das Funktionsargument <code>type = 3</code> angegeben wird. In der Psychologie (und generell in den Sozialwissenschaften und der Medizin) werden standardmäßig <a href="http://md.psych.bio.uni-goettingen.de/mv/unit/lm_cat/lm_cat_unbal_ss_explained.html">Quadratsummen vom Typ “III”</a> berechnet.</p>
-<pre class="r"><code># Formelschreibweise
-ice_cream %&gt;% 
-  anova_test(yumminess ~ flavor*sex, type = 3)
-
-# Funktionsargumente
-ice_cream %&gt;% 
-  anova_test(dv = yumminess, between = c(flavor, sex), type = 3)</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Formelschreibweise</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>ice_cream <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="kw">anova_test</span>(yumminess <span class="op">~</span><span class="st"> </span>flavor<span class="op">*</span>sex, <span class="dt">type =</span> <span class="dv">3</span>)</span>
+<span id="cb10-4"><a href="#cb10-4"></a></span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="co"># Funktionsargumente</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a>ice_cream <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> yumminess, <span class="dt">between =</span> <span class="kw">c</span>(flavor, sex), <span class="dt">type =</span> <span class="dv">3</span>)</span></code></pre></div>
 <p>Dieses Vorgehen liefert uns folgendes Resultat.</p>
-<pre class="r"><code>ice_cream %&gt;% 
-  anova_test(dv = yumminess, between = c(flavor, sex), type = 3)</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>ice_cream <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> yumminess, <span class="dt">between =</span> <span class="kw">c</span>(flavor, sex), <span class="dt">type =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>## ANOVA Table (type III tests)
 ## 
 ##       Effect DFn DFd       F        p p&lt;.05   ges
@@ -576,11 +654,11 @@ ice_cream %&gt;%
 <div id="varianzhomogenität-angenommen" class="section level4">
 <h4>Varianzhomogenität angenommen</h4>
 <p>Bei angenommener Varianzhomogenität sollen wir also die “Fehler des Gesamtmodells” berücksichtigen. Zu Beginn müssen wir somit unser Gesamtmodell definieren. Da wir uns im GLM, also im allgemeinen linearen Modell bewegen, ist unser Modell immer eine Form des linearen Modells, das in R mit <code>lm()</code> definiert wird. Mit der Formelschreibweise setzen wir das so um.</p>
-<pre class="r"><code>main_model &lt;- lm(yumminess ~ flavor * sex, data = ice_cream)</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>main_model &lt;-<span class="st"> </span><span class="kw">lm</span>(yumminess <span class="op">~</span><span class="st"> </span>flavor <span class="op">*</span><span class="st"> </span>sex, <span class="dt">data =</span> ice_cream)</span></code></pre></div>
 <p>Nun gehen wir genau so vor wie beschrieben und berechnen für jede Faktorstufe von “flavor” ganz normale ANOVAs, geben als Fehlerterme jedoch die des Gesamtmodells (<code>main_model</code>) an. Wir untersuchen an dieser Stelle also den Einfluss von “sex” auf “yumminess” für alle Faktorstufen von “flavor”.</p>
-<pre class="r"><code>ice_cream %&gt;% 
-  group_by(flavor) %&gt;% 
-  anova_test(yumminess ~ sex, error = main_model)</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>ice_cream <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="st">  </span><span class="kw">group_by</span>(flavor) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="st">  </span><span class="kw">anova_test</span>(yumminess <span class="op">~</span><span class="st"> </span>sex, <span class="dt">error =</span> main_model)</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 8
 ##   flavor    Effect   DFn   DFd       F        p `p&lt;.05`       ges
 ##   &lt;fct&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
@@ -593,9 +671,9 @@ ice_cream %&gt;%
 <div id="varianzhomogenität-nicht-angenommen" class="section level4">
 <h4>Varianzhomogenität nicht angenommen</h4>
 <p>Nehmen wir keine Varianzhomogenität an, berechnen wir wieder für die einzelnen Faktorstufen getrennte ANOVAs, verzichten jedoch auf die Angabe der Fehlerterme.</p>
-<pre class="r"><code>ice_cream %&gt;% 
-  group_by(flavor) %&gt;% 
-  anova_test(yumminess ~ sex)</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>ice_cream <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="st">  </span><span class="kw">group_by</span>(flavor) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="st">  </span><span class="kw">anova_test</span>(yumminess <span class="op">~</span><span class="st"> </span>sex)</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 8
 ##   flavor    Effect   DFn   DFd      F        p `p&lt;.05`      ges
 ##   &lt;fct&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;
@@ -612,7 +690,7 @@ ice_cream %&gt;%
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#ppjsjwkjhs .gt_table {
+#yguyywsdjk .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -635,7 +713,7 @@ ice_cream %&gt;%
   border-left-color: #D3D3D3;
 }
 
-#ppjsjwkjhs .gt_heading {
+#yguyywsdjk .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -647,7 +725,7 @@ ice_cream %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#ppjsjwkjhs .gt_title {
+#yguyywsdjk .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -657,7 +735,7 @@ ice_cream %&gt;%
   border-bottom-width: 0;
 }
 
-#ppjsjwkjhs .gt_subtitle {
+#yguyywsdjk .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -667,13 +745,13 @@ ice_cream %&gt;%
   border-top-width: 0;
 }
 
-#ppjsjwkjhs .gt_bottom_border {
+#yguyywsdjk .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ppjsjwkjhs .gt_col_headings {
+#yguyywsdjk .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -688,7 +766,7 @@ ice_cream %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#ppjsjwkjhs .gt_col_heading {
+#yguyywsdjk .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -708,7 +786,7 @@ ice_cream %&gt;%
   overflow-x: hidden;
 }
 
-#ppjsjwkjhs .gt_column_spanner_outer {
+#yguyywsdjk .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -720,15 +798,15 @@ ice_cream %&gt;%
   padding-right: 4px;
 }
 
-#ppjsjwkjhs .gt_column_spanner_outer:first-child {
+#yguyywsdjk .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ppjsjwkjhs .gt_column_spanner_outer:last-child {
+#yguyywsdjk .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ppjsjwkjhs .gt_column_spanner {
+#yguyywsdjk .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -740,7 +818,7 @@ ice_cream %&gt;%
   width: 100%;
 }
 
-#ppjsjwkjhs .gt_group_heading {
+#yguyywsdjk .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -762,7 +840,7 @@ ice_cream %&gt;%
   vertical-align: middle;
 }
 
-#ppjsjwkjhs .gt_empty_group_heading {
+#yguyywsdjk .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -777,19 +855,19 @@ ice_cream %&gt;%
   vertical-align: middle;
 }
 
-#ppjsjwkjhs .gt_striped {
+#yguyywsdjk .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ppjsjwkjhs .gt_from_md > :first-child {
+#yguyywsdjk .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ppjsjwkjhs .gt_from_md > :last-child {
+#yguyywsdjk .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ppjsjwkjhs .gt_row {
+#yguyywsdjk .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -808,7 +886,7 @@ ice_cream %&gt;%
   overflow-x: hidden;
 }
 
-#ppjsjwkjhs .gt_stub {
+#yguyywsdjk .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -820,7 +898,7 @@ ice_cream %&gt;%
   padding-left: 12px;
 }
 
-#ppjsjwkjhs .gt_summary_row {
+#yguyywsdjk .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -830,7 +908,7 @@ ice_cream %&gt;%
   padding-right: 5px;
 }
 
-#ppjsjwkjhs .gt_first_summary_row {
+#yguyywsdjk .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -840,7 +918,7 @@ ice_cream %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#ppjsjwkjhs .gt_grand_summary_row {
+#yguyywsdjk .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -850,7 +928,7 @@ ice_cream %&gt;%
   padding-right: 5px;
 }
 
-#ppjsjwkjhs .gt_first_grand_summary_row {
+#yguyywsdjk .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -860,7 +938,7 @@ ice_cream %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#ppjsjwkjhs .gt_table_body {
+#yguyywsdjk .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -869,7 +947,7 @@ ice_cream %&gt;%
   border-bottom-color: #D3D3D3;
 }
 
-#ppjsjwkjhs .gt_footnotes {
+#yguyywsdjk .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -883,13 +961,13 @@ ice_cream %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#ppjsjwkjhs .gt_footnote {
+#yguyywsdjk .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#ppjsjwkjhs .gt_sourcenotes {
+#yguyywsdjk .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -903,46 +981,46 @@ ice_cream %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#ppjsjwkjhs .gt_sourcenote {
+#yguyywsdjk .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#ppjsjwkjhs .gt_left {
+#yguyywsdjk .gt_left {
   text-align: left;
 }
 
-#ppjsjwkjhs .gt_center {
+#yguyywsdjk .gt_center {
   text-align: center;
 }
 
-#ppjsjwkjhs .gt_right {
+#yguyywsdjk .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ppjsjwkjhs .gt_font_normal {
+#yguyywsdjk .gt_font_normal {
   font-weight: normal;
 }
 
-#ppjsjwkjhs .gt_font_bold {
+#yguyywsdjk .gt_font_bold {
   font-weight: bold;
 }
 
-#ppjsjwkjhs .gt_font_italic {
+#yguyywsdjk .gt_font_italic {
   font-style: italic;
 }
 
-#ppjsjwkjhs .gt_super {
+#yguyywsdjk .gt_super {
   font-size: 65%;
 }
 
-#ppjsjwkjhs .gt_footnote_marks {
+#yguyywsdjk .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="ppjsjwkjhs" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="yguyywsdjk" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -981,10 +1059,10 @@ ice_cream %&gt;%
 <div id="robust" class="section level2">
 <h2>Robust</h2>
 <p>Auch für faktorielle ANOVAs hat <span class="citation">Wilcox (<a href="#ref-Wilcox.2017" role="doc-biblioref">2017</a>)</span> vorgesorgt. Für zweifaktorielle ANOVAs (wie in diesem Falle) dürfen wir uns aus dem Paket <code>WRS2</code> <span class="citation">(Mair &amp; Wilcox, <a href="#ref-Mair.2020" role="doc-biblioref">2020</a>)</span> der Funktion <code>t2way()</code> mit <code>mcp2atm()</code> als Post-hoc-Test bedienen, bei dreifaktoriellen ANOVAs dann jedoch <code>t3way()</code>. Höhere Designs werden derzeit nicht unterstützt, was aber kein Problem ist, da uns vier- oder mehrfaktorielle ANOVAs in der freien Wildbahn in der Regel nicht begegnen. Das hängt damit zusammen, dass die Modelle pro Faktor exponentiell komplizierter werden, und somit umso schwerer zu verstehen. Bei einer einfaktoriellen ANOVA wird ein für uns interessanter Effekt geschätzt: Der Haupteffelt des einen Faktors. Bei einer zweifaktoriellen ANOVA gibt es schon drei interessante Effekte: Jeweils den Haupteffekt der Faktoren und deren Interaktionseffekt. Bei dreifaktoriellen ANOVAs gibt es die drei Haupteffekte der Faktoren und alle möglichen Interaktionseffekte, also drei Interaktionseffekte zwischen jeweils zwei Faktoren und einen riesigen Interaktionseffekt zwischen llen drei Faktoren, was in der Summe 7 Effekte gibt. Das dann vernünftig zu interpretieren und darzustellen kann eine Herausforderung sein, die Forscher im Rahmen eines ungeschriebenen Gesetzes anscheinend nicht eingehen.</p>
-<pre class="r"><code>library(WRS2)
-
-# Robuste zweifaktorielle ANOVA
-t2way(yumminess ~ flavor * sex, data = ice_cream)</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">library</span>(WRS2)</span>
+<span id="cb18-2"><a href="#cb18-2"></a></span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="co"># Robuste zweifaktorielle ANOVA</span></span>
+<span id="cb18-4"><a href="#cb18-4"></a><span class="kw">t2way</span>(yumminess <span class="op">~</span><span class="st"> </span>flavor <span class="op">*</span><span class="st"> </span>sex, <span class="dt">data =</span> ice_cream)</span></code></pre></div>
 <pre><code>## Call:
 ## t2way(formula = yumminess ~ flavor * sex, data = ice_cream)
 ## 
@@ -992,8 +1070,8 @@ t2way(yumminess ~ flavor * sex, data = ice_cream)</code></pre>
 ## flavor     251.7609   0.001
 ## sex         86.2149   0.001
 ## flavor:sex  82.1532   0.001</code></pre>
-<pre class="r"><code># Robuster Post-hoc-Test für eine zweifaktorielle ANOVA
-mcp2atm(yumminess ~ flavor * sex, data = ice_cream)</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Robuster Post-hoc-Test für eine zweifaktorielle ANOVA</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="kw">mcp2atm</span>(yumminess <span class="op">~</span><span class="st"> </span>flavor <span class="op">*</span><span class="st"> </span>sex, <span class="dt">data =</span> ice_cream)</span></code></pre></div>
 <pre><code>## Call:
 ## mcp2atm(formula = yumminess ~ flavor * sex, data = ice_cream)
 ## 
@@ -1012,9 +1090,9 @@ mcp2atm(yumminess ~ flavor * sex, data = ice_cream)</code></pre>
 ## flavor5:sex1 -0.59259 -0.94873 -0.23646 0.00007
 ## flavor6:sex1 -0.55556 -1.00422 -0.10689 0.00138</code></pre>
 <p>Auch bei uns ist der Interaktionseffekt (neben den Haupteffekten) signifikant, <span class="math inline">\(\hat{\Psi} = 82.15, p = .001\)</span>. Der Output der Post-hoc-Tests ist allein für sich erstmal ziemlich kryptisch, welche Effekte wurden da getestet? Wenn wir den Befehl als Objekt abspeichern, können wir uns die Kontrastmatrix genauer ansehen.</p>
-<pre class="r"><code>ice_post_hocs &lt;- mcp2atm(yumminess ~ flavor * sex, data = ice_cream)
-
-ice_post_hocs$contrasts</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>ice_post_hocs &lt;-<span class="st"> </span><span class="kw">mcp2atm</span>(yumminess <span class="op">~</span><span class="st"> </span>flavor <span class="op">*</span><span class="st"> </span>sex, <span class="dt">data =</span> ice_cream)</span>
+<span id="cb22-2"><a href="#cb22-2"></a></span>
+<span id="cb22-3"><a href="#cb22-3"></a>ice_post_hocs<span class="op">$</span>contrasts</span></code></pre></div>
 <pre><code>##                  flavor1 flavor2 flavor3 flavor4 flavor5 flavor6 sex1
 ## Vanilla_Female         1       1       1       0       0       0    1
 ## Vanilla_Male           1       1       1       0       0       0   -1
@@ -1054,17 +1132,17 @@ ice_post_hocs$contrasts</code></pre>
 <p><span class="citation">Wood et al. (<a href="#ref-Wood.1977" role="doc-biblioref">1977</a>)</span> untersuchten Risikofaktoren für kardiovaskuläre Erkrankungen (also irgendwas was mit Herz). Unter anderem untersuchten sie hobbymäßige Läufer (mindestens 15 Meilen pro Woche) und den eher faulen Couch-Typ. Diese beiden Gruppen setzten sie für 6 Minuten auf einen Heimtrainer und maßen dann die Herzrate ind Schlägen pro Minute (bpm). <span class="citation">Moore et al. (<a href="#ref-Moore.2017" role="doc-biblioref">2017</a>)</span> haben die Daten aufbereitet und in der <a href="https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf">JASP Data Library</a> zur Verfügung gestellt. Hier findet Ihr sie in der Datei <code>heart_rate.csv</code>. In der ersten Spalte (<code>Gender</code>) ist das Geschlecht der Versuchspersonen eingetragen, in der zweiten Spalte (<code>Group</code>) die Angabe dazu, ob es sich bei dieser Versuchsperson um einen Läufer handelte, oder nicht. In der dritten Spalte (<code>Heart Rate</code>) ist die abhängige Variable “Herzrate” zu finden.</p>
 <p>Insgesamt wollen wir eine 2 <span class="math inline">\(\times\)</span> 2 faktorielle Varianzanalyse mit den Zwischensubjektfaktoren Geschlecht (weiblich vs. männlich) und Gruppe (Kontrollgruppe vs. Läufer) berechnen.</p>
 <p>Da wir echt unsaubere Variablennamen haben (teilweise mit Leerzeichen), beginnen wir damit, den Datensatz zu importieren und die Namen zu bereinigen. Zu Beginn sind sowohl <code>gender</code> als auch <code>group</code> noch Zeichenfolgen (Typ = <code>&lt;chr&gt;</code>), wir wollen diese jedoch als Faktoren, was wir mit <code>mutate()</code> umsetzen.</p>
-<pre class="r"><code>runners &lt;- read_csv(&quot;data/heart_rate.csv&quot;) %&gt;% janitor::clean_names()</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>runners &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/heart_rate.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()</span></code></pre></div>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   Gender = col_character(),
 ##   Group = col_character(),
 ##   `Heart Rate` = col_double()
 ## )</code></pre>
-<pre class="r"><code>runners &lt;- runners %&gt;%
-  mutate_if(is_character, as_factor)
-
-runners</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>runners &lt;-<span class="st"> </span>runners <span class="op">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a><span class="st">  </span><span class="kw">mutate_if</span>(is_character, as_factor)</span>
+<span id="cb26-3"><a href="#cb26-3"></a></span>
+<span id="cb26-4"><a href="#cb26-4"></a>runners</span></code></pre></div>
 <pre><code>## # A tibble: 800 x 3
 ##    gender group   heart_rate
 ##    &lt;fct&gt;  &lt;fct&gt;        &lt;dbl&gt;
@@ -1080,44 +1158,44 @@ runners</code></pre>
 ## 10 Female Runners        120
 ## # ... with 790 more rows</code></pre>
 <p>Dabei kommt mir ein kleiner, aber feiner Verdacht. Wenn wir uns die ersten paar Zeilen des Datensatzes anschauen, stellen wir fest, dass die ersten Probanden zur Gruppe der “Runners” gehörten. Die Funktion <code>as_factor()</code> wandelt diese Zeichenfolge in einen ordentlichen Faktor um und ordnet die Faktorlevels nach erstmaligem Auftreten dieses Faktors. Die Variable <code>group</code> hat nur zwei Level: “Runners” und “Control”. Da “Runners” direkt zu Beginn unseres Datensatzes kam, sind diese wahrscheinlich auch das erste Level. Wir können das schnell überprüfen, indem wir uns die Faktorlevels für die Variable <code>group</code> ausgeben lassen.</p>
-<pre class="r"><code>runners %&gt;% 
-  pull(group) %&gt;% 
-  levels()</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb28-2"><a href="#cb28-2"></a><span class="st">  </span><span class="kw">pull</span>(group) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb28-3"><a href="#cb28-3"></a><span class="st">  </span><span class="kw">levels</span>()</span></code></pre></div>
 <pre><code>## [1] &quot;Runners&quot; &quot;Control&quot;</code></pre>
 <p>Siehe da, die “Runners” kommen in der Reienfolge der Faktorlevels zuerst und erst danach die “Controls”. Das ist kein großes Problem, alle Analysen können wir durchführen, ohne an der Reihenfolge der Faktoren irgendetwas zu ändern, aber zu einem guten Stil sollte es gehören, die Level – insofern möglich – logisch zu ordnen. R behandelt das erste Faktorlevel in der Regel als Kontrollgruppe, z.B. bei Kontrasten. Deshalb ist es eine gute Idee, jegliche Form von Kontrollgruppe immer als erstes Faktorlevel zu definieren. Da wir in diesem Fall nur zwei Faktorlevel haben, können wir das einfach mit der Funktion <code>fct_rev()</code> bewerkställigen, die die Reihenvolge der Level einfach umkehrt<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>.</p>
-<pre class="r"><code>runners &lt;- runners %&gt;% 
-  mutate(group = fct_rev(group))
-
-runners %&gt;% 
-  pull(group) %&gt;% 
-  levels()</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>runners &lt;-<span class="st"> </span>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb30-2"><a href="#cb30-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">group =</span> <span class="kw">fct_rev</span>(group))</span>
+<span id="cb30-3"><a href="#cb30-3"></a></span>
+<span id="cb30-4"><a href="#cb30-4"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb30-5"><a href="#cb30-5"></a><span class="st">  </span><span class="kw">pull</span>(group) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb30-6"><a href="#cb30-6"></a><span class="st">  </span><span class="kw">levels</span>()</span></code></pre></div>
 <pre><code>## [1] &quot;Control&quot; &quot;Runners&quot;</code></pre>
 <p>Nach diesem Schritt können wir uns die Daten etwas genauer anschauen.</p>
 <div id="klassisch-1" class="section level2">
 <h2>Klassisch</h2>
 <div id="eda-1" class="section level3">
 <h3>EDA</h3>
-<pre class="r"><code>runners %&gt;% 
-  group_by(gender) %&gt;% 
-  get_summary_stats()</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb32-2"><a href="#cb32-2"></a><span class="st">  </span><span class="kw">group_by</span>(gender) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb32-3"><a href="#cb32-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 14
 ##   gender variable     n   min   max median    q1    q3   iqr   mad  mean    sd
 ##   &lt;fct&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1 Female heart_r~   400    78   196    132  115    148  33    25.2  132.  22.7
 ## 2 Male   heart_r~   400    69   172    115  102.   130  28.2  22.2  117.  19.8
 ## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
-<pre class="r"><code>runners %&gt;% 
-  group_by(group) %&gt;% 
-  get_summary_stats()</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-2"><a href="#cb34-2"></a><span class="st">  </span><span class="kw">group_by</span>(group) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-3"><a href="#cb34-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 14
 ##   group variable     n   min   max median    q1    q3   iqr   mad  mean    sd
 ##   &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1 Cont~ heart_r~   400    77   196    139   127   152    25  19.3  139   19.0
 ## 2 Runn~ heart_r~   400    69   164    109    98   120    22  16.3  110.  15.5
 ## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
-<pre class="r"><code>runners %&gt;% 
-  group_by(gender, group) %&gt;% 
-  get_summary_stats()</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb36-2"><a href="#cb36-2"></a><span class="st">  </span><span class="kw">group_by</span>(gender, group) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb36-3"><a href="#cb36-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 15
 ##   gender group variable     n   min   max median    q1    q3   iqr   mad  mean
 ##   &lt;fct&gt;  &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -1126,7 +1204,7 @@ runners %&gt;%
 ## 3 Male   Cont~ heart_r~   200    77   172    130   119   142    23  16.3  130 
 ## 4 Male   Runn~ heart_r~   200    69   146    103    96   112    16  11.9  104.
 ## # ... with 3 more variables: sd &lt;dbl&gt;, se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
-<pre class="r"><code>runners</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>runners</span></code></pre></div>
 <pre><code>## # A tibble: 800 x 3
 ##    gender group   heart_rate
 ##    &lt;fct&gt;  &lt;fct&gt;        &lt;dbl&gt;
@@ -1144,8 +1222,8 @@ runners %&gt;%
 <p>Insgesamt wurden unglaubliche <span class="math inline">\(N = 800\)</span> Probanden getestet. Diese teilten sich auf in jeweils <span class="math inline">\(n = 400\)</span> Männer und Frauen und jeweils <span class="math inline">\(n = 400\)</span> Läufer und Kontroll-Probanden, wodurch jede “Zelle” (Kombination aus Geschlecht und Gruppe) aus <span class="math inline">\(n = 200\)</span> Probanden bestand.</p>
 <p><img src="faktorielle-anova_files/figure-html/unnamed-chunk-22-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Wir sehen schon bestimmte Trends dahingehend, dass Frauen nach einem kurzen Heimtrainer-Training generell eine höhere Herzrate haben als Männer. Außerdem scheinen die Sportler darüberhinaus eine geringere Herzrate als Stubenhocker (die Kontrollgruppe) zu haben. Zur Varianzhomogenität können wir aus der Abbildung wenig entnehmen, wir sollten also den Levene-Test berechnen. Bei <span class="math inline">\(N = 800\)</span> Probanden können wir jedoch vorab eine gute Schätzung dazu abgeben, ob dieser signifikant sein wird, oder nicht…</p>
-<pre class="r"><code>runners %&gt;% 
-  levene_test(heart_rate ~ gender * group)</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb40-2"><a href="#cb40-2"></a><span class="st">  </span><span class="kw">levene_test</span>(heart_rate <span class="op">~</span><span class="st"> </span>gender <span class="op">*</span><span class="st"> </span>group)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 4
 ##     df1   df2 statistic        p
 ##   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;
@@ -1155,8 +1233,8 @@ runners %&gt;%
 <div id="durchführung-1" class="section level3">
 <h3>Durchführung</h3>
 <p>Die Durchführung ist wie immer kurz und schmerzlos.</p>
-<pre class="r"><code>runners %&gt;% 
-  anova_test(dv = heart_rate, between = c(gender, group), type = 3)</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb42-2"><a href="#cb42-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> heart_rate, <span class="dt">between =</span> <span class="kw">c</span>(gender, group), <span class="dt">type =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>## Coefficient covariances computed by hccm()</code></pre>
 <pre><code>## ANOVA Table (type III tests)
 ## 
@@ -1165,9 +1243,9 @@ runners %&gt;%
 ## 2        group   1 796 695.647 1.15e-110     * 0.466
 ## 3 gender:group   1 796   7.409  7.00e-03     * 0.009</code></pre>
 <p>Sowohl beide Haupteffekte als auch der Interaktionseffekt (<span class="math inline">\(F(1, 796) = 7.41, p = .007\)</span>) sind signifikant. Im Falle eines signifikanten Interaktionseffekts, beschränken wir unsere Interpretation immer auf diesen. Der Unterschied zwischen der Kontrollgruppe und den Läufern ist also zwischen den Geschlechtern signifikant verschieden. Anders gesagt: Die Linien in der Abbildung verlaufen (signifikant) nicht parallel. Um diesen weiter nachzuvollziehen, können wir eine <em>Simple Effects Analysis</em> berechnen. Da die Voraussetzung der Varianzhomogenität nicht gegeben ist, empfiehlt uns <span class="citation">Bibby (<a href="#ref-Bibby.2010" role="doc-biblioref">2010</a>)</span>, pro Faktorstufe eine einfaktorielle ANOVA zu berechnen. Wir können uns entscheiden, anhand welchen Faktors wir die Daten gruppieren sollen; am einfachsten ist es immer, wenn man sich an seiner erstellten Abbildung orientiert. In dieser war der Unterschied zwischen Läufern und der Kontrollgruppe auf der <span class="math inline">\(x\)</span>-Achse, also gruppieren wir anhand dieses Faktors und untersuchen so den Einfluss von Geschlecht auf die Herzrate pro Faktorstufe von “Gruppe”.</p>
-<pre class="r"><code>runners %&gt;% 
-  group_by(group) %&gt;% 
-  anova_test(heart_rate ~ gender, type = 3)</code></pre>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb45-2"><a href="#cb45-2"></a><span class="st">  </span><span class="kw">group_by</span>(group) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb45-3"><a href="#cb45-3"></a><span class="st">  </span><span class="kw">anova_test</span>(heart_rate <span class="op">~</span><span class="st"> </span>gender, <span class="dt">type =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 8
 ##   group   Effect   DFn   DFd     F        p `p&lt;.05`   ges
 ##   &lt;fct&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
@@ -1183,7 +1261,7 @@ runners %&gt;%
 <div id="beispiel_robust" class="section level2">
 <h2>Robust</h2>
 <p>Da die Voraussetzung der Varianzhomogenität aufgrund des signifikanten Levene-Tests nicht gegeben ist, sollten wir robuste Methoden zur Auswertung der Daten nutzen.</p>
-<pre class="r"><code>t2way(heart_rate ~ gender * group, data = runners)</code></pre>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="kw">t2way</span>(heart_rate <span class="op">~</span><span class="st"> </span>gender <span class="op">*</span><span class="st"> </span>group, <span class="dt">data =</span> runners)</span></code></pre></div>
 <pre><code>## Call:
 ## t2way(formula = heart_rate ~ gender * group, data = runners)
 ## 
@@ -1217,8 +1295,8 @@ runners %&gt;%
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Hätten wir mehrere Faktorlevel und müssten nur eine Gruppe “nach ganz vorne bringen”, können wir das mit <code>fct_relevel(&lt;VARIABLE&gt;, "&lt;CONTROLGROUP&gt;")</code> erreichen.<a href="#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p>Berechnet mit der Formel <a href="#effect_size">oben</a><a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p>Hätten wir mehrere Faktorlevel und müssten nur eine Gruppe “nach ganz vorne bringen”, können wir das mit <code>fct_relevel(&lt;VARIABLE&gt;, "&lt;CONTROLGROUP&gt;")</code> erreichen.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>Berechnet mit der Formel <a href="#effect_size">oben</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 

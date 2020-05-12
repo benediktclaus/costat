@@ -23,28 +23,103 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="shortcut icon" href="images/broom.ico">
 
+
 <style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
   }
 </style>
-<script type="text/javascript">
-if (window.hljs) {
-  hljs.configure({languages: []});
-  hljs.initHighlightingOnLoad();
-  if (document.readyState && document.readyState === "complete") {
-    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
-  }
-}
-</script>
-
 
 
 <style type="text/css">
@@ -422,6 +497,9 @@ div.tocify {
     <li class="divider"></li>
   </ul>
 </li>
+<li>
+  <a href="effektstaerken.html">Effektstärken</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
@@ -465,20 +543,20 @@ div.tocify {
 <div id="pakete" class="section level1">
 <h1>Pakete</h1>
 <p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien, <code>rstatix</code> für statistische Analysen und <code>skimr</code> für schnelle deskriptive Statistiken.</p>
-<pre class="r"><code>library(tidyverse)
-library(haven)
-library(rstatix)
-library(skimr)</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(haven)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rstatix)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(skimr)</span></code></pre></div>
 </div>
 <div id="beispiel" class="section level1">
 <h1>Beispiel</h1>
 <p>Den Bewohnern des Hogwarts-Hauses Hufflepuff wird ausgesprochene Geduld nachgesagt. Da ist es nicht verwunderlich, dass die Hauslehrerin Hufflepuffs Professor Pomona Sprout ist, die die langwierige Kräuterkunde unterrichtet. Ein ambitionierter Psychologie-Student hat sich gefragt, ob die Geduld der Mitglieder Hufflepuffs über das Schuljahr in Hogwarts eigentlich zunimmt. Man könnte annehmen, dass die Schüler zu Beginn des Schuljahres weniger geduldig sind, aber während des Schuljahres mit Aufgaben und Herausvorderungen konfrontiert werden, die ihre Geduld wachsen lassen. Dieser ambitionierte Psychologie-Student hat daraufhin zu Beginn und am Ende des Schuljahres alle Hufflepuffs hinsichtlich ihrer Geduld untersucht und uns den Datensatz <code>patience.sav</code> überlassen. Höhere Werte bedeuten eine höhere Geduld des Schülers.</p>
-<pre class="r"><code>patience_data &lt;- read_spss(&quot;data/patience.sav&quot;)
-
-patience_data &lt;- patience_data %&gt;% 
-  mutate(measurement = as_factor(measurement))
-
-patience_data</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>patience_data &lt;-<span class="st"> </span><span class="kw">read_spss</span>(<span class="st">&quot;data/patience.sav&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a>patience_data &lt;-<span class="st"> </span>patience_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">measurement =</span> <span class="kw">as_factor</span>(measurement))</span>
+<span id="cb2-5"><a href="#cb2-5"></a></span>
+<span id="cb2-6"><a href="#cb2-6"></a>patience_data</span></code></pre></div>
 <pre><code>## # A tibble: 106 x 3
 ##    id    measurement patience
 ##    &lt;chr&gt; &lt;fct&gt;          &lt;dbl&gt;
@@ -500,9 +578,9 @@ patience_data</code></pre>
 </div>
 <div id="eda" class="section level2">
 <h2>EDA</h2>
-<pre class="r"><code>patience_data %&gt;%
-  group_by(measurement) %&gt;% 
-  skim()</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>patience_data <span class="op">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw">group_by</span>(measurement) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="st">  </span><span class="kw">skim</span>()</span></code></pre></div>
 <table>
 <caption>Data summary</caption>
 <tbody>
@@ -637,15 +715,15 @@ patience_data</code></pre>
 <p><img src="t-test-abhaengig_files/figure-html/unnamed-chunk-6-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Diesen leichten Trend finden wir auch in der entsprechenden Abbildung (C) wieder. Bezüglich der Voraussetzungen können wir anhand der Kerndichteschätzung (= “geglättetes” Histogramm in A) und dem QQ-Plot (B) davon ausgehen, dass die Unterschiede in den Messwerten annähernd normalverteilt sind. Aufgrund des zentralen Grenzwertsatzes können wir jedoch in jedem Fall davon ausgehen, dass die Voraussetzung der Normalverteilung (der Stichprobenkennwerteverteilung) erfüllt ist.</p>
 <p>Wer seine Voraussetzungen gegen <a href="voraussetzungen.html">ausdrückliche Empfehlung</a> in großen Stichproben dennoch statistisch prüfen will, kann das natürlich trotzdem machen.</p>
-<pre class="r"><code>patience_data %&gt;% 
-  pivot_wider(
-    names_from = measurement,
-    values_from = patience
-  ) %&gt;% 
-  mutate(
-    difference = End - Begin
-  ) %&gt;% 
-  shapiro_test(difference)</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>patience_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="st">  </span><span class="kw">pivot_wider</span>(</span>
+<span id="cb5-3"><a href="#cb5-3"></a>    <span class="dt">names_from =</span> measurement,</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    <span class="dt">values_from =</span> patience</span>
+<span id="cb5-5"><a href="#cb5-5"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    <span class="dt">difference =</span> End <span class="op">-</span><span class="st"> </span>Begin</span>
+<span id="cb5-8"><a href="#cb5-8"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="st">  </span><span class="kw">shapiro_test</span>(difference)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 3
 ##   variable   statistic     p
 ##   &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt;
@@ -655,15 +733,15 @@ patience_data</code></pre>
 <div id="durchführung" class="section level2">
 <h2>Durchführung</h2>
 <p>Ist Die Zunahme der Geduld von Anfang bis Ende des Schuljahres nun statistisch signifikant? Das überprüfen wir nun mit dem <span class="math inline">\(t\)</span>-Test für abhängige Stichproben.</p>
-<pre class="r"><code>patience_data %&gt;% 
-  t_test(patience ~ measurement, paired = TRUE)</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>patience_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="st">  </span><span class="kw">t_test</span>(patience <span class="op">~</span><span class="st"> </span>measurement, <span class="dt">paired =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 8
 ##   .y.      group1 group2    n1    n2 statistic    df        p
 ## * &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
 ## 1 patience Begin  End       53    53     -3.57    52 0.000778</code></pre>
 <p><span class="math inline">\(p &lt; .001\)</span>, also können wir fetstellten, dass sich die Geduld der untersuchten Hufflepuffs von Beginn zu Ende des Schuljahres tatsächlich gesteigert hat. Natürlich interessiert uns nicht nur, ob der Effekt statistisch signifikant ist, vielmehr wollen wir auch die Größe des Effekts, also die Effektstärke berechnen.</p>
-<pre class="r"><code>patience_data %&gt;% 
-  cohens_d(patience ~ measurement, paired = TRUE, hedges.correction = TRUE)</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>patience_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="st">  </span><span class="kw">cohens_d</span>(patience <span class="op">~</span><span class="st"> </span>measurement, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 7
 ##   .y.      group1 group2 effsize    n1    n2 magnitude
 ## * &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;ord&gt;    
@@ -685,10 +763,10 @@ patience_data</code></pre>
 <p>Der Datensatz besteht auch zwei Spalten, einmal <code>moon</code> und einmal <code>other</code>. In der ersten Spalte steht die Anzahl der störenden Verhaltensweisen eines Patienten während einer Mondphase, in der zweiten die Anzahl der störenden Verhaltens <em>desselben</em> Patienten in anderen Phasen. Höhere Werte bedeuten hier mehr störendes Verhalten.</p>
 <div id="eda-1" class="section level2">
 <h2>EDA</h2>
-<pre class="r"><code>moon &lt;- read_csv(&quot;data/moon_and_aggression.csv&quot;) %&gt;% 
-  janitor::clean_names()
-
-moon</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>moon &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/moon_and_aggression.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()</span>
+<span id="cb11-3"><a href="#cb11-3"></a></span>
+<span id="cb11-4"><a href="#cb11-4"></a>moon</span></code></pre></div>
 <pre><code>## # A tibble: 15 x 2
 ##     moon other
 ##    &lt;dbl&gt; &lt;dbl&gt;
@@ -708,17 +786,17 @@ moon</code></pre>
 ## 14  0.33  0.23
 ## 15  2     0.38</code></pre>
 <p>Die Daten kommen im wide format, mit dem wir in R ungerne, bzw. selten arbeiten. Die meisten longitudinalen Daten sind im wide format, weil sie so intuitiv einzutragen sind, aber so sind sie eben <a href="data-wrangling.html">nicht tidy</a>. Wir müssen die Daten zunächst ins long format überführen, also “länger machen”. Damit wir den Überblick darüber behalten, von wem die Daten eigentlich sind, sollten wir auch Probanden IDs vergeben; dafür reicht eine fortlaufende Nummer. Das erreichen wir ganz unkompliziert mit der Funktion <code>rownames_to_column()</code>, der wir das Argument <code>var = "id"</code> mitgeben, so wird die neu erstellte Spalte direkt nach unseren Wünschen benannt.</p>
-<pre class="r"><code>moon &lt;- moon %&gt;% 
-  rownames_to_column(var = &quot;id&quot;) %&gt;% 
-  pivot_longer(
-    cols = -id,
-    names_to = &quot;cycle&quot;,
-    values_to = &quot;aggressive_behavior&quot;
-  )
-
-moon %&gt;% 
-  group_by(cycle) %&gt;% 
-  get_summary_stats()</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>moon &lt;-<span class="st"> </span>moon <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="st">  </span><span class="kw">rownames_to_column</span>(<span class="dt">var =</span> <span class="st">&quot;id&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="st">  </span><span class="kw">pivot_longer</span>(</span>
+<span id="cb13-4"><a href="#cb13-4"></a>    <span class="dt">cols =</span> <span class="op">-</span>id,</span>
+<span id="cb13-5"><a href="#cb13-5"></a>    <span class="dt">names_to =</span> <span class="st">&quot;cycle&quot;</span>,</span>
+<span id="cb13-6"><a href="#cb13-6"></a>    <span class="dt">values_to =</span> <span class="st">&quot;aggressive_behavior&quot;</span></span>
+<span id="cb13-7"><a href="#cb13-7"></a>  )</span>
+<span id="cb13-8"><a href="#cb13-8"></a></span>
+<span id="cb13-9"><a href="#cb13-9"></a>moon <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-10"><a href="#cb13-10"></a><span class="st">  </span><span class="kw">group_by</span>(cycle) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-11"><a href="#cb13-11"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 14
 ##   cycle variable     n   min   max median    q1    q3   iqr   mad  mean    sd
 ##   &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -728,13 +806,13 @@ moon %&gt;%
 <p>Anhand der deskriptiven Kennwerte können wir die Tendenz erahnen, dass sich die untersuchten Patienten mit Demenz in Mondphasen störender verhielten (<span class="math inline">\(M = 3.02, SD = 1.50\)</span>) als in anderen Mondphasen (<span class="math inline">\(M = 0.59, SD = 0.45\)</span>). Wir haben eine sehr kleine Stichprobe von <span class="math inline">\(n = 15\)</span> Probanden mit zwei Messungen. Wir sollten unsere Voraussetzungen also auf jeden Fall gründlich prüfen. Bei dem <span class="math inline">\(t\)</span>-Test mit verbundenen Stichproben müssen die Differenzen normalverteilt sein.</p>
 <p><img src="t-test-abhaengig_files/figure-html/unnamed-chunk-12-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Aus Abbildungen A (der Kerndichteschätzung der Differenzen) und B (dem QQ-Plot der Differenzen) können wir entnehmen, dass das ganz gut aussieht. Bis auf einen kleinen bumper am Ende sehen die Daten recht normalverteilt aus. Was sagt der Shapiro-Wilk-Test?</p>
-<pre class="r"><code>moon %&gt;% 
-  pivot_wider(
-    names_from = &quot;cycle&quot;,
-    values_from = &quot;aggressive_behavior&quot;
-  ) %&gt;% 
-  mutate(difference = other - moon) %&gt;%
-  shapiro_test(difference)</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>moon <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="st">  </span><span class="kw">pivot_wider</span>(</span>
+<span id="cb15-3"><a href="#cb15-3"></a>    <span class="dt">names_from =</span> <span class="st">&quot;cycle&quot;</span>,</span>
+<span id="cb15-4"><a href="#cb15-4"></a>    <span class="dt">values_from =</span> <span class="st">&quot;aggressive_behavior&quot;</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">difference =</span> other <span class="op">-</span><span class="st"> </span>moon) <span class="op">%&gt;%</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a><span class="st">  </span><span class="kw">shapiro_test</span>(difference)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 3
 ##   variable   statistic     p
 ##   &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt;
@@ -744,16 +822,16 @@ moon %&gt;%
 <div id="durchführung-1" class="section level2">
 <h2>Durchführung</h2>
 <p>Die eigentliche Durchführung ist auch hier wieder kurz und schmerzlos.</p>
-<pre class="r"><code># t-test
-moon %&gt;% 
-  t_test(aggressive_behavior ~ cycle, paired = TRUE)</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># t-test</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>moon <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="st">  </span><span class="kw">t_test</span>(aggressive_behavior <span class="op">~</span><span class="st"> </span>cycle, <span class="dt">paired =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 8
 ##   .y.                 group1 group2    n1    n2 statistic    df         p
 ## * &lt;chr&gt;               &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
 ## 1 aggressive_behavior moon   other     15    15      6.45    14 0.0000152</code></pre>
-<pre class="r"><code># Hedges&#39; g
-moon %&gt;% 
-  cohens_d(aggressive_behavior ~ cycle, paired = TRUE, hedges.correction = TRUE)</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Hedges&#39; g</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>moon <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="st">  </span><span class="kw">cohens_d</span>(aggressive_behavior <span class="op">~</span><span class="st"> </span>cycle, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 7
 ##   .y.                 group1 group2 effsize    n1    n2 magnitude
 ## * &lt;chr&gt;               &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;ord&gt;    

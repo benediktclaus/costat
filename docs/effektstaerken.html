@@ -23,27 +23,10 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="shortcut icon" href="images/broom.ico">
 
-<style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
-<script type="text/javascript">
-if (window.hljs) {
-  hljs.configure({languages: []});
-  hljs.initHighlightingOnLoad();
-  if (document.readyState && document.readyState === "complete") {
-    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
-  }
-}
-</script>
 
 
 
@@ -466,15 +449,20 @@ div.tocify {
 <p><img src="images/measure_r.jpg" /></p>
 <p>Nullhypothesen-Signifikanztests können uns ausschließlich zu einem probabilistischen Eindruck unserer Daten verhelfen. Wir lernen also etwas vor dem Hintergrund verschiedener Wahrscheinlichkeiten, und ob Effekte in diesem Sinne “statistisch signifikant” sind. Diese Methode wird mittlerweile im Rahmen eines regelrechten Signifikanz-Fetischismus unreflektiert – und ihm wahrsten Sinne des Wortes – ohne Rücksicht auf Verluste angewandt <span class="citation">(Cohen, <a href="#ref-Cohen.1994" role="doc-biblioref">1994</a>; Easterbrook et al., <a href="#ref-Easterbrook.1991" role="doc-biblioref">1991</a>; Kovic, <a href="#ref-Kovic.2016" role="doc-biblioref">2016</a>; Open Science Collaboration, <a href="#ref-OpenScienceCollaboration.2015" role="doc-biblioref">2015</a>)</span>. Jeder möchte “signifikante” Ergebnisse berichten und publizieren, alles andere versackt in den stillen Friedhöfen der Wissenschaft. Warum das ein Problem ist, wird an anderer Stelle erläutert.</p>
 <p>Durchforstet man die Literatur, wird schnell klar, das standardmäßig überprüft wird, ob ein Effekt statistisch signifikant ist. Ganz vereinfacht gesagt kann man so testen, “ob ein Effekt zufällig zustandegekommen ist”. Jeder, der aber mehr als einen Schritt geradeaus denken kann, fragt sich doch intuitiv nach der <strong>Größe</strong> dieses Effekts. Genau dafür sind Effektstärken da; sie vermitteln uns einen Eindruck von der Größe eines Effekts, komplett unabhängig davon, ob dieser statistisch signifikant ist.</p>
-<p>Nullhypothesen-Signifikanztests sind nämlich mit einem “Problem” behaftet: Bei großen Gruppengrößen werden selbst kleinste Effekte statistisch signifikant. Der allgemein festgelegte Gedankengang von Forscherinnen und Forschern scheint zu sein: “Der Unterschied/Effekt ist signifikant, deswegen gibt es den Effekt und er bedeutet etwas.” An diesem Gedanken ist so viel falsch, dass wir ihn an anderer Stelle ausführlich auseinandernehmen werden, aber vor allem ist dieser Gedanke gefährlich! Denn nur weil ein Effekt <em>statistisch</em> signifikant ist, heißt es noch lange nicht, dass er auch eine <em>Relevanz</em> hat. Über die Relevanz eines Effekts kann uns die Effektstärke Hinweise geben.</p>
+<p>Nullhypothesen-Signifikanztests sind nämlich mit einem “Problem” behaftet: Bei großen Gruppengrößen werden selbst kleinste Effekte statistisch signifikant. Aber nur nur weil ein Effekt <em>statistisch</em> signifikant ist, heißt es noch lange nicht, dass er auch eine <em>Relevanz</em> hat. Über die Relevanz eines Effekts kann uns die Effektstärke Hinweise geben.</p>
 <p>Auf dieser Seite unterscheiden wir häufig zwischen den “klassischen” und den “robusten” Verfahren. Auch bei Effektstärken gibt es robuste Verfahren, die weniger Anfällig gegenüber Ausreißern und schiefen Verteilungen sind. Deshalb werden wir diese beiden Gruppen auch wieder getrennt behandeln. Wer mehr zu klassischen Effektstärken erfahren möchte, sollte unbedingt <span class="citation">Cohen (<a href="#ref-Cohen.1988" role="doc-biblioref">1988</a>)</span> lesen. Des Weiteren kann man grob zwischen Effektstärken für Gruppenunterschiede und Zusammenhänge unterscheiden; auch dieser Gliederung wird gefolgt.</p>
 <div id="normal" class="section level1">
 <h1>Normal</h1>
 <div id="gruppenunterschiede" class="section level2">
 <h2>Gruppenunterschiede</h2>
+<div id="grundidee" class="section level3">
+<h3>Grundidee</h3>
+<p>Alle gleich folgenden Effektstärken für Gruppenunterschiede verfolgen dasselbe Ziel: Unterschiede zwischen Gruppen sollen interpretierbar werden. Es wird also einfach der Mittelwert der einen Gruppe (<span class="math inline">\(\mu_1\)</span>) minus den der anderen Gruppe gerechnet (<span class="math inline">\(\mu_2\)</span>). Das ist eigentlich schon eine Effektstärke, weil wir eine Idee von der Größe des Effekts bekommen. Nun ist es leider nicht so, dass in Studien immer dieselben Maße verwendet werden. Studien zur Depression benutzen ganz viele unterschiedliche Fragebögen, um das depressive Syndrom zu erfassen. Einige Autoren nutzen bspw. Becks Depressions-Inventar, andere ein eigenes Instrument. Ein Unterschied von 5 in der einen Studie ist also etwas anderes als ein Unterschied von 20 in der anderen. Um dennoch alle Studien miteinander vergleichen zu können, unabhängig davon, wie sie ihr Outcome erhoben haben, wird dieser Mittelwertunterschied <strong>standardisiert</strong> (durch einen bestimmten Wert geteilt). Man bringt ihn dadurch auf die Einheit von Standardabweichungen, und da alle Unterschiede in allen Studien so dieselbe Einheit haben, können wir sie miteinander vergleichen.</p>
+<p>Im Prinzip unterscheiden sich die Effektstärken dann nur in ihrer Standardisierung. Die wichtigsten werden nun vorgestellt.</p>
+</div>
 <div id="cohens-d" class="section level3">
 <h3>Cohens <span class="math inline">\(d\)</span></h3>
-<p>Der Urvater der Effektstärken ist <strong>Cohens <span class="math inline">\(d\)</span></strong> <span class="citation">(Cohen, <a href="#ref-Cohen.1988" role="doc-biblioref">1988</a>)</span>. Cohens <span class="math inline">\(d\)</span> gibt den <strong>standardisierten</strong> Unterschied zwischen zwei Gruppen an. Das macht es besonders breit anwendbar, da viele Studien miteinander verglichen werden können. Eine Stufe erfasst das depressive Syndrom der getesteten Probanden mit Becks Depressions-Inventar, eine andere mit einem eigenen Instrument. Ein Unterschied von 5 in der einen Studie ist also etwas anderes als ein Unterschied von 20 in der anderen. Standardisieren wir diesen Unterschied jedoch, können wir diese beiden Studien miteinander vergleichen. <span class="citation">Cohen (<a href="#ref-Cohen.1988" role="doc-biblioref">1988</a> S. 20)</span> gibt uns die Formel<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> <span class="math display">\[d = \dfrac{\mu_1-\mu_2}{\sigma}\]</span> mit <span class="math inline">\(\mu_1\)</span> und <span class="math inline">\(\mu_2\)</span> als die Gruppenmittelwerte von Gruppe <span class="math inline">\(1\)</span> und <span class="math inline">\(2\)</span>, sowie <span class="math inline">\(\sigma\)</span> als Standardabweichung der beiden Gruppen. Nach dieser Formel wird angenommen, dass die Standardabweichungen der Gruppen gleich sind (deshalb nur ein <span class="math inline">\(\sigma\)</span>). Natürlich haben die beiden Gruppen in den seltensten Fällen identische Varianzen, weshalb die Formel für ungleiche Gruppengrößen und -varianzen erweitert wurde <span class="citation">(Cohen, <a href="#ref-Cohen.1988" role="doc-biblioref">1988</a> S. 67)</span> <span class="math display">\[\dfrac{\mu_1 - \mu_2}{s}\]</span> mit der <strong>gepoolten Standardabweichung</strong> <span class="math display">\[s = \sqrt{\dfrac{\sum{(x_1 - \mu_1)^2} + \sum{(x_2 - \mu_2)^2}}{n_1 + n_2 -2}}\]</span> und <span class="math inline">\(x_1\)</span>, sowie <span class="math inline">\(x_2\)</span> als individuelle Werte der Probanden in den Gruppen <span class="math inline">\(1\)</span> und <span class="math inline">\(2\)</span>.</p>
+<p>Der Urvater der Effektstärken ist <strong>Cohens <span class="math inline">\(d\)</span></strong> <span class="citation">(Cohen, <a href="#ref-Cohen.1988" role="doc-biblioref">1988</a>)</span>. Cohens <span class="math inline">\(d\)</span> gibt den <strong>standardisierten</strong> Unterschied zwischen zwei Gruppen an. Das macht es besonders breit anwendbar, da viele Studien miteinander verglichen werden können. <span class="citation">Cohen (<a href="#ref-Cohen.1988" role="doc-biblioref">1988</a> S. 20)</span> gibt uns die Formel<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> <span class="math display">\[d = \dfrac{\mu_1-\mu_2}{\sigma}\]</span> mit <span class="math inline">\(\sigma\)</span> als Standardabweichung der beiden Gruppen. Nach dieser Formel wird angenommen, dass die Standardabweichungen der Gruppen gleich sind (deshalb nur ein <span class="math inline">\(\sigma\)</span>). Natürlich haben die beiden Gruppen in den seltensten Fällen identische Varianzen, weshalb die Formel für ungleiche Gruppengrößen und -varianzen erweitert wurde <span class="citation">(Cohen, <a href="#ref-Cohen.1988" role="doc-biblioref">1988</a> S. 67)</span> <span class="math display">\[\dfrac{\mu_1 - \mu_2}{s}\]</span> mit der <strong>gepoolten Standardabweichung</strong> <span class="math display">\[s = \sqrt{\dfrac{\sum{(x_1 - \mu_1)^2} + \sum{(x_2 - \mu_2)^2}}{n_1 + n_2 -2}}\]</span> und <span class="math inline">\(x_1\)</span>, sowie <span class="math inline">\(x_2\)</span> als individuelle Werte der Probanden in den Gruppen <span class="math inline">\(1\)</span> und <span class="math inline">\(2\)</span>.</p>
 </div>
 <div id="hedges-g" class="section level3">
 <h3>Hedges’ <span class="math inline">\(g\)</span></h3>
@@ -486,9 +474,17 @@ div.tocify {
 <p>Auch <span class="math inline">\(g^*\)</span> ist wieder keine komplett neue Effektstärke, sondern nur für eine natürlich auftretende positive Verzerrung korrigiert und lässt sich deshalb genau so interpretieren, wie die beiden vorigen Effektstärken.</p>
 <p>Welche sollte man nun also nehmen? <strong>Mit Hedges’ <span class="math inline">\(g^*\)</span> ist man immer auf der richtigen Seite!</strong></p>
 </div>
+<div id="glass-delta" class="section level3">
+<h3>Glass’ <span class="math inline">\(\Delta\)</span></h3>
+<p>Zu den bereits gängigen Effektstärken gibt es noch eine weitere, nämlich Glass’ <span class="math inline">\(\Delta\)</span>. Sie berechnet sich als <span class="math display">\[\Delta = \dfrac{\mu_1 - \mu_2}{\sigma_\text{Kontrollgruppe}}\]</span> Die Idee soll sein, dass die Varianz der Kontrollgruppe (oder deren Wurzel daraus, also <span class="math inline">\(\sigma\)</span>) eher die Population widerspiegelt, weil man mit ihr “noch nichts gemacht hat”, weil sie z.B. keine Behandlung bekommen hat. Hier habe ich sie eher aus historischen Gründen aufgeführt.</p>
+</div>
 </div>
 <div id="zusammenhänge" class="section level2">
 <h2>Zusammenhänge</h2>
+<div id="pearsons-r" class="section level3">
+<h3>Pearsons <span class="math inline">\(r\)</span></h3>
+<p>Einer der bekanntesten Effektstärken von Zusammenhängen ist der (stinknormale) Korrelationskoeffzient nach Pearson <span class="math inline">\(r\)</span> <span class="math display">\[r = \dfrac{1}{n-1}\sum_{i = 1}^n{\left(\frac{x_i - \bar{x}}{s_x}\right)\left(\frac{y_i - \bar{y}}{s_y}\right)}\]</span></p>
+</div>
 </div>
 </div>
 <div id="robust" class="section level1">
@@ -527,7 +523,7 @@ div.tocify {
 <hr />
 <ol>
 <li id="fn1"><p>im Sinne einer einheitlichen, einfachen und bekannten Notation, weiche ich an dieser Stelle von Cohens Notation ab und verwende die gängige Notation, die Studierende mehrheitlich lernen. Für die Übersichtlichkeit wird auf Indizes verzichtet.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>Hedges selbst nannte seine Effektstärke wieder <span class="math inline">\(d\)</span>, jedoch sollte man ihn im Sinne einer einheitlichen Bezeichnung <span class="math inline">\(g\)</span> bezeichnen. Die Effektstärke <span class="math inline">\(g^*\)</span> nannte er schlicht <span class="math inline">\(g\)</span>.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>Um für ausreichend Verwirrung zu sorgen, nannte Hedges selbst seine Effektstärke auch <span class="math inline">\(d\)</span>; jedoch sollte man sie im Sinne einer einheitlichen Bezeichnung <span class="math inline">\(g\)</span> bezeichnen. Die gleich folgende Effektstärke <span class="math inline">\(g^*\)</span> nannte er schlicht <span class="math inline">\(g\)</span>.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 

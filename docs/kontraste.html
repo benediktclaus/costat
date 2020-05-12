@@ -23,28 +23,103 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="shortcut icon" href="images/broom.ico">
 
+
 <style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
   }
 </style>
-<script type="text/javascript">
-if (window.hljs) {
-  hljs.configure({languages: []});
-  hljs.initHighlightingOnLoad();
-  if (document.readyState && document.readyState === "complete") {
-    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
-  }
-}
-</script>
-
 
 
 <style type="text/css">
@@ -422,6 +497,9 @@ div.tocify {
     <li class="divider"></li>
   </ul>
 </li>
+<li>
+  <a href="effektstaerken.html">Effektstärken</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
@@ -478,11 +556,11 @@ div.tocify {
 <div id="beispiel" class="section level1">
 <h1>Beispiel</h1>
 <p>Für das Beispiel der einfaktoriellen ANOVA hatten wir uns einen fiktiven Datensatz zu Besuchern des Phantasialandes angeschaut. In diesem Datensatz finden wir die empfundene Freude von 186 Besuchern des Phantasialandes (Variable <code>joy</code>), eingeteilt in Gruppen von Handgepäck-Typ. Wir haben Besucher ohne Handgepäck, mit leichtem und schwerem Rucksack und jenen, die einen Bollerwagen ziehen müssen. Mit der einfaktoriellen ANOVA haben wir bereits herausgefunden, dass sich diese Gruppen hinsichtlich ihrer Freude signifikant unterscheiden.</p>
-<pre class="r"><code>phantasialand &lt;- read_spss(&quot;data/phantasialand.sav&quot;) %&gt;%
-  mutate_if(is.labelled, as_factor)
-
-# Datensatz
-phantasialand</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>phantasialand &lt;-<span class="st"> </span><span class="kw">read_spss</span>(<span class="st">&quot;data/phantasialand.sav&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="st">  </span><span class="kw">mutate_if</span>(is.labelled, as_factor)</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># Datensatz</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>phantasialand</span></code></pre></div>
 <pre><code>## # A tibble: 186 x 3
 ##    id    backpack   joy
 ##    &lt;chr&gt; &lt;fct&gt;    &lt;dbl&gt;
@@ -497,16 +575,16 @@ phantasialand</code></pre>
 ##  9 9     None         9
 ## 10 10    Handcart     5
 ## # ... with 176 more rows</code></pre>
-<pre class="r"><code># Boxplot
-phantasialand %&gt;% 
-  ggplot(aes(x = backpack, y = joy)) +
-  geom_boxplot(outlier.color = NA) +
-  geom_jitter(width = 0.1, alpha = 0.2) +
-  labs(x = &quot;Gepäck&quot;, y = &quot;Freude&quot;)</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Boxplot</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>phantasialand <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> backpack, <span class="dt">y =</span> joy)) <span class="op">+</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="dt">outlier.color =</span> <span class="ot">NA</span>) <span class="op">+</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="st">  </span><span class="kw">geom_jitter</span>(<span class="dt">width =</span> <span class="fl">0.1</span>, <span class="dt">alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Gepäck&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Freude&quot;</span>)</span></code></pre></div>
 <p><img src="kontraste_files/figure-html/unnamed-chunk-2-1.png" width="2450" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># ANOVA
-phantasialand %&gt;% 
-  anova_test(joy ~ backpack)</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># ANOVA</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>phantasialand <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="st">  </span><span class="kw">anova_test</span>(joy <span class="op">~</span><span class="st"> </span>backpack)</span></code></pre></div>
 <pre><code>## ANOVA Table (type II tests)
 ## 
 ##     Effect DFn DFd       F        p p&lt;.05   ges
@@ -677,20 +755,20 @@ phantasialand %&gt;%
 <div id="durchführung" class="section level1">
 <h1>Durchführung</h1>
 <p>Unsere Kontraste können wir nun manuell definieren. Vorher sollten wir uns aber die Reihenfolge der Faktorlevels anschauen, nur um sicherzugehen, dass wir den Gruppen die richtigen Gewichte geben.</p>
-<pre class="r"><code>phantasialand %&gt;% 
-  pull(backpack) %&gt;% 
-  levels()</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>phantasialand <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="st">  </span><span class="kw">pull</span>(backpack) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span><span class="kw">levels</span>()</span></code></pre></div>
 <pre><code>## [1] &quot;None&quot;     &quot;Light&quot;    &quot;Heavy&quot;    &quot;Handcart&quot;</code></pre>
 <p>Die Reihenfolge ist wie gedacht, also können wir auch die Kontraste wie in der obigen Tabelle definieren.</p>
-<pre class="r"><code>contrast_1 &lt;- c(-3, 1, 1, 1)
-contrast_2 &lt;- c(0, -2, 1, 1)
-contrast_3 &lt;- c(0, 0, -1, 1)
-
-my_contrasts &lt;- cbind(contrast_1, contrast_2, contrast_3)
-
-contrasts(phantasialand$backpack) &lt;- my_contrasts
-
-phantasialand %&gt;% pull(backpack)</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>contrast_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb8-2"><a href="#cb8-2"></a>contrast_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">-2</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb8-3"><a href="#cb8-3"></a>contrast_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">-1</span>, <span class="dv">1</span>)</span>
+<span id="cb8-4"><a href="#cb8-4"></a></span>
+<span id="cb8-5"><a href="#cb8-5"></a>my_contrasts &lt;-<span class="st"> </span><span class="kw">cbind</span>(contrast_<span class="dv">1</span>, contrast_<span class="dv">2</span>, contrast_<span class="dv">3</span>)</span>
+<span id="cb8-6"><a href="#cb8-6"></a></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="kw">contrasts</span>(phantasialand<span class="op">$</span>backpack) &lt;-<span class="st"> </span>my_contrasts</span>
+<span id="cb8-8"><a href="#cb8-8"></a></span>
+<span id="cb8-9"><a href="#cb8-9"></a>phantasialand <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(backpack)</span></code></pre></div>
 <pre><code>##   [1] Light    Light    Handcart Heavy    Heavy    Heavy    Handcart None    
 ##   [9] None     Handcart None     None     None     None     Handcart None    
 ##  [17] Light    None     Light    Heavy    Heavy    None     Heavy    Heavy   
@@ -723,9 +801,9 @@ phantasialand %&gt;% pull(backpack)</code></pre>
 ## Handcart          1          1          1
 ## Levels: None Light Heavy Handcart</code></pre>
 <p>Wenn wir uns nun die Variable im Datensatz ansehen, stellen wir fest, dass ein Attribut hinzugefügt wurde, nämlich unsere Kontraste. Eigentlich wurde dieses Attribut nicht hinzugefügt, R hat nämlich einen Standard-Kontrast hinterlegt, den wir jetzt einfach überschrieben haben. Um die Kontraste nun zu berechnen, formulieren wir unser Modell in der hauseigenen ANOVA-Funktion von R, <code>aov()</code>, und speichern die Ergebnisse in einem neuen Objekt, das wir in diesem Fall <code>model_results</code> genannt haben.</p>
-<pre class="r"><code>model_results &lt;- aov(joy ~ backpack, data = phantasialand)</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>model_results &lt;-<span class="st"> </span><span class="kw">aov</span>(joy <span class="op">~</span><span class="st"> </span>backpack, <span class="dt">data =</span> phantasialand)</span></code></pre></div>
 <p>Um nun Informationen aus diesem Objekt zu ziehen, müssen wir uns die Zusammenfassung, also die <code>summary()</code> dieses Objektes anschauen.</p>
-<pre class="r"><code>summary(model_results)</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">summary</span>(model_results)</span></code></pre></div>
 <pre><code>##              Df Sum Sq Mean Sq F value Pr(&gt;F)    
 ## backpack      3  818.8  272.93   126.2 &lt;2e-16 ***
 ## Residuals   182  393.7    2.16                   
@@ -733,7 +811,7 @@ phantasialand %&gt;% pull(backpack)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>An dieser Stelle ist klar, dass die Funktion <code>aov()</code> aus Base R nichts anderes macht als die Funktion <code>anova_test()</code> aus dem Paket <code>rstatix</code>; die Ergebnisse sind nämlich identisch. Ursprünglich habe ich diese Funktion bewusst vorgestellt, da sie super in das Tidyverse passt – Kontraste kann man damit jedoch (noch) nicht berechnen. Dafür müssen wir zu Base R ausweichen.</p>
 <p>Wo sind denn jetzt die Kontraste? Da wir uns im GLM, also im allgemeinen linearen Modell bewegen, und eine ANOVA auch nichts anderes als eine lineare Regression ist, müssen wir uns die Zusammenfassung “durch die Brille” einer linearen Regression ansehen. Das ist mit der Funktion <code>summary.lm()</code> möglich.</p>
-<pre class="r"><code>summary.lm(model_results)</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">summary.lm</span>(model_results)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## aov(formula = joy ~ backpack, data = phantasialand)
