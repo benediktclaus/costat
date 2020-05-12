@@ -63,6 +63,6 @@ output:
     toc_float: true
     smooth_scroll: true
     theme: flatly
-    highlight: default
+    highlight: tango
     includes:
       in_header: "favicon.html"
