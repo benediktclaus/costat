@@ -1,0 +1,90 @@
+---
+title: "Daten-Import"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+![](images/import_r.jpg)
+
+Bevor wir in R -- oder auch in jedem anderen Statistik-Programm -- arbeiten könnne, müssen wir unsere eifrig gesammelten Daten irgendwie ins Programm kriegen. In R war das für einige Datenformate lange Zeit eine schmerzhafte Angelegenheit, was das Arbeiten in R nicht gerade attraktiv gemacht hat. Das Tidyverse jedoch greift uns bei dieser Aufgabe unter die Arme und der Import ist mit einer Zeile Code (versprochen!) abgeschlossen.
+
+Wir behandeln hier die gängigsten Datei-Typen: *Comma-Seperated  Values* (.csv), Excel-Dateien (.xlsx), SPSS-Dateien (.sav) und R-Objekt-Dateien (.rds). Jeder Datei-Typ hat seine Stärken und Schwächen, welche beim Import eine Rolle spielen können. CSV-Dateien sind eigentlich ideal zum Speichern von Daten, weil so ziemich jedes Programm, das mit Daten umgeht, entweder CSV-Daten einlesen, ausgeben oder abspeichern kann. Dabei werden die einzelnen Datenwerte durch Kommata getrennt abgespeichert (daher der Name). Jedes Komma zeigt also an, wann eine neue Spalte beginnt. Tricky wird es im deutschen Sprachraum, weil das Komma hier als Dezimaltrennzeichen genutzt wird. Die Zahl 1,5 würde also in 2 Spalten aufgeteilt werden. Da auch wir eine Daseinsberechtigung haben, und nicht alles ins englische Format überfüreh wollen, ist das Trennzeichen für CSV-Dateien bei uns kein Komma, sondern ein Semikolon (";").
+
+Nach den CSV-Dateien werden wohl Excel-Dateien die am häufigsten verwendeten sein, wenn es um den Austausch von Daten geht. Natürlich kann man Excel-Dateien über "Speichern unter" als CSV abspeichern (etwas, das nach jeder Änderung dann immer wieder gemacht werden muss), aber den Schritt kann man sich sparen und direkt Excel-Dateien importieren.
+
+Auch SPSS hat sein eigenes Datenformat, war ja klar. R hat sogar zwei, aber das RDS-Format bietet einige Vorteile, weshalb wir auch nur dieses behandeln.
+
+Je nach Datei-Typ müssen wir unterschiedliche Pakete laden. Für CSV- und RDS-Dateien benötigen wir nur das Tidyverse. Für Excel-Dateien wird das Paket `readxl` verwendet, für SPSS-Dateien `haven`.
+
+```{r message=FALSE}
+library(tidyverse)
+library(readxl)
+library(haven)
+```
+
+Im GitHub-Repository findest Du [im Ordner "data"](https://github.com/benediktclaus/costat/tree/master/data) fünf Beispiel-Dateien (`csv_data.csv`, `csv2_data.csv`, `excel_data.csv`, `spss_data.sav` und `rds_data.rds`) in unterschiedlichen Formaten, mit denen wir den Daten-Import üben werden.
+
+# Comma-Seperated Values (.csv)
+## International
+CSV-Dateien importieren wir mit dem Befehl `read_csv()`.
+
+```{r}
+read_csv("data/csv_data.csv")
+```
+
+Zu Beginn kriegen wir eine Information dazu, wie R die Datei eingelesen hat. Es gibt nämlich mehrere Daten-Typen. `read_csv()` versucht nun selbst zu erraten, um welchen Daten-Typen sich in den Variablen verstecken und gibt seinen Vorschlag als Info ab. `col_double()` bedeutet, dass R diese Spalte als Zahl eingelesen hat, `col_character()` dass eine Spalte als Zeichenfolge behandelt wird.
+
+Dieser Befehl öffnet jedoch nur die Datei. Um sie zu speichern, müssen wir sie einem Objekt zuweisen, dessen Namen wir frei wählen können.
+
+```{r}
+csv_data <- read_csv("data/csv_data.csv")
+
+csv_data
+```
+
+Wenn Du in RStudio arbeitest, wird dir aufgefallen sein, dass dir noch ein anderer, sehr ähnlich klingender Befehl vorgeschlagen wird, nämlich `read.csv()`. Das ist die Basis-Variante, die R nativ zur Verfügung stellt. Allerdings wird der Import relativ unübersichtlich dargestellt und wir erhalten ohne weiteres Zutun keine Informationen zu den Variablen-Typen.
+
+```{r}
+read.csv("data/csv_data.csv")
+```
+
+Deswegen kann man an dieser Stelle gerne im Tidyverse bleiben.
+
+## Deutschsprachiger Raum
+Im deutschen Sprachraum (und auch noch in anderen Gebieten, in denen das Komma schon als Dezimaltrennzeichen verwendet wird) wird anstatt des Kommas das Semikolon zum Trennen von Werten genutzt. Wenn man sich die Datei in einem Text-Editor genauer anschaut, wird man genau das feststellen. Hat man eine solche Datei, nutzt man einfach `read_csv2()`.
+
+```{r}
+read_csv2("data/csv2_data.csv")
+```
+
+Auch hier wieder nicht vergessen, den importierten Datensatz einem Objekt zuzuweisen!
+
+# Excel (.xlsx)
+Excel-Dateien könnnen mit der Funktion `read_excel()` geöffnet werden.
+
+```{r}
+read_excel("data/excel_data.xlsx")
+```
+
+Auch hier wieder nicht vergessen, den importierten Datensatz einem Objekt zuzuweisen!
+
+# SPSS (.sav)
+SPSS-Dateien können mit der Funktion `read_spss()` geöffnet werden.
+
+```{r}
+read_spss("data/spss_data.sav")
+```
+
+Die Variablen `sex` und `group` sehen relativ komisch aus, weil hier anscheindn Zahlen und Worte abgespeichert wurden. In SPSS speichert man Faktoren, indem einem selbst gewähltem Faktor-Level ein -Label gegeben wird. Diese behält `read_spss()` freundlicherweise beide für uns (zu erkennen am Typ <dbl + lbl>), damit wir damit später [selbst umgehen können](data-wrangling.html).
+
+# R (.rds)
+Das Beste kommt zum Schluss: RDS-Dateien können mit `read_rds()` geöffnet werden.
+
+```{r}
+read_rds("data/rds_data.rds")
+```
+
+Das Schöne an diesem Weg des Speicherns und Importierens ist, dass wir automatisch die korrekten Daten-Typen in den Variablen mit abgespeichert und eingelesen werden. Die Variablen `sex` und `group` sind nämlich Faktoren (zu erkennen am Typ `<fct>`), was durch das Einlesen des Datensatzes mit `read_rds()` berücksichtigt wurde. Wenn man noch einmal in die obigen Beispiele schaut, wird deutlich, dass das in allen anderen Methoden nicht geklappt hat. Teilt man Daten zwischen R-Nutzern, kann man das RDS-Format ohne weiteres ans Herz legen!

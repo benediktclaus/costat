@@ -18,6 +18,8 @@ navbar:
           href: stil.html
         - text: "Pakete"
           href: pakete.html
+        - text: "Daten-Import"
+          href: daten-import.html
         - text: "Data Wrangling"
           href: data-wrangling.html
     - text: Mittelwerte vergleichen
