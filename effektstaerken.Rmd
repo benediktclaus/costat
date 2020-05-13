@@ -45,7 +45,7 @@ Auch $g^*$ ist wieder keine komplett neue Effektstärke, sondern nur für eine n
 Welche sollte man nun also nehmen? **Mit Hedges' $g^*$ ist man immer auf der richtigen Seite!**
 
 ### Glass' $\Delta$
-Zu den bereits gängigen Effektstärken gibt es noch eine weitere, nämlich Glass' $\Delta$. Sie berechnet sich als $$\Delta = \dfrac{\mu_1 - \mu_2}{\sigma_\text{Kontrollgruppe}}$$ Die Idee soll sein, dass die Varianz der Kontrollgruppe (oder deren Wurzel daraus, also $\sigma$) eher die Population widerspiegelt, weil man mit ihr "noch nichts gemacht hat", weil sie z.B. keine Behandlung bekommen hat. Hier habe ich sie eher aus historischen Gründen aufgeführt.
+Zu den bereits gängigen Effektstärken gibt es noch eine weitere, nämlich Glass' $\Delta$. Sie berechnet sich als $$\Delta = \dfrac{\mu_1 - \mu_2}{\sigma_\text{Kontrollgruppe}}$$ Die Idee soll sein, dass die Varianz der Kontrollgruppe (oder deren Wurzel daraus, also $\sigma$) eher die der Population widerspiegelt, weil man mit ihr "noch nichts gemacht hat", weil sie z.B. keine Behandlung bekommen hat. Hier habe ich sie eher aus historischen Gründen aufgeführt.
 
 ## Zusammenhänge
 ### Pearsons $r$
