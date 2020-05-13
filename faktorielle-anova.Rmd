@@ -14,6 +14,8 @@ ggplot2::theme_set(ggplot2::theme_light())
 sea_effect_size <- function(f = F, df = DFd) {
   round(sqrt(f / (f + df)), 2)
 }
+
+library(benelib)
 ```
 
 ![](images/ice-cream_r.jpg)
@@ -109,6 +111,7 @@ ice_cream %>%
   stat_summary(fun = "mean", geom = "line", position = position_dodge(dodge_width), aes(group = sex), size = 1) +
   labs(x = "Flavor", y = "Yumminess", color  = "Sex") +
   expand_limits(y = c(0, 20)) +
+  scale_color_personal() +
   theme(legend.position = "bottom")
 ```
 
@@ -149,6 +152,7 @@ ice_flavor <- ice_cream %>%
   stat_summary(fun = "mean", geom = "line", position = position_dodge(dodge_width), aes(group = sex), size = 1) +
   labs(x = "Flavor", y = "Yumminess", color  = "Sex") +
   expand_limits(y = c(0, 20)) +
+  scale_color_personal() +
   theme(legend.position = "bottom")
 
 ice_sex <- ice_cream %>%
@@ -159,6 +163,7 @@ ice_sex <- ice_cream %>%
   labs(x = "Sex", y = "Yumminess", color  = "Flavor") +
   expand_limits(y = c(0, 20)) +
   theme(legend.position = "bottom") +
+  scale_color_personal(palette = "full") +
   guides(color = guide_legend(nrow = 2))
 
 (ice_flavor | ice_sex) + plot_annotation(tag_levels = "A")
@@ -320,7 +325,8 @@ runners %>%
   stat_summary(fun.data = "mean_se", geom = "errorbar", width = 0.1, position = position_dodge(dodge_width)) +
   expand_limits(y = 0) +
   labs(x = "Group", y = "Heart Rate", color = "Gender") +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  scale_color_personal()
 ```
 
 Wir sehen schon bestimmte Trends dahingehend, dass Frauen nach einem kurzen Heimtrainer-Training generell eine höhere Herzrate haben als Männer. Außerdem scheinen die Sportler darüberhinaus eine geringere Herzrate als Stubenhocker (die Kontrollgruppe) zu haben. Zur Varianzhomogenität können wir aus der Abbildung wenig entnehmen, wir sollten also den Levene-Test berechnen. Bei $N = 800$ Probanden können wir jedoch vorab eine gute Schätzung dazu abgeben, ob dieser signifikant sein wird, oder nicht...

@@ -10,6 +10,8 @@ editor_options:
 ```{r echo=FALSE}
 knitr::opts_chunk$set(fig.align = "center", dpi = 350)
 ggplot2::theme_set(ggplot2::theme_light())
+
+library(benelib)
 ```
 
 ![](images/harry-potter-car_r.jpg)
@@ -52,7 +54,7 @@ Auch hier betrachten wir die Daten erstmal, bevor wir irgendwelche Analysen durc
 ```{r}
 chivalry_data %>% 
   group_by(house) %>% 
-  skim()
+  get_summary_stats()
 ```
 
 Wir sehen einen eindeutigen Trend dahingehend, dass sich die Mitglieder Griffyndors als deutlicher ritterlicher einschätzen ($M = 92.3, SD = 6.86$) als die Mitglieder der Hauses Slytherin ($M = 48.1, SD = 8.94$). Auch in der Abbildung sehen wir diesen Unterschied deutlich. Die Boxplots (C) zeigen uns insgesamt 4 Outlier, zwei in jedem Haus. Die könnte man bei Bedarf entfernen, wir belassen es jedoch dabei und fahren fort, auch weil die Varianz der Daten in beiden Häusern ähnlich zu sein scheint. Außerdem sehen die Daten gut normalverteilt aus, was wir anhand der Kerndichteschätzungen (= "geglättetes" Histogramm in A) und dem QQ-Plot (B) erkennen können.
@@ -61,7 +63,9 @@ Wir sehen einen eindeutigen Trend dahingehend, dass sich die Mitglieder Griffynd
 chivalry_dens <- chivalry_data %>% 
   ggplot(aes(x = chivalry, fill = house, color = house)) +
   geom_density(alpha = 0.5) +
-  labs(x = "Ritterlichkeit", y = "Dichte", fill = "Haus")
+  scale_fill_personal() +
+  scale_color_personal() +
+  labs(x = "Ritterlichkeit", y = "Dichte", fill = "Haus", color = "Haus")
 
 chivalry_qq <- chivalry_data %>% 
   ggplot(aes(sample = chivalry)) +
@@ -156,6 +160,8 @@ Dem ersten Eindruck nach, scheint der Abruf in der Gruppe mit horizontalen Augen
 eye_movement_dens <- eye_movement %>% 
   ggplot(aes(x = critical_recall, fill = condition, color = condition)) +
   geom_density(alpha = 0.5) +
+  scale_fill_personal() +
+  scale_color_personal() +
   labs(x = "Recall", y = "Dichte", color = "Bedingung", fill = "Bedingung")
 
 eye_movement_qq <- eye_movement %>% 
