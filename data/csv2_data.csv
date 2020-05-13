@@ -1,0 +1,531 @@
+id;age;sex;group;test_score;bdi;well_being
+  1;24;Male;Waitlist;14,830963; 7;50
+  2;47;Male;Waitlist;18,951326; 4;25
+  3;24;Female;Placebo;14,619546; 6;42
+  4;28;Female;Waitlist;15,438800; 8;59
+  5;43;Male;Waitlist;16,181193; 3;12
+  6;25;Male;Treatment;22,037545; 8;20
+  7;22;Female;Placebo;15,983710; 7;33
+  8;17;Female;Treatment;22,366219; 5;14
+  9;44;Female;Treatment;23,026597; 3;32
+ 10;20;Female;Waitlist;16,530477; 8;37
+ 11;28;Male;Treatment;14,598394; 5;15
+ 12;46;Female;Waitlist;18,594622; 6;57
+ 13;43;Male;Placebo;20,850671; 4;31
+ 14;48;Male;Treatment;20,520692; 7;19
+ 15;32;Male;Treatment;28,278799; 2;21
+ 16;45;Female;Treatment;20,037016; 4;40
+ 17;30;Female;Placebo; 9,963999; 3;50
+ 18;45;Male;Waitlist;14,552438; 1;52
+ 19;21;Male;Waitlist;15,447021; 4;58
+ 20;38;Female;Treatment;17,896427; 1;46
+ 21;47;Male;Treatment;22,458752; 3;20
+ 22;44;Male;Placebo;21,351758; 1;13
+ 23;36;Female;Placebo;14,896804; 3;46
+ 24;29;Female;Placebo;18,709113; 3;22
+ 25;45;Female;Waitlist;20,140872; 6;22
+ 26;48;Male;Placebo;17,808666; 5;45
+ 27;41;Female;Placebo;18,734497; 5;14
+ 28;49;Male;Treatment;16,802089; 5;41
+ 29;30;Male;Treatment;20,425132; 1;39
+ 30;48;Male;Waitlist;24,605413; 4;57
+ 31;30;Male;Waitlist;16,878033; 3;19
+ 32;20;Female;Treatment;22,497833; 5;59
+ 33;45;Male;Placebo;14,416401; 2;13
+ 34;19;Male;Waitlist;24,052620; 2;53
+ 35;17;Male;Treatment;25,681463; 2;22
+ 36;41;Male;Placebo;16,137472; 9;15
+ 37;49;Female;Waitlist;20,557112; 1;24
+ 38;18;Female;Placebo;20,312771; 4;41
+ 39;22;Male;Placebo;16,465839; 2;47
+ 40;27;Female;Treatment;20,988159; 3;40
+ 41;44;Female;Treatment;24,229824; 3;41
+ 42;42;Male;Placebo;15,449402; 4;26
+ 43;50;Female;Placebo;21,268919; 3;35
+ 44;32;Female;Treatment;25,625651; 8;16
+ 45;20;Female;Placebo;18,058238; 6;59
+ 46;32;Female;Placebo;17,631963; 1;24
+ 47;33;Male;Waitlist;22,110356; 8;18
+ 48;32;Male;Placebo;19,083754; 3;25
+ 49;23;Male;Treatment;15,371831; 4;59
+ 50;26;Male;Placebo;22,901227; 4;46
+ 51;44;Male;Waitlist;13,780166; 3;56
+ 52;47;Female;Treatment;18,529491; 3;47
+ 53;47;Female;Treatment;14,404215; 3;36
+ 54;27;Male;Placebo;19,129989; 4;57
+ 55;40;Male;Waitlist;18,903438; 5;35
+ 56;42;Female;Treatment;23,578581; 8;52
+ 57;22;Male;Treatment;18,987187;10;38
+ 58;18;Female;Waitlist;16,601481; 2;18
+ 59;18;Male;Treatment;18,519873; 1;38
+ 60;44;Male;Waitlist;15,646308; 2;58
+ 61;21;Male;Waitlist;18,543104; 2;24
+ 62;24;Male;Placebo;24,027461; 1;33
+ 63;40;Male;Waitlist;21,249020; 4;52
+ 64;38;Female;Treatment;25,376193; 3;13
+ 65;43;Male;Waitlist;16,181173; 2;59
+ 66;17;Female;Placebo;22,969084; 5;29
+ 67;42;Male;Waitlist;16,807646; 6;19
+ 68;23;Male;Treatment;23,436641; 6;16
+ 69;49;Male;Waitlist;17,557085; 2;57
+ 70;41;Female;Treatment;30,308846;11;38
+ 71;28;Male;Placebo;20,256123; 4;51
+ 72;17;Male;Waitlist;16,870011; 4;44
+ 73;46;Male;Treatment;19,286927; 1;29
+ 74;19;Male;Treatment;20,711221; 7;15
+ 75;29;Male;Treatment;24,012376; 1;39
+ 76;23;Male;Treatment;21,209376; 2;22
+ 77;31;Male;Waitlist;16,756785; 3;25
+ 78;36;Female;Treatment;16,372833; 0;40
+ 79;16;Female;Waitlist;19,662887; 4;18
+ 80;40;Female;Waitlist;23,532984; 4;34
+ 81;50;Female;Treatment;20,600158; 1;41
+ 82;38;Female;Waitlist;25,512852; 3;57
+ 83;24;Female;Treatment;12,801259; 8;44
+ 84;38;Female;Treatment;22,265600; 6;51
+ 85;40;Female;Treatment;28,278386; 6;39
+ 86;42;Female;Placebo;19,677741; 4;19
+ 87;34;Male;Placebo;19,176906; 3;55
+ 88;48;Female;Waitlist;23,611693; 4;41
+ 89;29;Female;Waitlist;21,662897; 2;57
+ 90;39;Male;Treatment;15,391568; 3;21
+ 91;42;Female;Placebo;15,188511; 4;44
+ 92;17;Male;Treatment;22,202550; 1;44
+ 93;44;Female;Placebo;15,788929; 3;14
+ 94;49;Male;Treatment;13,969373; 5;14
+ 95;46;Male;Treatment;23,018800; 9;20
+ 96;46;Female;Placebo;17,933293; 3;32
+ 97;33;Female;Waitlist;21,673127; 5;53
+ 98;30;Female;Waitlist;11,932595; 3;55
+ 99;18;Female;Treatment;21,858603; 2;59
+100;33;Male;Placebo;14,373729; 4;60
+101;40;Female;Placebo;17,519324; 6;42
+102;17;Male;Waitlist;20,009557;12;31
+103;50;Male;Placebo;18,654740; 2;20
+104;39;Male;Placebo;25,991534; 7;38
+105;21;Female;Waitlist;23,607069; 4;50
+106;36;Female;Waitlist;18,910912; 9;13
+107;38;Female;Placebo;17,784416; 7;19
+108;48;Female;Waitlist;22,188541; 2;26
+109;36;Male;Treatment;15,579388; 1;59
+110;17;Female;Waitlist;14,961379; 7;14
+111;24;Female;Treatment;18,759443; 6;54
+112;21;Male;Treatment;16,491228; 3;59
+113;33;Male;Waitlist;14,070121; 4;21
+114;49;Female;Waitlist;14,678054; 3;17
+115;35;Female;Waitlist;16,776493; 4;33
+116;19;Female;Treatment;17,166675; 3;51
+117;30;Male;Placebo;14,959392; 2;55
+118;26;Female;Waitlist;16,345063; 5;43
+119;50;Female;Waitlist;24,255593; 4;43
+120;35;Male;Waitlist;22,930437; 9;55
+121;42;Female;Waitlist;22,914002; 3;57
+122;50;Female;Waitlist;20,155140; 3;27
+123;25;Female;Waitlist;23,323915; 2;49
+124;33;Male;Placebo;15,446671; 2;55
+125;41;Male;Placebo;23,644645; 1;13
+126;30;Male;Waitlist;24,649189; 2;48
+127;46;Male;Treatment;26,058207; 2;12
+128;40;Male;Placebo;19,040639; 5;44
+129;29;Female;Placebo;23,001233; 4;26
+130;45;Female;Treatment;15,738587; 2;51
+131;50;Male;Treatment;16,838571; 5;44
+132;41;Male;Treatment;21,184144; 2;28
+133;21;Female;Treatment;23,467592; 2;44
+134;22;Female;Waitlist;20,336577; 4;38
+135;46;Female;Treatment;24,611880; 6;26
+136;17;Female;Treatment;13,752675; 8;46
+137;40;Male;Placebo;24,766789; 2;13
+138;29;Male;Treatment;23,749299; 2;44
+139;43;Male;Waitlist;22,794793; 6;25
+140;26;Male;Waitlist;28,446327; 2;12
+141;23;Female;Treatment;17,973373;13;34
+142;46;Male;Placebo;23,963685; 2;36
+143;22;Male;Waitlist;11,514562; 3;36
+144;17;Male;Treatment;15,901428;11;36
+145;38;Male;Waitlist;12,755775; 2;22
+146;41;Female;Treatment;22,384958; 2;59
+147;47;Female;Placebo;25,983820; 3;31
+148;33;Male;Treatment;22,174039; 7;55
+149;45;Female;Waitlist;14,405200; 3;44
+150;26;Female;Treatment;25,163400; 9;53
+151;26;Female;Waitlist;26,624734; 3;27
+152;31;Male;Treatment;27,244304; 4;40
+153;35;Male;Waitlist;19,786399; 3;39
+154;49;Female;Waitlist;19,441433; 3;48
+155;48;Female;Placebo;17,253233; 0;27
+156;43;Female;Waitlist;21,523004; 4;16
+157;24;Female;Placebo;25,556499; 2;32
+158;45;Male;Placebo;18,618811; 7;54
+159;49;Female;Treatment;15,918905; 3;38
+160;44;Male;Waitlist; 8,417106; 2;51
+161;18;Male;Waitlist;11,556624;11;47
+162;50;Female;Waitlist;19,767451; 2;32
+163;40;Female;Placebo;19,376419;10;43
+164;48;Female;Treatment;26,919202; 3;21
+165;22;Male;Treatment;27,346637; 6;52
+166;46;Female;Treatment;22,562643; 4;13
+167;16;Female;Placebo;24,853248; 2;20
+168;26;Male;Treatment;22,911675; 2;15
+169;19;Female;Placebo;21,240379; 4;14
+170;18;Female;Waitlist;26,346302; 1;18
+171;41;Female;Placebo;21,784256; 1;28
+172;26;Female;Treatment;12,233351; 3;41
+173;47;Female;Waitlist;23,818266; 0;35
+174;28;Male;Placebo;16,256383; 2;45
+175;33;Female;Placebo;20,522907; 5;52
+176;37;Male;Treatment;10,670618;11;60
+177;17;Male;Waitlist;18,074535; 1;16
+178;33;Male;Waitlist;21,044331; 2;30
+179;28;Male;Treatment;16,082789; 3;35
+180;38;Female;Treatment;28,038135; 6;28
+181;36;Female;Waitlist;18,438616; 3;27
+182;37;Female;Placebo;22,948672; 4;52
+183;37;Female;Treatment;17,957416; 2;57
+184;16;Female;Treatment;17,867703; 5;24
+185;24;Male;Treatment;21,025227; 7;28
+186;29;Male;Waitlist;22,534694; 3;50
+187;22;Male;Treatment;20,118505; 7;20
+188;25;Female;Waitlist;18,623502; 6;43
+189;31;Female;Treatment;15,106704; 9;22
+190;36;Male;Placebo;13,173582; 2;50
+191;47;Male;Treatment;22,607622; 1;44
+192;47;Male;Waitlist;16,533083; 4;13
+193;46;Male;Placebo;19,178714; 4;14
+194;18;Female;Treatment;15,637437; 2;14
+195;36;Female;Waitlist;23,503519; 2;37
+196;24;Female;Waitlist;19,693115;10;36
+197;19;Female;Treatment;18,837736; 4;23
+198;48;Male;Waitlist;15,924889; 8;14
+199;43;Female;Treatment;15,093246; 2;41
+200;36;Female;Waitlist;25,811519; 9;52
+201;38;Female;Waitlist;18,818594; 0;38
+202;49;Female;Treatment;23,406162; 4;22
+203;41;Female;Waitlist;15,703774; 2;44
+204;32;Female;Placebo;17,606009; 2;27
+205;48;Female;Treatment;16,508025; 7;32
+206;31;Male;Treatment;19,163628; 1;40
+207;50;Male;Waitlist;20,086610; 4;50
+208;45;Female;Placebo;18,461053; 8;54
+209;36;Female;Placebo;22,770488; 1;45
+210;34;Male;Treatment;29,122881;12;56
+211;25;Female;Placebo;12,498740; 3;60
+212;25;Female;Waitlist;18,161649; 4;30
+213;43;Female;Treatment;18,926686; 0;46
+214;33;Male;Placebo;18,422332; 3;31
+215;46;Female;Treatment;16,713769; 4;20
+216;17;Female;Waitlist;20,016918; 4;49
+217;30;Male;Placebo;20,089724; 4;34
+218;29;Female;Waitlist;16,338159; 1;24
+219;38;Female;Treatment;23,214371; 2;22
+220;17;Male;Treatment;18,142627; 2;36
+221;39;Male;Treatment;21,796199; 7;55
+222;31;Male;Placebo;15,416649; 5;25
+223;47;Male;Waitlist;20,014228; 1;57
+224;30;Female;Placebo;25,899107; 2;34
+225;38;Male;Placebo;24,501029; 2;21
+226;43;Male;Waitlist;19,407325; 3;35
+227;22;Male;Treatment;16,789511; 2;47
+228;18;Female;Treatment;19,443477; 2;37
+229;17;Female;Placebo;12,674474; 4;40
+230;22;Male;Placebo;20,994411; 4;41
+231;34;Male;Treatment;20,535739; 4;30
+232;44;Male;Waitlist;21,127682; 9;59
+233;41;Male;Waitlist;22,350493;10;36
+234;49;Male;Placebo;18,433091; 8;28
+235;22;Female;Treatment;16,084158; 6;54
+236;30;Female;Treatment;24,034050; 4;48
+237;43;Female;Treatment;15,930302; 3;22
+238;31;Male;Treatment;15,482508; 4;37
+239;37;Male;Treatment;20,643968; 1;25
+240;46;Female;Waitlist;25,260506; 5;35
+241;27;Male;Waitlist;14,967710; 6;13
+242;35;Male;Treatment;22,323641;10;49
+243;28;Female;Waitlist;13,674219; 6;19
+244;45;Male;Placebo;16,138770; 5;56
+245;17;Male;Waitlist;23,056194; 3;54
+246;23;Female;Waitlist;25,782987; 5;46
+247;27;Female;Waitlist;23,714016; 4;36
+248;30;Male;Treatment;24,234724; 3;18
+249;34;Female;Placebo;24,472456; 1;53
+250;32;Female;Placebo;14,575209; 4;31
+251;17;Male;Waitlist;22,606468; 3;17
+252;28;Male;Placebo;22,302954; 4;53
+253;26;Male;Treatment;19,592365; 1;45
+254;33;Male;Placebo;16,349466; 2;25
+255;46;Female;Treatment;15,399295; 2;55
+256;16;Male;Waitlist;17,311270; 5;56
+257;20;Male;Treatment;26,961843; 6;21
+258;46;Male;Treatment;23,029511; 2;22
+259;25;Male;Waitlist;27,502354; 4;12
+260;20;Female;Treatment;20,693949; 3;33
+261;38;Male;Waitlist;11,364917; 2;43
+262;19;Male;Treatment;14,765449; 2;23
+263;47;Female;Placebo;16,096061; 1;51
+264;33;Male;Placebo;19,314696;12;35
+265;44;Female;Waitlist;16,159413; 7;35
+266;16;Female;Waitlist;16,349897;10;47
+267;46;Male;Treatment;19,599735; 2;14
+268;45;Male;Waitlist;32,860644; 1;33
+269;32;Male;Placebo;18,626982; 3;15
+270;37;Male;Treatment;17,383294; 4;55
+271;27;Female;Placebo;22,561974; 6;50
+272;28;Female;Waitlist;17,171127; 3;21
+273;44;Male;Waitlist;17,014158; 1;40
+274;44;Male;Treatment;19,365743; 1;37
+275;17;Male;Waitlist;17,872399; 6;25
+276;31;Female;Placebo;18,744161; 5;58
+277;45;Male;Placebo;28,264763; 7;24
+278;21;Female;Waitlist;18,310485;14;41
+279;19;Female;Placebo;18,676856; 5;51
+280;39;Female;Waitlist;18,635505; 0;39
+281;31;Male;Placebo;24,305054; 7;59
+282;48;Male;Placebo;18,890847; 1;18
+283;25;Female;Placebo;18,346372; 8;43
+284;20;Female;Placebo;23,508046; 2;54
+285;44;Male;Treatment;23,214027; 3;55
+286;24;Female;Placebo;18,240659; 1;25
+287;33;Male;Waitlist;20,709116; 4;26
+288;26;Male;Treatment;18,723762; 7;14
+289;18;Male;Placebo;14,618085; 5;42
+290;33;Female;Treatment;24,411021; 0;43
+291;41;Male;Treatment;18,798679; 5;37
+292;43;Female;Placebo;22,288013; 2;47
+293;26;Female;Placebo;19,142059; 2;15
+294;48;Male;Waitlist;21,154569; 6;35
+295;31;Male;Placebo;16,432054; 5;57
+296;36;Female;Treatment;14,840605; 7;22
+297;37;Female;Treatment; 8,760015; 5;27
+298;44;Male;Placebo;14,823664; 4;58
+299;36;Male;Treatment;22,407812; 3;35
+300;42;Female;Treatment;24,059178; 2;34
+301;33;Female;Waitlist;14,100200; 1;22
+302;21;Female;Placebo;19,318420; 4;17
+303;29;Male;Placebo;20,464117; 1;33
+304;46;Male;Waitlist;18,639818; 1;44
+305;28;Male;Placebo;17,558130; 2;44
+306;43;Male;Placebo;17,978751; 6;26
+307;16;Male;Waitlist;15,895145; 5;42
+308;40;Female;Treatment;23,727966; 2;41
+309;30;Male;Waitlist;21,626574; 8;46
+310;42;Male;Placebo;26,581878; 4;28
+311;49;Female;Treatment;23,226072; 8;38
+312;41;Female;Waitlist;23,818637; 3;54
+313;22;Male;Placebo;19,779562; 5;59
+314;41;Male;Treatment;21,211374; 2;22
+315;34;Male;Waitlist;19,641161; 2;41
+316;33;Female;Placebo;14,911585; 1;26
+317;18;Male;Placebo;16,743648; 4;36
+318;32;Female;Waitlist;17,385372; 8;53
+319;19;Male;Placebo;13,984755; 8;28
+320;46;Male;Treatment;14,252485; 1;39
+321;47;Female;Treatment;20,525298; 1;28
+322;33;Male;Placebo;19,620226; 1;34
+323;49;Female;Placebo;16,663917; 3;18
+324;24;Male;Placebo;12,624144; 3;18
+325;39;Male;Waitlist;14,542458; 3;30
+326;34;Male;Waitlist;19,819747; 2;59
+327;26;Female;Waitlist;18,006327; 4;29
+328;32;Female;Placebo;16,109640; 2;19
+329;39;Male;Waitlist;26,432623; 2;27
+330;26;Male;Treatment;17,251289; 4;12
+331;20;Male;Treatment;20,228001; 9;54
+332;35;Female;Treatment;15,610248; 3;31
+333;43;Female;Placebo;17,801031; 3;42
+334;46;Male;Waitlist;17,442469; 6;20
+335;40;Male;Waitlist;21,970990; 7;49
+336;48;Female;Placebo;15,554802; 5;47
+337;30;Female;Treatment;25,379480; 2;55
+338;21;Male;Treatment;22,374595; 2;36
+339;19;Male;Treatment;17,002402; 3;24
+340;45;Male;Placebo;19,318473; 6;40
+341;24;Male;Treatment;22,105080; 4;18
+342;16;Female;Placebo;29,868156; 3;36
+343;22;Female;Treatment;19,455522; 8;38
+344;42;Male;Placebo;17,191076; 1;50
+345;42;Male;Waitlist;14,575737; 2;42
+346;22;Male;Waitlist;19,009582; 4;57
+347;34;Male;Waitlist;15,745884; 1;43
+348;32;Male;Treatment;20,957702; 4;30
+349;18;Male;Waitlist;20,384087; 8;20
+350;16;Female;Placebo;18,906787; 3;57
+351;19;Male;Treatment;13,117619; 2;43
+352;35;Female;Waitlist;11,882645; 3;56
+353;38;Female;Treatment;16,642942; 1;57
+354;41;Male;Treatment;18,794880; 3;33
+355;23;Male;Waitlist;22,982754; 1;29
+356;21;Male;Waitlist;11,383787;10;50
+357;48;Female;Waitlist;25,316263; 0;56
+358;21;Male;Waitlist;23,380397; 2;51
+359;30;Male;Waitlist;20,356070; 1;36
+360;35;Female;Waitlist;16,071953; 7;44
+361;26;Male;Treatment;21,717440; 3;36
+362;43;Female;Placebo;20,828541; 2;36
+363;42;Male;Waitlist;21,082850; 3;23
+364;17;Male;Placebo;20,842392; 4;23
+365;21;Male;Treatment;17,627135;12;30
+366;40;Female;Placebo;16,986252; 1;28
+367;16;Male;Waitlist;17,253229; 5;51
+368;45;Male;Treatment;16,568988; 4;26
+369;30;Male;Waitlist;19,607241; 7;12
+370;42;Female;Placebo;18,344830; 2;49
+371;23;Female;Treatment;20,085553; 1;31
+372;21;Male;Placebo;19,148417; 0;30
+373;41;Female;Treatment;17,634751; 3;26
+374;31;Male;Waitlist;19,961565;11;38
+375;16;Female;Waitlist;12,999709; 3;31
+376;31;Female;Treatment;17,430922;13;28
+377;29;Female;Waitlist;19,990137; 9;46
+378;26;Male;Placebo;17,346503; 7;31
+379;30;Male;Treatment;18,457617; 3;54
+380;48;Female;Treatment;21,006952; 5;19
+381;38;Male;Treatment;19,588303;14;25
+382;45;Female;Treatment;24,215431; 5;22
+383;24;Male;Treatment;24,519255; 7;12
+384;24;Female;Waitlist;21,390348; 3;30
+385;31;Male;Placebo;13,271511; 4;52
+386;47;Male;Treatment;18,758939; 4;31
+387;23;Male;Placebo;23,994715; 5;20
+388;44;Female;Placebo;16,172913; 1;33
+389;41;Female;Placebo;17,819229; 1;45
+390;45;Male;Waitlist;20,878598; 3;34
+391;46;Male;Waitlist;23,991528; 6;55
+392;38;Male;Placebo;22,435910; 4;21
+393;37;Female;Placebo;17,803236; 4;25
+394;21;Female;Waitlist;28,388963; 8;15
+395;45;Male;Placebo;19,666196; 4;47
+396;49;Female;Placebo;24,355968; 1;19
+397;48;Female;Placebo;26,776802; 4;52
+398;50;Male;Waitlist;17,681042; 2;26
+399;20;Male;Waitlist;15,695848; 2;23
+400;42;Male;Treatment;12,973797; 2;16
+401;17;Female;Waitlist;18,764214; 3;37
+402;22;Female;Treatment;20,361118; 5;49
+403;40;Male;Placebo;12,505201; 2;53
+404;31;Male;Waitlist;17,072808; 1;42
+405;22;Male;Treatment;14,385532; 2;32
+406;18;Male;Waitlist;17,622795; 4;36
+407;40;Male;Placebo;17,052711; 4;24
+408;26;Female;Placebo;23,240648; 2;44
+409;50;Male;Waitlist;17,698250; 2;48
+410;29;Female;Placebo;17,846933; 6;57
+411;44;Male;Waitlist;23,574470; 8;31
+412;26;Female;Treatment;22,168653; 3;14
+413;21;Male;Waitlist;26,807460; 9;24
+414;19;Female;Waitlist;18,595558; 0;57
+415;30;Female;Placebo;15,601841; 5;16
+416;39;Male;Waitlist;16,706556; 5;30
+417;41;Female;Treatment;17,931729; 1;54
+418;19;Female;Placebo;12,860965; 3;16
+419;48;Female;Waitlist;18,994352;11;33
+420;26;Male;Waitlist;18,183840; 5;28
+421;18;Female;Placebo;24,411726; 5;18
+422;26;Female;Waitlist;21,664932; 7;25
+423;35;Female;Treatment;24,971656; 2;29
+424;33;Female;Waitlist;21,578456; 4;36
+425;29;Male;Treatment;18,626082; 3;48
+426;35;Male;Waitlist;17,942245; 1;55
+427;27;Female;Placebo;21,961905; 6;19
+428;35;Male;Treatment;14,312453; 6;28
+429;20;Female;Waitlist;19,652386; 5;34
+430;37;Female;Waitlist;18,109733; 1;15
+431;50;Female;Placebo;13,354369; 5;29
+432;38;Female;Waitlist;22,229775; 2;46
+433;46;Male;Treatment;25,066251; 6;46
+434;19;Male;Waitlist;20,046887; 2;36
+435;44;Male;Waitlist;25,409209; 5;44
+436;28;Male;Waitlist;14,160332; 2;14
+437;21;Male;Waitlist;22,110333; 9;25
+438;20;Female;Placebo;21,946626; 1;13
+439;38;Female;Waitlist;18,231621; 5;26
+440;27;Female;Treatment;24,818577; 1;34
+441;30;Male;Waitlist;21,781023; 1;42
+442;31;Female;Placebo;18,509878; 4;21
+443;43;Male;Placebo;17,994107; 2;38
+444;28;Female;Treatment;16,823179; 2;27
+445;18;Female;Treatment;20,967382; 2;20
+446;39;Male;Placebo;12,001395;10;44
+447;22;Female;Treatment;14,509140;16;15
+448;34;Male;Treatment;11,609299;10;20
+449;35;Male;Placebo;20,276881; 7;52
+450;43;Female;Treatment;21,367308; 5;13
+451;21;Male;Treatment;28,648329; 3;38
+452;49;Male;Waitlist;24,746938; 3;31
+453;31;Female;Placebo;23,077753; 5;40
+454;43;Female;Waitlist;21,973095; 6;34
+455;39;Male;Treatment;20,917162; 3;17
+456;44;Male;Treatment;21,387537; 2;46
+457;39;Male;Waitlist;21,154447; 2;19
+458;28;Female;Placebo;19,159983; 4;34
+459;29;Female;Waitlist;21,248572; 2;38
+460;32;Male;Treatment;22,005122; 3;25
+461;46;Female;Waitlist;25,021638; 4;38
+462;30;Female;Placebo;21,769572; 5;58
+463;17;Female;Placebo;23,588788; 1;30
+464;27;Female;Treatment;19,974765; 6;27
+465;25;Female;Placebo;12,377031; 3;60
+466;29;Male;Treatment;24,215494; 2;34
+467;21;Female;Treatment;17,410842; 3;28
+468;27;Male;Waitlist;16,932460; 2;57
+469;37;Male;Waitlist;20,807675; 4;56
+470;36;Female;Placebo;12,636720; 7;43
+471;48;Female;Treatment;23,764568; 1;32
+472;36;Male;Waitlist;19,813318;11;49
+473;36;Female;Treatment;19,503054; 6;42
+474;19;Male;Placebo;20,826843; 7;34
+475;18;Male;Waitlist;26,741348; 3;49
+476;34;Male;Placebo;15,514271; 1;17
+477;18;Female;Waitlist;12,333065; 6;23
+478;22;Male;Placebo;20,687795; 2;50
+479;18;Female;Treatment;16,211733;12;47
+480;27;Male;Treatment;16,746482; 3;32
+481;47;Male;Waitlist;13,731471; 3;40
+482;33;Male;Waitlist;19,851468; 3;43
+483;42;Male;Placebo;20,754198; 1;17
+484;40;Female;Treatment;22,964284; 3;21
+485;48;Male;Waitlist;12,999226; 1;36
+486;27;Male;Waitlist;15,270534; 5;36
+487;30;Male;Treatment;21,138963; 2;28
+488;29;Male;Waitlist;15,731455;13;53
+489;34;Male;Placebo;17,605946; 9;52
+490;37;Male;Treatment;15,919131; 4;58
+491;20;Female;Treatment;25,566831; 6;33
+492;19;Female;Treatment;20,907985; 4;32
+493;22;Male;Placebo;24,329630; 5;32
+494;31;Female;Waitlist;21,404479; 1;54
+495;46;Male;Placebo;22,384332; 1;23
+496;48;Male;Placebo;19,569929; 2;45
+497;16;Male;Treatment;21,362089; 3;37
+498;28;Male;Waitlist;20,823564; 2;55
+499;32;Male;Placebo;17,790241;10;59
+500;36;Male;Placebo;16,682421; 5;28
+501;19;Male;Waitlist;20,897070; 1;30
+502;25;Female;Treatment;26,004790; 4;34
+503;42;Female;Treatment;16,136324; 3;20
+504;34;Female;Waitlist;21,963424; 7;36
+505;32;Female;Waitlist;21,996091;11;15
+506;39;Male;Waitlist;15,839340; 1;35
+507;33;Female;Placebo;18,501674; 8;18
+508;24;Male;Treatment;22,778783; 2;52
+509;20;Male;Placebo;25,496369; 5;40
+510;21;Male;Treatment;22,381152; 6;40
+511;37;Female;Treatment;16,422991; 1;51
+512;37;Male;Treatment;21,885998; 3;34
+513;31;Male;Waitlist;22,950648; 3;39
+514;29;Male;Waitlist;22,508998; 7;55
+515;25;Female;Placebo;26,954884; 6;54
+516;47;Female;Treatment;23,129663; 6;27
+517;41;Female;Waitlist;24,696012; 2;12
+518;18;Male;Treatment;18,386584; 5;12
+519;17;Female;Waitlist;16,726535; 5;46
+520;30;Male;Waitlist;22,869176; 9;27
+521;42;Female;Treatment;10,648731; 2;30
+522;29;Male;Placebo;20,773746; 4;53
+523;50;Male;Treatment;22,097858; 6;22
+524;24;Female;Placebo;20,782215;12;41
+525;39;Female;Treatment;19,184498; 3;29
+526;16;Female;Waitlist;20,632837; 1;54
+527;37;Female;Waitlist;13,438727; 6;31
+528;42;Female;Placebo;23,168809; 3;47
+529;28;Male;Waitlist;16,298207; 2;43
+530;41;Female;Placebo;24,077541; 3;15

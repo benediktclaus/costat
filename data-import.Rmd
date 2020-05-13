@@ -1,0 +1,20 @@
+---
+title: "Daten-Import"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+![](images/import_r.jpg)
+
+Bevor wir in R -- oder auch in jedem anderen Statistik-Programm -- arbeiten könnne, müssen wir unsere eifrig gesammelten Daten irgendwie ins Programm kriegen. In R war das für einige Datenformate lange Zeit eine schmerzhafte Angelegenheit, was das Arbeiten in R nicht gerade attraktiv gemacht hat. Das Tidyverse jedoch greift uns bei dieser Aufgabe unter die Arme und der Import ist mit einer Zeile Code (versprochen!) abgeschlossen.
+
+Wir behandeln hier die gängigsten Datei-Typen: *Comma-Seperated  Values* (.csv), Excel-Dateien (.xlsx), SPSS-Dateien (.sav) und R-Objekt-Dateien (.rds). Jeder Datei-Typ hat seine Stärken und Schwächen, welche beim Import eine Rolle spielen können. CSV-Dateien sind eigentlich ideal zum Speichern von Daten, weil so ziemich jedes Programm, das mit Daten umgeht, entweder CSV-Daten einlesen, ausgeben oder abspeichern kann. Dabei werden die einzelnen Datenwerte durch Kommata getrennt abgespeichert (daher der Name). Jedes Komma zeigt also an, wann eine neue Spalte beginnt. Tricky wird es im deutschen Sprachraum, weil das Komma hier als Dezimaltrennzeichen genutzt wird. Die Zahl 1,5 würde also in 2 Spalten aufgeteilt werden. Da auch wir eine Daseinsberechtigung haben, und nicht alles ins englische Format überfüreh wollen, ist das Trennzeichen für CSV-Dateien bei uns kein Komma, sondern ein Semikolon (";").
+
+Nach den CSV-Dateien werden wohl Excel-Dateien die am häufigsten verwendeten sein, wenn es um den Austausch von Daten geht. Natürlich kann man Excel-Dateien über "Speichern unter" als CSV abspeichern (etwas, das nach jeder Änderung dann immer wieder gemacht werden muss), aber den Schritt kann man sich sparen und direkt Excel-Dateien importieren.
+
+Auch SPSS hat sein eigenes Datenformat, war ja klar. R hat sogar zwei, aber das RDS-Format bietet einige Vorteile, weshalb wir auch nur dieses behandeln.
+
+Je nach Datei-Typ müssen wir unterschiedliche Pakete laden. Für CSV- und RDS-Dateien benötigen wir nur das Tidyverse. Für Excel-Dateien wird das Paket `readxl` verwendet, für SPSS-Dateien `haven`.
