@@ -341,7 +341,7 @@ Oh Wunder, er ist signifikant, da $p < .05$. Der Spaß mit der klassischen ANOVA
 ### Durchführung
 Die Durchführung ist wie immer kurz und schmerzlos.
 
-```{r}
+```{r message=FALSE}
 runners %>% 
   anova_test(dv = heart_rate, between = c(gender, group), type = 3)
 ```

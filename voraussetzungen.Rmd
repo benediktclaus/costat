@@ -26,7 +26,7 @@ Wichtig ist allerdings, dass wir uns, egal wie kompliziert das Modell auch sein 
 * Homoskedastizität
 * Unabhängigkeit
 
-Verletzungen dieser Annahmen haben Auswrikungen auf die Schätzung der **Parameter** and sich (die $\beta$), die **Konfidenzintervalle** dieser Parameter und die **Signifikanztests**.
+Verletzungen dieser Annahmen haben Auswirkungen auf die Schätzung der **Parameter** an sich (die $\beta$s), die **Konfidenzintervalle** dieser Parameter und die **Signifikanztests**. Sie können nämlich schlicht falsch sein -- somit sind die Schlüsse, die wir aus ihnen ziehen, auch falsch.
 
 
 # Additivität
@@ -107,9 +107,96 @@ Gibt es Methoden, Varianzhomogenität auch mit einem Signifikanztest zu überpr�
 # Unabhängigkeit
 Mit der Unabhängigkeit ist eigentlich die Unabhängigkeit der Fehler ($\varepsilon$) gemeint. Beispielweise sollen die Fehler eines Probanden nicht mit den Fehlern eines anderen Probanden zusammenhängen. Wenn man **unabhängige** Stichproben zieht, ist das in der Regel immer erfüllt; betrachtet man jedoch **verbundene** Stichproben (klassischerweise wie in Designs mit Messwiederholung), sind die Fehler nicht mehr abhängig. Stell dir einmal eine Studie vor, in der Felix und Johanna einen Test zur Stresstoleranz in drei Wochen hintereinander ausgefüllt haben. Du möchtest nun herauskriegen, ob sich der Test-Wert der beiden im Mittel verändert hat. Die Beobachtungen sind aber nicht mehr unabhängig -- im Gegenteil. Felix' Werte sind durch Felix an sich beeinflusst und Johannas Werte von Johanna. Die Werte von Felix und Johanna sind also für sich genommen ähnlicher als die Werte untereinander, weil beide individuelle "Fehler" machen. Wie man damit umgeht, wird auf den entsprechenden Seiten erklärt.
 
+# Robuste Methoden {#robuste_Methoden}
+Wenn die Voraussetzungen nicht erfüllt sind, hat da, wie bereits erwähnt, drastische Konsequenzen [@Mair.2020; @Wilcox.2017]. Zum Glück gibt es Rand Wilcox, der viel Zeit seiner Arbeit in **robuste Methoden** investiert hat [@Wilcox.2017]. Das sind Methoden, die keine Annahme an die Normalverteilung oder Varianzhomogenität stellen.
 
-```{r echo=FALSE}
-remove(list = ls())
+@Wilcox.2017 unterscheidet grob drei robuste Methoden für die von uns oft verwendeten Schätzer (Mittelwert, Standardabweichung, etc.)
+
+* Trimming
+* Winsorizing
+* M-Schätzer
+
+An dieser Stelle werfe ich deutsche und englische Begriffe durcheinander, weil es nicht immer das Gegenstück in der anderen Sprache gibt.
+
+## Trimming
+Beim Trimmen nimmt man sich die Daten, ordnet sich der Größe nach und schneidet dann "oben" und "unten" einen gewissen Prozentsatz ab, z.B. 10%. Übrig bleiben dann 80% der ursprünglichen Daten, allerdings ohne einflussreiche/extrem kleine und große Werte. An dieser Stelle wird bereits deutlich, wie gut diese Methoden beim Vorhandensein von Ausreißern sind.
+
+Den getrimmten Mittelwert kann R von Haus aus berechnen, indem wir der Funktion `mean()` mit `trim = ` angeben, um wie viel die Daten getrimmt werden sollen. Ein guter Start sind 20%. Der Standardfehler des getrimmten Mittelwerts berechnen wir mit `trimse()` aus dem Paket `WRS2` [@Mair.2020]. Trimmt man $n$ Werte um einen bestimmten Prozentsatz, bleiben nach dem Trimmen $h$ Werte (Stichprobengröße nach dem Trimmen) übrig.
+
+```{r}
+library(WRS2)
+
+# Zufällige Werte einer schiefen Verteilung
+set.seed(20200512)
+gruesome_data <- tibble("x" = c(round(rchisq(80, 10)), rep(95:100, times = 2)))
+
+# Getrimmter Mittelwert
+gruesome_data %>% 
+  summarise(mean = mean(x),
+            se = sd(x)/sqrt(n()),
+            trimmed_mean = mean(x, trim = 0.2),
+            trimmed_se = trimse(x, tr = 0.2))
+```
+
+Im direkten Vergleich des klassischen und des robusten Verfahrens fällt auf, dass sich die Werte für Mittelwert und Standardfehler doch schon gut unterscheiden -- die getrimmten Werte sind deutlich kleiner.
+
+## Winsorizing
+Das Winsorizing funktioniert ähnlich wie das Trimmen, aber anstatt die obersten und untersten Prozent der Daten abzuschneiden, werden diese durch den jeweils verbleibenden größten, bzw. kleinsten, Wert ersetzt. Den entsprechenden Mittelwert errechnet man mit `winmean()` und den Standardfehler mit `winse()`
+
+```{r}
+gruesome_data %>% 
+  summarise(mean = mean(x),
+            se = sd(x)/sqrt(n()),
+            winsorized_mean = winmean(x, tr = 0.2),
+            winsorized_se = winse(x, tr = 0.2))
+```
+
+## M-Schätzer
+M-Schätzer arbeiten auf der Basis von Maximum-Likelihood-Schätzungen [siehe @Wilcox.2017 für weitere Informationen]. Den entsprechenden Mittelwert errechnet man mit `mest()` und den Standardfehler mit `mestse()`.
+
+```{r}
+gruesome_data %>% 
+  summarise(mean = mean(x),
+            se = sd(x)/sqrt(n()),
+            m_est_mean = mest(x),
+            m_est_se = mestse(x))
+```
+
+## Vergleich der robusten Schätzer
+Betrachtet man die robusten Schätzer im Vergleich zu den empirischen Daten und der klassischen Methode, stellt man fest, dass die robusten Schätzer ein besseres Bild der Realität wiedergeben.
+
+```{r echo=FALSE, fig.height=3}
+tr_mean_se <- function(x) {
+  mean_x <- mean(x, trim = 0.2)
+  se_x <- trimse(x, tr = 0.2)
+  
+  tibble("y" = mean_x, "ymin" = mean_x - se_x, "ymax" = mean_x + se_x)
+}
+
+win_mean_se <- function(x) {
+  mean_x <- winmean(x, tr = 0.2)
+  se_x <- winse(x, tr = 0.2)
+  
+  tibble("y" = mean_x, "ymin" = mean_x - se_x, "ymax" = mean_x + se_x)
+}
+
+m_est_mean_se <- function(x) {
+  mean_x <- mest(x)
+  se_x <- mestse(x)
+  
+  tibble("y" = mean_x, "ymin" = mean_x - se_x, "ymax" = mean_x + se_x)
+}
+
+gruesome_data %>% 
+  ggplot(aes(y = x)) +
+  geom_jitter(aes(x = 0), width = 0.1, alpha = 0.5) +
+  stat_summary(aes(x = 1), fun.data = "mean_se", geom = "pointrange") +
+  stat_summary(aes(x = 2), fun.data = "tr_mean_se", geom = "pointrange") +
+  stat_summary(aes(x = 3), fun.data = "win_mean_se", geom = "pointrange") +
+  stat_summary(aes(x = 4), fun.data = "m_est_mean_se", geom = "pointrange") +
+  coord_flip() +
+  scale_x_reverse(labels = c("Beobachtet", "Mittelwert", "Getrimmter\nMittelwert", "Winsorized\nMittelwert", "M-Estimator"), breaks = 0:4, minor_breaks = NULL) +
+  labs(x = NULL)
 ```
 
 
