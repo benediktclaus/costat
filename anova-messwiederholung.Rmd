@@ -1,0 +1,93 @@
+---
+title: "ANOVA mit Messwiederholungen"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(fig.align = "center", dpi = 350)
+ggplot2::theme_set(ggplot2::theme_light())
+
+
+library(benelib)
+```
+
+![](images/runner_r.jpg)
+
+Mit einer (allgemeinen) ANOVA mit Messwiederholungen kann man mehr als zwei Gruppenmittelwerte in Abhängigkeit von kategorialen Prädiktoren vergleichen, wenn *dieselben* Probanden in mehreren Gruppen sind. Da die ANOVA ein Omnibus-Test ist, und so nur anzeigt, ob irgendwo ein signifikanter Unterschied zwischen den betrachteten Mittelwerten besteht, nutzt man entweder [Kontraste](kontraste.html) oder [Post-hoc-Tests](post-hoc-tests.html), um herauszufinden, welche Mittelwerte sich letztendlich signifikant voneinander unterscheiden. Zusätzlich kann eine [*Simple Effects Analysis*](#simple_effects) dazu genutzt werden, Unterschiede auf einzelnen Faktorstufen festzustellen.
+
+# Pakete 
+Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen.
+
+```{r message=FALSE}
+library(tidyverse)
+library(haven)
+library(rstatix)
+```
+
+```{r echo=FALSE}
+library(patchwork)
+```
+
+# Beispiel
+
+## Klassisch
+
+
+```{r}
+ice_cream <- read_spss("data/ice_cream.sav")
+
+ice_cream <- ice_cream %>% mutate_if(is.labelled, as_factor)
+
+ice_cream
+```
+
+### Voraussetzungen
+Da wir uns im GLM bewegen, gelten die üblichen [Voraussetzungen](voraussetzungen.html). Zusätzlich gilt bei wiederholten Messungen jedoch noch die Voraussetzung der Sphärizität.
+
+### EDA
+
+
+### Durchführung
+
+
+### Simple Effects Analysis {#simple_effects}
+#### Varianzhomogenität angenommen
+#### Varianzhomogenität nicht angenommen
+
+
+
+#### Effektstärke {#effect_size}
+
+
+### Berichten
+
+
+## Robust
+
+
+## Non-parametrisch
+
+
+# Aus der Praxis
+
+## Klassisch
+### EDA
+
+
+### Durchführung
+
+
+### Berichten
+
+
+## Robust {#beispiel_robust}
+
+# Literatur
+
+```{r echo=FALSE}
+remove(list = ls())
+```
