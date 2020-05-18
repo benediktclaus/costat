@@ -64,3 +64,21 @@ crossing(flavor = as_factor(c("Vanilla", "Chocolate", "Cookie", "Champagne")),
   sample_n(size = nrow(.)) %>% 
   rownames_to_column(var = "id") %>% 
   write_sav("data/ice_cream.sav")
+
+# ANOVA mit Messwiederholungen
+set.seed(20200518)
+tibble(
+  "bad" = rnorm(51, mean = 10, sd = 3),
+  "neutral" = rnorm(51, mean = 16, sd = 3),
+  "favorite" = rnorm(51, mean = 25, sd = 3)
+) %>% 
+  rownames_to_column(var = "id") %>% 
+  pivot_longer(
+    cols = -id,
+    names_to = "music_type",
+    values_to = "endurance"
+  ) %>% 
+  mutate(endurance = round(endurance),
+         endurance = pmax(endurance, 0),
+         endurance = pmin(endurance, 30)) %>% 
+  write_sav(path = "data/runners.sav")
