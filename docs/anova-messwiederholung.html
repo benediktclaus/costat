@@ -11,7 +11,7 @@
 
 
 
-<title>ANOVA mit Messwiederholungen</title>
+<title>ANOVA mit Messwiederholung</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -489,7 +489,9 @@ div.tocify {
       <a href="faktorielle-anova.html">Faktorielle ANOVA</a>
     </li>
     <li class="dropdown-header">ANCOVA</li>
-    <li class="dropdown-header">Repeated Measures ANOVA</li>
+    <li>
+      <a href="anova-messwiederholung.html">ANOVA mit Messwiederholung</a>
+    </li>
     <li class="dropdown-header">Mixed ANOVA</li>
     <li>
       <a href="kontraste.html">Geplante Kontraste</a>
@@ -536,74 +538,177 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">ANOVA mit Messwiederholungen</h1>
+<h1 class="title toc-ignore">ANOVA mit Messwiederholung</h1>
 
 </div>
 
 
 <p><img src="images/runner_r.jpg" /></p>
-<p>Mit einer (allgemeinen) ANOVA mit Messwiederholungen kann man mehr als zwei Gruppenmittelwerte in Abhängigkeit von kategorialen Prädiktoren vergleichen, wenn <em>dieselben</em> Probanden in mehreren Gruppen sind. Da die ANOVA ein Omnibus-Test ist, und so nur anzeigt, ob irgendwo ein signifikanter Unterschied zwischen den betrachteten Mittelwerten besteht, nutzt man entweder <a href="kontraste.html">Kontraste</a> oder <a href="post-hoc-tests.html">Post-hoc-Tests</a>, um herauszufinden, welche Mittelwerte sich letztendlich signifikant voneinander unterscheiden. Zusätzlich kann eine <a href="#simple_effects"><em>Simple Effects Analysis</em></a> dazu genutzt werden, Unterschiede auf einzelnen Faktorstufen festzustellen.</p>
+<p>Mit einer (allgemeinen) ANOVA mit Messwiederholung (<em>repeated measures ANOVA</em>) kann man mehr als zwei Gruppenmittelwerte in Abhängigkeit von kategorialen Prädiktoren vergleichen, wenn <em>dieselben</em> Probanden in mehreren Gruppen sind. Da die ANOVA ein Omnibus-Test ist, und so nur anzeigt, ob irgendwo ein signifikanter Unterschied zwischen den betrachteten Mittelwerten besteht, nutzt man entweder <a href="kontraste.html">Kontraste</a> oder <a href="post-hoc-tests.html">Post-hoc-Tests</a>, um herauszufinden, welche Mittelwerte sich letztendlich signifikant voneinander unterscheiden. Zusätzlich kann eine <a href="#simple_effects"><em>Simple Effects Analysis</em></a> dazu genutzt werden, Unterschiede auf einzelnen Faktorstufen festzustellen.</p>
 <div id="pakete" class="section level1">
 <h1>Pakete</h1>
-<p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien und <code>rstatix</code> für statistische Analysen.</p>
+<p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien und <code>rstatix</code> für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket <code>costatcompanion</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(haven)</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rstatix)</span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rstatix)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(costatcompanion)</span></code></pre></div>
 </div>
 <div id="beispiel" class="section level1">
 <h1>Beispiel</h1>
+<p>Viele Hobby-Läufer finden das Laufen an sich sinnvoll, aber auf Dauer ziemlich langweilig. Wer sich nicht an der Fülle der Natur erfreuen kann, oder an ein Laufband in der eigenen Wohnung gebunden ist, der lenkt sich gerne mit Musik ab. Wir vermuten, dass es nicht egal ist, welche Musik die Läufer hören, sondern dass die Musik einen Einfluss auf die Leistung der Läufer hat. Dazu haben wir ein kleines Experiment durchgeführt, um diesen Effekt zu beschreiben – insofern es ihn gibt. Wir haben und ein paar Läufer aus den Parks des Ruhrgebiets geschnappt und uns von denen eine Liste von Musik-Titeln bewerten lassen. Für jeden Läufer konnten wir so “schlecht”, “neutrale” und “Lieblings-” Titel herausfinden und in individuellen Playlists abspeichern. Nun haben wir den Läufern beim Laufen an drei aufeinanderfolgenden Tagen zufällig eine dieser drei individuellen Playlists auf die Ohren gelegt und anschließend an das Training das empfundene Durchhaltevermögen auf einer Skala von 0 – 30 einschätzen lassen (natürlcih waren alle drei Läufe gleich lang). Höhere Werte bedeuten hierbei ein höheres, empfundenes Durchhaltevermögen.</p>
 <div id="klassisch" class="section level2">
 <h2>Klassisch</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>ice_cream &lt;-<span class="st"> </span><span class="kw">read_spss</span>(<span class="st">&quot;data/ice_cream.sav&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a>ice_cream &lt;-<span class="st"> </span>ice_cream <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate_if</span>(is.labelled, as_factor)</span>
-<span id="cb2-4"><a href="#cb2-4"></a></span>
-<span id="cb2-5"><a href="#cb2-5"></a>ice_cream</span></code></pre></div>
-<pre><code>## # A tibble: 295 x 4
-##    id    flavor    sex    yumminess
-##    &lt;chr&gt; &lt;fct&gt;     &lt;fct&gt;      &lt;dbl&gt;
-##  1 1     Champagne Female        14
-##  2 2     Vanilla   Female        19
-##  3 3     Champagne Female        16
-##  4 4     Chocolate Female        17
-##  5 5     Chocolate Female        16
-##  6 6     Vanilla   Male          16
-##  7 7     Vanilla   Female        17
-##  8 8     Vanilla   Male          18
-##  9 9     Cookie    Male          13
-## 10 10    Champagne Female        13
-## # ... with 285 more rows</code></pre>
+<p>Die Daten sind in der Datei <code>runners.sav</code> oder im Paket <code>costatcompanion</code> unter demselben Namen. Der Datensatz enthält drei Variablen: Die ID der Läufer (<code>id</code>), den für den Lauf gehörten Typ von Musik (<code>music_type</code>) und das nach dem Lauf eingeschätzte Durchhaltevermögen während des Laufes (<code>endurance</code>). Wir untersuchen also eine einfaktorielle Varianzanalyse mit dem Innersubjektfaktor “Music Type” mit drei Faktorstufen (“bad”, “neutral”, und “favorite”).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>runners</span></code></pre></div>
+<pre><code>## # A tibble: 153 x 3
+##    id    music_type endurance
+##    &lt;chr&gt; &lt;fct&gt;          &lt;dbl&gt;
+##  1 1     bad                4
+##  2 1     neutral           26
+##  3 1     favorite          24
+##  4 2     bad               10
+##  5 2     neutral           17
+##  6 2     favorite          24
+##  7 3     bad                8
+##  8 3     neutral           11
+##  9 3     favorite          30
+## 10 4     bad               10
+## # ... with 143 more rows</code></pre>
 <div id="voraussetzungen" class="section level3">
 <h3>Voraussetzungen</h3>
 <p>Da wir uns im GLM bewegen, gelten die üblichen <a href="voraussetzungen.html">Voraussetzungen</a>. Zusätzlich gilt bei wiederholten Messungen jedoch noch die Voraussetzung der Sphärizität.</p>
 </div>
 <div id="eda" class="section level3">
 <h3>EDA</h3>
+<p>Zu Beginn, schauen wir uns die Daten einmal an und lassen und deskriptive Statistiken ausgeben.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 13
+##   variable     n   min   max median    q1    q3   iqr   mad  mean    sd    se
+##   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 enduran~   153     4    30     16    11    23    12  8.90  16.6  7.20 0.582
+## # ... with 1 more variable: ci &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="st">  </span><span class="kw">group_by</span>(music_type) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 3 x 14
+##   music_type variable     n   min   max median    q1    q3   iqr   mad  mean
+##   &lt;fct&gt;      &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 bad        enduran~    51     4    18      9   6.5  11     4.5  2.96  8.98
+## 2 neutral    enduran~    51     7    26     16  13.5  18     4.5  2.96 16.2 
+## 3 favorite   enduran~    51    19    30     24  22.5  26.5   4    2.96 24.6 
+## # ... with 3 more variables: sd &lt;dbl&gt;, se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+<p><img src="anova-messwiederholung_files/figure-html/unnamed-chunk-6-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p>Wir sehen einen deutlichen Trend dahingehend, dass mit “Zunahme” der Valenz der gehörten Musik, also in die Richtung von “schlechter” zu “neutraler” zur “Lieblings-” Musik, auch das eingeschätzte Durchhaltevermögen der Läufer steigt (von <span class="math inline">\(M = 8.89, SD = 3.09\)</span> auf <span class="math inline">\(M = 16.2, SD = 4.00\)</span> auf <span class="math inline">\(M = 24.6, Sd = 2.68\)</span>). Wie immer gibt es mehrere Möglichkeiten, mit denen man das darstellen kann. Entweder als Boxplots mit den originalen Datenpunkten (A) oder als “klassisches” Liniendiagramm mit eingezeichneten Mittelwerten und Fehlerbalken, die <span class="math inline">\(\pm\)</span> 1 Standardabweichung anzeigen. Für ein einfaktorielles Design kann man die Boxplots bevorzugen, weil sie mit gleicher Klarheit deutlich mehr Information anzeigen können (wie z.B. Ausreißer).</p>
+<p>Die Vaoraussetzung der Sphärizität müssen wir vorab nicht zwingend prüfen, weil uns das Paket <code>rstatix</code> unter die Arme greift. Geprüft wird diese mit Mauchlys Test. Ist dieser Test signifikant, also die Voraussetzung der Sphärizität nicht erfüllt, dann müssen die <span class="math inline">\(p\)</span>-Werte korrigiert werden. Bemerkt <code>rtstaix</code> einen signifkanten Wert in Mauchlys Test, dann korrigiert es den <span class="math inline">\(p\)</span>-Wert automatisch.</p>
 </div>
 <div id="durchführung" class="section level3">
 <h3>Durchführung</h3>
-</div>
-<div id="simple_effects" class="section level3">
-<h3>Simple Effects Analysis</h3>
-<div id="varianzhomogenität-angenommen" class="section level4">
-<h4>Varianzhomogenität angenommen</h4>
-</div>
-<div id="varianzhomogenität-nicht-angenommen" class="section level4">
-<h4>Varianzhomogenität nicht angenommen</h4>
-</div>
-<div id="effect_size" class="section level4">
-<h4>Effektstärke</h4>
-</div>
+<p>Die eigentliche Durchführung ist, wie immer, kurz und schmerzlos.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> endurance, <span class="dt">wid =</span> id, <span class="dt">within =</span> music_type)</span></code></pre></div>
+<pre><code>## ANOVA Table (type III tests)
+## 
+## $ANOVA
+##       Effect DFn DFd       F        p p&lt;.05   ges
+## 1 music_type   2 100 272.105 3.54e-41     * 0.792
+## 
+## $`Mauchly&#39;s Test for Sphericity`
+##       Effect     W     p p&lt;.05
+## 1 music_type 0.834 0.012     *
+## 
+## $`Sphericity Corrections`
+##       Effect   GGe      DF[GG]    p[GG] p[GG]&lt;.05   HFe     DF[HF]    p[HF]
+## 1 music_type 0.858 1.72, 85.75 1.11e-35         * 0.885 1.77, 88.5 9.64e-37
+##   p[HF]&lt;.05
+## 1         *</code></pre>
+<p>Wenn wir diesen Befehl ausführen, dann sehen wir, dass Mauchlys-Test signifikant ist – die Variassetzung der Sphärizität ist nicht erfüllt. Eine gute Methode, um den <span class="math inline">\(p\)</span>-Wert nun zu korrigieren, ist die Methode nach Greenhouse und Geisser <span class="citation">(Greenhouse &amp; Geisser, <a href="#ref-Greenhouse.1959" role="doc-biblioref">1959</a>)</span>. Um diese Korrektur, wie versprochen, automatisch zu erhalten, lassen wir uns anschließend mit <code>get_anova_table()</code>, angehängt an den bereits ausgeführten Befehl, die ANOVA-Ergebnisse ausgeben.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> endurance, <span class="dt">wid =</span> id, <span class="dt">within =</span> music_type) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="kw">get_anova_table</span>()</span></code></pre></div>
+<pre><code>## ANOVA Table (type III tests)
+## 
+##       Effect  DFn   DFd       F        p p&lt;.05   ges
+## 1 music_type 1.72 85.75 272.105 1.11e-35     * 0.792</code></pre>
+<p>Das <span class="math inline">\(p\)</span> ist nun identisch mit dem <code>p[GG]</code> im vorigen Output. Empfehlen würde ich jedoch, diese Schritt nicht durchzuführen und auf <code>get_anova_table()</code> zu verzichten, da wir Informationen aus dem vorigen Schritt (<code>anova_test()</code>) beim Berichten angeben müssen. Dazu zählt insbesondere der Wert (<span class="math inline">\(\varepsilon\)</span>), um den letztendlich korrigiert wurde. Standardmäßig bekommen wir zwei Korrekturen angeboten: Die bereits erwähnt nach Greenhouse und Geisser und die nach Huynh und Feldt <span class="citation">(Huynh &amp; Feldt, <a href="#ref-Huynh.1976" role="doc-biblioref">1976</a>)</span>. Um kenntlich zu machen, welche Korrektur man genommen hat, gibt man als Index am <span class="math inline">\(\varepsilon\)</span> am besten die Autorenkürzel an, also <span class="math inline">\(\varepsilon_\text{GG}\)</span> für Greenhouse-Geisser und <span class="math inline">\(\varepsilon_\text{HF}\)</span> für Huynh-Feldt.</p>
+<p>Auch hier ist die ANOVA wieder nur ein <strong>Omnibus-Test</strong>, wir wissen also nun, dass sich die Werte zwischen unseren Gruppen irgendwo unterscheiden, aber nicht genau wo. Um das zu überprüfen, können wir <a href="post-hoc-tests.html">Post-hoc-Tests</a> nutzen.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="st">  </span><span class="kw">pairwise_t_test</span>(endurance <span class="op">~</span><span class="st"> </span>music_type, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;holm&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 3 x 10
+##   .y.   group1 group2    n1    n2 statistic    df        p    p.adj p.adj.signif
+## * &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
+## 1 endu~ bad    neutr~    51    51     -9.26    50 1.97e-12 1.97e-12 ****        
+## 2 endu~ bad    favor~    51    51    -28.9     50 7.32e-33 2.20e-32 ****        
+## 3 endu~ neutr~ favor~    51    51    -12.6     50 4.37e-17 8.74e-17 ****</code></pre>
+<p>Es unterscheiden sich alle Gruppen signifikant voneinander.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="st">  </span><span class="kw">cohens_d</span>(endurance <span class="op">~</span><span class="st"> </span>music_type, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>, <span class="dt">paired =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 3 x 7
+##   .y.       group1  group2   effsize    n1    n2 magnitude
+## * &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;ord&gt;    
+## 1 endurance bad     neutral    -1.28    51    51 large    
+## 2 endurance bad     favorite   -3.99    51    51 large    
+## 3 endurance neutral favorite   -1.73    51    51 large</code></pre>
 </div>
 <div id="berichten" class="section level3">
 <h3>Berichten</h3>
+<p>We found the type of music to have an effect on runner’s perceived endurance during runs, <span class="math inline">\(F(2, 100) = 272.11, p &lt; .001, \varepsilon_\text{GG} = .858, \eta_G^2 = .792\)</span>. Follow up post-hoc-tests revealed statistically significant differences between all groups (all <span class="math inline">\(p &lt; .001\)</span>). The “bad” and “neutral” group differed by Hedges’ <span class="math inline">\(g = 1.28\)</span>, “bad” and “favorite” by <span class="math inline">\(g = 3.99\)</span>, and “neutral” and “favorite” by <span class="math inline">\(g = 1.73\)</span>.</p>
 </div>
 </div>
 <div id="robust" class="section level2">
 <h2>Robust</h2>
+<p>Natürlich hat Rand <span class="citation">Wilcox (<a href="#ref-Wilcox.2017" role="doc-biblioref">2017</a>)</span> auch für ANOVAS mit Messwiederholung eine robuste Alternative entwickelt und im Paket <code>WRS2</code> <span class="citation">(Mair &amp; Wilcox, <a href="#ref-Mair.2020" role="doc-biblioref">2020</a>)</span> zur Verfügung gestellt. Diese kann mit dem Befehl <code>rmanova()</code> ausgeführt werden; Post-hoc-Tests mit <code>rmmcp()</code>, die Ausführung des Befehls weicht allerdings etwas von der bekannten Syntax ab.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">library</span>(WRS2)</span>
+<span id="cb16-2"><a href="#cb16-2"></a></span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="co"># Robuste ANOVA mit Messwiederholung</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="kw">with</span>(runners,</span>
+<span id="cb16-5"><a href="#cb16-5"></a>     <span class="kw">rmanova</span>(<span class="dt">y =</span> endurance, <span class="dt">groups =</span> music_type, <span class="dt">block =</span> id))</span></code></pre></div>
+<pre><code>## Call:
+## rmanova(y = endurance, groups = music_type, blocks = id)
+## 
+## Test statistic: F = 229.2643 
+## Degrees of freedom 1: 1.9 
+## Degrees of freedom 2: 56.92 
+## p-value: 0</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Robuste Post-hoc-Tests</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="kw">with</span>(runners,</span>
+<span id="cb18-3"><a href="#cb18-3"></a>     <span class="kw">rmmcp</span>(<span class="dt">y =</span> endurance, <span class="dt">groups =</span> music_type, <span class="dt">blocks =</span> id))</span></code></pre></div>
+<pre><code>## Call:
+## rmmcp(y = endurance, groups = music_type, blocks = id)
+## 
+##                         psihat  ci.lower  ci.upper p.value p.crit  sig
+## bad vs. neutral       -6.83871  -8.94367  -4.73375       0 0.0500 TRUE
+## bad vs. favorite     -15.67742 -17.10274 -14.25210       0 0.0169 TRUE
+## neutral vs. favorite  -8.00000  -9.56582  -6.43418       0 0.0250 TRUE</code></pre>
+<p>Auch hier erhalten wir zuerst das Ergebnis, dass die Mittelwerte sich irgendwo signifikant unterscheiden, <span class="math inline">\(F(1.9, 56.92) = 229.26, p &lt; .001\)</span>. Die robusten Post-hoc-Tests zeigen uns auch hier an, dass sich alle Gruppen signifikant voneinander unterscheiden.</p>
 </div>
 <div id="non-parametrisch" class="section level2">
 <h2>Non-parametrisch</h2>
+<p>Friedman-ANOVA, allerdings nur für einfaktoriellen Designs. Wenn es mehrere Faktoren sein sollen, gibt es nur noch die robusten Alternativen (s.o.). Die Effektstärke für eine Friedman-ANOVA ist Kendalls <span class="math inline">\(W\)</span>, welches sich mit <code>friedman_effsize()</code> berechnen lässt. Als Post-hoc-Test wird der Wilcoxon signed-rank test genutzt. Dabei muss darauf geachtet werden, dass die Daten in der richtigen Reihenfolge sind! D.h., dass die Daten innerhalb eines Probanden immer in derselben Reihenfolge stehen müssen (hier immer die Abfolge von “bad”, “neutral” und “favorite”).</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Friedman-ANOVA</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="st">  </span><span class="kw">friedman_test</span>(endurance <span class="op">~</span><span class="st"> </span>music_type <span class="op">|</span><span class="st"> </span>id)</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 6
+##   .y.           n statistic    df        p method       
+## * &lt;chr&gt;     &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;        
+## 1 endurance    51      96.1     2 1.38e-21 Friedman test</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Kendalls W</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="st">  </span><span class="kw">friedman_effsize</span>(endurance <span class="op">~</span><span class="st"> </span>music_type <span class="op">|</span><span class="st"> </span>id)</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 5
+##   .y.           n effsize method    magnitude
+## * &lt;chr&gt;     &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;     &lt;ord&gt;    
+## 1 endurance    51   0.942 Kendall W large</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># Post-hoc-Test</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb24-3"><a href="#cb24-3"></a><span class="st">  </span><span class="kw">wilcox_test</span>(endurance <span class="op">~</span><span class="st"> </span>music_type, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;holm&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 3 x 9
+##   .y.      group1 group2     n1    n2 statistic        p      p.adj p.adj.signif
+## * &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;       
+## 1 enduran~ bad    neutral    51    51      16.5 4.60e- 9    4.60e-9 ****        
+## 2 enduran~ bad    favori~    51    51       0   5.12e-10    1.54e-9 ****        
+## 3 enduran~ neutr~ favori~    51    51       3.5 9.26e-10    1.85e-9 ****</code></pre>
+<p>Auch die Friedman-ANOVA liefert uns ein signifikantes Ergebnis, <span class="math inline">\(\chi^2(2) = 96.1, p &lt; .001, W = .942\)</span>. Auch die Post-hoc-Tests ergeben signifikante Unterschiede zwischen allen Gruppen, da in allen Fällen <span class="math inline">\(p &lt; .05\)</span> ist.</p>
 </div>
 </div>
 <div id="aus-der-praxis" class="section level1">
@@ -624,8 +729,22 @@ div.tocify {
 <h2>Robust</h2>
 </div>
 </div>
-<div id="literatur" class="section level1">
+<div id="literatur" class="section level1 unnumbered">
 <h1>Literatur</h1>
+<div id="refs" class="references">
+<div id="ref-Greenhouse.1959">
+<p>Greenhouse, S. W., &amp; Geisser, S. (1959). On methods in the analysis of profile data. <em>Psychometrika</em>, <em>24</em>(2), 95–112. <a href="https://doi.org/10.1007/BF02289823">https://doi.org/10.1007/BF02289823</a></p>
+</div>
+<div id="ref-Huynh.1976">
+<p>Huynh, H., &amp; Feldt, L. S. (1976). Estimation of the Box Correction for Degrees of Freedom from Sample Data in Randomized Block and Split-Plot Designs. <em>Journal of Educational Statistics</em>, <em>1</em>(1), 69–82. <a href="https://doi.org/10.3102/10769986001001069">https://doi.org/10.3102/10769986001001069</a></p>
+</div>
+<div id="ref-Mair.2020">
+<p>Mair, P., &amp; Wilcox, R. R. (2020). Robust statistical methods in R using the WRS2 package. <em>Behavior Research Methods</em>, <em>52</em>(2), 464–488. <a href="https://doi.org/10.3758/s13428-019-01246-w">https://doi.org/10.3758/s13428-019-01246-w</a></p>
+</div>
+<div id="ref-Wilcox.2017">
+<p>Wilcox, R. R. (2017). <em>Introduction to Robust Estimation and Hypothesis Testing</em> (4th ed.). Elsevier Academic Press.</p>
+</div>
+</div>
 </div>
 
 

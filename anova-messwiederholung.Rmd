@@ -1,9 +1,9 @@
 ---
-title: "ANOVA mit Messwiederholungen"
+title: "ANOVA mit Messwiederholung"
 bibliography: references.bib
 link-citations: yes
 csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -17,15 +17,16 @@ library(benelib)
 
 ![](images/runner_r.jpg)
 
-Mit einer (allgemeinen) ANOVA mit Messwiederholungen kann man mehr als zwei Gruppenmittelwerte in Abhängigkeit von kategorialen Prädiktoren vergleichen, wenn *dieselben* Probanden in mehreren Gruppen sind. Da die ANOVA ein Omnibus-Test ist, und so nur anzeigt, ob irgendwo ein signifikanter Unterschied zwischen den betrachteten Mittelwerten besteht, nutzt man entweder [Kontraste](kontraste.html) oder [Post-hoc-Tests](post-hoc-tests.html), um herauszufinden, welche Mittelwerte sich letztendlich signifikant voneinander unterscheiden. Zusätzlich kann eine [*Simple Effects Analysis*](#simple_effects) dazu genutzt werden, Unterschiede auf einzelnen Faktorstufen festzustellen.
+Mit einer (allgemeinen) ANOVA mit Messwiederholung (*repeated measures ANOVA*) kann man mehr als zwei Gruppenmittelwerte in Abhängigkeit von kategorialen Prädiktoren vergleichen, wenn *dieselben* Probanden in mehreren Gruppen sind. Da die ANOVA ein Omnibus-Test ist, und so nur anzeigt, ob irgendwo ein signifikanter Unterschied zwischen den betrachteten Mittelwerten besteht, nutzt man entweder [Kontraste](kontraste.html) oder [Post-hoc-Tests](post-hoc-tests.html), um herauszufinden, welche Mittelwerte sich letztendlich signifikant voneinander unterscheiden. Zusätzlich kann eine [*Simple Effects Analysis*](#simple_effects) dazu genutzt werden, Unterschiede auf einzelnen Faktorstufen festzustellen.
 
 # Pakete 
-Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen.
+Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket `costatcompanion`.
 
 ```{r message=FALSE}
 library(tidyverse)
 library(haven)
 library(rstatix)
+library(costatcompanion)
 ```
 
 ```{r echo=FALSE}
@@ -33,44 +34,125 @@ library(patchwork)
 ```
 
 # Beispiel
+Viele Hobby-Läufer finden das Laufen an sich sinnvoll, aber auf Dauer ziemlich langweilig. Wer sich nicht an der Fülle der Natur erfreuen kann, oder an ein Laufband in der eigenen Wohnung gebunden ist, der lenkt sich gerne mit Musik ab. Wir vermuten, dass es nicht egal ist, welche Musik die Läufer hören, sondern dass die Musik einen Einfluss auf die Leistung der Läufer hat. Dazu haben wir ein kleines Experiment durchgeführt, um diesen Effekt zu beschreiben -- insofern es ihn gibt. Wir haben und ein paar Läufer aus den Parks des Ruhrgebiets geschnappt und uns von denen eine Liste von Musik-Titeln bewerten lassen. Für jeden Läufer konnten wir so "schlecht", "neutrale" und "Lieblings-" Titel herausfinden und in individuellen Playlists abspeichern. Nun haben wir den Läufern beim Laufen an drei aufeinanderfolgenden Tagen zufällig eine dieser drei individuellen Playlists auf die Ohren gelegt und anschließend an das Training das empfundene Durchhaltevermögen auf einer Skala von 0 -- 30 einschätzen lassen (natürlcih waren alle drei Läufe gleich lang). Höhere Werte bedeuten hierbei ein höheres, empfundenes Durchhaltevermögen.
 
 ## Klassisch
-
+Die Daten sind in der Datei `runners.sav` oder im Paket `costatcompanion` unter demselben Namen. Der Datensatz enthält drei Variablen: Die ID der Läufer (`id`), den für den Lauf gehörten Typ von Musik (`music_type`) und das nach dem Lauf eingeschätzte Durchhaltevermögen während des Laufes (`endurance`). Wir untersuchen also eine einfaktorielle Varianzanalyse mit dem Innersubjektfaktor "Music Type" mit drei Faktorstufen ("bad", "neutral", und "favorite").
 
 ```{r}
-ice_cream <- read_spss("data/ice_cream.sav")
-
-ice_cream <- ice_cream %>% mutate_if(is.labelled, as_factor)
-
-ice_cream
+runners
 ```
 
 ### Voraussetzungen
 Da wir uns im GLM bewegen, gelten die üblichen [Voraussetzungen](voraussetzungen.html). Zusätzlich gilt bei wiederholten Messungen jedoch noch die Voraussetzung der Sphärizität.
 
 ### EDA
+Zu Beginn, schauen wir uns die Daten einmal an und lassen und deskriptive Statistiken ausgeben.
 
+```{r}
+runners %>% 
+  get_summary_stats()
+
+runners %>% 
+  group_by(music_type) %>% 
+  get_summary_stats()
+```
+
+```{r echo=FALSE}
+runners_box <- runners %>% 
+  ggplot(aes(x = music_type, y = endurance)) +
+  geom_boxplot(outlier.color = NA) +
+  geom_jitter(width = 0.02, alpha = 0.2) +
+  stat_summary(fun = "median", geom = "line", size = 1, aes(group = 1)) +
+  expand_limits(y = c(0, 30)) +
+  labs(x = "Music Type", y = "Endurance")
+
+runners_line <- runners %>% 
+  ggplot(aes(x = music_type, y = endurance)) +
+  stat_summary(fun.data = "mean_sd", geom = "errorbar", width = 0.1, size = 1) +
+  stat_summary(fun = "mean", geom = "point") +
+  stat_summary(fun = "mean", geom = "line", size = 1, aes(group = 1)) +
+  expand_limits(y = c(0, 30)) +
+  labs(x = "Music Type", y = "Endurance")
+
+(runners_box | runners_line) + plot_annotation(tag_levels = "A")
+```
+
+Wir sehen einen deutlichen Trend dahingehend, dass mit "Zunahme" der Valenz der gehörten Musik, also in die Richtung von "schlechter" zu "neutraler" zur "Lieblings-" Musik, auch das eingeschätzte Durchhaltevermögen der Läufer steigt (von $M = 8.89, SD = 3.09$ auf $M = 16.2, SD = 4.00$ auf $M = 24.6, Sd = 2.68$). Wie immer gibt es mehrere Möglichkeiten, mit denen man das darstellen kann. Entweder als Boxplots mit den originalen Datenpunkten (A) oder als "klassisches" Liniendiagramm mit eingezeichneten Mittelwerten und Fehlerbalken, die $\pm$ 1 Standardabweichung anzeigen. Für ein einfaktorielles Design kann man die Boxplots bevorzugen, weil sie mit gleicher Klarheit deutlich mehr Information anzeigen können (wie z.B. Ausreißer).
+
+Die Vaoraussetzung der Sphärizität müssen wir vorab nicht zwingend prüfen, weil uns das Paket `rstatix` unter die Arme greift. Geprüft wird diese mit Mauchlys Test. Ist dieser Test signifikant, also die Voraussetzung der Sphärizität nicht erfüllt, dann müssen die $p$-Werte korrigiert werden. Bemerkt `rtstaix` einen signifkanten Wert in Mauchlys Test, dann korrigiert es den $p$-Wert automatisch.
 
 ### Durchführung
+Die eigentliche Durchführung ist, wie immer, kurz und schmerzlos.
 
+```{r}
+runners %>% 
+  anova_test(dv = endurance, wid = id, within = music_type)
+```
 
-### Simple Effects Analysis {#simple_effects}
-#### Varianzhomogenität angenommen
-#### Varianzhomogenität nicht angenommen
+Wenn wir diesen Befehl ausführen, dann sehen wir, dass Mauchlys-Test signifikant ist -- die Variassetzung der Sphärizität ist nicht erfüllt. Eine gute Methode, um den $p$-Wert nun zu korrigieren, ist die Methode nach Greenhouse und Geisser [@Greenhouse.1959]. Um diese Korrektur, wie versprochen, automatisch zu erhalten, lassen wir uns anschließend mit `get_anova_table()`, angehängt an den bereits ausgeführten Befehl, die ANOVA-Ergebnisse ausgeben.
 
+```{r}
+runners %>% 
+  anova_test(dv = endurance, wid = id, within = music_type) %>% 
+  get_anova_table()
+```
 
+Das $p$ ist nun identisch mit dem `p[GG]` im vorigen Output. Empfehlen würde ich jedoch, diese Schritt nicht durchzuführen und auf `get_anova_table()` zu verzichten, da wir Informationen aus dem vorigen Schritt (`anova_test()`) beim Berichten angeben müssen. Dazu zählt insbesondere der Wert ($\varepsilon$), um den letztendlich korrigiert wurde. Standardmäßig bekommen wir zwei Korrekturen angeboten: Die bereits erwähnt nach Greenhouse und Geisser und die nach Huynh und Feldt [@Huynh.1976]. Um kenntlich zu machen, welche Korrektur man genommen hat, gibt man als Index am $\varepsilon$ am besten die Autorenkürzel an, also $\varepsilon_\text{GG}$ für Greenhouse-Geisser und $\varepsilon_\text{HF}$ für Huynh-Feldt.
 
-#### Effektstärke {#effect_size}
+Auch hier ist die ANOVA wieder nur ein **Omnibus-Test**, wir wissen also nun, dass sich die Werte zwischen unseren Gruppen irgendwo unterscheiden, aber nicht genau wo. Um das zu überprüfen, können wir [Post-hoc-Tests](post-hoc-tests.html) nutzen.
+
+```{r}
+runners %>% 
+  pairwise_t_test(endurance ~ music_type, paired = TRUE, p.adjust.method = "holm")
+```
+
+Es unterscheiden sich alle Gruppen signifikant voneinander.
+
+```{r}
+runners %>% 
+  cohens_d(endurance ~ music_type, hedges.correction = TRUE, paired = TRUE)
+```
 
 
 ### Berichten
-
+We found the type of music to have an effect on runner's perceived endurance during runs, $F(2, 100) = 272.11, p < .001, \varepsilon_\text{GG} = .858, \eta_G^2 = .792$. Follow up post-hoc-tests revealed statistically significant differences between all groups (all $p < .001$). The "bad" and "neutral" group differed by Hedges' $g = 1.28$, "bad" and "favorite" by $g = 3.99$, and "neutral" and "favorite" by $g = 1.73$.
 
 ## Robust
+Natürlich hat Rand @Wilcox.2017 auch für ANOVAS mit Messwiederholung eine robuste Alternative entwickelt und im Paket `WRS2` [@Mair.2020] zur Verfügung gestellt. Diese kann mit dem Befehl `rmanova()` ausgeführt werden; Post-hoc-Tests mit `rmmcp()`, die Ausführung des Befehls weicht allerdings etwas von der bekannten Syntax ab.
 
+```{r}
+library(WRS2)
+
+# Robuste ANOVA mit Messwiederholung
+with(runners,
+     rmanova(y = endurance, groups = music_type, block = id))
+
+# Robuste Post-hoc-Tests
+with(runners,
+     rmmcp(y = endurance, groups = music_type, blocks = id))
+```
+
+Auch hier erhalten wir zuerst das Ergebnis, dass die Mittelwerte sich irgendwo signifikant unterscheiden, $F(1.9, 56.92) = 229.26, p < .001$. Die robusten Post-hoc-Tests zeigen uns auch hier an, dass sich alle Gruppen signifikant voneinander unterscheiden.
 
 ## Non-parametrisch
+Friedman-ANOVA, allerdings nur für einfaktoriellen Designs. Wenn es mehrere Faktoren sein sollen, gibt es nur noch die robusten Alternativen (s.o.). Die Effektstärke für eine Friedman-ANOVA ist Kendalls $W$, welches sich mit `friedman_effsize()` berechnen lässt. Als Post-hoc-Test wird der Wilcoxon signed-rank test genutzt. Dabei muss darauf geachtet werden, dass die Daten in der richtigen Reihenfolge sind! D.h., dass die Daten innerhalb eines Probanden immer in derselben Reihenfolge stehen müssen (hier immer die Abfolge von "bad", "neutral" und "favorite").
 
+```{r}
+# Friedman-ANOVA
+runners %>% 
+  friedman_test(endurance ~ music_type | id)
+
+# Kendalls W
+runners %>% 
+  friedman_effsize(endurance ~ music_type | id)
+
+# Post-hoc-Test
+runners %>% 
+  wilcox_test(endurance ~ music_type, paired = TRUE, p.adjust.method = "holm")
+```
+
+Auch die Friedman-ANOVA liefert uns ein signifikantes Ergebnis, $\chi^2(2) = 96.1, p < .001, W = .942$. Auch die Post-hoc-Tests ergeben signifikante Unterschiede zwischen allen Gruppen, da in allen Fällen $p < .05$ ist.
 
 # Aus der Praxis
 

@@ -489,7 +489,9 @@ div.tocify {
       <a href="faktorielle-anova.html">Faktorielle ANOVA</a>
     </li>
     <li class="dropdown-header">ANCOVA</li>
-    <li class="dropdown-header">Repeated Measures ANOVA</li>
+    <li>
+      <a href="anova-messwiederholung.html">ANOVA mit Messwiederholung</a>
+    </li>
     <li class="dropdown-header">Mixed ANOVA</li>
     <li>
       <a href="kontraste.html">Geplante Kontraste</a>
@@ -618,10 +620,10 @@ div.tocify {
 <p><span class="math inline">\(\xi\)</span> (gesprochen “ksi”) wurde von <span class="citation">Wilcox &amp; Tian (<a href="#ref-Wilcox.2011" role="doc-biblioref">2011</a>)</span> vorgeschlagen und verfolgt die Grundidee einer <em>explanatory effect size</em>. Sie gibt also grob an, wie viel Varianz durch den Effekt “erklärt” wird. Besonders elegant ist <span class="math inline">\(\xi\)</span>, weil die Varianzhomogenität nicht vorausgesetzt wird und mehr als zwei Gruppen miteinander verglichen werden können (wie bspw. in ANOVA-Designs). Berechnet wird sie durch:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">yuen.effect.ci</span>(chivalry <span class="op">~</span><span class="st"> </span>house, <span class="dt">data =</span> chivalry_data)</span></code></pre></div>
 <pre><code>## $effsize
-## [1] 0.9829564
+## [1] 0.9832787
 ## 
 ## $CI
-## [1] 0.9492407 0.9942069</code></pre>
+## [1] 0.9469672 0.9943013</code></pre>
 </div>
 </div>
 </div>

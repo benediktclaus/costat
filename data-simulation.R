@@ -76,7 +76,8 @@ tibble(
   pivot_longer(
     cols = -id,
     names_to = "music_type",
-    values_to = "endurance"
+    values_to = "endurance",
+    names_ptypes = list(music_type = factor())
   ) %>% 
   mutate(endurance = round(endurance),
          endurance = pmax(endurance, 0),

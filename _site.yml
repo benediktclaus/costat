@@ -41,7 +41,8 @@ navbar:
        - text: "Faktorielle ANOVA"
          href: faktorielle-anova.html
        - text: "ANCOVA"
-       - text: "Repeated Measures ANOVA"
+       - text: "ANOVA mit Messwiederholung"
+         href: anova-messwiederholung.html
        - text: "Mixed ANOVA"
        - text: "Geplante Kontraste"
          href: kontraste.html

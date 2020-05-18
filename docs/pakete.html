@@ -489,7 +489,9 @@ div.tocify {
       <a href="faktorielle-anova.html">Faktorielle ANOVA</a>
     </li>
     <li class="dropdown-header">ANCOVA</li>
-    <li class="dropdown-header">Repeated Measures ANOVA</li>
+    <li>
+      <a href="anova-messwiederholung.html">ANOVA mit Messwiederholung</a>
+    </li>
     <li class="dropdown-header">Mixed ANOVA</li>
     <li>
       <a href="kontraste.html">Geplante Kontraste</a>
@@ -577,10 +579,17 @@ div.tocify {
 ##   &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1 x          y         z         1     2     3</code></pre>
 </div>
+<div id="costatcompanion" class="section level1">
+<h1>costatcompanion</h1>
+<p>Auf das Arbeiten mit dieser Website abgestimmt ist das Paket <code>costatcompanion</code> – der perfekte Begleiter für die Kammer der Statistik. Das Paket enthält kleinere Hilfs-Funktionen und vor allem alle behandelten Datensätze. Es its nicht über CRAN verfügbar und muss von GitHub installiert werden. Eingebunden wird es über den normalen <code>library()</code> Befehl.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;benediktclaus/costatcompanion&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="kw">library</span>(costatcompanion)</span></code></pre></div>
+</div>
 <div id="skimr" class="section level1">
 <h1>skimr</h1>
 <p>Mit <code>skimr</code> <span class="citation">(Waring et al., <a href="#ref-Waring.2020" role="doc-biblioref">2020</a>)</span> können wir uns auf einfache Weise umfangreiche deskriptive Statistiken ausgeben lassen. Für den Datensatz <code>mtcars</code> sieht das beispielwesie so aus:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">skim</span>(mtcars)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">skim</span>(mtcars)</span></code></pre></div>
 <table>
 <caption>Data summary</caption>
 <tbody>
