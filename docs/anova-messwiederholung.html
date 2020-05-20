@@ -622,7 +622,7 @@ div.tocify {
 ## 1 music_type 0.858 1.72, 85.75 1.11e-35         * 0.885 1.77, 88.5 9.64e-37
 ##   p[HF]&lt;.05
 ## 1         *</code></pre>
-<p>Wenn wir diesen Befehl ausführen, dann sehen wir, dass Mauchlys-Test signifikant ist – die Variassetzung der Sphärizität ist nicht erfüllt. Eine gute Methode, um den <span class="math inline">\(p\)</span>-Wert nun zu korrigieren, ist die Methode nach Greenhouse und Geisser <span class="citation">(Greenhouse &amp; Geisser, <a href="#ref-Greenhouse.1959" role="doc-biblioref">1959</a>)</span>. Um diese Korrektur, wie versprochen, automatisch zu erhalten, lassen wir uns anschließend mit <code>get_anova_table()</code>, angehängt an den bereits ausgeführten Befehl, die ANOVA-Ergebnisse ausgeben.</p>
+<p>Wenn wir diesen Befehl ausführen, dann sehen wir, dass Mauchlys-Test signifikant ist – die Variassetzung der Sphärizität ist nicht erfüllt. Eine gute Methode, um den <span class="math inline">\(p\)</span>-Wert nun zu korrigieren, ist die Methode nach Greenhouse und Geisser <span class="citation">(Greenhouse &amp; Geisser, <a href="#ref-Greenhouse.1959" role="doc-biblioref">1959</a>)</span>. Um diese Korrektur<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, wie versprochen, automatisch zu erhalten, lassen wir uns anschließend mit <code>get_anova_table()</code>, angehängt an den bereits ausgeführten Befehl, die ANOVA-Ergebnisse ausgeben.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb10-2"><a href="#cb10-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> endurance, <span class="dt">wid =</span> id, <span class="dt">within =</span> music_type) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="kw">get_anova_table</span>()</span></code></pre></div>
@@ -652,7 +652,7 @@ div.tocify {
 </div>
 <div id="berichten" class="section level3">
 <h3>Berichten</h3>
-<p>We found the type of music to have an effect on runner’s perceived endurance during runs, <span class="math inline">\(F(2, 100) = 272.11, p &lt; .001, \varepsilon_\text{GG} = .858, \eta_G^2 = .792\)</span>. Follow up post-hoc-tests revealed statistically significant differences between all groups (all <span class="math inline">\(p &lt; .001\)</span>). The “bad” and “neutral” group differed by Hedges’ <span class="math inline">\(g = 1.28\)</span>, “bad” and “favorite” by <span class="math inline">\(g = 3.99\)</span>, and “neutral” and “favorite” by <span class="math inline">\(g = 1.73\)</span>.</p>
+<p>We found the type of music to have an effect on runner’s perceived endurance during runs, <span class="math inline">\(F(2, 85.75) = 272.11, p &lt; .001, \varepsilon_\text{GG} = .858, \eta_G^2 = .792\)</span>. Follow up post-hoc-tests revealed statistically significant differences between all groups (all <span class="math inline">\(p &lt; .001\)</span>). The “bad” and “neutral” group differed by Hedges’ <span class="math inline">\(g = 1.28\)</span>, “bad” and “favorite” by <span class="math inline">\(g = 3.99\)</span>, and “neutral” and “favorite” by <span class="math inline">\(g = 1.73\)</span>.</p>
 </div>
 </div>
 <div id="robust" class="section level2">
@@ -680,7 +680,7 @@ div.tocify {
 ## bad vs. neutral       -6.83871  -8.94367  -4.73375       0 0.0500 TRUE
 ## bad vs. favorite     -15.67742 -17.10274 -14.25210       0 0.0169 TRUE
 ## neutral vs. favorite  -8.00000  -9.56582  -6.43418       0 0.0250 TRUE</code></pre>
-<p>Auch hier erhalten wir zuerst das Ergebnis, dass die Mittelwerte sich irgendwo signifikant unterscheiden, <span class="math inline">\(F(1.9, 56.92) = 229.26, p &lt; .001\)</span>. Die robusten Post-hoc-Tests zeigen uns auch hier an, dass sich alle Gruppen signifikant voneinander unterscheiden.</p>
+<p>Auch hier erhalten wir zuerst das Ergebnis, dass die Mittelwerte sich irgendwo signifikant unterscheiden, <span class="math inline">\(F_T(1.9, 56.92) = 229.26, p &lt; .001\)</span>. Die robusten Post-hoc-Tests zeigen uns auch hier an, dass sich alle Gruppen signifikant voneinander unterscheiden.</p>
 </div>
 <div id="non-parametrisch" class="section level2">
 <h2>Non-parametrisch</h2>
@@ -713,25 +713,176 @@ div.tocify {
 </div>
 <div id="aus-der-praxis" class="section level1">
 <h1>Aus der Praxis</h1>
+<p>Ein wirklich tolles Experiment zur Akquisition von Ängsten bei Kindern führte <span class="citation">Field (<a href="#ref-Field.2006" role="doc-biblioref">2006</a>)</span> durch. Er lud eine Reihe Kinder in sein Labor ein und erzählte ihnen Geschichten zu drei neuen Tieren (dem Quoll, dem Quokka und dem Cuscus). Dabei wurde zu einem Tier eine negative, “angsteinflößende”, Geschichte erzählt, zum dem zweiten Tier eine positive und zum dritten Tier gar keine. Nun zeigte Field den Kindern drei Holzboxen, und die Kinder sollten ihre Hand auf diese Boxen legen. Der Haken an der Sache war allerdings, dass Field den Kindern erklärte, dass in diesen Holzkisten nun jeweils eines der drei vorher vorgestellten Tiere lebte. Um zu untersuchen, ob die Kinder Angst vor dem Tier mit der negativen Geschichte hatten, maß er die Zeit, die die Kinder benötigten, um ihre Hand auf die Holzkisten zu legen. Um seine Hypothese zu überprüfen, führte er eine einfaktorielle ANOVA mit Messwiederholung durch, mit dem Innersubjektfaktor “Information” mit drei Faktorstufen (negativ, positiv, keine). Die Daten finden sich in der Datei <code>field_2006.sav</code> und stammen von der <a href="https://edge.sagepub.com/field5e">begleitenden Website</a> von <span class="citation">Field (<a href="#ref-Field.2018" role="doc-biblioref">2018</a>)</span>. Bei Daten mit Messwiederholung erhält man meistens “unsaubere” Daten im <a href="data-wrangling.html#wide_long">wide-Format</a>, wie auch in diesem Fall.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>animals &lt;-<span class="st"> </span><span class="kw">read_spss</span>(<span class="st">&quot;data/field_2006.sav&quot;</span>)</span>
+<span id="cb26-2"><a href="#cb26-2"></a></span>
+<span id="cb26-3"><a href="#cb26-3"></a>animals</span></code></pre></div>
+<pre><code>## # A tibble: 127 x 4
+##     code bhvneg bhvpos bhvnone
+##    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1     1   2.03   1.25   11.4 
+##  2     2   8.37   3.06    3.54
+##  3     3  15     14.6    15   
+##  4     4   2.25   1.72    1.1 
+##  5     5   2.9    1.19   15   
+##  6     6   4.22   1.5     2.63
+##  7     7  18.6   16.9     1.13
+##  8     8   2.65   1.94    1.6 
+##  9     9   1.92   1.6     1.75
+## 10    10   2.24   1.67    2.34
+## # ... with 117 more rows</code></pre>
+<p>Unsere erste Aufgabe besteht also nun darin, die Daten ins “saubere” long-Format zu überführen. Dazu nutzen wir <code>pivot_longer()</code>. Als kleines Schmankerl geben wir noch das Argument <code>names_prefix = "bhv"</code> mit, dann werden die Buchstaben “bhv” automatisch entfernt und es bleiben nur noch “neg”, “pos” und “none” als Werte in der neuen Variable “information” übrig. Anschließend ändern wir unsere neue Variable “information” so, dass sie ein Faktor wird<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>animals_long &lt;-<span class="st"> </span>animals <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb28-2"><a href="#cb28-2"></a><span class="st">  </span><span class="kw">pivot_longer</span>(</span>
+<span id="cb28-3"><a href="#cb28-3"></a>    <span class="dt">cols =</span> <span class="op">-</span>code,</span>
+<span id="cb28-4"><a href="#cb28-4"></a>    <span class="dt">names_to =</span> <span class="st">&quot;information&quot;</span>,</span>
+<span id="cb28-5"><a href="#cb28-5"></a>    <span class="dt">names_prefix =</span> <span class="st">&quot;bhv&quot;</span>,</span>
+<span id="cb28-6"><a href="#cb28-6"></a>    <span class="dt">values_to =</span> <span class="st">&quot;reaction_time&quot;</span></span>
+<span id="cb28-7"><a href="#cb28-7"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb28-8"><a href="#cb28-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">information =</span> <span class="kw">as_factor</span>(information))</span>
+<span id="cb28-9"><a href="#cb28-9"></a></span>
+<span id="cb28-10"><a href="#cb28-10"></a>animals_long</span></code></pre></div>
+<pre><code>## # A tibble: 381 x 3
+##     code information reaction_time
+##    &lt;dbl&gt; &lt;fct&gt;               &lt;dbl&gt;
+##  1     1 neg                  2.03
+##  2     1 pos                  1.25
+##  3     1 none                11.4 
+##  4     2 neg                  8.37
+##  5     2 pos                  3.06
+##  6     2 none                 3.54
+##  7     3 neg                 15   
+##  8     3 pos                 14.6 
+##  9     3 none                15   
+## 10     4 neg                  2.25
+## # ... with 371 more rows</code></pre>
 <div id="klassisch-1" class="section level2">
 <h2>Klassisch</h2>
 <div id="eda-1" class="section level3">
 <h3>EDA</h3>
+<p>Zu Beginn gucken wir uns die Daten wie immer einfach mal an. Um die <a href="voraussetzungen.html">Voraussetzung der Normalverteilung</a> müssen wir uns keine Sorgen machen, da wir Daten von 127 Kindern, also einer großen Stichprobe, vorliegen haben.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb30-2"><a href="#cb30-2"></a><span class="st">  </span><span class="kw">group_by</span>(information) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb30-3"><a href="#cb30-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>(reaction_time)</span></code></pre></div>
+<pre><code>## # A tibble: 3 x 14
+##   information variable     n   min   max median    q1    q3   iqr   mad  mean
+##   &lt;fct&gt;       &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 neg         reactio~   127  1     27     4.53  3.1   8.35  5.24  3.01  6.35
+## 2 pos         reactio~   127  0.64  23.2   2.03  1.29  3.26  1.98  1.20  3.11
+## 3 none        reactio~   127  0.52  15.3   2.13  1.53  3.48  1.94  1.02  3.49
+## # ... with 3 more variables: sd &lt;dbl&gt;, se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+<p><img src="anova-messwiederholung_files/figure-html/unnamed-chunk-16-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p>Wir bekommen eine leichte Idee dahingehend, dass die untersuchten Kinder deutlich länger gebraucht haben, um ihre Hand auf die Holzkiste mit dem “gefürchteten” Tier zu legen, weil die Reaktionszeiten länger sind. Holzkisten, die vermeintlich freundliche Tiere beinhalten, oder jene, zu denen man nichts weiß, werden schneller berührt. Wie immer bei Reaktionszeiten haben wir jedoch viele, viele Ausreißer. Wir rechnen jetzt einfach mal “normal” weiter, aber behalten im Hinterkopf, dass wir definitiv das robuste Verfahren anwenden sollten<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.</p>
 </div>
 <div id="durchführung-1" class="section level3">
 <h3>Durchführung</h3>
+<p>Die Durchführung ist, wie immer, kurz und schmerzlos.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb32-2"><a href="#cb32-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> reaction_time, <span class="dt">wid =</span> code, <span class="dt">within =</span> information)</span></code></pre></div>
+<pre><code>## ANOVA Table (type III tests)
+## 
+## $ANOVA
+##        Effect DFn DFd      F        p p&lt;.05   ges
+## 1 information   2 252 58.684 1.19e-21     * 0.117
+## 
+## $`Mauchly&#39;s Test for Sphericity`
+##        Effect     W        p p&lt;.05
+## 1 information 0.798 7.62e-07     *
+## 
+## $`Sphericity Corrections`
+##        Effect   GGe       DF[GG]   p[GG] p[GG]&lt;.05   HFe       DF[HF]    p[HF]
+## 1 information 0.832 1.66, 209.68 1.9e-18         * 0.842 1.68, 212.15 1.24e-18
+##   p[HF]&lt;.05
+## 1         *</code></pre>
+<p>Mauchlys Test auf Sphärizität ist signifikant (<span class="math inline">\(W = 0.798, p &lt; .001\)</span>), weshalb wir schleunigst eine Korrektur der Freiheitsgrade nach Greenhouse-Geisser anstreben sollten (<span class="math inline">\(\varepsilon_\text{GG} = .832\)</span>). Dazu aber beim “Berichten” mehr.</p>
+<p>Wir wissen nun, dass sich die Reaktionszeiten der Kinder <em>irgendwo</em> unterschieden, aber wo genau? Dem kommen wir mit Post-hoc-Tests auf die Schliche.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-2"><a href="#cb34-2"></a><span class="st">  </span><span class="kw">pairwise_t_test</span>(reaction_time <span class="op">~</span><span class="st"> </span>information, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;holm&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 3 x 10
+##   .y.   group1 group2    n1    n2 statistic    df        p    p.adj p.adj.signif
+## * &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
+## 1 reac~ neg    pos      127   127      9.07   126 1.93e-15 5.79e-15 ****        
+## 2 reac~ neg    none     127   127      7.81   126 1.98e-12 3.96e-12 ****        
+## 3 reac~ pos    none     127   127     -1.57   126 1.19e- 1 1.19e- 1 ns</code></pre>
+<p>Unser erster Eindruck bestätigt sich. Die Hand auf eine Holzkiste zu legen, in der ein “furchterregendes” Tier hockt, dauert im Vergleich zu “freundlichen” Tieren, oder jenen ohne Informationen, signifikant länger (beide <span class="math inline">\(p &lt; .001\)</span>). Der Unterschied in der Reaktionszeit zwischen Tieren mit positiver oder gar keiner Geschichte ist nicht signifikant, <span class="math inline">\(p = .119\)</span>.</p>
+<p>Effektstärken können wir uns natürlich auch wieder berechnen lassen.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb36-2"><a href="#cb36-2"></a><span class="st">  </span><span class="kw">cohens_d</span>(reaction_time <span class="op">~</span><span class="st"> </span>information, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 3 x 7
+##   .y.           group1 group2 effsize    n1    n2 magnitude 
+## * &lt;chr&gt;         &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;ord&gt;     
+## 1 reaction_time neg    pos      0.800   127   127 large     
+## 2 reaction_time neg    none     0.688   127   127 moderate  
+## 3 reaction_time pos    none    -0.139   127   127 negligible</code></pre>
 </div>
 <div id="berichten-1" class="section level3">
 <h3>Berichten</h3>
+<p>We found the kind of information given to kids to have a significant influence on the observed reaction time, <span class="math inline">\(F(2, 209.69) = 58.68, p &lt; .001, \varepsilon_\text{GG} = .832, \eta_G^2 = .117\)</span>. Post-hoc-test revealed the differences between the “negative” and “positive” condition (<span class="math inline">\(p &lt; .001, g = 0.80\)</span>), as well as the “non” condition (<span class="math inline">\(p &lt; .001, g = 0.69\)</span>). The “positive” and “none” condition did not differ significantly, <span class="math inline">\(p = .119, g = -0.14\)</span>.</p>
 </div>
 </div>
 <div id="beispiel_robust" class="section level2">
 <h2>Robust</h2>
+<p>Wie wir bereits bei der explorativen Datenanalyse festgestellt haben, gibt es in diesem Datensatz eine Menge Ausreißer. Deshalb lont es sich, hier robust zu rechnen.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="co"># Robuste ANOVA mit Messwiederholung</span></span>
+<span id="cb38-2"><a href="#cb38-2"></a><span class="kw">with</span>(animals_long,</span>
+<span id="cb38-3"><a href="#cb38-3"></a>     <span class="kw">rmanova</span>(<span class="dt">y =</span> reaction_time, <span class="dt">groups =</span> information, <span class="dt">block =</span> code))</span></code></pre></div>
+<pre><code>## Call:
+## rmanova(y = reaction_time, groups = information, blocks = code)
+## 
+## Test statistic: F = 78.1521 
+## Degrees of freedom 1: 1.24 
+## Degrees of freedom 2: 94.32 
+## p-value: 0</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="co"># Robuste Post-hoc-Tests</span></span>
+<span id="cb40-2"><a href="#cb40-2"></a><span class="kw">with</span>(animals_long,</span>
+<span id="cb40-3"><a href="#cb40-3"></a>     <span class="kw">rmmcp</span>(<span class="dt">y =</span> reaction_time, <span class="dt">groups =</span> information, <span class="dt">block =</span> code))</span></code></pre></div>
+<pre><code>## Call:
+## rmmcp(y = reaction_time, groups = information, blocks = code)
+## 
+##                psihat ci.lower ci.upper p.value p.crit  sig
+## neg vs. pos   2.41558  1.71695  3.11421 0.00000 0.0169 TRUE
+## neg vs. none  2.07013  1.35313  2.78713 0.00000 0.0250 TRUE
+## pos vs. none -0.20597 -0.40537 -0.00658 0.01351 0.0500 TRUE</code></pre>
+<p>Auch hier erhalten wir das Ergebnis, dass sich die Werte irgendwo unterscheiden, <span class="math inline">\(F_T(1.24, 94.32) = 78.15, p &lt; .001\)</span>. Die robusten Post-hoc-Tests allerdings liefern uns ein anderes ergebnis als die klassichen Methoden. Hier unterscheiden sich auch die positive und die neutrale Bedingung voneinander, <span class="math inline">\(\hat{\Psi} = -0.21, p = .014\)</span> (zwar knapp, aber so ist Nullhypothesen-Signifikanztesten nun einmal).</p>
+</div>
+<div id="non-paramterisch" class="section level2">
+<h2>Non-paramterisch</h2>
+<p>Wer in Anbetracht der viel besser geeigneten robusten Verfahren dennoch auf non-paramtrisch setzen möchte, der führt hier die Friedman-ANOVA durch.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="co"># Friedman-ANOVA</span></span>
+<span id="cb42-2"><a href="#cb42-2"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb42-3"><a href="#cb42-3"></a><span class="st">  </span><span class="kw">friedman_test</span>(reaction_time <span class="op">~</span><span class="st"> </span>information <span class="op">|</span><span class="st"> </span>code)</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 6
+##   .y.               n statistic    df        p method       
+## * &lt;chr&gt;         &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;        
+## 1 reaction_time   127      140.     2 3.33e-31 Friedman test</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="co"># Kendalls W</span></span>
+<span id="cb44-2"><a href="#cb44-2"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb44-3"><a href="#cb44-3"></a><span class="st">  </span><span class="kw">friedman_effsize</span>(reaction_time <span class="op">~</span><span class="st"> </span>information <span class="op">|</span><span class="st"> </span>code)</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 5
+##   .y.               n effsize method    magnitude
+## * &lt;chr&gt;         &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;     &lt;ord&gt;    
+## 1 reaction_time   127   0.553 Kendall W large</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a><span class="co"># Post-hoc-Test</span></span>
+<span id="cb46-2"><a href="#cb46-2"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb46-3"><a href="#cb46-3"></a><span class="st">  </span><span class="kw">wilcox_test</span>(reaction_time <span class="op">~</span><span class="st"> </span>information, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;holm&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 3 x 9
+##   .y.         group1 group2    n1    n2 statistic        p    p.adj p.adj.signif
+## * &lt;chr&gt;       &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
+## 1 reaction_t~ neg    pos      127   127      7612 1.47e-18 4.41e-18 ****        
+## 2 reaction_t~ neg    none     127   127      6995 1.27e-17 2.54e-17 ****        
+## 3 reaction_t~ pos    none     127   127      2950 1.10e- 2 1.10e- 2 *</code></pre>
+<p>Auch mit dem non-parametrischen Verfahren erhalten wir ähnliche Ergebnisse, wie mit den robusten Verfahren. Die ANOVA an sich ist signifikant, <span class="math inline">\(\chi^2(2) = 140.00, p &lt; .001, W = .553\)</span>. Die Post-hoc-Tests zeigten signifikante Unterschiede zwischen allen Gruppen (alle <span class="math inline">\(p \leq .010\)</span>).</p>
 </div>
 </div>
 <div id="literatur" class="section level1 unnumbered">
 <h1>Literatur</h1>
 <div id="refs" class="references">
+<div id="ref-Field.2006">
+<p>Field, A. P. (2006). The behavioral inhibition system and the verbal information pathway to children’s fears. <em>Journal of abnormal psychology</em>, <em>115</em>(4), 742–752. <a href="https://doi.org/10.1037/0021-843X.115.4.742">https://doi.org/10.1037/0021-843X.115.4.742</a></p>
+</div>
+<div id="ref-Field.2018">
+<p>Field, A. P. (2018). <em>Discovering Statistics using IBM SPSS Statistics</em> (5th ed.). SAGE.</p>
+</div>
 <div id="ref-Greenhouse.1959">
 <p>Greenhouse, S. W., &amp; Geisser, S. (1959). On methods in the analysis of profile data. <em>Psychometrika</em>, <em>24</em>(2), 95–112. <a href="https://doi.org/10.1007/BF02289823">https://doi.org/10.1007/BF02289823</a></p>
 </div>
@@ -745,6 +896,14 @@ div.tocify {
 <p>Wilcox, R. R. (2017). <em>Introduction to Robust Estimation and Hypothesis Testing</em> (4th ed.). Elsevier Academic Press.</p>
 </div>
 </div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Korrigiert werden einfach nur die Freiheitsgrade der Fehler, sie werden mit dem <span class="math inline">\(\varepsilon\)</span> der Korrektur-Methode multipliziert.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>Wer sich den Schritt über ein anschließendes <code>mutate()</code> sparen möchte und etwas mehr Erfahrung im Tidyverse hat, der kann bereits bei <code>pivot_longer()</code> das Argument <code>names_ptypes = list(information = factor())</code> angeben; tidyr formatiert diese Variable dann direkt als Faktor.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>Eine weitere Möglichkeit, vor allem bei Reaktionszeiten, ist die logarithmische Transformation der Daten, die <span class="citation">Field (<a href="#ref-Field.2006" role="doc-biblioref">2006</a>)</span> auch tatsächlich durchgeführt hat. Ob und wann das sinnvoll oder empfohlen ist, hängt immer vom Forschungsfeld ab.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 
 

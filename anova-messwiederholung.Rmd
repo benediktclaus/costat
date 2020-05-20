@@ -90,7 +90,7 @@ runners %>%
   anova_test(dv = endurance, wid = id, within = music_type)
 ```
 
-Wenn wir diesen Befehl ausführen, dann sehen wir, dass Mauchlys-Test signifikant ist -- die Variassetzung der Sphärizität ist nicht erfüllt. Eine gute Methode, um den $p$-Wert nun zu korrigieren, ist die Methode nach Greenhouse und Geisser [@Greenhouse.1959]. Um diese Korrektur, wie versprochen, automatisch zu erhalten, lassen wir uns anschließend mit `get_anova_table()`, angehängt an den bereits ausgeführten Befehl, die ANOVA-Ergebnisse ausgeben.
+Wenn wir diesen Befehl ausführen, dann sehen wir, dass Mauchlys-Test signifikant ist -- die Variassetzung der Sphärizität ist nicht erfüllt. Eine gute Methode, um den $p$-Wert nun zu korrigieren, ist die Methode nach Greenhouse und Geisser [@Greenhouse.1959]. Um diese Korrektur^[Korrigiert werden einfach nur die Freiheitsgrade der Fehler, sie werden mit dem $\varepsilon$ der Korrektur-Methode multipliziert.], wie versprochen, automatisch zu erhalten, lassen wir uns anschließend mit `get_anova_table()`, angehängt an den bereits ausgeführten Befehl, die ANOVA-Ergebnisse ausgeben.
 
 ```{r}
 runners %>% 
@@ -116,7 +116,7 @@ runners %>%
 
 
 ### Berichten
-We found the type of music to have an effect on runner's perceived endurance during runs, $F(2, 100) = 272.11, p < .001, \varepsilon_\text{GG} = .858, \eta_G^2 = .792$. Follow up post-hoc-tests revealed statistically significant differences between all groups (all $p < .001$). The "bad" and "neutral" group differed by Hedges' $g = 1.28$, "bad" and "favorite" by $g = 3.99$, and "neutral" and "favorite" by $g = 1.73$.
+We found the type of music to have an effect on runner's perceived endurance during runs, $F(2, 85.75) = 272.11, p < .001, \varepsilon_\text{GG} = .858, \eta_G^2 = .792$. Follow up post-hoc-tests revealed statistically significant differences between all groups (all $p < .001$). The "bad" and "neutral" group differed by Hedges' $g = 1.28$, "bad" and "favorite" by $g = 3.99$, and "neutral" and "favorite" by $g = 1.73$.
 
 ## Robust
 Natürlich hat Rand @Wilcox.2017 auch für ANOVAS mit Messwiederholung eine robuste Alternative entwickelt und im Paket `WRS2` [@Mair.2020] zur Verfügung gestellt. Diese kann mit dem Befehl `rmanova()` ausgeführt werden; Post-hoc-Tests mit `rmmcp()`, die Ausführung des Befehls weicht allerdings etwas von der bekannten Syntax ab.
@@ -133,7 +133,7 @@ with(runners,
      rmmcp(y = endurance, groups = music_type, blocks = id))
 ```
 
-Auch hier erhalten wir zuerst das Ergebnis, dass die Mittelwerte sich irgendwo signifikant unterscheiden, $F(1.9, 56.92) = 229.26, p < .001$. Die robusten Post-hoc-Tests zeigen uns auch hier an, dass sich alle Gruppen signifikant voneinander unterscheiden.
+Auch hier erhalten wir zuerst das Ergebnis, dass die Mittelwerte sich irgendwo signifikant unterscheiden, $F_T(1.9, 56.92) = 229.26, p < .001$. Die robusten Post-hoc-Tests zeigen uns auch hier an, dass sich alle Gruppen signifikant voneinander unterscheiden.
 
 ## Non-parametrisch
 Friedman-ANOVA, allerdings nur für einfaktoriellen Designs. Wenn es mehrere Faktoren sein sollen, gibt es nur noch die robusten Alternativen (s.o.). Die Effektstärke für eine Friedman-ANOVA ist Kendalls $W$, welches sich mit `friedman_effsize()` berechnen lässt. Als Post-hoc-Test wird der Wilcoxon signed-rank test genutzt. Dabei muss darauf geachtet werden, dass die Daten in der richtigen Reihenfolge sind! D.h., dass die Daten innerhalb eines Probanden immer in derselben Reihenfolge stehen müssen (hier immer die Abfolge von "bad", "neutral" und "favorite").
@@ -155,18 +155,116 @@ runners %>%
 Auch die Friedman-ANOVA liefert uns ein signifikantes Ergebnis, $\chi^2(2) = 96.1, p < .001, W = .942$. Auch die Post-hoc-Tests ergeben signifikante Unterschiede zwischen allen Gruppen, da in allen Fällen $p < .05$ ist.
 
 # Aus der Praxis
+Ein wirklich tolles Experiment zur Akquisition von Ängsten bei Kindern führte @Field.2006 durch. Er lud eine Reihe Kinder in sein Labor ein und erzählte ihnen Geschichten zu drei neuen Tieren (dem Quoll, dem Quokka und dem Cuscus). Dabei wurde zu einem Tier eine negative, "angsteinflößende", Geschichte erzählt, zum dem zweiten Tier eine positive und zum dritten Tier gar keine. Nun zeigte Field den Kindern drei Holzboxen, und die Kinder sollten ihre Hand auf diese Boxen legen. Der Haken an der Sache war allerdings, dass Field den Kindern erklärte, dass in diesen Holzkisten nun jeweils eines der drei vorher vorgestellten Tiere lebte. Um zu untersuchen, ob die Kinder Angst vor dem Tier mit der negativen Geschichte hatten, maß er die Zeit, die die Kinder benötigten, um ihre Hand auf die Holzkisten zu legen. Um seine Hypothese zu überprüfen, führte er eine einfaktorielle ANOVA mit Messwiederholung durch, mit dem Innersubjektfaktor "Information" mit drei Faktorstufen (negativ, positiv, keine). Die Daten finden sich in der Datei `field_2006.sav` und stammen von der [begleitenden Website](https://edge.sagepub.com/field5e) von @Field.2018. Bei Daten mit Messwiederholung erhält man meistens "unsaubere" Daten im [wide-Format](data-wrangling.html#wide_long), wie auch in diesem Fall.
+
+```{r}
+animals <- read_spss("data/field_2006.sav")
+
+animals
+```
+
+Unsere erste Aufgabe besteht also nun darin, die Daten ins "saubere" long-Format zu überführen. Dazu nutzen wir `pivot_longer()`. Als kleines Schmankerl geben wir noch das Argument `names_prefix = "bhv"` mit, dann werden die Buchstaben "bhv" automatisch entfernt und es bleiben nur noch "neg", "pos" und "none" als Werte in der neuen Variable "information" übrig. Anschließend ändern wir unsere neue Variable "information" so, dass sie ein Faktor wird^[Wer sich den Schritt über ein anschließendes `mutate()` sparen möchte und etwas mehr Erfahrung im Tidyverse hat, der kann bereits bei `pivot_longer()` das Argument `names_ptypes = list(information = factor())` angeben; tidyr formatiert diese Variable dann direkt als Faktor.].
+
+```{r}
+animals_long <- animals %>% 
+  pivot_longer(
+    cols = -code,
+    names_to = "information",
+    names_prefix = "bhv",
+    values_to = "reaction_time"
+  ) %>% 
+  mutate(information = as_factor(information))
+
+animals_long
+```
 
 ## Klassisch
 ### EDA
+Zu Beginn gucken wir uns die Daten wie immer einfach mal an. Um die [Voraussetzung der Normalverteilung](voraussetzungen.html) müssen wir uns keine Sorgen machen, da wir Daten von 127 Kindern, also einer großen Stichprobe, vorliegen haben.
 
+```{r warning=FALSE}
+animals_long %>% 
+  group_by(information) %>% 
+  get_summary_stats(reaction_time)
+```
+
+
+```{r echo=FALSE}
+animals_long %>% 
+  ggplot(aes(x = information, y = reaction_time)) +
+  geom_boxplot(outlier.color = NA) +
+  geom_jitter(width = 0.02, alpha = 0.2) +
+  stat_summary(fun = "median", geom = "line", size = 1, aes(group = 1)) +
+  # scale_y_log10() +
+  expand_limits(y = 0) +
+  labs(x = "Information", y = "Reaction time")
+```
+
+Wir bekommen eine leichte Idee dahingehend, dass die untersuchten Kinder deutlich länger gebraucht haben, um ihre Hand auf die Holzkiste mit dem "gefürchteten" Tier zu legen, weil die Reaktionszeiten länger sind. Holzkisten, die vermeintlich freundliche Tiere beinhalten, oder jene, zu denen man nichts weiß, werden schneller berührt. Wie immer bei Reaktionszeiten haben wir jedoch viele, viele Ausreißer. Wir rechnen jetzt einfach mal "normal" weiter, aber behalten im Hinterkopf, dass wir definitiv das robuste Verfahren anwenden sollten^[Eine weitere Möglichkeit, vor allem bei Reaktionszeiten, ist die logarithmische Transformation der Daten, die @Field.2006 auch tatsächlich durchgeführt hat. Ob und wann das sinnvoll oder empfohlen ist, hängt immer vom Forschungsfeld ab.].
 
 ### Durchführung
+Die Durchführung ist, wie immer, kurz und schmerzlos.
+
+```{r}
+animals_long %>% 
+  anova_test(dv = reaction_time, wid = code, within = information)
+```
+
+Mauchlys Test auf Sphärizität ist signifikant ($W = 0.798, p < .001$), weshalb wir schleunigst eine Korrektur der Freiheitsgrade nach Greenhouse-Geisser anstreben sollten ($\varepsilon_\text{GG} = .832$). Dazu aber beim "Berichten" mehr.
+
+Wir wissen nun, dass sich die Reaktionszeiten der Kinder *irgendwo* unterschieden, aber wo genau? Dem kommen wir mit Post-hoc-Tests auf die Schliche.
+
+```{r}
+animals_long %>% 
+  pairwise_t_test(reaction_time ~ information, paired = TRUE, p.adjust.method = "holm")
+```
+
+Unser erster Eindruck bestätigt sich. Die Hand auf eine Holzkiste zu legen, in der ein "furchterregendes" Tier hockt, dauert im Vergleich zu "freundlichen" Tieren, oder jenen ohne Informationen, signifikant länger (beide $p < .001$). Der Unterschied in der Reaktionszeit zwischen Tieren mit positiver oder gar keiner Geschichte ist nicht signifikant, $p = .119$.
+
+Effektstärken können wir uns natürlich auch wieder berechnen lassen.
+
+```{r}
+animals_long %>% 
+  cohens_d(reaction_time ~ information, paired = TRUE, hedges.correction = TRUE)
+```
 
 
 ### Berichten
-
+We found the kind of information given to kids to have a significant influence on the observed reaction time, $F(2, 209.69) = 58.68, p < .001, \varepsilon_\text{GG} = .832, \eta_G^2 = .117$. Post-hoc-test revealed the differences between the "negative" and "positive" condition ($p < .001, g = 0.80$), as well as the "non" condition ($p < .001, g = 0.69$). The "positive" and "none" condition did not differ significantly, $p = .119, g = -0.14$.
 
 ## Robust {#beispiel_robust}
+Wie wir bereits bei der explorativen Datenanalyse festgestellt haben, gibt es in diesem Datensatz eine Menge Ausreißer. Deshalb lont es sich, hier robust zu rechnen.
+
+```{r}
+# Robuste ANOVA mit Messwiederholung
+with(animals_long,
+     rmanova(y = reaction_time, groups = information, block = code))
+
+# Robuste Post-hoc-Tests
+with(animals_long,
+     rmmcp(y = reaction_time, groups = information, block = code))
+```
+
+Auch hier erhalten wir das Ergebnis, dass sich die Werte irgendwo unterscheiden, $F_T(1.24, 94.32) = 78.15, p < .001$. Die robusten Post-hoc-Tests allerdings liefern uns ein anderes ergebnis als die klassichen Methoden. Hier unterscheiden sich auch die positive und die neutrale Bedingung voneinander, $\hat{\Psi} = -0.21, p = .014$ (zwar knapp, aber so ist Nullhypothesen-Signifikanztesten nun einmal).
+
+## Non-paramterisch
+Wer in Anbetracht der viel besser geeigneten robusten Verfahren dennoch auf non-paramtrisch setzen möchte, der führt hier die Friedman-ANOVA durch.
+
+```{r}
+# Friedman-ANOVA
+animals_long %>% 
+  friedman_test(reaction_time ~ information | code)
+
+# Kendalls W
+animals_long %>% 
+  friedman_effsize(reaction_time ~ information | code)
+
+# Post-hoc-Test
+animals_long %>% 
+  wilcox_test(reaction_time ~ information, paired = TRUE, p.adjust.method = "holm")
+```
+
+Auch mit dem non-parametrischen Verfahren erhalten wir ähnliche Ergebnisse, wie mit den robusten Verfahren. Die ANOVA an sich ist signifikant, $\chi^2(2) = 140.00, p < .001, W = .553$. Die Post-hoc-Tests zeigten signifikante Unterschiede zwischen allen Gruppen (alle $p \leq .010$).
 
 # Literatur
 
