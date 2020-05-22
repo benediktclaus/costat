@@ -15,6 +15,7 @@ Am Laufen gehalten wird diese Website von mir, Benedikt Claus, wissenschaftliche
 Mich interessiert zum einen alles, was mit psychischen Störungen, ihrer Verbreitung, Entstehung und vor allem deren Behandlung zu tun hat. Speziell interessiere ich mich für die Wirksamkeit von Psychopharmaka (wie etwa Antidepressiva), deren Nutzen über den Placebo-Effekt hinaus und deren Langzeitfolgen. Zum anderen bin ich aber auch von ziemlich vielem angetan, was eher dem bereich der wissenschaftlichen Methoden zuzuordnen ist. Hier beschäftige ich mich insbesondere mit longitudinalen Daten, dem Vergleich statistischer vs. klinischer Signifikanz und der Implementierung von Standard-Methoden im [Tidyverse](https://www.tidyverse.org/).
 
 ### Links 
+`r icon::fa_globe()` [www.benediktclaus.com](https://www.benediktclaus.com)  
 `r icon::ai_orcid()`  [ORCiD](https://orcid.org/0000-0001-9501-0954)  
 `r icon::fa_github()` [GitHub](https://github.com/benediktclaus)  
 `r icon::ai_osf()` [OSF](https://osf.io/du5kq/)
