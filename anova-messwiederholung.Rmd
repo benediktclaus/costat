@@ -19,6 +19,8 @@ library(benelib)
 
 Mit einer (allgemeinen) ANOVA mit Messwiederholung (*repeated measures ANOVA*) kann man mehr als zwei Gruppenmittelwerte in Abhängigkeit von kategorialen Prädiktoren vergleichen, wenn *dieselben* Probanden in mehreren Gruppen sind. Da die ANOVA ein Omnibus-Test ist, und so nur anzeigt, ob irgendwo ein signifikanter Unterschied zwischen den betrachteten Mittelwerten besteht, nutzt man entweder [Kontraste](kontraste.html) oder [Post-hoc-Tests](post-hoc-tests.html), um herauszufinden, welche Mittelwerte sich letztendlich signifikant voneinander unterscheiden. Zusätzlich kann eine [*Simple Effects Analysis*](#simple_effects) dazu genutzt werden, Unterschiede auf einzelnen Faktorstufen festzustellen.
 
+ANOVAs mit Messwiederholung setzen auf **listenweisen Fallausschluss**, d.h., dass wenn in einer Messung eines Probanden auch nur eine Mesusng fehlt, dieser von der weiteren Analyse **komplett ausgeschlossen** wird. Generell kann man empfehlen, anstatt eine klassiche ANOVA, lieber Multilevel Linear Models zu berechnen.
+
 # Pakete 
 Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket `costatcompanion`.
 
@@ -33,14 +35,14 @@ library(costatcompanion)
 library(patchwork)
 ```
 
-# Beispiel
+# Beispiel 1
 Viele Hobby-Läufer finden das Laufen an sich sinnvoll, aber auf Dauer ziemlich langweilig. Wer sich nicht an der Fülle der Natur erfreuen kann, oder an ein Laufband in der eigenen Wohnung gebunden ist, der lenkt sich gerne mit Musik ab. Wir vermuten, dass es nicht egal ist, welche Musik die Läufer hören, sondern dass die Musik einen Einfluss auf die Leistung der Läufer hat. Dazu haben wir ein kleines Experiment durchgeführt, um diesen Effekt zu beschreiben -- insofern es ihn gibt. Wir haben und ein paar Läufer aus den Parks des Ruhrgebiets geschnappt und uns von denen eine Liste von Musik-Titeln bewerten lassen. Für jeden Läufer konnten wir so "schlecht", "neutrale" und "Lieblings-" Titel herausfinden und in individuellen Playlists abspeichern. Nun haben wir den Läufern beim Laufen an drei aufeinanderfolgenden Tagen zufällig eine dieser drei individuellen Playlists auf die Ohren gelegt und anschließend an das Training das empfundene Durchhaltevermögen auf einer Skala von 0 -- 30 einschätzen lassen (natürlcih waren alle drei Läufe gleich lang). Höhere Werte bedeuten hierbei ein höheres, empfundenes Durchhaltevermögen.
 
 ## Klassisch
 Die Daten sind in der Datei `runners.sav` oder im Paket `costatcompanion` unter demselben Namen. Der Datensatz enthält drei Variablen: Die ID der Läufer (`id`), den für den Lauf gehörten Typ von Musik (`music_type`) und das nach dem Lauf eingeschätzte Durchhaltevermögen während des Laufes (`endurance`). Wir untersuchen also eine einfaktorielle Varianzanalyse mit dem Innersubjektfaktor "Music Type" mit drei Faktorstufen ("bad", "neutral", und "favorite").
 
 ```{r}
-runners
+costatcompanion::runners
 ```
 
 ### Voraussetzungen
@@ -265,6 +267,64 @@ animals_long %>%
 ```
 
 Auch mit dem non-parametrischen Verfahren erhalten wir ähnliche Ergebnisse, wie mit den robusten Verfahren. Die ANOVA an sich ist signifikant, $\chi^2(2) = 140.00, p < .001, W = .553$. Die Post-hoc-Tests zeigten signifikante Unterschiede zwischen allen Gruppen (alle $p \leq .010$).
+
+# Beispiel 2
+Auch bei ANOVAs mit Messwiederholung können natürlich mehrere Faktoren berücksichtigt werden. Unser Beispieldatensatz wurde z.B. um die Variable `motivation` erweitert, in der festgehalten wurde, ob ein Läufer zusätzlich zur gehörten Musik, an diesem Tag überhaupt motiviert war, zu laufen (daher die zwei Faktorstufen "yes" vs. "no"). Wir haben also neue Läufer rekrutiert und neue Daten gesammelt.
+
+```{r}
+costatcompanion::runners_motivation
+```
+
+```{r}
+runners_motivation %>% 
+  get_summary_stats()
+
+runners_motivation %>% 
+  group_by(music_type, motivation) %>% 
+  get_summary_stats()
+```
+
+```{r echo=FALSE}
+dodge_width <- position_dodge(width = 0.1)
+
+runners_motivation %>% 
+  ggplot(aes(music_type, endurance, color = motivation)) +
+  stat_summary(fun = "mean", geom = "line", position = dodge_width, size = 1, aes(group = motivation)) +
+  stat_summary(fun = "mean", geom = "point", position = dodge_width) +
+  stat_summary(fun.data = "mean_sd", geom = "errorbar", width = 0.1, position = dodge_width, size = 1) +
+  expand_limits(y = 0) +
+  theme(legend.position = "bottom") +
+  labs(x = "Music Type", y = "Endurance") +
+  scale_color_personal()
+```
+
+Aus der Abbildung geht hervor, dass die Art der Musik wahrscheinlich eher einen Einfluss macht, wenn man motiviert ist. Ansonsten scheinen die Leistungen der Läufer nicht wirklich von der Art der Musik abzuhängen (blaue Linie).
+
+```{r}
+runners_motivation %>% 
+  anova_test(dv = endurance, wid = id, within = c(music_type, motivation))
+```
+
+Mauchlys Test auf Sphärizität fällt für uns positiv aus (nicht signifikante Ergebnisse, da $p = .355$ und $p = .810$ und somit beide $p > .05$), weshalb wir eine "normale" ANOVA mit Messwiederholung berechnen können, ohne die Freiheitsgrade der Teststaistik im Anschluss zu korrigieren. Wir erhalten einen signifikanten Haupteffekt für den Faktor "Art der Musik", $F(2, 100) = 222.43, p < . 001, \eta_G^2 = .599$, und einen signifikanten Haupteffekt für den Faktor "Motivation beim Laufen", $F(1, 50) = 96.01, p < 001, \eta_G^2 = .288$. Viel wichtiger ist an dieser Stelle der signifikante **Interaktionseffekt**, $F(2, 100) = 168.33, p < .001, \eta_G^2 = .482$. Wenn der Interaktionseffekt signifikant ist, *können wir die Haupteffekte nicht einzeln interpretieren*. Bzw. wir können es schon (niemand hält uns davon ab), aber es macht keinen Sinn.
+
+Bei einer ANOVA mit Messwiederholung können wir dem Interaktionseffekt wieder mit einer *Simple Effects Analysis* (siehe [faktorielle ANOVA](faktorielle-anova.html)) entgegentreten. Dabei betrachten wir den Unterschied in der gefühlten Ausdauer zwischen den Läufern pro Faktorstufe von "Art der Musik" und berechnen jeweils einfaktorielle ANOVAS. Anschließend ist es eine gute Idee, die $p$-Werte aufgrund multipler Testungen mit `adjust_pvalue()` zu korrigieren. Mit `add_significance()` können wir unsere so heiß geliebten Signifikanzsternchen ("*") ausgeben lassen.
+
+```{r}
+runners_motivation %>% 
+  group_by(music_type) %>% 
+  anova_test(dv = endurance, wid = id, within = motivation) %>% 
+  get_anova_table() %>% 
+  adjust_pvalue(method = "holm") %>% 
+  add_significance()
+```
+
+Wir können aus diesem Ergebnis schließen, dass sie Die Läufer in ihrer eingeschätzten Ausdauer nicht signifikant voneinander unterscheiden, wenn sie für sie unangenehme Musik hören und nicht motiviert sind. Bei neutraler und Liebligs-Musik unterscheiden sich die Läufer jedoch signifikant voneinander, je nachdem, ob sie motiviert sind oder nicht. 
+
+## Robust
+Gibt es nur für einfaktorielle ANOVAs.
+
+## Non-parametrisch
+Gibt es nur für einfaktorielle ANOVAs.
 
 # Literatur
 

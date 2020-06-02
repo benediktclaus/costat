@@ -62,6 +62,7 @@ navbar:
       href: about.html
 output:
   html_document:
+    # css: my_style.css
     toc: true
     toc_float: true
     smooth_scroll: true

@@ -545,6 +545,7 @@ div.tocify {
 
 <p><img src="images/runner_r.jpg" /></p>
 <p>Mit einer (allgemeinen) ANOVA mit Messwiederholung (<em>repeated measures ANOVA</em>) kann man mehr als zwei Gruppenmittelwerte in Abhängigkeit von kategorialen Prädiktoren vergleichen, wenn <em>dieselben</em> Probanden in mehreren Gruppen sind. Da die ANOVA ein Omnibus-Test ist, und so nur anzeigt, ob irgendwo ein signifikanter Unterschied zwischen den betrachteten Mittelwerten besteht, nutzt man entweder <a href="kontraste.html">Kontraste</a> oder <a href="post-hoc-tests.html">Post-hoc-Tests</a>, um herauszufinden, welche Mittelwerte sich letztendlich signifikant voneinander unterscheiden. Zusätzlich kann eine <a href="#simple_effects"><em>Simple Effects Analysis</em></a> dazu genutzt werden, Unterschiede auf einzelnen Faktorstufen festzustellen.</p>
+<p>ANOVAs mit Messwiederholung setzen auf <strong>listenweisen Fallausschluss</strong>, d.h., dass wenn in einer Messung eines Probanden auch nur eine Mesusng fehlt, dieser von der weiteren Analyse <strong>komplett ausgeschlossen</strong> wird. Generell kann man empfehlen, anstatt eine klassiche ANOVA, lieber Multilevel Linear Models zu berechnen.</p>
 <div id="pakete" class="section level1">
 <h1>Pakete</h1>
 <p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien und <code>rstatix</code> für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket <code>costatcompanion</code>.</p>
@@ -553,13 +554,13 @@ div.tocify {
 <span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rstatix)</span>
 <span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(costatcompanion)</span></code></pre></div>
 </div>
-<div id="beispiel" class="section level1">
-<h1>Beispiel</h1>
+<div id="beispiel-1" class="section level1">
+<h1>Beispiel 1</h1>
 <p>Viele Hobby-Läufer finden das Laufen an sich sinnvoll, aber auf Dauer ziemlich langweilig. Wer sich nicht an der Fülle der Natur erfreuen kann, oder an ein Laufband in der eigenen Wohnung gebunden ist, der lenkt sich gerne mit Musik ab. Wir vermuten, dass es nicht egal ist, welche Musik die Läufer hören, sondern dass die Musik einen Einfluss auf die Leistung der Läufer hat. Dazu haben wir ein kleines Experiment durchgeführt, um diesen Effekt zu beschreiben – insofern es ihn gibt. Wir haben und ein paar Läufer aus den Parks des Ruhrgebiets geschnappt und uns von denen eine Liste von Musik-Titeln bewerten lassen. Für jeden Läufer konnten wir so “schlecht”, “neutrale” und “Lieblings-” Titel herausfinden und in individuellen Playlists abspeichern. Nun haben wir den Läufern beim Laufen an drei aufeinanderfolgenden Tagen zufällig eine dieser drei individuellen Playlists auf die Ohren gelegt und anschließend an das Training das empfundene Durchhaltevermögen auf einer Skala von 0 – 30 einschätzen lassen (natürlcih waren alle drei Läufe gleich lang). Höhere Werte bedeuten hierbei ein höheres, empfundenes Durchhaltevermögen.</p>
 <div id="klassisch" class="section level2">
 <h2>Klassisch</h2>
 <p>Die Daten sind in der Datei <code>runners.sav</code> oder im Paket <code>costatcompanion</code> unter demselben Namen. Der Datensatz enthält drei Variablen: Die ID der Läufer (<code>id</code>), den für den Lauf gehörten Typ von Musik (<code>music_type</code>) und das nach dem Lauf eingeschätzte Durchhaltevermögen während des Laufes (<code>endurance</code>). Wir untersuchen also eine einfaktorielle Varianzanalyse mit dem Innersubjektfaktor “Music Type” mit drei Faktorstufen (“bad”, “neutral”, und “favorite”).</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>runners</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>costatcompanion<span class="op">::</span>runners</span></code></pre></div>
 <pre><code>## # A tibble: 153 x 3
 ##    id    music_type endurance
 ##    &lt;chr&gt; &lt;fct&gt;          &lt;dbl&gt;
@@ -874,6 +875,94 @@ div.tocify {
 <p>Auch mit dem non-parametrischen Verfahren erhalten wir ähnliche Ergebnisse, wie mit den robusten Verfahren. Die ANOVA an sich ist signifikant, <span class="math inline">\(\chi^2(2) = 140.00, p &lt; .001, W = .553\)</span>. Die Post-hoc-Tests zeigten signifikante Unterschiede zwischen allen Gruppen (alle <span class="math inline">\(p \leq .010\)</span>).</p>
 </div>
 </div>
+<div id="beispiel-2" class="section level1">
+<h1>Beispiel 2</h1>
+<p>Auch bei ANOVAs mit Messwiederholung können natürlich mehrere Faktoren berücksichtigt werden. Unser Beispieldatensatz wurde z.B. um die Variable <code>motivation</code> erweitert, in der festgehalten wurde, ob ein Läufer zusätzlich zur gehörten Musik, an diesem Tag überhaupt motiviert war, zu laufen (daher die zwei Faktorstufen “yes” vs. “no”). Wir haben also neue Läufer rekrutiert und neue Daten gesammelt.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a>costatcompanion<span class="op">::</span>runners_motivation</span></code></pre></div>
+<pre><code>## # A tibble: 306 x 4
+##    id    music_type motivation endurance
+##    &lt;chr&gt; &lt;fct&gt;      &lt;fct&gt;          &lt;dbl&gt;
+##  1 1     bad        no                16
+##  2 1     neutral    no                10
+##  3 1     favorite   no                14
+##  4 1     bad        yes               13
+##  5 1     neutral    yes               13
+##  6 1     favorite   yes               30
+##  7 2     bad        no                12
+##  8 2     neutral    no                 9
+##  9 2     favorite   no                13
+## 10 2     bad        yes                3
+## # ... with 296 more rows</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>runners_motivation <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb50-2"><a href="#cb50-2"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 13
+##   variable     n   min   max median    q1    q3   iqr   mad  mean    sd    se
+##   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 enduran~   306     3    30     13    10    17     7  5.19  14.2  6.29 0.359
+## # ... with 1 more variable: ci &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a>runners_motivation <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb52-2"><a href="#cb52-2"></a><span class="st">  </span><span class="kw">group_by</span>(music_type, motivation) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb52-3"><a href="#cb52-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 15
+##   music_type motivation variable     n   min   max median    q1    q3   iqr
+##   &lt;fct&gt;      &lt;fct&gt;      &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 bad        no         enduran~    51     3    16     10   7.5    13   5.5
+## 2 bad        yes        enduran~    51     3    15     10   8      12   4  
+## 3 neutral    no         enduran~    51     3    18     11   9.5    14   4.5
+## 4 neutral    yes        enduran~    51     9    23     17  14      19   5  
+## 5 favorite   no         enduran~    51     6    17     12  10      14   4  
+## 6 favorite   yes        enduran~    51    19    30     25  24      27   3  
+## # ... with 5 more variables: mad &lt;dbl&gt;, mean &lt;dbl&gt;, sd &lt;dbl&gt;, se &lt;dbl&gt;,
+## #   ci &lt;dbl&gt;</code></pre>
+<p><img src="anova-messwiederholung_files/figure-html/unnamed-chunk-24-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p>Aus der Abbildung geht hervor, dass die Art der Musik wahrscheinlich eher einen Einfluss macht, wenn man motiviert ist. Ansonsten scheinen die Leistungen der Läufer nicht wirklich von der Art der Musik abzuhängen (blaue Linie).</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>runners_motivation <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb54-2"><a href="#cb54-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> endurance, <span class="dt">wid =</span> id, <span class="dt">within =</span> <span class="kw">c</span>(music_type, motivation))</span></code></pre></div>
+<pre><code>## ANOVA Table (type III tests)
+## 
+## $ANOVA
+##                  Effect DFn DFd       F        p p&lt;.05   ges
+## 1            music_type   2 100 222.429 1.53e-37     * 0.599
+## 2            motivation   1  50 222.713 4.72e-20     * 0.484
+## 3 music_type:motivation   2 100 168.325 9.85e-33     * 0.482
+## 
+## $`Mauchly&#39;s Test for Sphericity`
+##                  Effect     W     p p&lt;.05
+## 1            music_type 0.959 0.355      
+## 2 music_type:motivation 0.991 0.810      
+## 
+## $`Sphericity Corrections`
+##                  Effect   GGe      DF[GG]    p[GG] p[GG]&lt;.05   HFe       DF[HF]
+## 1            music_type 0.960 1.92, 96.03 3.74e-36         * 0.998     2, 99.78
+## 2 music_type:motivation 0.992 1.98, 99.15 1.77e-32         * 1.032 2.06, 103.23
+##      p[HF] p[HF]&lt;.05
+## 1 1.83e-37         *
+## 2 9.85e-33         *</code></pre>
+<p>Mauchlys Test auf Sphärizität fällt für uns positiv aus (nicht signifikante Ergebnisse, da <span class="math inline">\(p = .355\)</span> und <span class="math inline">\(p = .810\)</span> und somit beide <span class="math inline">\(p &gt; .05\)</span>), weshalb wir eine “normale” ANOVA mit Messwiederholung berechnen können, ohne die Freiheitsgrade der Teststaistik im Anschluss zu korrigieren. Wir erhalten einen signifikanten Haupteffekt für den Faktor “Art der Musik”, <span class="math inline">\(F(2, 100) = 222.43, p &lt; . 001, \eta_G^2 = .599\)</span>, und einen signifikanten Haupteffekt für den Faktor “Motivation beim Laufen”, <span class="math inline">\(F(1, 50) = 96.01, p &lt; 001, \eta_G^2 = .288\)</span>. Viel wichtiger ist an dieser Stelle der signifikante <strong>Interaktionseffekt</strong>, <span class="math inline">\(F(2, 100) = 168.33, p &lt; .001, \eta_G^2 = .482\)</span>. Wenn der Interaktionseffekt signifikant ist, <em>können wir die Haupteffekte nicht einzeln interpretieren</em>. Bzw. wir können es schon (niemand hält uns davon ab), aber es macht keinen Sinn.</p>
+<p>Bei einer ANOVA mit Messwiederholung können wir dem Interaktionseffekt wieder mit einer <em>Simple Effects Analysis</em> (siehe <a href="faktorielle-anova.html">faktorielle ANOVA</a>) entgegentreten. Dabei betrachten wir den Unterschied in der gefühlten Ausdauer zwischen den Läufern pro Faktorstufe von “Art der Musik” und berechnen jeweils einfaktorielle ANOVAS. Anschließend ist es eine gute Idee, die <span class="math inline">\(p\)</span>-Werte aufgrund multipler Testungen mit <code>adjust_pvalue()</code> zu korrigieren. Mit <code>add_significance()</code> können wir unsere so heiß geliebten Signifikanzsternchen ("*") ausgeben lassen.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a>runners_motivation <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb56-2"><a href="#cb56-2"></a><span class="st">  </span><span class="kw">group_by</span>(music_type) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb56-3"><a href="#cb56-3"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> endurance, <span class="dt">wid =</span> id, <span class="dt">within =</span> motivation) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb56-4"><a href="#cb56-4"></a><span class="st">  </span><span class="kw">get_anova_table</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb56-5"><a href="#cb56-5"></a><span class="st">  </span><span class="kw">adjust_pvalue</span>(<span class="dt">method =</span> <span class="st">&quot;holm&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb56-6"><a href="#cb56-6"></a><span class="st">  </span><span class="kw">add_significance</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 3 x 10
+##   music_type Effect   DFn   DFd      F        p `p&lt;.05`   ges    p.adj
+##   &lt;fct&gt;      &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+## 1 bad        motiv~     1    50   1.41 2.41e- 1 &quot;&quot;      0.013 2.41e- 1
+## 2 neutral    motiv~     1    50  66.8  8.90e-11 &quot;*&quot;     0.376 1.78e-10
+## 3 favorite   motiv~     1    50 580.   3.59e-29 &quot;*&quot;     0.865 1.08e-28
+## # ... with 1 more variable: p.adj.signif &lt;chr&gt;</code></pre>
+<p>Wir können aus diesem Ergebnis schließen, dass sie Die Läufer in ihrer eingeschätzten Ausdauer nicht signifikant voneinander unterscheiden, wenn sie für sie unangenehme Musik hören und nicht motiviert sind. Bei neutraler und Liebligs-Musik unterscheiden sich die Läufer jedoch signifikant voneinander, je nachdem, ob sie motiviert sind oder nicht.</p>
+<div id="robust-1" class="section level2">
+<h2>Robust</h2>
+<p>Gibt es nur für einfaktorielle ANOVAs.</p>
+</div>
+<div id="non-parametrisch-1" class="section level2">
+<h2>Non-parametrisch</h2>
+<p>Gibt es nur für einfaktorielle ANOVAs.</p>
+</div>
+</div>
 <div id="literatur" class="section level1 unnumbered">
 <h1>Literatur</h1>
 <div id="refs" class="references">
@@ -956,7 +1045,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0

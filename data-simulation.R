@@ -65,7 +65,7 @@ crossing(flavor = as_factor(c("Vanilla", "Chocolate", "Cookie", "Champagne")),
   rownames_to_column(var = "id") %>% 
   write_sav("data/ice_cream.sav")
 
-# ANOVA mit Messwiederholungen
+# ANOVA mit Messwiederholung
 set.seed(20200518)
 tibble(
   "bad" = rnorm(51, mean = 10, sd = 3),
@@ -83,3 +83,27 @@ tibble(
          endurance = pmax(endurance, 0),
          endurance = pmin(endurance, 30)) %>% 
   write_sav(path = "data/runners.sav")
+
+# Faktorielle ANOVA mit Messwiederholung
+set.seed(20200528)
+tibble(
+  "bad_no" = rnorm(51, mean = 12, sd = 3),
+  "neutral_no" = rnorm(51, mean = 13, sd = 3),
+  "favorite_no" = rnorm(51, mean = 14, sd = 3),
+  "bad_yes" = rnorm(51, mean = 10, sd = 3),
+  "neutral_yes" = rnorm(51, mean = 16, sd = 3),
+  "favorite_yes" = rnorm(51, mean = 25, sd = 3)
+) %>% 
+  rownames_to_column(var = "id") %>% 
+  pivot_longer(
+    cols = -id,
+    names_to = c("music_type", "motivation"),
+    names_sep = "_",
+    names_ptypes = list(music_type = factor(),
+                        motivation = factor()),
+    values_to = "endurance"
+  ) %>% 
+  mutate(endurance = round(endurance),
+         endurance = pmax(endurance, 0),
+         endurance = pmin(endurance, 30)) %>% 
+  write_sav("data/runners_motivation.sav")
