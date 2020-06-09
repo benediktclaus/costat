@@ -461,6 +461,21 @@ div.tocify {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Überblick</li>
+    <li class="divider"></li>
+    <li>
+      <a href="korrelation.html">Korrelation</a>
+    </li>
+    <li class="dropdown-header">Lineare Regression</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Mittelwerte vergleichen
      
     <span class="caret"></span>
@@ -546,10 +561,11 @@ div.tocify {
 <p><img src="" /></p>
 <div id="pakete" class="section level1">
 <h1>Pakete</h1>
-<p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien und <code>rstatix</code> für statistische Analysen.</p>
+<p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien und <code>rstatix</code> für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket <code>costatcompanion</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(haven)</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rstatix)</span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rstatix)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(costatcompanion)</span></code></pre></div>
 </div>
 <div id="beispiel" class="section level1">
 <h1>Beispiel</h1>

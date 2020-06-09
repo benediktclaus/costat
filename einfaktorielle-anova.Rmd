@@ -33,15 +33,10 @@ library(patchwork)
 Begeben wir uns ins [Phantasialand](https://www.phantasialand.de/de/) in Brühl bei Köln. Auch Forscher brauchen mal Spaß -- und wo könnte man sich den besser holen? Natürlich lässt sich das Bestreben nach wissenschaftlichem Fortschritt auch bei Besuchen von Freizeitparks nicht abstellen. So fällt uns beispielsweise auf, dass selbst im Phantasialand, nicht alle Besucher gleich viel Spaß haben. Es gibt sehr viele, die mit lachenden Gesichtern durch den Park laufen, doch auch jene, die ihre Mundwinkel der Schwerkraft hingeben. Woran könnte das liegen? Eine Hypothese könnte doch das Gewicht des Handgepäcks sein. Vielleicht haben Besucher mit wenig Handgepäck mehr Spaß, weil sie weniger zu tragen haben? Wir möchten also untersuchen, ob die Größe des Handgepäcks einen Einfluss auf die Freude der Besucher hat. Dazu haben wir viele Besucher mit vier unterschiedlichen Arten von Handgepäck nach ihrer derzeitigen empfundenen Freude gefragt.
 
 ## Klassisch
-Die Daten dieser kleinen Erhebung sind in der Datei `phantasialand.sav`. Die Spalte `id` ist die ID des Besuchers, in der Spalte `backpack` ist angegeben, mit welchem Handgepäck der Besucher oder die Besucherin unterwegs war. Wir unterscheiden vier Faktorstufen: "None" = kein Handgepäck, "Light" = leichtes, "Heavy" steht für schweres und "Handcart" steht für Bollerwagen. In der Spalte `joy` wurde die zu dem Zeitpunkt empfundene Freude des Besuchers eingetragen.
+Die Daten dieser kleinen Erhebung sind in dem Datensatz `phantasialand`. Die Spalte `id` ist die ID des Besuchers, in der Spalte `backpack` ist angegeben, mit welchem Handgepäck der Besucher oder die Besucherin unterwegs war. Wir unterscheiden vier Faktorstufen: "None" = kein Handgepäck, "Light" = leichtes, "Heavy" steht für schweres und "Handcart" steht für Bollerwagen. In der Spalte `joy` wurde die zu dem Zeitpunkt empfundene Freude des Besuchers eingetragen.
 
 ```{r}
-phantasialand <- read_spss("data/phantasialand.sav")
-
-phantasialand <- phantasialand %>% 
-  mutate(backpack = as_factor(backpack))
-
-phantasialand
+costatcompanion::phantasialand
 ```
 
 Wie immer, wenn wir SPSS-Daten mit vergebenen Werte-Labels importieren, schützt das Paket `haven` für uns die Information der Levels und der Labels. In der Variable `backpack` haben wir also direkt nach dem Import sowohl die Levels (Zahlen) als auch die  Labels (Bezeichnungen). Wir arbeiten auch hier, wie immer, mit ordentlichen Faktoren weiter und überführen alle Werte dieser Variablen mit der Funktion `as_factor()` in Faktoren.

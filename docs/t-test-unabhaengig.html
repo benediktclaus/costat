@@ -461,6 +461,21 @@ div.tocify {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Überblick</li>
+    <li class="divider"></li>
+    <li>
+      <a href="korrelation.html">Korrelation</a>
+    </li>
+    <li class="dropdown-header">Lineare Regression</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Mittelwerte vergleichen
      
     <span class="caret"></span>
@@ -547,34 +562,16 @@ div.tocify {
 <p>Begeben wir uns in die Welt der Magie, Muggel und Zauberstäbe; tauchen wir ein in die Welt von Harry Potter <span class="citation">(Rowling, <a href="#ref-Rowling.1997" role="doc-biblioref">1997</a>)</span>. Auch in Hogwarts gibt es viel zu entdecken und statistisch zu entschlüsseln. Vielleicht kennst Du die vier Häuser von Hogwarts: Gryffindor, Hufflepuff, Ravenclaw und Slytherin. Jedem dieser Häuser werden verschiedene Eigenschaften nachgesagt, und jeder Schüler wird ausgehend von seinen Eigenschaften durch den sprechenden Hut einem der Häuser zugeteilt. Genau diese Eigenschaften der Schüler in den Häusern können wir uns nun einmal anschauen.</p>
 <div id="pakete" class="section level1">
 <h1>Pakete</h1>
-<p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien, <code>rstatix</code> für statistische Analysen und <code>skimr</code> für schnelle deskriptive Statistiken.</p>
+<p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien und <code>rstatix</code> für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket <code>costatcompanion</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(haven)</span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rstatix)</span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(skimr)</span></code></pre></div>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(costatcompanion)</span></code></pre></div>
 </div>
 <div id="beispiel" class="section level1">
 <h1>Beispiel</h1>
-<p>Es wird spannend, denn wir betrachten die Rivalität der Häuser Griffyndor und Slytherin. Dem Haus Griffyndor werden Tapferkeit, Kühnheit und Ritterlichkeit zugeschrieben – dem Haus Slytherin, naja, eher nicht. Im Datensatz <code>chivalry.sav</code> sind die Ergebnisse eines Persönlichkeitstests zu finden, den alle in Hogwarts eingeschriebenen Bewohner dieser zwei Häuser durchführten, und der das Konstrukt “Ritterlichkeit” erfasst. Der Gesamtwert dieses Tests kann Werte zwischen 0 (keine Richtterlichkeit vorhanden) und 110 (nimmt den Kampf gegen Voldemort auf und empfängt den Tod als einen alten Freund) annehmen.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>chivalry_data &lt;-<span class="st"> </span><span class="kw">read_spss</span>(<span class="st">&quot;data/chivalry.sav&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a>chivalry_data &lt;-<span class="st"> </span>chivalry_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">house =</span> <span class="kw">as_factor</span>(house))</span>
-<span id="cb2-4"><a href="#cb2-4"></a></span>
-<span id="cb2-5"><a href="#cb2-5"></a>chivalry_data</span></code></pre></div>
-<pre><code>## # A tibble: 80 x 3
-##    id    house      chivalry
-##    &lt;chr&gt; &lt;fct&gt;         &lt;dbl&gt;
-##  1 1     Gryffindor       95
-##  2 2     Gryffindor       75
-##  3 3     Gryffindor       95
-##  4 4     Gryffindor       95
-##  5 5     Gryffindor       83
-##  6 6     Gryffindor       92
-##  7 7     Gryffindor       89
-##  8 8     Gryffindor       98
-##  9 9     Gryffindor       86
-## 10 10    Gryffindor       97
-## # ... with 70 more rows</code></pre>
+<p>Es wird spannend, denn wir betrachten die Rivalität der Häuser Griffyndor und Slytherin. Dem Haus Griffyndor werden Tapferkeit, Kühnheit und Ritterlichkeit zugeschrieben – dem Haus Slytherin, naja, eher nicht. Im Datensatz <code>chivalry</code> sind die Ergebnisse eines Persönlichkeitstests zu finden, den alle in Hogwarts eingeschriebenen Bewohner dieser zwei Häuser durchführten, und der das Konstrukt “Ritterlichkeit” erfasst. Der Gesamtwert dieses Tests kann Werte zwischen 0 (keine Richtterlichkeit vorhanden) und 110 (nimmt den Kampf gegen Voldemort auf und empfängt den Tod als einen alten Freund) annehmen.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>chivalry_data &lt;-<span class="st"> </span>costatcompanion<span class="op">::</span>chivalry</span></code></pre></div>
 <p>Da wir wieder SPSS-Daten importieren, finden wir für die Variable <code>house</code> wieder den merkwürdigen Datentyp <code>&lt;dbl+lbl&gt;</code> vor. Hier ist R nur mehr als freundlich zu uns, indem es uns beides, die Werte-Levels und -Labels gleichzeitig anzeigt Für die Analysen benötigen wir jedoch nur die Labels als ordentliche Faktoren. Das beheben wir mit der Funktion <code>as_factor()</code> (siehe auch die Seite zum <a href="data-wrangling.html">Data Wrangling</a>).</p>
 <div id="voraussetzungen" class="section level2">
 <h2>Voraussetzungen</h2>
@@ -583,30 +580,29 @@ div.tocify {
 <div id="eda" class="section level2">
 <h2>EDA</h2>
 <p>Auch hier betrachten wir die Daten erstmal, bevor wir irgendwelche Analysen durchführen. Beobachtet man verschiedene Gruppen, macht es Sinn, die Ausgabe der statistischen Kennwerte für jede Gruppe durchzuführen.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>chivalry_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw">group_by</span>(house) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>chivalry_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="st">  </span><span class="kw">group_by</span>(house) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 14
-##   house variable     n   min   max median    q1    q3   iqr   mad  mean    sd
-##   &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 Gryf~ chivalry    42    75   105   92      89  96.5   7.5  5.19  92.3  6.86
-## 2 Slyt~ chivalry    38    26    72   47.5    42  53    11    8.15  48.1  8.94
-## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+##   house      variable     n   min   max median    q1    q3   iqr   mad  mean    sd    se    ci
+##   &lt;fct&gt;      &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Gryffindor chivalry    42    75   105   92      89  96.5   7.5  5.19  92.3  6.86  1.06  2.14
+## 2 Slytherin  chivalry    38    26    72   47.5    42  53    11    8.15  48.1  8.94  1.45  2.94</code></pre>
 <p>Wir sehen einen eindeutigen Trend dahingehend, dass sich die Mitglieder Griffyndors als deutlicher ritterlicher einschätzen (<span class="math inline">\(M = 92.3, SD = 6.86\)</span>) als die Mitglieder der Hauses Slytherin (<span class="math inline">\(M = 48.1, SD = 8.94\)</span>). Auch in der Abbildung sehen wir diesen Unterschied deutlich. Die Boxplots (C) zeigen uns insgesamt 4 Outlier, zwei in jedem Haus. Die könnte man bei Bedarf entfernen, wir belassen es jedoch dabei und fahren fort, auch weil die Varianz der Daten in beiden Häusern ähnlich zu sein scheint. Außerdem sehen die Daten gut normalverteilt aus, was wir anhand der Kerndichteschätzungen (= “geglättetes” Histogramm in A) und dem QQ-Plot (B) erkennen können.</p>
 <p><img src="t-test-unabhaengig_files/figure-html/unnamed-chunk-6-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Wer auf Tests zur Überprüfung der Voraussetzungen besteht, also dem Vorgehen, von dem ich bei großen Stichproben wieder <a href="voraussetzungen.html">entschieden abrate</a>), der kann diese natürlich durchführen. Wichtig ist dabei zu beachten, dass der Test der Daten “auf Normalverteilung” pro Haus, bzw. pro Gruppe, durchgeführt werden muss.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Shapiro-Wilk-Test</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a>chivalry_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span><span class="kw">group_by</span>(house) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="st">  </span><span class="kw">shapiro_test</span>(chivalry)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Shapiro-Wilk-Test</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>chivalry_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="st">  </span><span class="kw">group_by</span>(house) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="st">  </span><span class="kw">shapiro_test</span>(chivalry)</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 4
 ##   house      variable statistic     p
 ##   &lt;fct&gt;      &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
 ## 1 Gryffindor chivalry     0.972 0.382
 ## 2 Slytherin  chivalry     0.980 0.717</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Levene-Test</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a>chivalry_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw">levene_test</span>(chivalry <span class="op">~</span><span class="st"> </span>house)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Levene-Test</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>chivalry_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="st">  </span><span class="kw">levene_test</span>(chivalry <span class="op">~</span><span class="st"> </span>house)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 4
 ##     df1   df2 statistic     p
 ##   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;
@@ -615,22 +611,22 @@ div.tocify {
 </div>
 <div id="durchführung" class="section level2">
 <h2>Durchführung</h2>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>chivalry_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="st">  </span><span class="kw">t_test</span>(chivalry <span class="op">~</span><span class="st"> </span>house)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>chivalry_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="st">  </span><span class="kw">t_test</span>(chivalry <span class="op">~</span><span class="st"> </span>house)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 8
 ##   .y.      group1     group2       n1    n2 statistic    df        p
 ## * &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;     &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
 ## 1 chivalry Gryffindor Slytherin    42    38      24.6  69.2 5.98e-36</code></pre>
 <p>Ja, die beiden Mitglieder der Häuser unterscheiden sich in ihrer selbst eingeschätzten Ritterlichkeit signifikant voneinander, da <span class="math inline">\(p &lt; 0.05\)</span> ist. Wer sich die Daten in einem anderen Statistikprogramm vorgenommen und mitgerechnet hat, vielleicht sogar direkt in SPSS, der wird feststellen, dass die Werte etwas von seinen abweichen. Das liegt daran, dass R standardmäßig gar nicht den traditionellen <span class="math inline">\(t\)</span>-Test (auch Students <span class="math inline">\(t\)</span>-Test genannt) berechnet, sondern den <strong>Welchs-<span class="math inline">\(t\)</span>-Test</strong>. Den kennen viele Psychologie-Studenten eigentlich als Alternative zum <span class="math inline">\(t\)</span>-Test, wenn die Voraussetzungen der Normalverteilung und Varianzhomogenität verletzt sind. Auf die Prüfung dieser beiden Annahmen kann man eigentlich gänzlich verzichten und standardmäßigdirekt den Welch-Test durchführen <span class="citation">(Rasch et al., <a href="#ref-Rasch.2011" role="doc-biblioref">2011</a>; Ruxton, <a href="#ref-Ruxton.2006" role="doc-biblioref">2006</a>)</span>, so, wie R es auch anbietet. Wer dennoch unbedingt den “richtigen” <span class="math inline">\(t\)</span>-Test haben möchte, gibt einfach ein zusätzliches Argument an und schon decken sich alle Ergebnisse.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>chivalry_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="st">  </span><span class="kw">t_test</span>(chivalry <span class="op">~</span><span class="st"> </span>house, <span class="dt">var.equal =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>chivalry_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="st">  </span><span class="kw">t_test</span>(chivalry <span class="op">~</span><span class="st"> </span>house, <span class="dt">var.equal =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 8
 ##   .y.      group1     group2       n1    n2 statistic    df        p
 ## * &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;     &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
 ## 1 chivalry Gryffindor Slytherin    42    38      24.9    78 6.41e-39</code></pre>
 <p>Bei Gruppenunterschieden ist nicht nur interessant, ob sich diese statistisch signifikant voneinander unterscheiden; vor allem interessiert uns die Größe des Effekts, also die Effektstärke. Auch diese lässt sich einfach berechnen. Hier sollte man immer das Argument <code>hedges.correction = TRUE</code> angeben, da Cohens <span class="math inline">\(d\)</span> von Haus aus positiv verzerrt ist <span class="citation">(Hedges &amp; Olkin, <a href="#ref-Hedges.1985" role="doc-biblioref">1985</a>)</span>. Entgegen dem Namen des Befehls (<code>cohens_d()</code>) erhalten wir so nicht Cohens <span class="math inline">\(d\)</span>, sondern Hedges’ <span class="math inline">\(g\)</span>.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>chivalry_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb14-2"><a href="#cb14-2"></a><span class="st">  </span><span class="kw">cohens_d</span>(chivalry <span class="op">~</span><span class="st"> </span>house, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>chivalry_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="st">  </span><span class="kw">cohens_d</span>(chivalry <span class="op">~</span><span class="st"> </span>house, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 7
 ##   .y.      group1     group2    effsize    n1    n2 magnitude
 ## * &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;ord&gt;    
@@ -650,13 +646,13 @@ div.tocify {
 <p><span class="citation">Matzke et al. (<a href="#ref-Matzke.2015" role="doc-biblioref">2015</a>)</span> ließen eine Reihe von Probanden neutrale Worte auswendig lernen. Die Autoren teilten ihre Probanden unter anderem nun in zwei Gruppen ein: die eine Gruppe ließen sie nun nach dem Lernen und vor dem Abruf (im <em>retention interval</em>) ihre Augen horizontal bewegen, die andere Gruppe ließen sie einen Punkt fixieren. Anschließend sollten die Probanden so viele gelernte Worte wie möglich abrufen. Die Frage war nun, ob die Augenbewegung den Abruf verbessert oder verschlechtert. Die Daten aus der Original-Studie sind in der Datei <code>eye_movements.csv</code> und stammen aus der <a href="https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf">JASP Data Library</a> <span class="citation">(JASP Team, <a href="#ref-JASPTeam.2019" role="doc-biblioref">2019</a>)</span>.</p>
 <div id="eda-1" class="section level2">
 <h2>EDA</h2>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>eye_movement &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/eye_movements.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()</span>
-<span id="cb16-3"><a href="#cb16-3"></a></span>
-<span id="cb16-4"><a href="#cb16-4"></a>eye_movement &lt;-<span class="st"> </span>eye_movement <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb16-5"><a href="#cb16-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">as_factor</span>(condition))</span>
-<span id="cb16-6"><a href="#cb16-6"></a></span>
-<span id="cb16-7"><a href="#cb16-7"></a>eye_movement</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>eye_movement &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/eye_movements.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()</span>
+<span id="cb15-3"><a href="#cb15-3"></a></span>
+<span id="cb15-4"><a href="#cb15-4"></a>eye_movement &lt;-<span class="st"> </span>eye_movement <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-5"><a href="#cb15-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">as_factor</span>(condition))</span>
+<span id="cb15-6"><a href="#cb15-6"></a></span>
+<span id="cb15-7"><a href="#cb15-7"></a>eye_movement</span></code></pre></div>
 <pre><code>## # A tibble: 49 x 3
 ##    participant_number condition  critical_recall
 ##                 &lt;dbl&gt; &lt;fct&gt;                &lt;dbl&gt;
@@ -672,8 +668,8 @@ div.tocify {
 ## 10                 15 Fixation                16
 ## # ... with 39 more rows</code></pre>
 <p>Wenn wir die Daten einlesen, lassen wir uns die Variablennamen direkt mit der Funktion <code>clean_names()</code> aus dem Paket <code>janitor</code> bereinigen. Nach dem Import haben wir festgestellt, dass die Variable <code>condition</code> als Zeichenfolge (<code>&lt;chr&gt;</code>) und nicht als Faktor eingelesen wurde. Das kann ganz leicht mit dem Befehl <code>as_factor()</code> behoben werden. Die Variable <code>participant_number</code> gibt die Nummer des Probanden an und ist uninteressant. In der Variable <code>condition</code> wird hinterlegt, welcher Proband welcher Bedingung (Horizontal vs. Fixation) zugeteilt wurde und <code>critical_recall</code> ist schließlich unsere abhängige Variable, die Anzahl der abgerufenen Worte. Den nun bereinigten Datensatz schauen wir uns genauer an.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>eye_movement <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb18-2"><a href="#cb18-2"></a><span class="st">  </span><span class="kw">skim</span>(condition)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>eye_movement <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="st">  </span><span class="kw">skim</span>(condition)</span></code></pre></div>
 <table>
 <caption>Data summary</caption>
 <tbody>
@@ -735,9 +731,9 @@ div.tocify {
 </tbody>
 </table>
 <p>Dieser ersten Übersicht können wir entnehmen, dass 25 Probanden ihre Augen horizontal bewegten und 24 einen Punkt fixierten.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>eye_movement <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb19-2"><a href="#cb19-2"></a><span class="st">  </span><span class="kw">group_by</span>(condition) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb19-3"><a href="#cb19-3"></a><span class="st">  </span><span class="kw">skim</span>(critical_recall)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>eye_movement <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="st">  </span><span class="kw">group_by</span>(condition) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="st">  </span><span class="kw">skim</span>(critical_recall)</span></code></pre></div>
 <table>
 <caption>Data summary</caption>
 <tbody>
@@ -827,18 +823,18 @@ div.tocify {
 <p>Dem ersten Eindruck nach, scheint der Abruf in der Gruppe mit horizontalen Augenbewegungen schlechter zu sein. Im Durchschnitt haben die Probanden dieser experimentellen Bedingung <span class="math inline">\(M = 10.88, SD = 4.32\)</span> Wörter abgerufen, Probanden, die einen Punkt fixierten jedoch <span class="math inline">\(M = 15.29, SD = 6.38\)</span> Worte. Den gleichen Effekt können wir ganz gut im Violin-Plot<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> (C) erkennt. In beiden Bedingungen hatten wir auf jeden Fall auch richtige Brains sitzen, die maximalen abgerufenen Worte sind hier 22 und 25. Allerdings gab es auch Probanden, die nur 3 oder 4 Worte abrufen konnten. Da wir eine ziemlich kleine Stichprobe haben (in beiden Bedingungen jeweils <span class="math inline">\(n &lt; 30\)</span>), sollten wir die Daten tatsächlich auf Normalverteilung und Varianzhomogenität prüfen und uns entsprechende Abbildungen zur Beurteilung ansehen.</p>
 <p><img src="t-test-unabhaengig_files/figure-html/unnamed-chunk-14-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Argh! Anhand der Kerndichteschätzungen (A) und den QQ-Plots (B) können wir festhalten: Normalverteilung sieht anders aus… So ist das mit den empirischen Daten, kaum etwas erhoben, sofort nur Probleme. Die Daten der Bedingung “Horizontal” gehen noch, aber bei den Daten der Bedingung “Fixation” haben wir ernstzunehmende Probleme. Was sagen uns der Shapiro-Wilk- und der Levene-Test?</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Shapiro-Wilk-Test</span></span>
-<span id="cb20-2"><a href="#cb20-2"></a>eye_movement <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb20-3"><a href="#cb20-3"></a><span class="st">  </span><span class="kw">group_by</span>(condition) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb20-4"><a href="#cb20-4"></a><span class="st">  </span><span class="kw">shapiro_test</span>(critical_recall)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Shapiro-Wilk-Test</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>eye_movement <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="st">  </span><span class="kw">group_by</span>(condition) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="st">  </span><span class="kw">shapiro_test</span>(critical_recall)</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 4
 ##   condition  variable        statistic      p
 ##   &lt;fct&gt;      &lt;chr&gt;               &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 Horizontal critical_recall     0.959 0.396 
 ## 2 Fixation   critical_recall     0.926 0.0794</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Levene-Test</span></span>
-<span id="cb22-2"><a href="#cb22-2"></a>eye_movement <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb22-3"><a href="#cb22-3"></a><span class="st">  </span><span class="kw">levene_test</span>(critical_recall <span class="op">~</span><span class="st"> </span>condition)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># Levene-Test</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>eye_movement <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb21-3"><a href="#cb21-3"></a><span class="st">  </span><span class="kw">levene_test</span>(critical_recall <span class="op">~</span><span class="st"> </span>condition)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 4
 ##     df1   df2 statistic       p
 ##   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;
@@ -848,16 +844,16 @@ div.tocify {
 <div id="durchführung-1" class="section level2">
 <h2>Durchführung</h2>
 <p>Die eigentliche Analyse ist kurz und schmerzlos.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># Welch-Test</span></span>
-<span id="cb24-2"><a href="#cb24-2"></a>eye_movement <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb24-3"><a href="#cb24-3"></a><span class="st">  </span><span class="kw">t_test</span>(critical_recall <span class="op">~</span><span class="st"> </span>condition)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># Welch-Test</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a>eye_movement <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb23-3"><a href="#cb23-3"></a><span class="st">  </span><span class="kw">t_test</span>(critical_recall <span class="op">~</span><span class="st"> </span>condition)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 8
 ##   .y.             group1     group2      n1    n2 statistic    df       p
 ## * &lt;chr&gt;           &lt;chr&gt;      &lt;chr&gt;    &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
 ## 1 critical_recall Horizontal Fixation    25    24     -2.82  40.3 0.00735</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="co"># Hedges&#39; g</span></span>
-<span id="cb26-2"><a href="#cb26-2"></a>eye_movement <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb26-3"><a href="#cb26-3"></a><span class="st">  </span><span class="kw">cohens_d</span>(critical_recall <span class="op">~</span><span class="st"> </span>condition, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># Hedges&#39; g</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a>eye_movement <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="st">  </span><span class="kw">cohens_d</span>(critical_recall <span class="op">~</span><span class="st"> </span>condition, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 7
 ##   .y.             group1     group2   effsize    n1    n2 magnitude
 ## * &lt;chr&gt;           &lt;chr&gt;      &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;ord&gt;    

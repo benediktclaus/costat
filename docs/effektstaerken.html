@@ -461,6 +461,21 @@ div.tocify {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Überblick</li>
+    <li class="divider"></li>
+    <li>
+      <a href="korrelation.html">Korrelation</a>
+    </li>
+    <li class="dropdown-header">Lineare Regression</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Mittelwerte vergleichen
      
     <span class="caret"></span>
@@ -620,10 +635,10 @@ div.tocify {
 <p><span class="math inline">\(\xi\)</span> (gesprochen “ksi”) wurde von <span class="citation">Wilcox &amp; Tian (<a href="#ref-Wilcox.2011" role="doc-biblioref">2011</a>)</span> vorgeschlagen und verfolgt die Grundidee einer <em>explanatory effect size</em>. Sie gibt also grob an, wie viel Varianz durch den Effekt “erklärt” wird. Besonders elegant ist <span class="math inline">\(\xi\)</span>, weil die Varianzhomogenität nicht vorausgesetzt wird und mehr als zwei Gruppen miteinander verglichen werden können (wie bspw. in ANOVA-Designs). Berechnet wird sie durch:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">yuen.effect.ci</span>(chivalry <span class="op">~</span><span class="st"> </span>house, <span class="dt">data =</span> chivalry_data)</span></code></pre></div>
 <pre><code>## $effsize
-## [1] 0.9826569
+## [1] 0.9822259
 ## 
 ## $CI
-## [1] 0.9485893 0.9935199</code></pre>
+## [1] 0.9470369 0.9933996</code></pre>
 </div>
 </div>
 </div>

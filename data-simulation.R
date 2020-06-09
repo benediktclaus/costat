@@ -1,6 +1,21 @@
 # Pakete ------------------------------------------------------------------
 library(tidyverse)
+library(MASS)
 library(haven)
+
+
+# Regression --------------------------------------------------------------
+# Korrelation
+set.seed(20200609)
+mvrnorm(100, mu = c(0,0,0,0), Sigma = matrix(c(1, 0.86, 0.79, 0.75, 0.86, 1, 0.95, 0.80, 0.79, 0.95, 1, 0.70, 0.75, 0.80, 0.70, 1), ncol = 4), empirical = TRUE) %>% 
+  as_tibble(.name_repair = "unique") %>% 
+  rename(temperature = "...1", swimmers = "...2", sales = "...3", beatings = "...4") %>% 
+  mutate(temperature = round(temperature * 6 + 25, 1),
+         swimmers = round(swimmers * 30 + 100),
+         sales = round(sales * 500 + 1500),
+         beatings = round(beatings * 2 + 5)) %>% 
+  rownames_to_column(var = "day_id") %>% 
+  write_sav("data/swimmers.sav")
 
 
 # t-Tests -----------------------------------------------------------------

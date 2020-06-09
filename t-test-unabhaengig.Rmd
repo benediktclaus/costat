@@ -20,12 +20,13 @@ Begeben wir uns in die Welt der Magie, Muggel und Zauberstäbe; tauchen wir ein 
 
 
 # Pakete
-Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien, `rstatix` für statistische Analysen und `skimr` für schnelle deskriptive Statistiken.
+Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket `costatcompanion`.
+
 ```{r message=FALSE}
 library(tidyverse)
 library(haven)
 library(rstatix)
-library(skimr)
+library(costatcompanion)
 ```
 
 ```{r echo=FALSE}
@@ -34,13 +35,9 @@ library(patchwork)
 
 # Beispiel
 
-Es wird spannend, denn wir betrachten die Rivalität der Häuser Griffyndor und Slytherin. Dem Haus Griffyndor werden Tapferkeit, Kühnheit und Ritterlichkeit zugeschrieben -- dem Haus Slytherin, naja, eher nicht. Im Datensatz `chivalry.sav` sind die Ergebnisse eines Persönlichkeitstests zu finden, den alle in Hogwarts eingeschriebenen Bewohner dieser zwei Häuser durchführten, und der das Konstrukt "Ritterlichkeit" erfasst. Der Gesamtwert dieses Tests kann Werte zwischen 0 (keine Richtterlichkeit vorhanden) und 110 (nimmt den Kampf gegen Voldemort auf und empfängt den Tod als einen alten Freund) annehmen.
+Es wird spannend, denn wir betrachten die Rivalität der Häuser Griffyndor und Slytherin. Dem Haus Griffyndor werden Tapferkeit, Kühnheit und Ritterlichkeit zugeschrieben -- dem Haus Slytherin, naja, eher nicht. Im Datensatz `chivalry` sind die Ergebnisse eines Persönlichkeitstests zu finden, den alle in Hogwarts eingeschriebenen Bewohner dieser zwei Häuser durchführten, und der das Konstrukt "Ritterlichkeit" erfasst. Der Gesamtwert dieses Tests kann Werte zwischen 0 (keine Richtterlichkeit vorhanden) und 110 (nimmt den Kampf gegen Voldemort auf und empfängt den Tod als einen alten Freund) annehmen.
 ```{r}
-chivalry_data <- read_spss("data/chivalry.sav")
-
-chivalry_data <- chivalry_data %>% mutate(house = as_factor(house))
-
-chivalry_data
+chivalry_data <- costatcompanion::chivalry
 ```
 
 Da wir wieder SPSS-Daten importieren, finden wir für die Variable `house` wieder den merkwürdigen Datentyp `<dbl+lbl>` vor. Hier ist R nur mehr als freundlich zu uns, indem es uns beides, die Werte-Levels und -Labels gleichzeitig anzeigt Für die Analysen benötigen wir jedoch nur die Labels als ordentliche Faktoren. Das beheben wir mit der Funktion `as_factor()` (siehe auch die Seite zum [Data Wrangling](data-wrangling.html)).

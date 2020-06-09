@@ -1,0 +1,280 @@
+---
+title: "Korrelation"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(fig.align = "center", dpi = 350)
+ggplot2::theme_set(ggplot2::theme_light())
+
+
+library(benelib)
+```
+
+![](images/swimmer_r.jpg)
+
+Mit einer Korrelation können wir statistische Zusammenhänge zwischen Variablen aufdecken und angeben, wie sehr diese "zusammenhängen". Wichtig dabei ist, so viel schon einmal vorab, nicht den Zusammenhang an sich (die Korrelation) mit einer Ursache-Wirkungs-Beziehung  (**Kausalität**) gleichzusetzen -- einer der häufigsten und auch von erfahrenen Forschern immer noch begangener Fehler.
+
+# Pakete 
+Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket `costatcompanion`.
+
+```{r message=FALSE}
+library(tidyverse)
+library(haven)
+library(rstatix)
+library(costatcompanion)
+```
+
+```{r echo=FALSE}
+library(patchwork)
+```
+
+# Beispiel 1
+Wir sind mitten im heißen Sommer, lange Tage, laue Nächte, nach dem Duschen hat man Schweiß auf der Stirn und das letzte Mal, dass Querlüften funktioniert hat, ist schon einige Wochen her. Was könnten wir nun machen, um uns abukühlen? Richtig, wir könnten ins Freibad gehen! Mit einem dahinschmelzenden Calippo in der Hand fragt sich aber der geübte Statistiker: Ist es eigentlich jeden Tag so voll? Oder hängt die Anzahl der Schwimmer in diesem Freibad mit irgendetwas zusammen? Sofort fragt er den Kassenwart nach Daten, Daten, Daten! Und siehe da, tatsächlich führt das Freibad eine Liste darüber, an welchem Tag, wie viele Besucher kamen, inklusive einiger anderer Faktoren, wie z.B. der Durchschnitts-Temperatur.
+
+
+## Klassisch
+Den Datensatz `water_park` finden wir im Paket `costatcompanion`. In der ersten Spalte (`day_id`) finden wir eine individuelle ID des beobachteten Tages (in zufälliger Reihenfolge). Nachfolgend finden wir vier Variablen, die an jedem Tag gemessen wurden. Dazu zählen die Durchschnitts-Temperatur (`temperature`), die Anzahl der Schwimmer im Schwimmbecken (`swimmers`), den Tages-Umsatz des Freibad-Kiosks in Euro (`sales`) und die Anzahl der Schlägereien, wegen der die Polizei gerufen werden musste (`beatings`).
+
+```{r}
+costatcompanion::water_park
+```
+
+### Voraussetzungen
+Da wir uns im GLM bewegen, gelten die üblichen [Voraussetzungen](voraussetzungen.html). Vor allem sollten die Daten jedoch auf Linearität und potenzielle Ausreißer geprüft werden!
+
+### EDA
+Zunächst wollen wir untersuchen, ob die Durchschnitts-Temperatur eines beobachteten Tages mit der Anzahl der Schwimmer im Schwimmbecken zusammenhängt. Wir könnten spontan vermuten, dass es mehr Schwimmer bei höheren Temperaturen gibt. 
+
+Eine gute Idee ist, sich deskriptive Statistiken zu seinen untersuchten Variablen auszugeben und sich deren Verteilungen anzuschauen.
+
+```{r}
+water_park %>% 
+  select(temperature, swimmers) %>% 
+  get_summary_stats()
+```
+
+```{r echo=FALSE}
+water_park %>% 
+  select(day_id, temperature, swimmers) %>% 
+  pivot_longer(-day_id,
+               names_to = "outcome",
+               values_to = "score") %>% 
+  mutate(outcome = str_to_title(outcome)) %>% 
+  ggplot(aes(score, fill = outcome, color = outcome)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_personal() +
+  scale_color_personal() +
+  facet_wrap(~ outcome, scales = "free") +
+  theme(legend.position = "none") +
+  labs(x = "Value", y = "Density")
+```
+
+Eine weitere gute Idee wäre, sich einen vermuteten Zusammenhang graphisch als Streudiagramm darstellen zu lassen. Hier finden wir einen guten linearen Zusammenhang, der genau das nahelegt: Je höher die Temperatur (je weiter man auf der $x$-Achse nach rechts geht), desto mehr Schwimmer wurden beobachtet (desto höher liegen die Punkte).
+
+```{r}
+water_park %>% 
+  ggplot(aes(temperature, swimmers)) +
+  geom_point() +
+  labs(x = "Temperature", y = "Swimmers") +
+  expand_limits(y = 0, x = 0)
+```
+
+### Durchführung
+Die eigentliche Berechnung einer Korrelation ist einfach und auch der Output hält sich in engen Grenzen:
+
+```{r}
+water_park %>% 
+  cor_test(temperature, swimmers)
+```
+
+Wir erhalten einen statistisch signifikanten Zusammenhang, $r = .860 [.798, .904], p < .001$. Berechnet wird standardmäßig der Korrelationskoeffizient nach Pearson ($r$), auch Produkt-Moment-Korrelation bezeichnet.
+
+### Berichten
+We found a significant correlation between an observed day's temperature and the amount of swimmers in the pool, $r = .860 [.798, .904], p < .001$.
+
+## Robust
+Natürlich hat Rand @Wilcox.2017 auch für Korrelationen vorgesorgt und stellt uns im Paket `WRS2` [@Mair.2020] robuste Methoden zur Berechnung von Korrelationen zur Verfügung. Einmal gibt es die *percentage bend correlation* ($\rho_{pb}$, `pbcor()`) und einmal die Korrelation auf Basis von winsorized Daten ($\rho_w$, `wincor()`)
+
+```{r}
+library(WRS2)
+
+# PB Correlation
+with(
+  water_park,
+  pbcor(temperature, swimmers)
+)
+
+# Winsorized Correlation
+with(
+  water_park,
+  wincor(temperature, swimmers)
+)
+```
+
+Die *percentage bend correlation* beträgt $\rho_{pb} = .823, p < .001$ und die Korrelation basierend auf winsorized Daten $\rho_w = ,789, p < .001$.
+
+## Non-parametrisch
+Wer [entgegen aller Empfehlungen](voraussetzungen.html) trotzdem non-parametrisch rechnen möchte, der kann auf zwei bekannte Verfahren zurückgreifen. Zum einen den Korrelationskoeffizinten nach Spearman ($r_s$), gelegentlich auch Spearmans Rho ($\rho$) bezeichnet, und zum anderen Kendalls Tau ($\tau$). Nach @Howell.1997 ist $\tau$ zu bevorzugen. Berechnen tun wir beide non-parametrischen Varianten mit derselben Funktion wie Pearsons $r$, geben jedoch unser gewünschtes Verfahren als Metode an.
+
+```{r}
+# Spearmans r
+water_park %>% 
+  cor_test(temperature, swimmers, method = "spearman")
+
+# Kendalls Tau
+water_park %>% 
+  cor_test(temperature, swimmers, method = "kendall")
+```
+
+Eine gute Möglichkeit, sich angesichts der doch unterschiedlichen Ergebnisse nicht zwischen beiden Verfahren im Nachhinein zu entscheiden (Stichwort $p$-Hacking!), ist das vorherige Festlegen des Verfahrens.
+
+# Interpretation
+## Varianzaufklärung
+Den Korrelationskoeffizienten $r$ kann man qudrieren und erhält $R^2$, das Bestimmtheitsmaß oder Determinationskoeffizient gennant wird -- je nachdem, wie sehr man gerade mit einem statistischen Wissen angeben will. $R^2$ gibt an, wie viel Varianz zwei Variablen miteinander teilen. Ist der Korrelationskoeffizient zwischen zwei Variablen zum Beispiel $r = 0.80$, dann teilen sich diese beiden Variablen aus der Gesamtvarianz der Daten einen Anteil von $R^2 = .80^2 \Leftrightarrow R^2 = 0.64$, also 64%.
+
+## Stärke eines Zusammenhangs
+Sehr viele Leute, wenn nicht alle, verwechseln regelmäßig die *Stärke* eines Zusammenhangs mit der *Größe* eines Zusammenhangs. Man kann schnell für sich testen, ob man denselben Fehler machen würde. Betrachten wir die beiden folgenden Abbildungen: In welcher ist die Korrelation größer?
+
+```{r}
+sample_1 <- MASS::mvrnorm(50, mu = c(0,0), Sigma = matrix(c(1,0.85,0.85,1), ncol = 2), empirical = TRUE) %>% 
+  as_tibble(.name_repair = "unique") %>% 
+  rename(x = "...1", y = "...2") %>% 
+  mutate(sample = "sample_1",
+         y = y * 3)
+
+sample_2 <- MASS::mvrnorm(50, mu = c(0,0), Sigma = matrix(c(1,0.70,0.70,1), ncol = 2), empirical = TRUE) %>% 
+  as_tibble(.name_repair = "unique") %>% 
+  rename(x = "...1", y = "...2") %>% 
+  mutate(sample = "sample_2",
+         x = x * 0.2)
+
+bind_rows(sample_1, sample_2) %>% 
+  mutate(sample = str_to_title(sample), sample = str_replace(sample, pattern = "_", replacement = " ")) %>% 
+  ggplot(aes(x, y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~ sample, scales = "free_x")
+```
+
+Wer sich für die linke Seite entschieden hat, ist nicht alleine und liegt gleichzeitig gnadenlos daneben. Die Korrelation ist rechts ($r = .850$) nämlich deutlich höher als links ($r = .700$). Trotzdem entscheiden sich viele für die Linke Abbildung. Wieso? Weil sie eben die Stärke der Korrelation, also die Stärke des Zusammenhangs mit der Größe des Zusammenhangs verwechseln.
+
+Die Stärke eines Zusammenhangs gibt nicht an, wie "steil" die Punkt sind, sondern wie eng sie um eine Linie fallen. Je enger die Punkte um die eingezeichnete Linie fallen, desto größer ist die Korrelation. Wie "steil" die Gerade ist, wie *groß* also der Zusammenhang zwischen zwei Variablen ist, ist eine Frage, auf die die **Regression** Antworten hat.
+
+Was folgt daraus? Die Stärke und die Größe eines Zusammenhangs sind voneinander unabhängig und müssen immer einzeln beurteilt werden. Es kann bspw. sein, dass es Zusammenhänge gibt, die total klein, aber extrem stark sind. Hier muss man sich dann die Frage stellen, ob dieser Zusammenhang irgendwelche klinischen/bedeutenden Implikationen mit sich bringt.
+
+```{r}
+MASS::mvrnorm(500, mu = c(0,0), Sigma = matrix(c(1,0.90,0.90,1), ncol = 2), empirical = TRUE) %>% 
+  as_tibble(.name_repair = "unique") %>% 
+  rename(x = "...1", y = "...2") %>% 
+  mutate(sample = "sample_1",
+         y = y * 0.2) %>% 
+  ggplot(aes(x, y)) +
+  geom_point() +
+  expand_limits(y = c(-3, 3))
+```
+
+## Korrelation und Kausalität
+Nur weil zwei Variablen zusammenhängen, heißt das nicht, dass die eine Variable die andere *kausal*, also ursächlich, beeinflusst. In unserem Beispiel oben haben wir uns den Zusammenhang zwischen Tages-Temperatur und Anzahl von Schwimmern im Schwimmbecken angeschaut. Aber nur, weil wir eine signifikante Korrelation gefunden haben, heißt das *nicht*, dass heißere Tage die Ursache für mehr Schwimmer waren (siehe auch Beispiel 2 unten). Was nun ursächlich für eine Variable oder ein Merkmal ist, kann letzten Endes **nicht durch statistische Verfahren** beurteilt werden, sondern entspringt einer adäquaten **Versuchsplanung** und fällt in den Bereich der experimentellen Methoden (!) Hat man seine Untersuchung nicht darauf ausgelegt, kann man rechnen, was man will, aber man wird nie auf einen kausalen Zusammenhang schließen können.
+
+# Beispiel 2
+## Klassisch
+Natürlich sind wir nicht darauf beschränkt, uns einzelne Variablen rauszupicken und so einzeln mal eine Korrelation zu berechnen. Wir können das auch über mehrere Variablen gleichzeitig machen. Unser Datensatz `water_park` enthält vier abhängige Variablen, deren Korrelationen wir uns einmal gleichzeitig anschauen können.
+
+```{r}
+# Deskriptive Statistiken
+water_park %>% 
+  select(-day_id) %>% 
+  get_summary_stats()
+
+# Korrelationen
+water_park %>% 
+  select(-day_id) %>% 
+  cor_mat()
+```
+
+Um nun beurteilen zu können, ob diese Zusammenhänge statistisch signifikant sind, können wir die Funktion `cor_get_pval()` anhängen und erhalten die korrespondierenen $p$-Werte der eben erstellten Korrelationen.
+
+```{r}
+water_park %>% 
+  select(-day_id) %>% 
+  cor_mat() %>% 
+  cor_get_pval()
+```
+
+Bei insgesamt vier Variablen haben wir noch einen guten Überblick, aber mit wachsendem Datensatz kann dieser Überblick schnell verloren gehen. Eine gute Möglichkeit, sich viele Korrelationen auf einmal anzuschauen liefert ein **Korrelogramm**, das wir mit dem Paket `corrgram` erstellen können.
+
+```{r}
+library(corrgram)
+
+outcomes <- water_park %>% 
+  select(-day_id) %>% 
+  corrgram(upper.panel = panel.conf,
+           diag.panel = panel.density)
+```
+
+Interessant ist, dass alle Variablen miteinander positiv korrelieren. Und auch hier müssen wir ganz klar in unserer Interpretation sein. Die Variablen hängen zusammen, aber verursachen sich nicht kausal. Denn letzteres würde bedeuten, dass höhere Temperaturen zu mehr Schlägereien führten, höhere Verkaufs-Umsetze des Kiosks zu höheren Temperaturen, oder mehr Schlägereien zu höheren Tages-Umsetzen. Das macht alles nicht wirklich Sinn, und daran kann man gut erkennen, dass Korrelationen keine Kausalitäten liefern.
+
+## Robust
+Für *percentage bend correlations* nutzen wir `pball()`, für Korrelationen basierend auf winsorized Daten `winall()`.
+
+```{r}
+water_park %>% 
+  select(-day_id) %>% 
+  pball()
+
+water_park %>% 
+  select(-day_id) %>% 
+  winall()
+```
+
+
+## Non-parametrisch
+Für non-parametrische Tests, von deren Verwendung hier im Zuge der zur Verfügung stehenden robusten Tests wieder entschieden abgeraten wird, gehen wir genau so wie bei der parametrischen Variante vor, aber geben auch hier wieder eine andere Methode als Funktions-Argument mit.
+
+```{r}
+# Spearmans r
+water_park %>% 
+  select(-day_id) %>% 
+  cor_mat(method = "spearman")
+
+water_park %>% 
+  select(-day_id) %>% 
+  cor_mat(method = "spearman") %>% 
+  cor_get_pval()
+
+# Kendalls Tau
+water_park %>% 
+  select(-day_id) %>% 
+  cor_mat(method = "kendall")
+
+water_park %>% 
+  select(-day_id) %>% 
+  cor_mat(method = "kendall") %>% 
+  cor_get_pval()
+```
+
+
+# Aus der Praxis
+Folgt.
+
+## Klassisch
+### EDA
+
+### Durchführung
+
+
+### Berichten
+
+## Robust {#beispiel_robust}
+
+
+# Literatur
+
+```{r echo=FALSE}
+remove(list = ls())
+```

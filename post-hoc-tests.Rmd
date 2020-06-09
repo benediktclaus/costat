@@ -56,11 +56,7 @@ Für die anderen Tests sieht es in R schlecht aus. Dafür bietet R viele weitere
 Für das Beispiel der [einfaktoriellen ANOVA](einfaktorielle-anova.html) hatten wir uns einen fiktiven Datensatz zu Besuchern des Phantasialandes angeschaut. In diesem Datensatz finden wir die empfundene Freude von 186 Besuchern des Phantasialandes (Variable `joy`), eingeteilt in Gruppen von Handgepäck-Typ. Wir haben Besucher ohne Handgepäck, mit leichtem und schwerem Rucksack und jenen, die einen Bollerwagen ziehen müssen. Mit der einfaktoriellen ANOVA haben wir bereits herausgefunden, dass sich diese Gruppen hinsichtlich ihrer Freude signifikant unterscheiden.
 
 ```{r message=FALSE}
-phantasialand <- read_spss("data/phantasialand.sav") %>%
-  mutate_if(is.labelled, as_factor)
-
-# Datensatz
-phantasialand
+costatcompanion::phantasialand
 
 # Boxplot
 phantasialand %>% 

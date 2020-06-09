@@ -19,12 +19,13 @@ Vielleicht kennst Du die vier Häuser von Hogwarts: Gryffindor, Hufflepuff, Rave
 
 
 # Pakete
-Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien, `rstatix` für statistische Analysen und `skimr` für schnelle deskriptive Statistiken.
+Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket `costatcompanion`.
+
 ```{r message=FALSE}
 library(tidyverse)
 library(haven)
 library(rstatix)
-library(skimr)
+library(costatcompanion)
 ```
 
 ```{r echo=FALSE}
@@ -32,15 +33,10 @@ library(patchwork)
 ```
 
 # Beispiel
-Den Bewohnern des Hogwarts-Hauses Hufflepuff wird ausgesprochene Geduld nachgesagt. Da ist es nicht verwunderlich, dass die Hauslehrerin Hufflepuffs Professor Pomona Sprout ist, die die langwierige Kräuterkunde unterrichtet. Ein ambitionierter Psychologie-Student hat sich gefragt, ob die Geduld der Mitglieder Hufflepuffs über das Schuljahr in Hogwarts eigentlich zunimmt. Man könnte annehmen, dass die Schüler zu Beginn des Schuljahres weniger geduldig sind, aber während des Schuljahres mit Aufgaben und Herausvorderungen konfrontiert werden, die ihre Geduld wachsen lassen. Dieser ambitionierte Psychologie-Student hat daraufhin zu Beginn und am Ende des Schuljahres alle Hufflepuffs hinsichtlich ihrer Geduld untersucht und uns den Datensatz `patience.sav` überlassen. Höhere Werte bedeuten eine höhere Geduld des Schülers.
+Den Bewohnern des Hogwarts-Hauses Hufflepuff wird ausgesprochene Geduld nachgesagt. Da ist es nicht verwunderlich, dass die Hauslehrerin Hufflepuffs Professor Pomona Sprout ist, die die langwierige Kräuterkunde unterrichtet. Ein ambitionierter Psychologie-Student hat sich gefragt, ob die Geduld der Mitglieder Hufflepuffs über das Schuljahr in Hogwarts eigentlich zunimmt. Man könnte annehmen, dass die Schüler zu Beginn des Schuljahres weniger geduldig sind, aber während des Schuljahres mit Aufgaben und Herausvorderungen konfrontiert werden, die ihre Geduld wachsen lassen. Dieser ambitionierte Psychologie-Student hat daraufhin zu Beginn und am Ende des Schuljahres alle Hufflepuffs hinsichtlich ihrer Geduld untersucht und uns den Datensatz `patience` überlassen. Höhere Werte bedeuten eine höhere Geduld des Schülers.
 
 ```{r}
-patience_data <- read_spss("data/patience.sav")
-
-patience_data <- patience_data %>% 
-  mutate(measurement = as_factor(measurement))
-
-patience_data
+patience_data <- costatcompanion::patience
 ```
 
 Auch hier finden wir in der Variable `measurement` wieder den Datentyp `<dbl+lbl>`, durch den gleichzeitig Werte-Levels und -Labels gespeichert werden. In R arbeiten wir immer mit ordentlichen Faktoren, die wir mit `as_factor()` erstellen können.

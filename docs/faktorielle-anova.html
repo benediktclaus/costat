@@ -461,6 +461,21 @@ div.tocify {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Überblick</li>
+    <li class="divider"></li>
+    <li>
+      <a href="korrelation.html">Korrelation</a>
+    </li>
+    <li class="dropdown-header">Lineare Regression</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Mittelwerte vergleichen
      
     <span class="caret"></span>
@@ -557,12 +572,8 @@ div.tocify {
 <p>Jeder liebt es, so viel ist klar. Aber mögen alle Personen jede Sorte Eis gleich gerne? Pfiffige Forscher haben sich an einem schönen Sommertag an einer Eisdile in der Dortmunder Innenstadt platziert und viele zufällig vorbeikommende Passanten vier Eissorten kosten lassen. Die Probanden konnten dann auf einer Skala von 0 – 20 angeben, wie lecker sie die eben probierte Eissorte fanden. Ein höherer Wert bedeutet eine bessere Bewertung. Wir wollen herausfinden, ob die Sorte selbst und das Geschlecht des Verkosters einen Einfluss auf den Geschmack hat. Wichtig ist dabei zu bachten, dass jeder Passant nur <em>eine</em> Eissorte probiert hat.</p>
 <div id="klassisch" class="section level2">
 <h2>Klassisch</h2>
-<p>Die Daten zu diesem Experiment sind in der Datei <code>ice_cream.sav</code>. In der ersten Spalte (<code>flavor</code>) ist der Geschmack eingetragen, in der zweiten Spalte (<code>sex</code>) das Geschlecht des Verkosters. In der dritten Spalte finden wir unsere abhängige Variable <code>yumminess</code>. Wir berechnen hier also eine 4 <span class="math inline">\(\times\)</span> 2 faktorielle ANOVA mit den Zwischensubjektfaktoren “Eissorte” mit vier Fakorstufen (“Vanilla”, “Chocolate”, “Cookie” und “Champagne”) und “Geschlecht” mit zwei Faktorstufen (“Female” und “Male”).</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>ice_cream &lt;-<span class="st"> </span><span class="kw">read_spss</span>(<span class="st">&quot;data/ice_cream.sav&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a>ice_cream &lt;-<span class="st"> </span>ice_cream <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate_if</span>(is.labelled, as_factor)</span>
-<span id="cb2-4"><a href="#cb2-4"></a></span>
-<span id="cb2-5"><a href="#cb2-5"></a>ice_cream</span></code></pre></div>
+<p>Die Daten zu diesem Experiment sind im Datensatz <code>ice_cream</code>. In der ersten Spalte (<code>flavor</code>) ist der Geschmack eingetragen, in der zweiten Spalte (<code>sex</code>) das Geschlecht des Verkosters. In der dritten Spalte finden wir unsere abhängige Variable <code>yumminess</code>. Wir berechnen hier also eine 4 <span class="math inline">\(\times\)</span> 2 faktorielle ANOVA mit den Zwischensubjektfaktoren “Eissorte” mit vier Fakorstufen (“Vanilla”, “Chocolate”, “Cookie” und “Champagne”) und “Geschlecht” mit zwei Faktorstufen (“Female” und “Male”).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>costatcompanion<span class="op">::</span>ice_cream</span></code></pre></div>
 <pre><code>## # A tibble: 295 x 4
 ##    id    flavor    sex    yumminess
 ##    &lt;chr&gt; &lt;fct&gt;     &lt;fct&gt;      &lt;dbl&gt;
@@ -588,39 +599,36 @@ div.tocify {
 <span id="cb4-3"><a href="#cb4-3"></a><span class="st">  </span><span class="kw">group_by</span>(flavor) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb4-4"><a href="#cb4-4"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 14
-##   flavor variable     n   min   max median    q1    q3   iqr   mad  mean    sd
-##   &lt;fct&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 Vanil~ yummine~    74    11    20   17    15      18  3     2.96  16.6  2.18
-## 2 Choco~ yummine~    81    12    20   17    16      18  2     1.48  17.2  1.68
-## 3 Cookie yummine~    80     8    20   14.5  12.8    17  4.25  3.71  14.6  2.83
-## 4 Champ~ yummine~    60     2    20   14    11      15  4     2.96  13.2  3.64
-## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+##   flavor    variable      n   min   max median    q1    q3   iqr   mad  mean    sd    se    ci
+##   &lt;fct&gt;     &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Vanilla   yumminess    74    11    20   17    15      18  3     2.96  16.6  2.18 0.253 0.505
+## 2 Chocolate yumminess    81    12    20   17    16      18  2     1.48  17.2  1.68 0.186 0.371
+## 3 Cookie    yumminess    80     8    20   14.5  12.8    17  4.25  3.71  14.6  2.83 0.316 0.629
+## 4 Champagne yumminess    60     2    20   14    11      15  4     2.96  13.2  3.64 0.47  0.941</code></pre>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># ...zur Verteilung der Geschlechter...</span></span>
 <span id="cb6-2"><a href="#cb6-2"></a>ice_cream <span class="op">%&gt;%</span></span>
 <span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span><span class="kw">group_by</span>(sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb6-4"><a href="#cb6-4"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 14
-##   sex   variable     n   min   max median    q1    q3   iqr   mad  mean    sd
-##   &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 Fema~ yummine~   162    10    20     17    15    18     3  2.96  16.4  2.21
-## 2 Male  yummine~   133     2    20     15    12    17     5  4.45  14.5  3.51
-## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+##   sex    variable      n   min   max median    q1    q3   iqr   mad  mean    sd    se    ci
+##   &lt;fct&gt;  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Female yumminess   162    10    20     17    15    18     3  2.96  16.4  2.21 0.173 0.342
+## 2 Male   yumminess   133     2    20     15    12    17     5  4.45  14.5  3.51 0.304 0.601</code></pre>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># ...und zu den Eissorten für jedes Geschlecht</span></span>
 <span id="cb8-2"><a href="#cb8-2"></a>ice_cream <span class="op">%&gt;%</span></span>
 <span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw">group_by</span>(flavor, sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb8-4"><a href="#cb8-4"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 8 x 15
-##   flavor sex   variable     n   min   max median    q1    q3   iqr   mad  mean
-##   &lt;fct&gt;  &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 Vanil~ Fema~ yummine~    36    12    20     17 16       19  3     2.22  17.1
-## 2 Vanil~ Male  yummine~    38    11    20     16 15       18  3     2.22  16.1
-## 3 Choco~ Fema~ yummine~    41    13    20     17 16       18  2     1.48  17.2
-## 4 Choco~ Male  yummine~    40    12    20     17 16       18  2     1.48  17.1
-## 5 Cookie Fema~ yummine~    45    10    20     16 14       18  4     2.96  16.1
-## 6 Cookie Male  yummine~    35     8    18     13 11.5     14  2.5   1.48  12.8
-## 7 Champ~ Fema~ yummine~    40    11    20     15 14       17  3     1.48  15.2
-## 8 Champ~ Male  yummine~    20     2    13     10  8.75    11  2.25  1.48   9.2
-## # ... with 3 more variables: sd &lt;dbl&gt;, se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+##   flavor    sex    variable      n   min   max median    q1    q3   iqr   mad  mean    sd    se    ci
+##   &lt;fct&gt;     &lt;fct&gt;  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Vanilla   Female yumminess    36    12    20     17 16       19  3     2.22  17.1  1.99 0.332 0.674
+## 2 Vanilla   Male   yumminess    38    11    20     16 15       18  3     2.22  16.1  2.26 0.366 0.742
+## 3 Chocolate Female yumminess    41    13    20     17 16       18  2     1.48  17.2  1.76 0.275 0.557
+## 4 Chocolate Male   yumminess    40    12    20     17 16       18  2     1.48  17.1  1.60 0.254 0.513
+## 5 Cookie    Female yumminess    45    10    20     16 14       18  4     2.96  16.1  2.38 0.354 0.714
+## 6 Cookie    Male   yumminess    35     8    18     13 11.5     14  2.5   1.48  12.8  2.22 0.376 0.764
+## 7 Champagne Female yumminess    40    11    20     15 14       17  3     1.48  15.2  2.08 0.329 0.666
+## 8 Champagne Male   yumminess    20     2    13     10  8.75    11  2.25  1.48   9.2  2.61 0.583 1.22</code></pre>
 <p>Wir haben Daten zu vier Eissorten. Verköstigt wurden am häufigsten Schokolade (<span class="math inline">\(n = 81\)</span>) und Cookie (<span class="math inline">\(n = 80\)</span>); bewertet wurden am besten Vanille (<span class="math inline">\(M = 16.57, SD = 2.18\)</span>) und Schokolade (<span class="math inline">\(M = 17.16, SD = 1.68\)</span>). Insgesamt haben <span class="math inline">\(N = 295\)</span> Passanten an der Untersuchung teilgenommen, wovon <span class="math inline">\(n = 162\)</span> Frauen und <span class="math inline">\(n = 133\)</span> Männer waren.</p>
 <p><img src="faktorielle-anova_files/figure-html/unnamed-chunk-7-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Aufgrund der Abbildung bekommen wir eine grobe Idee davon, dass die untersuchten Frauen alle Eissorten in etwa gleich lecker fanden. Die Männer jedoch stehen weniger auf Cookie und überhaupt nicht auf Champagner. (Bah!) Jetzt ist die Frage, ob unsere Einschätzung, dass sich die Mittelwerte tatsächlich signifikant unterscheiden, richtig ist. Dafür berechnen wir die ANOVA.</p>
@@ -695,7 +703,7 @@ div.tocify {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#kuglzeksmf .gt_table {
+#hokapduuch .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -718,7 +726,7 @@ div.tocify {
   border-left-color: #D3D3D3;
 }
 
-#kuglzeksmf .gt_heading {
+#hokapduuch .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -730,7 +738,7 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#kuglzeksmf .gt_title {
+#hokapduuch .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -740,7 +748,7 @@ div.tocify {
   border-bottom-width: 0;
 }
 
-#kuglzeksmf .gt_subtitle {
+#hokapduuch .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -750,13 +758,13 @@ div.tocify {
   border-top-width: 0;
 }
 
-#kuglzeksmf .gt_bottom_border {
+#hokapduuch .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#kuglzeksmf .gt_col_headings {
+#hokapduuch .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -771,7 +779,7 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#kuglzeksmf .gt_col_heading {
+#hokapduuch .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -791,7 +799,7 @@ div.tocify {
   overflow-x: hidden;
 }
 
-#kuglzeksmf .gt_column_spanner_outer {
+#hokapduuch .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -803,15 +811,15 @@ div.tocify {
   padding-right: 4px;
 }
 
-#kuglzeksmf .gt_column_spanner_outer:first-child {
+#hokapduuch .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#kuglzeksmf .gt_column_spanner_outer:last-child {
+#hokapduuch .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#kuglzeksmf .gt_column_spanner {
+#hokapduuch .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -823,7 +831,7 @@ div.tocify {
   width: 100%;
 }
 
-#kuglzeksmf .gt_group_heading {
+#hokapduuch .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -845,7 +853,7 @@ div.tocify {
   vertical-align: middle;
 }
 
-#kuglzeksmf .gt_empty_group_heading {
+#hokapduuch .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -860,19 +868,19 @@ div.tocify {
   vertical-align: middle;
 }
 
-#kuglzeksmf .gt_striped {
+#hokapduuch .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#kuglzeksmf .gt_from_md > :first-child {
+#hokapduuch .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#kuglzeksmf .gt_from_md > :last-child {
+#hokapduuch .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#kuglzeksmf .gt_row {
+#hokapduuch .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -891,7 +899,7 @@ div.tocify {
   overflow-x: hidden;
 }
 
-#kuglzeksmf .gt_stub {
+#hokapduuch .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -903,7 +911,7 @@ div.tocify {
   padding-left: 12px;
 }
 
-#kuglzeksmf .gt_summary_row {
+#hokapduuch .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -913,7 +921,7 @@ div.tocify {
   padding-right: 5px;
 }
 
-#kuglzeksmf .gt_first_summary_row {
+#hokapduuch .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -923,7 +931,7 @@ div.tocify {
   border-top-color: #D3D3D3;
 }
 
-#kuglzeksmf .gt_grand_summary_row {
+#hokapduuch .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -933,7 +941,7 @@ div.tocify {
   padding-right: 5px;
 }
 
-#kuglzeksmf .gt_first_grand_summary_row {
+#hokapduuch .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -943,7 +951,7 @@ div.tocify {
   border-top-color: #D3D3D3;
 }
 
-#kuglzeksmf .gt_table_body {
+#hokapduuch .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -952,7 +960,7 @@ div.tocify {
   border-bottom-color: #D3D3D3;
 }
 
-#kuglzeksmf .gt_footnotes {
+#hokapduuch .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -966,13 +974,13 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#kuglzeksmf .gt_footnote {
+#hokapduuch .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#kuglzeksmf .gt_sourcenotes {
+#hokapduuch .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -986,46 +994,46 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#kuglzeksmf .gt_sourcenote {
+#hokapduuch .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#kuglzeksmf .gt_left {
+#hokapduuch .gt_left {
   text-align: left;
 }
 
-#kuglzeksmf .gt_center {
+#hokapduuch .gt_center {
   text-align: center;
 }
 
-#kuglzeksmf .gt_right {
+#hokapduuch .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#kuglzeksmf .gt_font_normal {
+#hokapduuch .gt_font_normal {
   font-weight: normal;
 }
 
-#kuglzeksmf .gt_font_bold {
+#hokapduuch .gt_font_bold {
   font-weight: bold;
 }
 
-#kuglzeksmf .gt_font_italic {
+#hokapduuch .gt_font_italic {
   font-style: italic;
 }
 
-#kuglzeksmf .gt_super {
+#hokapduuch .gt_super {
   font-size: 65%;
 }
 
-#kuglzeksmf .gt_footnote_marks {
+#hokapduuch .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="kuglzeksmf" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="hokapduuch" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -1098,33 +1106,24 @@ div.tocify {
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>ice_post_hocs &lt;-<span class="st"> </span><span class="kw">mcp2atm</span>(yumminess <span class="op">~</span><span class="st"> </span>flavor <span class="op">*</span><span class="st"> </span>sex, <span class="dt">data =</span> ice_cream)</span>
 <span id="cb22-2"><a href="#cb22-2"></a></span>
 <span id="cb22-3"><a href="#cb22-3"></a>ice_post_hocs<span class="op">$</span>contrasts</span></code></pre></div>
-<pre><code>##                  flavor1 flavor2 flavor3 flavor4 flavor5 flavor6 sex1
-## Vanilla_Female         1       1       1       0       0       0    1
-## Vanilla_Male           1       1       1       0       0       0   -1
-## Chocolate_Female      -1       0       0       1       1       0    1
-## Chocolate_Male        -1       0       0       1       1       0   -1
-## Cookie_Female          0      -1       0      -1       0       1    1
-## Cookie_Male            0      -1       0      -1       0       1   -1
-## Champagne_Female       0       0      -1       0      -1      -1    1
-## Champagne_Male         0       0      -1       0      -1      -1   -1
-##                  flavor1:sex1 flavor2:sex1 flavor3:sex1 flavor4:sex1
-## Vanilla_Female              1            1            1            0
-## Vanilla_Male               -1           -1           -1            0
-## Chocolate_Female           -1            0            0            1
-## Chocolate_Male              1            0            0           -1
-## Cookie_Female               0           -1            0           -1
-## Cookie_Male                 0            1            0            1
-## Champagne_Female            0            0           -1            0
-## Champagne_Male              0            0            1            0
-##                  flavor5:sex1 flavor6:sex1
-## Vanilla_Female              0            0
-## Vanilla_Male                0            0
-## Chocolate_Female            1            0
-## Chocolate_Male             -1            0
-## Cookie_Female               0            1
-## Cookie_Male                 0           -1
-## Champagne_Female           -1           -1
-## Champagne_Male              1            1</code></pre>
+<pre><code>##                  flavor1 flavor2 flavor3 flavor4 flavor5 flavor6 sex1 flavor1:sex1 flavor2:sex1 flavor3:sex1 flavor4:sex1 flavor5:sex1
+## Vanilla_Female         1       1       1       0       0       0    1            1            1            1            0            0
+## Vanilla_Male           1       1       1       0       0       0   -1           -1           -1           -1            0            0
+## Chocolate_Female      -1       0       0       1       1       0    1           -1            0            0            1            1
+## Chocolate_Male        -1       0       0       1       1       0   -1            1            0            0           -1           -1
+## Cookie_Female          0      -1       0      -1       0       1    1            0           -1            0           -1            0
+## Cookie_Male            0      -1       0      -1       0       1   -1            0            1            0            1            0
+## Champagne_Female       0       0      -1       0      -1      -1    1            0            0           -1            0           -1
+## Champagne_Male         0       0      -1       0      -1      -1   -1            0            0            1            0            1
+##                  flavor6:sex1
+## Vanilla_Female              0
+## Vanilla_Male                0
+## Chocolate_Female            0
+## Chocolate_Male              0
+## Cookie_Female               1
+## Cookie_Male                -1
+## Champagne_Female           -1
+## Champagne_Male              1</code></pre>
 <p>Das sieht jetzt aufgrund der Anzahl der Kontraste und des geringen Platzes nicht gerade schön aus, ist aber informativ. Aus dem eigentlichen Funktionsaufruf können wir erkennen, dass der Effekt “flavor5” signifikant ist (<span class="math inline">\(\hat{\Psi} = 0.593, p &lt; .001\)</span>). Aus der Kontrastmatrix können wir aus der Spalte “flavor5” entnehmen, dass hier die Eissorten Schokolade und Champagner miteinander vergleichen wurden. Da dieser Kontrast signifikant ist, ist auch der “Unterschied zwischen diesen beiden Sorten sgnifikant.”yumminess“-Unterschied zwischen diesen beiden Sorten signifikant. Dasselbe trifft auf den Unterschied zwischen Cookie und Champagner zu (Kontrast”flavor 6“). Das sind im Prinzip die Post-hoc-Tests für den Haupteffekt”flavor“. Der Kontrast für den Haupteffekt”sex" (“sex1”) ist ebenfalls signifikant, also unterscheiden sich auch die Geschlechter in ihren “yumminess”-Einschätzungen signifikant voneinander. So viel wissen wir schon; die Ergebnisse sind identisch mit denen unserer klassischen ANOVA. Bezüglich der Interaktionseffekte gibt es nur zwei, die signifikant geworden sind, nämlich “flavor5:sex” (<span class="math inline">\(\hat{\Psi} = -0.593, p &lt;.001\)</span>) und “flavor6:sex” (<span class="math inline">\(\hat{\Psi} = -0.556, p = .001\)</span>). Der erste signifikante Kontrast sagt uns, dass sich der Unterschied zwischen Schokolade und Champagner zwischen den Geschlechtern signifikant unterscheidet. Frauen haben Schokolade und Chmpagner als weniger unterschiedlich eingeschätzt als die Männer (die Richtung dieses Kontrasts muss man sich aus den Abbildungen oder deskriptiven Statistiken fischen; der signifikanter Interaktionseffekt gibt nur an, dass etwas unterschiedlich ist). Dasselbe finden wir beim letzten Kontrast: Der Unterschied zwischen Cookie und Champagner wurde von beiden Geschlechtern ebenfalls unterschiedlich eingeschätzt. Auch hier wurde der Unterschied in der “yumminess” zwischen Cookie und Champagner von Frauen geringer eingeschätzt als von den Männern.</p>
 </div>
 <div id="non-parametrisch" class="section level2">
@@ -1184,31 +1183,28 @@ div.tocify {
 <span id="cb32-2"><a href="#cb32-2"></a><span class="st">  </span><span class="kw">group_by</span>(gender) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb32-3"><a href="#cb32-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 14
-##   gender variable     n   min   max median    q1    q3   iqr   mad  mean    sd
-##   &lt;fct&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 Female heart_r~   400    78   196    132  115    148  33    25.2  132.  22.7
-## 2 Male   heart_r~   400    69   172    115  102.   130  28.2  22.2  117.  19.8
-## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+##   gender variable       n   min   max median    q1    q3   iqr   mad  mean    sd    se    ci
+##   &lt;fct&gt;  &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Female heart_rate   400    78   196    132  115    148  33    25.2  132.  22.7 1.14   2.23
+## 2 Male   heart_rate   400    69   172    115  102.   130  28.2  22.2  117.  19.8 0.992  1.95</code></pre>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb34-2"><a href="#cb34-2"></a><span class="st">  </span><span class="kw">group_by</span>(group) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb34-3"><a href="#cb34-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 14
-##   group variable     n   min   max median    q1    q3   iqr   mad  mean    sd
-##   &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 Cont~ heart_r~   400    77   196    139   127   152    25  19.3  139   19.0
-## 2 Runn~ heart_r~   400    69   164    109    98   120    22  16.3  110.  15.5
-## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+##   group   variable       n   min   max median    q1    q3   iqr   mad  mean    sd    se    ci
+##   &lt;fct&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Control heart_rate   400    77   196    139   127   152    25  19.3  139   19.0 0.947  1.86
+## 2 Runners heart_rate   400    69   164    109    98   120    22  16.3  110.  15.5 0.777  1.53</code></pre>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb36-2"><a href="#cb36-2"></a><span class="st">  </span><span class="kw">group_by</span>(gender, group) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb36-3"><a href="#cb36-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 15
-##   gender group variable     n   min   max median    q1    q3   iqr   mad  mean
-##   &lt;fct&gt;  &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 Female Cont~ heart_r~   200   105   196    147   137   160    23  16.3  148 
-## 2 Female Runn~ heart_r~   200    78   164    116   106   126    20  14.8  116.
-## 3 Male   Cont~ heart_r~   200    77   172    130   119   142    23  16.3  130 
-## 4 Male   Runn~ heart_r~   200    69   146    103    96   112    16  11.9  104.
-## # ... with 3 more variables: sd &lt;dbl&gt;, se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+##   gender group   variable       n   min   max median    q1    q3   iqr   mad  mean    sd    se    ci
+##   &lt;fct&gt;  &lt;fct&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Female Control heart_rate   200   105   196    147   137   160    23  16.3  148   16.3 1.15   2.27
+## 2 Female Runners heart_rate   200    78   164    116   106   126    20  14.8  116.  16.0 1.13   2.23
+## 3 Male   Control heart_rate   200    77   172    130   119   142    23  16.3  130   17.1 1.21   2.38
+## 4 Male   Runners heart_rate   200    69   146    103    96   112    16  11.9  104.  12.5 0.884  1.74</code></pre>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>runners</span></code></pre></div>
 <pre><code>## # A tibble: 800 x 3
 ##    gender group   heart_rate

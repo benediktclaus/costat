@@ -461,6 +461,21 @@ div.tocify {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Überblick</li>
+    <li class="divider"></li>
+    <li>
+      <a href="korrelation.html">Korrelation</a>
+    </li>
+    <li class="dropdown-header">Lineare Regression</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Mittelwerte vergleichen
      
     <span class="caret"></span>
@@ -602,11 +617,7 @@ div.tocify {
 <div id="beispiel" class="section level1">
 <h1>Beispiel</h1>
 <p>Für das Beispiel der <a href="einfaktorielle-anova.html">einfaktoriellen ANOVA</a> hatten wir uns einen fiktiven Datensatz zu Besuchern des Phantasialandes angeschaut. In diesem Datensatz finden wir die empfundene Freude von 186 Besuchern des Phantasialandes (Variable <code>joy</code>), eingeteilt in Gruppen von Handgepäck-Typ. Wir haben Besucher ohne Handgepäck, mit leichtem und schwerem Rucksack und jenen, die einen Bollerwagen ziehen müssen. Mit der einfaktoriellen ANOVA haben wir bereits herausgefunden, dass sich diese Gruppen hinsichtlich ihrer Freude signifikant unterscheiden.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>phantasialand &lt;-<span class="st"> </span><span class="kw">read_spss</span>(<span class="st">&quot;data/phantasialand.sav&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="st">  </span><span class="kw">mutate_if</span>(is.labelled, as_factor)</span>
-<span id="cb2-3"><a href="#cb2-3"></a></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># Datensatz</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a>phantasialand</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>costatcompanion<span class="op">::</span>phantasialand</span></code></pre></div>
 <pre><code>## # A tibble: 186 x 3
 ##    id    backpack   joy
 ##    &lt;chr&gt; &lt;fct&gt;    &lt;dbl&gt;

@@ -22,6 +22,13 @@ navbar:
           href: daten-import.html
         - text: "Data Wrangling"
           href: data-wrangling.html
+    - text: Regression
+      menu:
+       - text: "Überblick"
+       - text: "--------"
+       - text: "Korrelation"
+         href: korrelation.html
+       - text: "Lineare Regression"
     - text: Mittelwerte vergleichen
       menu:
        - text: "Überblick"

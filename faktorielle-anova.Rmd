@@ -39,14 +39,10 @@ library(patchwork)
 Jeder liebt es, so viel ist klar. Aber mögen alle Personen jede Sorte Eis gleich gerne? Pfiffige Forscher haben sich an einem schönen Sommertag an einer Eisdile in der Dortmunder Innenstadt platziert und viele zufällig vorbeikommende Passanten vier Eissorten kosten lassen. Die Probanden konnten dann auf einer Skala von 0 -- 20 angeben, wie lecker sie die eben probierte Eissorte fanden. Ein höherer Wert bedeutet eine bessere Bewertung. Wir wollen herausfinden, ob die Sorte selbst und das Geschlecht des Verkosters einen Einfluss auf den Geschmack hat. Wichtig ist dabei zu bachten, dass jeder Passant nur *eine* Eissorte probiert hat.
 
 ## Klassisch
- Die Daten zu diesem Experiment sind in der Datei `ice_cream.sav`. In der ersten Spalte (`flavor`) ist der Geschmack eingetragen, in der zweiten Spalte (`sex`) das Geschlecht des Verkosters. In der dritten Spalte finden wir unsere abhängige Variable `yumminess`. Wir berechnen hier also eine 4 $\times$ 2 faktorielle ANOVA mit den Zwischensubjektfaktoren "Eissorte" mit vier Fakorstufen ("Vanilla", "Chocolate", "Cookie" und "Champagne") und "Geschlecht" mit zwei Faktorstufen ("Female" und "Male").
+ Die Daten zu diesem Experiment sind im Datensatz `ice_cream`. In der ersten Spalte (`flavor`) ist der Geschmack eingetragen, in der zweiten Spalte (`sex`) das Geschlecht des Verkosters. In der dritten Spalte finden wir unsere abhängige Variable `yumminess`. Wir berechnen hier also eine 4 $\times$ 2 faktorielle ANOVA mit den Zwischensubjektfaktoren "Eissorte" mit vier Fakorstufen ("Vanilla", "Chocolate", "Cookie" und "Champagne") und "Geschlecht" mit zwei Faktorstufen ("Female" und "Male").
 
 ```{r}
-ice_cream <- read_spss("data/ice_cream.sav")
-
-ice_cream <- ice_cream %>% mutate_if(is.labelled, as_factor)
-
-ice_cream
+costatcompanion::ice_cream
 ```
 
 ### Voraussetzungen

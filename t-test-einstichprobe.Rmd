@@ -18,12 +18,13 @@ Begeben wir uns in die Welt der Magie, Muggel und Zauberstäbe; tauchen wir ein 
 
 
 # Pakete
-Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien, `rstatix` für statistische Analysen und `skimr` für schnelle deskriptive Statistiken.
+Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket `costatcompanion`.
+
 ```{r message=FALSE}
 library(tidyverse)
 library(haven)
 library(rstatix)
-library(skimr)
+library(costatcompanion)
 ```
 
 ```{r echo=FALSE}
@@ -34,9 +35,7 @@ library(patchwork)
 # Beispiel
 Das Haus Ravenclaw soll durch ausgesprochene Intelligenz punkten. Nun gut, gehen wir dem einmal auf den Grund. Der Intelligenzquotient (IQ) ist so normiert, dass sein Mittelwert normalerweise 100 beträgt und die Standardbweichung 15. Wir haben IQ-Daten von Mitgliedern des Hauses Ravenclaws im Datensatz `ravenclaw.sav`.
 ```{r}
-ravenclaw <- read_spss("data/ravenclav.sav")
-
-ravenclaw
+costatcompanion::ravenclaw
 ```
 
 ## Voraussetzungen
