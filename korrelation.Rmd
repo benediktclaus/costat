@@ -140,7 +140,7 @@ Den Korrelationskoeffizienten $r$ kann man qudrieren und erhält $R^2$, das Best
 ## Stärke eines Zusammenhangs
 Sehr viele Leute, wenn nicht alle, verwechseln regelmäßig die *Stärke* eines Zusammenhangs mit der *Größe* eines Zusammenhangs. Man kann schnell für sich testen, ob man denselben Fehler machen würde. Betrachten wir die beiden folgenden Abbildungen: In welcher ist die Korrelation größer?
 
-```{r}
+```{r echo=FALSE, message=FALSE}
 sample_1 <- MASS::mvrnorm(50, mu = c(0,0), Sigma = matrix(c(1,0.85,0.85,1), ncol = 2), empirical = TRUE) %>% 
   as_tibble(.name_repair = "unique") %>% 
   rename(x = "...1", y = "...2") %>% 
@@ -167,7 +167,7 @@ Die Stärke eines Zusammenhangs gibt nicht an, wie "steil" die Punkt sind, sonde
 
 Was folgt daraus? Die Stärke und die Größe eines Zusammenhangs sind voneinander unabhängig und müssen immer einzeln beurteilt werden. Es kann bspw. sein, dass es Zusammenhänge gibt, die total klein, aber extrem stark sind. Hier muss man sich dann die Frage stellen, ob dieser Zusammenhang irgendwelche klinischen/bedeutenden Implikationen mit sich bringt.
 
-```{r}
+```{r echo=FALSE, message=FALSE}
 MASS::mvrnorm(500, mu = c(0,0), Sigma = matrix(c(1,0.90,0.90,1), ncol = 2), empirical = TRUE) %>% 
   as_tibble(.name_repair = "unique") %>% 
   rename(x = "...1", y = "...2") %>% 

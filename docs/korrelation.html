@@ -601,10 +601,11 @@ div.tocify {
 <span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw">select</span>(temperature, swimmers) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 13
-##   variable        n   min   max median    q1    q3   iqr   mad  mean    sd    se    ci
-##   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 swimmers      100  34   195     97    82   121   39    28.2  100.  30.0   3.00  5.95
-## 2 temperature   100  11.9  45.6   25.1  21.0  28.9  7.98  6.00  25.0  6.00  0.6   1.19</code></pre>
+##   variable     n   min   max median    q1    q3   iqr   mad  mean    sd    se
+##   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 swimmers   100  34   195     97    82   121   39    28.2  100.  30.0   3.00
+## 2 tempera~   100  11.9  45.6   25.1  21.0  28.9  7.98  6.00  25.0  6.00  0.6 
+## # ... with 1 more variable: ci &lt;dbl&gt;</code></pre>
 <p><img src="korrelation_files/figure-html/unnamed-chunk-6-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Eine weitere gute Idee wäre, sich einen vermuteten Zusammenhang graphisch als Streudiagramm darstellen zu lassen. Hier finden wir einen guten linearen Zusammenhang, der genau das nahelegt: Je höher die Temperatur (je weiter man auf der <span class="math inline">\(x\)</span>-Achse nach rechts geht), desto mehr Schwimmer wurden beobachtet (desto höher liegen die Punkte).</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -688,44 +689,10 @@ div.tocify {
 <div id="stärke-eines-zusammenhangs" class="section level2">
 <h2>Stärke eines Zusammenhangs</h2>
 <p>Sehr viele Leute, wenn nicht alle, verwechseln regelmäßig die <em>Stärke</em> eines Zusammenhangs mit der <em>Größe</em> eines Zusammenhangs. Man kann schnell für sich testen, ob man denselben Fehler machen würde. Betrachten wir die beiden folgenden Abbildungen: In welcher ist die Korrelation größer?</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>sample_<span class="dv">1</span> &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">mvrnorm</span>(<span class="dv">50</span>, <span class="dt">mu =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">Sigma =</span> <span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="fl">0.85</span>,<span class="fl">0.85</span>,<span class="dv">1</span>), <span class="dt">ncol =</span> <span class="dv">2</span>), <span class="dt">empirical =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb17-2"><a href="#cb17-2"></a><span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">.name_repair =</span> <span class="st">&quot;unique&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb17-3"><a href="#cb17-3"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">x =</span> <span class="st">&quot;...1&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;...2&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb17-4"><a href="#cb17-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="st">&quot;sample_1&quot;</span>,</span>
-<span id="cb17-5"><a href="#cb17-5"></a>         <span class="dt">y =</span> y <span class="op">*</span><span class="st"> </span><span class="dv">3</span>)</span></code></pre></div>
-<pre><code>## New names:
-## * `` -&gt; ...1
-## * `` -&gt; ...2</code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>sample_<span class="dv">2</span> &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">mvrnorm</span>(<span class="dv">50</span>, <span class="dt">mu =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">Sigma =</span> <span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="fl">0.70</span>,<span class="fl">0.70</span>,<span class="dv">1</span>), <span class="dt">ncol =</span> <span class="dv">2</span>), <span class="dt">empirical =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb19-2"><a href="#cb19-2"></a><span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">.name_repair =</span> <span class="st">&quot;unique&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb19-3"><a href="#cb19-3"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">x =</span> <span class="st">&quot;...1&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;...2&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb19-4"><a href="#cb19-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="st">&quot;sample_2&quot;</span>,</span>
-<span id="cb19-5"><a href="#cb19-5"></a>         <span class="dt">x =</span> x <span class="op">*</span><span class="st"> </span><span class="fl">0.2</span>)</span></code></pre></div>
-<pre><code>## New names:
-## * `` -&gt; ...1
-## * `` -&gt; ...2</code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">bind_rows</span>(sample_<span class="dv">1</span>, sample_<span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb21-2"><a href="#cb21-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">str_to_title</span>(sample), <span class="dt">sample =</span> <span class="kw">str_replace</span>(sample, <span class="dt">pattern =</span> <span class="st">&quot;_&quot;</span>, <span class="dt">replacement =</span> <span class="st">&quot; &quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb21-3"><a href="#cb21-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, y)) <span class="op">+</span></span>
-<span id="cb21-4"><a href="#cb21-4"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
-<span id="cb21-5"><a href="#cb21-5"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
-<span id="cb21-6"><a href="#cb21-6"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>sample, <span class="dt">scales =</span> <span class="st">&quot;free_x&quot;</span>)</span></code></pre></div>
-<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="korrelation_files/figure-html/unnamed-chunk-11-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Wer sich für die linke Seite entschieden hat, ist nicht alleine und liegt gleichzeitig gnadenlos daneben. Die Korrelation ist rechts (<span class="math inline">\(r = .850\)</span>) nämlich deutlich höher als links (<span class="math inline">\(r = .700\)</span>). Trotzdem entscheiden sich viele für die Linke Abbildung. Wieso? Weil sie eben die Stärke der Korrelation, also die Stärke des Zusammenhangs mit der Größe des Zusammenhangs verwechseln.</p>
 <p>Die Stärke eines Zusammenhangs gibt nicht an, wie “steil” die Punkt sind, sondern wie eng sie um eine Linie fallen. Je enger die Punkte um die eingezeichnete Linie fallen, desto größer ist die Korrelation. Wie “steil” die Gerade ist, wie <em>groß</em> also der Zusammenhang zwischen zwei Variablen ist, ist eine Frage, auf die die <strong>Regression</strong> Antworten hat.</p>
 <p>Was folgt daraus? Die Stärke und die Größe eines Zusammenhangs sind voneinander unabhängig und müssen immer einzeln beurteilt werden. Es kann bspw. sein, dass es Zusammenhänge gibt, die total klein, aber extrem stark sind. Hier muss man sich dann die Frage stellen, ob dieser Zusammenhang irgendwelche klinischen/bedeutenden Implikationen mit sich bringt.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>MASS<span class="op">::</span><span class="kw">mvrnorm</span>(<span class="dv">500</span>, <span class="dt">mu =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">Sigma =</span> <span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="fl">0.90</span>,<span class="fl">0.90</span>,<span class="dv">1</span>), <span class="dt">ncol =</span> <span class="dv">2</span>), <span class="dt">empirical =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb23-2"><a href="#cb23-2"></a><span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">.name_repair =</span> <span class="st">&quot;unique&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb23-3"><a href="#cb23-3"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">x =</span> <span class="st">&quot;...1&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;...2&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb23-4"><a href="#cb23-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="st">&quot;sample_1&quot;</span>,</span>
-<span id="cb23-5"><a href="#cb23-5"></a>         <span class="dt">y =</span> y <span class="op">*</span><span class="st"> </span><span class="fl">0.2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb23-6"><a href="#cb23-6"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, y)) <span class="op">+</span></span>
-<span id="cb23-7"><a href="#cb23-7"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
-<span id="cb23-8"><a href="#cb23-8"></a><span class="st">  </span><span class="kw">expand_limits</span>(<span class="dt">y =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>))</span></code></pre></div>
-<pre><code>## New names:
-## * `` -&gt; ...1
-## * `` -&gt; ...2</code></pre>
 <p><img src="korrelation_files/figure-html/unnamed-chunk-12-1.png" width="2450" style="display: block; margin: auto;" /></p>
 </div>
 <div id="korrelation-und-kausalität" class="section level2">
@@ -738,21 +705,22 @@ div.tocify {
 <div id="klassisch-1" class="section level2">
 <h2>Klassisch</h2>
 <p>Natürlich sind wir nicht darauf beschränkt, uns einzelne Variablen rauszupicken und so einzeln mal eine Korrelation zu berechnen. Wir können das auch über mehrere Variablen gleichzeitig machen. Unser Datensatz <code>water_park</code> enthält vier abhängige Variablen, deren Korrelationen wir uns einmal gleichzeitig anschauen können.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># Deskriptive Statistiken</span></span>
-<span id="cb25-2"><a href="#cb25-2"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb25-3"><a href="#cb25-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb25-4"><a href="#cb25-4"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Deskriptive Statistiken</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb17-4"><a href="#cb17-4"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 13
-##   variable        n   min    max median     q1     q3    iqr    mad    mean     sd     se     ci
-##   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-## 1 beatings      100   1     11      5      4      6     2      1.48    5.01   2.02  0.202  0.401
-## 2 sales         100 410   2837   1476   1156.  1861.  706.   554.   1500.   500.   50     99.2  
-## 3 swimmers      100  34    195     97     82    121    39     28.2   100.    30.0   3.00   5.95 
-## 4 temperature   100  11.9   45.6   25.1   21.0   28.9   7.98   6.00   25.0    6.00  0.6    1.19</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># Korrelationen</span></span>
-<span id="cb27-2"><a href="#cb27-2"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb27-3"><a href="#cb27-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb27-4"><a href="#cb27-4"></a><span class="st">  </span><span class="kw">cor_mat</span>()</span></code></pre></div>
+##   variable     n   min    max median     q1     q3    iqr    mad   mean     sd
+##   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1 beatings   100   1     11      5      4      6     2      1.48 5.01e0   2.02
+## 2 sales      100 410   2837   1476   1156.  1861.  706.   554.   1.50e3 500.  
+## 3 swimmers   100  34    195     97     82    121    39     28.2  1.00e2  30.0 
+## 4 tempera~   100  11.9   45.6   25.1   21.0   28.9   7.98   6.00 2.50e1   6.00
+## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Korrelationen</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="st">  </span><span class="kw">cor_mat</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 5
 ##   rowname     temperature swimmers sales beatings
 ## * &lt;chr&gt;             &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
@@ -761,10 +729,10 @@ div.tocify {
 ## 3 sales              0.79     0.95  1        0.7 
 ## 4 beatings           0.75     0.8   0.7      1</code></pre>
 <p>Um nun beurteilen zu können, ob diese Zusammenhänge statistisch signifikant sind, können wir die Funktion <code>cor_get_pval()</code> anhängen und erhalten die korrespondierenen <span class="math inline">\(p\)</span>-Werte der eben erstellten Korrelationen.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb29-2"><a href="#cb29-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb29-3"><a href="#cb29-3"></a><span class="st">  </span><span class="kw">cor_mat</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb29-4"><a href="#cb29-4"></a><span class="st">  </span><span class="kw">cor_get_pval</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb21-3"><a href="#cb21-3"></a><span class="st">  </span><span class="kw">cor_mat</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb21-4"><a href="#cb21-4"></a><span class="st">  </span><span class="kw">cor_get_pval</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 5
 ##   rowname     temperature swimmers    sales beatings
 ##   &lt;chr&gt;             &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
@@ -773,21 +741,23 @@ div.tocify {
 ## 3 sales          1.58e-22 1.76e-51 0.       5.36e-16
 ## 4 beatings       4.99e-19 2.25e-23 5.36e-16 0.</code></pre>
 <p>Bei insgesamt vier Variablen haben wir noch einen guten Überblick, aber mit wachsendem Datensatz kann dieser Überblick schnell verloren gehen. Eine gute Möglichkeit, sich viele Korrelationen auf einmal anzuschauen liefert ein <strong>Korrelogramm</strong>, das wir mit dem Paket <code>corrgram</code> erstellen können.</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">library</span>(corrgram)</span>
-<span id="cb31-2"><a href="#cb31-2"></a></span>
-<span id="cb31-3"><a href="#cb31-3"></a>outcomes &lt;-<span class="st"> </span>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb31-4"><a href="#cb31-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb31-5"><a href="#cb31-5"></a><span class="st">  </span><span class="kw">corrgram</span>(<span class="dt">upper.panel =</span> panel.conf,</span>
-<span id="cb31-6"><a href="#cb31-6"></a>           <span class="dt">diag.panel =</span> panel.density)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">library</span>(corrgram)</span></code></pre></div>
+<pre><code>## Registered S3 method overwritten by &#39;seriation&#39;:
+##   method         from 
+##   reorder.hclust gclus</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>outcomes &lt;-<span class="st"> </span>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="st">  </span><span class="kw">corrgram</span>(<span class="dt">upper.panel =</span> panel.conf,</span>
+<span id="cb25-4"><a href="#cb25-4"></a>           <span class="dt">diag.panel =</span> panel.density)</span></code></pre></div>
 <p><img src="korrelation_files/figure-html/unnamed-chunk-15-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Interessant ist, dass alle Variablen miteinander positiv korrelieren. Und auch hier müssen wir ganz klar in unserer Interpretation sein. Die Variablen hängen zusammen, aber verursachen sich nicht kausal. Denn letzteres würde bedeuten, dass höhere Temperaturen zu mehr Schlägereien führten, höhere Verkaufs-Umsetze des Kiosks zu höheren Temperaturen, oder mehr Schlägereien zu höheren Tages-Umsetzen. Das macht alles nicht wirklich Sinn, und daran kann man gut erkennen, dass Korrelationen keine Kausalitäten liefern.</p>
 </div>
 <div id="robust-1" class="section level2">
 <h2>Robust</h2>
 <p>Für <em>percentage bend correlations</em> nutzen wir <code>pball()</code>, für Korrelationen basierend auf winsorized Daten <code>winall()</code>.</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb32-2"><a href="#cb32-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb32-3"><a href="#cb32-3"></a><span class="st">  </span><span class="kw">pball</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb26-2"><a href="#cb26-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="st">  </span><span class="kw">pball</span>()</span></code></pre></div>
 <pre><code>## Call:
 ## pball(x = .)
 ## 
@@ -807,9 +777,9 @@ div.tocify {
 ## 
 ## 
 ## Test statistic H: Inf, p-value = 0</code></pre>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb34-2"><a href="#cb34-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb34-3"><a href="#cb34-3"></a><span class="st">  </span><span class="kw">winall</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb28-2"><a href="#cb28-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb28-3"><a href="#cb28-3"></a><span class="st">  </span><span class="kw">winall</span>()</span></code></pre></div>
 <pre><code>## Call:
 ## winall(x = .)
 ## 
@@ -830,10 +800,10 @@ div.tocify {
 <div id="non-parametrisch-1" class="section level2">
 <h2>Non-parametrisch</h2>
 <p>Für non-parametrische Tests, von deren Verwendung hier im Zuge der zur Verfügung stehenden robusten Tests wieder entschieden abgeraten wird, gehen wir genau so wie bei der parametrischen Variante vor, aber geben auch hier wieder eine andere Methode als Funktions-Argument mit.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="co"># Spearmans r</span></span>
-<span id="cb36-2"><a href="#cb36-2"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb36-3"><a href="#cb36-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb36-4"><a href="#cb36-4"></a><span class="st">  </span><span class="kw">cor_mat</span>(<span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="co"># Spearmans r</span></span>
+<span id="cb30-2"><a href="#cb30-2"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb30-3"><a href="#cb30-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb30-4"><a href="#cb30-4"></a><span class="st">  </span><span class="kw">cor_mat</span>(<span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 5
 ##   rowname     temperature swimmers sales beatings
 ## * &lt;chr&gt;             &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
@@ -841,10 +811,10 @@ div.tocify {
 ## 2 swimmers           0.82     1     0.95     0.75
 ## 3 sales              0.75     0.95  1        0.66
 ## 4 beatings           0.7      0.75  0.66     1</code></pre>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb38-2"><a href="#cb38-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb38-3"><a href="#cb38-3"></a><span class="st">  </span><span class="kw">cor_mat</span>(<span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb38-4"><a href="#cb38-4"></a><span class="st">  </span><span class="kw">cor_get_pval</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb32-2"><a href="#cb32-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb32-3"><a href="#cb32-3"></a><span class="st">  </span><span class="kw">cor_mat</span>(<span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb32-4"><a href="#cb32-4"></a><span class="st">  </span><span class="kw">cor_get_pval</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 5
 ##   rowname     temperature swimmers    sales beatings
 ##   &lt;chr&gt;             &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
@@ -852,10 +822,10 @@ div.tocify {
 ## 2 swimmers       6.43e-26 0.       1.37e-49 4.62e-19
 ## 3 sales          2.36e-19 1.37e-49 0.       8.92e-14
 ## 4 beatings       1.02e-15 4.62e-19 8.92e-14 0.</code></pre>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="co"># Kendalls Tau</span></span>
-<span id="cb40-2"><a href="#cb40-2"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb40-3"><a href="#cb40-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb40-4"><a href="#cb40-4"></a><span class="st">  </span><span class="kw">cor_mat</span>(<span class="dt">method =</span> <span class="st">&quot;kendall&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="co"># Kendalls Tau</span></span>
+<span id="cb34-2"><a href="#cb34-2"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-3"><a href="#cb34-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-4"><a href="#cb34-4"></a><span class="st">  </span><span class="kw">cor_mat</span>(<span class="dt">method =</span> <span class="st">&quot;kendall&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 5
 ##   rowname     temperature swimmers sales beatings
 ## * &lt;chr&gt;             &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
@@ -863,10 +833,10 @@ div.tocify {
 ## 2 swimmers          0.65      1    0.81      0.6 
 ## 3 sales             0.570     0.81 1         0.51
 ## 4 beatings          0.55      0.6  0.51      1</code></pre>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb42-2"><a href="#cb42-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb42-3"><a href="#cb42-3"></a><span class="st">  </span><span class="kw">cor_mat</span>(<span class="dt">method =</span> <span class="st">&quot;kendall&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb42-4"><a href="#cb42-4"></a><span class="st">  </span><span class="kw">cor_get_pval</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb36-2"><a href="#cb36-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb36-3"><a href="#cb36-3"></a><span class="st">  </span><span class="kw">cor_mat</span>(<span class="dt">method =</span> <span class="st">&quot;kendall&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb36-4"><a href="#cb36-4"></a><span class="st">  </span><span class="kw">cor_get_pval</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 5
 ##   rowname     temperature swimmers    sales beatings
 ##   &lt;chr&gt;             &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
