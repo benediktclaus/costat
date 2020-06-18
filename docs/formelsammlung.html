@@ -11,7 +11,7 @@
 
 
 
-<title>R Basics</title>
+<title>Formelsammlung</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,98 +28,6 @@
 <link rel="shortcut icon" href="images/broom.ico">
 
 
-<style type="text/css">code{white-space: pre;}</style>
-<style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {  background-color: #f8f8f8; }
-@media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ef2929; } /* Alert */
-code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #c4a000; } /* Attribute */
-code span.bn { color: #0000cf; } /* BaseN */
-code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4e9a06; } /* Char */
-code span.cn { color: #000000; } /* Constant */
-code span.co { color: #8f5902; font-style: italic; } /* Comment */
-code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
-code span.dt { color: #204a87; } /* DataType */
-code span.dv { color: #0000cf; } /* DecVal */
-code span.er { color: #a40000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #0000cf; } /* Float */
-code span.fu { color: #000000; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
-code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
-code span.ot { color: #8f5902; } /* Other */
-code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code span.sc { color: #000000; } /* SpecialChar */
-code span.ss { color: #4e9a06; } /* SpecialString */
-code span.st { color: #4e9a06; } /* String */
-code span.va { color: #000000; } /* Variable */
-code span.vs { color: #4e9a06; } /* VerbatimString */
-code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-
-</style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
-  }
-})();
-</script>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 
 
 <style type="text/css">
@@ -556,45 +464,62 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">R Basics</h1>
+<h1 class="title toc-ignore">Formelsammlung</h1>
 
 </div>
 
 
-<p><img src="images/computer_r.jpg" /></p>
-<p>Dann fangen wir mal an! R ist im Prinzip nur ein Taschenrechner und man kann es als solchen verwenden. Wenn Du mit RStudio arbeitest, wirst du vier “Panes” sehen; links oben ist das “Source” Pane, links unten die “Console”, rechts oben die “Environment” und rechts unten befindet sich das “Files” Pane. Bei allen Panes siehst Du Tabs, mit denen du die Funktion des Panes umschalten kannst. Erstellst du beispielsweise eine Abbildung, schaltet RStudio rechts unten automatisch auf “Plots”.</p>
-<div id="befehle" class="section level1">
-<h1>Befehle</h1>
-<p>Geben wir nun unseren ersten <strong>Befehl</strong> in das Source Pane ein und führen ihn dann mit der Tastenkombination “Strg + Enter” aus:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">2</span></span></code></pre></div>
-<pre><code>## [1] 4</code></pre>
-<p>In der Console erscheint die 4, wir haben uns also schon mal nicht verrechnet! Brauchen wir ein Ergebnis später noch einmal, können wir es einem Objekt zuweisen, das dann für die Dauer der Session (bis R geschlossen oder neu gestartet wird) weiter besteht. Zuweisungen machen wir durch ein <code>&lt;-</code> kenntlich.</p>
-<p>Wir können das Ergebnis zum Beispiel so als <code>x</code> zuweisen:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>x &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">2</span></span></code></pre></div>
-<p>Führt man diesen Befehl aus (“Strg + Enter”), wurde das Ergebnis in <code>x</code> gespeichert. Um das Ergebnis nun wieder abzurufen, geben wir unser Objekt in die Source ein und führen den Befehl wie gewohnt aus:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>x</span></code></pre></div>
-<pre><code>## [1] 4</code></pre>
+<p><img src="images/equation_r.jpg" /></p>
+<p>Für viele Methoden und Verfahren ist es zwar wichtig zu verstehen, was diese machen und berechnen, aber die Formeln an sich braucht man anscheinend nur in Klausuren. Für den interessierten Leser finden sich hier einige wichtige Formeln zu bereits behandelten Themen.</p>
+<div id="effektstärken" class="section level1">
+<h1>Effektstärken</h1>
+<div id="gruppenunterschiede" class="section level2">
+<h2>Gruppenunterschiede</h2>
+<div id="cohens-d" class="section level3">
+<h3>Cohens <span class="math inline">\(d\)</span></h3>
+<p>Nach <span class="citation">Cohen (<a href="#ref-Cohen.1988" role="doc-biblioref">1988</a> S. 20)</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> <span class="math display">\[d = \dfrac{\mu_1-\mu_2}{\sigma}\]</span> mit <span class="math inline">\(\sigma\)</span> als Standardabweichung der beiden Gruppen.</p>
+<p>Nach <span class="citation">Cohen (<a href="#ref-Cohen.1988" role="doc-biblioref">1988</a> S. 67)</span> berechnet man <span class="math inline">\(d\)</span> für Gruppen mit ungelichen Standardabweichungen gemäß <span class="math display">\[\dfrac{\mu_1 - \mu_2}{s}\]</span> mit der <strong>gepoolten Standardabweichung</strong> <span class="math display">\[s = \sqrt{\dfrac{\sum{(x_1 - \mu_1)^2} + \sum{(x_2 - \mu_2)^2}}{n_1 + n_2 -2}}\]</span> und <span class="math inline">\(x_1\)</span>, sowie <span class="math inline">\(x_2\)</span> als individuelle Werte der Probanden in den Gruppen <span class="math inline">\(1\)</span> und <span class="math inline">\(2\)</span>.</p>
 </div>
-<div id="funktionen" class="section level1">
-<h1>Funktionen</h1>
-<p>Auf Dauer wäre es ziemlich anstrengend, alle Berechnungen von Hand auszuführen. Deshalb gibt es <strong>Funktionen</strong>. Man kann so zum Beispiel eine Sequenz von 1 bis 10 generieren:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">seq</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</span></code></pre></div>
-<pre><code>##  [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
-<p>Die könnte man natürlich auch wieder speichern und dann den Mittelwert berechnen:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>seq_<span class="dv">1</span>_<span class="dv">10</span> &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</span>
-<span id="cb8-2"><a href="#cb8-2"></a></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="kw">mean</span>(seq_<span class="dv">1</span>_<span class="dv">10</span>)</span></code></pre></div>
-<pre><code>## [1] 5.5</code></pre>
-<p>Der Mittelwert aller ganzen Zahlen von 1 bis 10 ist somit 5.5. Ich habe das Objekt, das die Sequenz enthält, an dieser Stelle <code>seq_1_10</code> gennant, aber in deiner Namensgebung bist du frei. Obwohl, eigentlich auch nicht so ganz, denn Bezeichnungen für Objekte <em>müssen</em> mit einem Buchstaben beginnen und dürfen nur Buchstaben, Zahlen, <code>_</code> und <code>.</code> beinhalten.</p>
-<p>Weitere Informationen findest Du in den ersten Kapiteln von <span class="citation">Wickham &amp; Grolemund (<a href="#ref-Wickham.2017" role="doc-biblioref">2017</a>)</span>.</p>
+<div id="hedges-g" class="section level3">
+<h3>Hedges’ <span class="math inline">\(g\)</span></h3>
+<p>Nach <span class="citation">Hedges (<a href="#ref-Hedges.1981" role="doc-biblioref">1981</a> S. 110)</span> <span class="math display">\[g = \dfrac{\mu_1 - \mu_2}{s_\text{corrected}}\]</span> mit der korrigierten Standardabweichung <span class="math display">\[s_\text{corrected} = \sqrt{\dfrac{(n_1 - 1) s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 -2}}\]</span></p>
+</div>
+<div id="hedges-g-1" class="section level3">
+<h3>Hedges’ <span class="math inline">\(g^*\)</span></h3>
+<p>Nach <span class="citation">Hedges (<a href="#ref-Hedges.1981" role="doc-biblioref">1981</a> S. 111)</span> erhält man <span class="math inline">\(g^*\)</span> durch die Multiplikation von <span class="math inline">\(g\)</span> mit dem Korrektur-Faktor <span class="math display">\[J = \dfrac{\Gamma \left(\frac{\alpha}{2}\right)}{\sqrt{\frac{\alpha}{2}} \cdot \Gamma \left(\frac{\alpha - 1}{2}\right)}\]</span> und <span class="math display">\[\alpha = n_1 + n_2 - 2\]</span> Der Korrektur-Faktor wird, weil nicht jeder so leicht die Gamma-Funktion (<span class="math inline">\(\Gamma\)</span>) berechnen kann, gerne approximativ angegeben als <span class="citation">(Borenstein et al., <a href="#ref-Borenstein.2009" role="doc-biblioref">2009</a> S. 27)</span> <span class="math display">\[ J \approx 1 - \dfrac{3}{4(n_1 + n_2 - 2) - 1} \]</span></p>
+</div>
+<div id="glass-delta" class="section level3">
+<h3>Glass’ <span class="math inline">\(\Delta\)</span></h3>
+<p><span class="math display">\[\Delta = \dfrac{\mu_1 - \mu_2}{\sigma_\text{Kontrollgruppe}}\]</span></p>
+</div>
+</div>
+<div id="zusammenhänge" class="section level2">
+<h2>Zusammenhänge</h2>
+<div id="perasons-r" class="section level3">
+<h3>Perasons <span class="math inline">\(r\)</span></h3>
+<p><span class="math display">\[r = \dfrac{1}{n-1}\sum_{i = 1}^n{\left(\frac{x_i - \bar{x}}{s_x}\right)\left(\frac{y_i - \bar{y}}{s_y}\right)}\]</span> mit <span class="math inline">\(n\)</span> als Anzahl Stichprobengröße, <span class="math inline">\(x_i\)</span> und <span class="math inline">\(y_i\)</span> als individuelle Werte der Probanden auf den Variablen <span class="math inline">\(x\)</span> und <span class="math inline">\(y\)</span>, sowie <span class="math inline">\(\bar{x}\)</span> und <span class="math inline">\(\bar{y}\)</span> als Mittelwerte der beiden Variablen, sowie <span class="math inline">\(s_x\)</span> und <span class="math inline">\(s_y\)</span> als Standardabweichung der Variablen.</p>
+</div>
+</div>
 </div>
 <div id="literatur" class="section level1 unnumbered">
 <h1>Literatur</h1>
 <div id="refs" class="references">
-<div id="ref-Wickham.2017">
-<p>Wickham, H., &amp; Grolemund, G. (2017). <em>R for Data Science</em>. O’Reilly. <a href="https://r4ds.had.co.nz/">https://r4ds.had.co.nz/</a></p>
+<div id="ref-Borenstein.2009">
+<p>Borenstein, M., Hedges, L. V., Higgins, Julian, P.T., &amp; Rothstein, H. R. (2009). <em>Introduction to Meta-Analysis</em>. Wiley.</p>
+</div>
+<div id="ref-Cohen.1988">
+<p>Cohen, J. (1988). <em>Statistical Power Analysis for the Behavioral Sciences</em> (2nd ed.). Lawrence Erlbaum Associates.</p>
+</div>
+<div id="ref-Hedges.1981">
+<p>Hedges, L. V. (1981). Distribution Theory for Glass’s Estimator of Effect size and Related Estimators. <em>Journal of Educational Statistics</em>, <em>6</em>(2), 107–128. <a href="https://doi.org/10.3102/10769986006002107">https://doi.org/10.3102/10769986006002107</a></p>
 </div>
 </div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>im Sinne einer einheitlichen, einfachen und bekannten Notation, weiche ich an dieser Stelle von Cohens Notation ab und verwende die gängige Notation, die Studierende mehrheitlich lernen. Für die Übersichtlichkeit wird auf Indizes verzichtet.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 
 

@@ -23,6 +23,7 @@ Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pake
 library(tidyverse)
 library(haven)
 library(rstatix)
+library(costatcompanion)
 ```
 
 ```{r echo=FALSE}

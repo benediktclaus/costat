@@ -534,6 +534,9 @@ div.tocify {
       <a href="voraussetzungen.html">Voraussetzungen im GLM</a>
     </li>
     <li>
+      <a href="formelsammlung.html">Formelsammlung</a>
+    </li>
+    <li>
       <a href="zentraler-grenzwertsatz.html">Zentraler Grenzwertsatz</a>
     </li>
   </ul>
@@ -854,20 +857,13 @@ div.tocify {
 <p>Den Datensatz finden wir in der Excel-Datei <code>president_heights.xlsx</code> (zu finden im Ordner <code>data</code> des <a href="https://github.com/benediktclaus/costat/tree/master/data">GitHub-Repositories</a>) und ist eine gekürzte Fassung des von <span class="citation">Stulp et al. (<a href="#ref-Stulp.2013" role="doc-biblioref">2013</a>)</span> zur Verfügung gestellten Datensatzes. Da es sich hier um eine Excel-Datei handelt, benötigen wir das Paket <code>readxl</code> aus dem Tidyverse, um diese Daten einzulesen. Um unseren einheitlichen Stil umzusetzen, bereinigen wir die Variablen-Namen direkt mit der Funktion <code>clean_names()</code> aus dem Paket <code>janitor</code>.</p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="co"># Pakets laden</span></span>
 <span id="cb38-2"><a href="#cb38-2"></a><span class="kw">library</span>(readxl)</span>
-<span id="cb38-3"><a href="#cb38-3"></a><span class="kw">library</span>(janitor)</span></code></pre></div>
-<pre><code>## 
-## Attaching package: &#39;janitor&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:rstatix&#39;:
-## 
-##     make_clean_names</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     chisq.test, fisher.test</code></pre>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="co"># Daten laden</span></span>
-<span id="cb42-2"><a href="#cb42-2"></a>presidents_heights &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;data/presidents_heights.xlsx&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb42-3"><a href="#cb42-3"></a><span class="st">  </span><span class="kw">clean_names</span>()</span>
-<span id="cb42-4"><a href="#cb42-4"></a></span>
-<span id="cb42-5"><a href="#cb42-5"></a>presidents_heights</span></code></pre></div>
+<span id="cb38-3"><a href="#cb38-3"></a><span class="kw">library</span>(janitor)</span>
+<span id="cb38-4"><a href="#cb38-4"></a></span>
+<span id="cb38-5"><a href="#cb38-5"></a><span class="co"># Daten laden</span></span>
+<span id="cb38-6"><a href="#cb38-6"></a>presidents_heights &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;data/presidents_heights.xlsx&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb38-7"><a href="#cb38-7"></a><span class="st">  </span><span class="kw">clean_names</span>()</span>
+<span id="cb38-8"><a href="#cb38-8"></a></span>
+<span id="cb38-9"><a href="#cb38-9"></a>presidents_heights</span></code></pre></div>
 <pre><code>## # A tibble: 61 x 10
 ##    president election_year president_number party height height_most_pop~
 ##    &lt;chr&gt;             &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;            &lt;dbl&gt;
@@ -887,17 +883,17 @@ div.tocify {
 ## #   ratio_pop_vote_president_pop_vote_most_popular_opponent &lt;dbl&gt;</code></pre>
 <p>Wir betrachten hier einen Datensatz mit 61 Zeilen (“Wahlen”) und 10 Variablen. In der Variable <code>president</code> ist der Name des Präsidenten eingetragen, in <code>election_year</code> das Wahljahr, dann die Stelle des gewählten Kandidaten in der Reihenfolge der Präsidenten (<code>president_number</code>), die Partei (<code>party</code>), die Größe des gewählten Präsidenten (<code>height</code>), die Größe des erfolgreichsten Gegenkandidaten (<code>height_most_popular_opponent</code>), der <em>popular vote</em> für den gewählten Präsidenten (<code>popular_vote_president</code>) und selbes für den erfolgreichsten Gegenkandidaten (<code>popvote_most_popular_opponent</code>). Die letzten beiden Variablen sind jeweils das Verhältnis der Größe und des <em>popular vote</em> von gewähltem Präsidenten und Gegenkandidaten.</p>
 <p>Wann immer solche Prozentsätze, Summen oder Mittelwerte gebildet wurden, dürfen wir berechtigterweise skeptisch sein (auch in der Forschung wird so etwas, je nach Kenntnisstand des Ausfüllenden auch noch mal per Hand gemacht) und solche Werte selbst berechnen<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. Das machen wir doch direkt mal: Für die relative Größe des Gewinners teilen wir die Größe des Gewinners durch die des erfolgreichsten Gegenkandidaten. Beim <em>popular vote</em> handelt es sich bereits um Prozente, für den relativen Anteil teilen wir also den <em>popuar vote</em> des Präsidenten durch die Summe des <em>popular votes</em> des Präsidenten und des erfolgreichsten Gegenkandidaten. <span class="math display">\[\text{ratio_vote} = \dfrac{\text{vote president}}{\text{vote president} \cdot \text{vote opponent}}\]</span></p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>presidents_heights &lt;-<span class="st"> </span>presidents_heights <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb44-2"><a href="#cb44-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
-<span id="cb44-3"><a href="#cb44-3"></a>    <span class="dt">ratio_height =</span> height <span class="op">/</span><span class="st"> </span>height_most_popular_opponent,</span>
-<span id="cb44-4"><a href="#cb44-4"></a>    <span class="dt">ratio_vote =</span> popular_vote_president <span class="op">/</span><span class="st"> </span>(popular_vote_president <span class="op">+</span><span class="st"> </span>popvote_most_popular_opponent),</span>
-<span id="cb44-5"><a href="#cb44-5"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>presidents_heights &lt;-<span class="st"> </span>presidents_heights <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb40-2"><a href="#cb40-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb40-3"><a href="#cb40-3"></a>    <span class="dt">ratio_height =</span> height <span class="op">/</span><span class="st"> </span>height_most_popular_opponent,</span>
+<span id="cb40-4"><a href="#cb40-4"></a>    <span class="dt">ratio_vote =</span> popular_vote_president <span class="op">/</span><span class="st"> </span>(popular_vote_president <span class="op">+</span><span class="st"> </span>popvote_most_popular_opponent),</span>
+<span id="cb40-5"><a href="#cb40-5"></a>  )</span></code></pre></div>
 <div id="eda-1" class="section level3">
 <h3>EDA</h3>
 <p>Wie immer, ist es eine gute Idee, die Daten erst einmal zu betrachten, bevor wir anfangen, wilde Modelle zu berechnen. Uns interessiert der Zusammenhang zwischen zwei Variablen: Der relativen Größe des Präsidenten mit dem relativen Anteil am <em>popular vote</em>.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a>presidents_heights <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb45-2"><a href="#cb45-2"></a><span class="st">  </span><span class="kw">select</span>(ratio_height, ratio_vote) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb45-3"><a href="#cb45-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a>presidents_heights <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb41-2"><a href="#cb41-2"></a><span class="st">  </span><span class="kw">select</span>(ratio_height, ratio_vote) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb41-3"><a href="#cb41-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 13
 ##   variable     n   min   max median    q1    q3   iqr   mad  mean    sd    se
 ##   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -912,9 +908,9 @@ div.tocify {
 <div id="durchführung-1" class="section level3">
 <h3>Durchführung</h3>
 <p>Die Durchführung ist wie immer kurz und schmerzlos.</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a>presidents_heights <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb47-2"><a href="#cb47-2"></a><span class="st">  </span><span class="kw">select</span>(ratio_height, ratio_vote) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb47-3"><a href="#cb47-3"></a><span class="st">  </span><span class="kw">cor_test</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a>presidents_heights <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb43-2"><a href="#cb43-2"></a><span class="st">  </span><span class="kw">select</span>(ratio_height, ratio_vote) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb43-3"><a href="#cb43-3"></a><span class="st">  </span><span class="kw">cor_test</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 8
 ##   var1         var2         cor statistic       p conf.low conf.high method 
 ##   &lt;chr&gt;        &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;  
@@ -929,22 +925,22 @@ div.tocify {
 <div id="robust-2" class="section level2">
 <h2>Robust</h2>
 <p>Auch robust können wir einen Zusammenhang feststellen. Wir haben oben zwei Verfahren kennengelernt, die <em>percentage bend correlation</em> und die Korrelation basierend auf “winsorizierten” Daten.</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1"></a><span class="co"># Percentage Bend Correlation</span></span>
-<span id="cb49-2"><a href="#cb49-2"></a><span class="kw">with</span>(</span>
-<span id="cb49-3"><a href="#cb49-3"></a>  presidents_heights,</span>
-<span id="cb49-4"><a href="#cb49-4"></a>  <span class="kw">pbcor</span>(ratio_height, ratio_vote)</span>
-<span id="cb49-5"><a href="#cb49-5"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="co"># Percentage Bend Correlation</span></span>
+<span id="cb45-2"><a href="#cb45-2"></a><span class="kw">with</span>(</span>
+<span id="cb45-3"><a href="#cb45-3"></a>  presidents_heights,</span>
+<span id="cb45-4"><a href="#cb45-4"></a>  <span class="kw">pbcor</span>(ratio_height, ratio_vote)</span>
+<span id="cb45-5"><a href="#cb45-5"></a>)</span></code></pre></div>
 <pre><code>## Call:
 ## pbcor(x = ratio_height, y = ratio_vote)
 ## 
 ## Robust correlation coefficient: 0.4134
 ## Test statistic: 3.0115
 ## p-value: 0.0043</code></pre>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a><span class="co"># Winsorized Correlation</span></span>
-<span id="cb51-2"><a href="#cb51-2"></a><span class="kw">with</span>(</span>
-<span id="cb51-3"><a href="#cb51-3"></a>  presidents_heights,</span>
-<span id="cb51-4"><a href="#cb51-4"></a>  <span class="kw">wincor</span>(ratio_height, ratio_vote)</span>
-<span id="cb51-5"><a href="#cb51-5"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="co"># Winsorized Correlation</span></span>
+<span id="cb47-2"><a href="#cb47-2"></a><span class="kw">with</span>(</span>
+<span id="cb47-3"><a href="#cb47-3"></a>  presidents_heights,</span>
+<span id="cb47-4"><a href="#cb47-4"></a>  <span class="kw">wincor</span>(ratio_height, ratio_vote)</span>
+<span id="cb47-5"><a href="#cb47-5"></a>)</span></code></pre></div>
 <pre><code>## Call:
 ## wincor(x = ratio_height, y = ratio_vote)
 ## 

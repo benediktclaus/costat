@@ -534,6 +534,9 @@ div.tocify {
       <a href="voraussetzungen.html">Voraussetzungen im GLM</a>
     </li>
     <li>
+      <a href="formelsammlung.html">Formelsammlung</a>
+    </li>
+    <li>
       <a href="zentraler-grenzwertsatz.html">Zentraler Grenzwertsatz</a>
     </li>
   </ul>
@@ -584,10 +587,11 @@ div.tocify {
 <span id="cb3-2"><a href="#cb3-2"></a><span class="st">  </span><span class="kw">group_by</span>(house) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb3-3"><a href="#cb3-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 14
-##   house      variable     n   min   max median    q1    q3   iqr   mad  mean    sd    se    ci
-##   &lt;fct&gt;      &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 Gryffindor chivalry    42    75   105   92      89  96.5   7.5  5.19  92.3  6.86  1.06  2.14
-## 2 Slytherin  chivalry    38    26    72   47.5    42  53    11    8.15  48.1  8.94  1.45  2.94</code></pre>
+##   house variable     n   min   max median    q1    q3   iqr   mad  mean    sd
+##   &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Gryf~ chivalry    42    75   105   92      89  96.5   7.5  5.19  92.3  6.86
+## 2 Slyt~ chivalry    38    26    72   47.5    42  53    11    8.15  48.1  8.94
+## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
 <p>Wir sehen einen eindeutigen Trend dahingehend, dass sich die Mitglieder Griffyndors als deutlicher ritterlicher einschätzen (<span class="math inline">\(M = 92.3, SD = 6.86\)</span>) als die Mitglieder der Hauses Slytherin (<span class="math inline">\(M = 48.1, SD = 8.94\)</span>). Auch in der Abbildung sehen wir diesen Unterschied deutlich. Die Boxplots (C) zeigen uns insgesamt 4 Outlier, zwei in jedem Haus. Die könnte man bei Bedarf entfernen, wir belassen es jedoch dabei und fahren fort, auch weil die Varianz der Daten in beiden Häusern ähnlich zu sein scheint. Außerdem sehen die Daten gut normalverteilt aus, was wir anhand der Kerndichteschätzungen (= “geglättetes” Histogramm in A) und dem QQ-Plot (B) erkennen können.</p>
 <p><img src="t-test-unabhaengig_files/figure-html/unnamed-chunk-6-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Wer auf Tests zur Überprüfung der Voraussetzungen besteht, also dem Vorgehen, von dem ich bei großen Stichproben wieder <a href="voraussetzungen.html">entschieden abrate</a>), der kann diese natürlich durchführen. Wichtig ist dabei zu beachten, dass der Test der Daten “auf Normalverteilung” pro Haus, bzw. pro Gruppe, durchgeführt werden muss.</p>

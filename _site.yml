@@ -63,6 +63,8 @@ navbar:
       menu:
         - text: "Voraussetzungen im GLM"
           href: voraussetzungen.html
+        - text: "Formelsammlung"
+          href: formelsammlung.html
         - text: "Zentraler Grenzwertsatz"
           href: zentraler-grenzwertsatz.html
     - icon: fa-info

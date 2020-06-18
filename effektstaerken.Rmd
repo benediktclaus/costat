@@ -26,21 +26,22 @@ Nullhypothesen-Signifikanztests sind nämlich mit einem "Problem" behaftet: Bei 
 
 Auf dieser Seite unterscheiden wir häufig zwischen den "klassischen" und den "robusten" Verfahren. Auch bei Effektstärken gibt es robuste Verfahren, die weniger Anfällig gegenüber Ausreißern und schiefen Verteilungen sind. Deshalb werden wir diese beiden Gruppen auch wieder getrennt behandeln. Wer mehr zu klassischen Effektstärken erfahren möchte, sollte unbedingt @Cohen.1988 lesen. Des Weiteren kann man grob zwischen Effektstärken für Gruppenunterschiede und Zusammenhänge unterscheiden; auch dieser Gliederung wird gefolgt.
 
-# Normal
+# Klassisch
 ## Gruppenunterschiede (unabhängig)
 ### Grundidee
-Alle gleich folgenden Effektstärken für Gruppenunterschiede verfolgen dasselbe Ziel: Unterschiede zwischen Gruppen sollen interpretierbar werden. Es wird also einfach der Mittelwert der einen Gruppe ($\mu_1$) minus den der anderen Gruppe gerechnet ($\mu_2$). Das ist eigentlich schon eine Effektstärke, weil wir eine Idee von der Größe des Effekts bekommen. Nun ist es leider nicht so, dass in Studien immer dieselben Maße verwendet werden. Studien zur Depression benutzen ganz viele unterschiedliche Fragebögen, um das depressive Syndrom zu erfassen. Einige Autoren nutzen bspw. Becks Depressions-Inventar, andere ein eigenes Instrument. Ein Unterschied von 5 in der einen Studie ist also etwas anderes als ein Unterschied von 20 in der anderen. Um dennoch alle Studien miteinander vergleichen zu können, unabhängig davon, wie sie ihr Outcome erhoben haben, wird dieser Mittelwertunterschied **standardisiert** (durch einen bestimmten Wert geteilt). Man bringt ihn dadurch auf die Einheit von Standardabweichungen, und da alle Unterschiede in allen Studien so dieselbe Einheit haben, können wir sie miteinander vergleichen.
+Alle gleich folgenden Effektstärken für Gruppenunterschiede verfolgen dasselbe Ziel: Unterschiede zwischen Gruppen sollen interpretierbar werden. Es wird also einfach der Mittelwert der einen Gruppe minus den der anderen Gruppe gerechnet. Das ist eigentlich schon eine Effektstärke, weil wir eine Idee von der Größe des (rohen) Effekts bekommen. Nun ist es leider nicht so, dass in Studien immer dieselben Maße verwendet werden. Studien zur Depression benutzen ganz viele unterschiedliche Fragebögen, um das depressive Syndrom zu erfassen. Einige Autoren nutzen bspw. Becks Depressions-Inventar, andere ein eigenes Instrument. Ein Unterschied von 5 in der einen Studie ist also etwas anderes als ein Unterschied von 20 in der anderen. Um dennoch alle Studien miteinander vergleichen zu können, unabhängig davon, wie sie ihr Outcome erhoben haben, wird dieser Mittelwertunterschied **standardisiert** (durch einen bestimmten Wert geteilt). Man bringt ihn dadurch auf die Einheit von Standardabweichungen, und da alle Unterschiede in allen Studien so dieselbe Einheit haben, können wir sie miteinander vergleichen.
 
 Im Prinzip unterscheiden sich die Effektstärken dann nur in ihrer Standardisierung. Die wichtigsten werden nun vorgestellt.
 
 ### Cohens $d$
-Der Urvater der Effektstärken ist **Cohens $d$** [@Cohen.1988]. Cohens $d$ gibt den **standardisierten** Unterschied zwischen zwei Gruppen an. Das macht es besonders breit anwendbar, da viele Studien miteinander verglichen werden können.  @Cohen.1988[S. 20] gibt uns die Formel^[im Sinne einer einheitlichen, einfachen und bekannten Notation, weiche ich an dieser Stelle von Cohens Notation ab und verwende die gängige Notation, die Studierende mehrheitlich lernen. Für die Übersichtlichkeit wird auf Indizes verzichtet.] $$d = \dfrac{\mu_1-\mu_2}{\sigma}$$ mit $\sigma$ als Standardabweichung der beiden Gruppen. Nach dieser Formel wird angenommen, dass die Standardabweichungen der Gruppen gleich sind (deshalb nur ein $\sigma$). Natürlich haben die beiden Gruppen in den seltensten Fällen identische Varianzen, weshalb die Formel für ungleiche Gruppengrößen und -varianzen erweitert wurde [@Cohen.1988 S. 67] $$\dfrac{\mu_1 - \mu_2}{s}$$ mit der **gepoolten Standardabweichung** $$s = \sqrt{\dfrac{\sum{(x_1 - \mu_1)^2} + \sum{(x_2 - \mu_2)^2}}{n_1 + n_2 -2}}$$ und $x_1$, sowie $x_2$ als individuelle Werte der Probanden in den Gruppen $1$ und $2$.
+Der Urvater der Effektstärken ist **Cohens $d$** [@Cohen.1988]. Cohens $d$ gibt den **standardisierten** Unterschied zwischen zwei Gruppen an. Das macht es besonders breit anwendbar, da viele Studien miteinander verglichen werden können. @Cohen[S. 20] schlägt vor, die Mittelwerte beider Gruppen durch die Standardabweichung zu teilen. Nach diesem Vorgehen wird angenommen, dass die Standardabweichungen der Gruppen gleich sind (deshalb teilt man nur durch *eine* Standardabweichung). Natürlich haben die beiden Gruppen in den seltensten Fällen identische Varianzen, weshalb die Formel für ungleiche Gruppengrößen und -varianzen um die **gepoolte Standardabweichung** erweitert wurde [@Cohen.1988, S. 67]. Die entsprechenden Formeln sind in der [Formelsammlung](formelsammlung.html).
 
-In R können wir $d$ relativ einfach berechnen -- in SPSS hat man keine Chance. Als konkretes Beispiel nutzen wir den Datensatz, den wir bei den unabhängigen $t$-Tests genauer untersucht haben (`chivalry.sav`).
+In R können wir $d$ relativ einfach berechnen -- in SPSS hat man nur mit Mühe eine Chance. Als konkretes Beispiel nutzen wir den Datensatz, den wir bei den unabhängigen $t$-Tests genauer untersucht haben (`chivalry.sav`).
 
 ```{r}
 # Daten laden
-chivalry_data <- read_spss("data/chivalry.sav") %>% mutate(house = as_factor(house))
+chivalry_data <- read_spss("data/chivalry.sav") %>%
+  mutate(house = as_factor(house))
 
 # Daten visualisieren
 ggplot(chivalry_data, aes(x = house, y = chivalry)) + geom_boxplot()
@@ -51,7 +52,7 @@ chivalry_data %>% cohens_d(chivalry ~ house)
 
 
 ### Hedges' $g$
-Bereits @Hedges.1981 konnte zeigen, dass Cohens $d$ positiv verzerrt ist -- es kommen also zu große Werte raus. @Hedges.1981[S.110] entwickelte deshalb Hedges' $g$^[Um für ausreichend Verwirrung zu sorgen, nannte Hedges selbst seine Effektstärke auch $d$; jedoch sollte man sie im Sinne einer einheitlichen Bezeichnung $g$ bezeichnen. Die gleich folgende Effektstärke $g^*$ nannte er schlicht $g$.] $$g = \dfrac{\mu_1 - \mu_2}{s_\text{corrected}}$$ mit der korrigierten Standardabweichung $$s_\text{corrected} = \sqrt{\dfrac{(n_1 - 1) s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 -2}}$$ Dabei handelt es sich nur um eine korrigierte Version von Cohens $d$ und wird auf gleiche Art und Weise interpretiert.
+Bereits @Hedges.1981 konnte zeigen, dass Cohens $d$ positiv verzerrt ist -- es kommen also zu große Werte raus. @Hedges.1981[S.110] entwickelte deshalb Hedges' $g$. Um für ausreichend Verwirrung zu sorgen, nannte Hedges selbst seine Effektstärke auch $d$; jedoch sollte man sie im Sinne einer einheitlichen Bezeichnung $g$ bezeichnen. (Die gleich folgende Effektstärke $g^*$ nannte er übrigens schlicht $g$.) Hedges geht bei der Berechnung von $g$ genau vor wie Cohen, indem er die Differenz der Gruppenmittelwerte bildet, diese jedoch durch eine **korrigierte Standardabweichung** teilt (die entsprechenden Formeln sind in der [Formelsammlung](formelsammlung.html)). Dabei handelt es sich somit nur um eine korrigierte Version von Cohens $d$ und wird auf gleiche Art und Weise interpretiert.
 
 Auch Hedges' $g$ kann mit der Funktion `cohens_d()` berechnet werden, indem man das Argument `hedges.correction = TRUE` mitgibt.
 
@@ -61,18 +62,18 @@ chivalry_data %>% cohens_d(chivalry ~ house, hedges.correction = TRUE)
 
 
 ### Hedges' $g^*$
-Nur um die Sache komplizierter zu machen, berichten @Hedges.1985, dass auch $g$ bei kleinen Stichproben positiv verzerrt ist. Deshalb schlug @Hedges.1981[S. 111] einen Korrektur-Faktor für $g$ vor $$g^* = g \cdot J$$ mit dem Korrektur-Faktor $$J = \dfrac{\Gamma \left(\frac{\alpha}{2}\right)}{\sqrt{\frac{\alpha}{2}} \cdot \Gamma \left(\frac{\alpha - 1}{2}\right)}$$ und $$\alpha = n_1 + n_2 - 2$$ Der Korrektur-Faktor wird, weil nicht jeder so leicht die Gamma-Funktion ($\Gamma$) berechnen kann, gerne approximativ angegeben als [@Borenstein.2009 S. 27] $$ J \approx 1 - \dfrac{3}{4(n_1 + n_2 - 2) - 1} $$
+Nur um die Sache komplizierter zu machen, berichten @Hedges.1985, dass auch $g$ bei kleinen Stichproben positiv verzerrt ist. Deshalb schlug @Hedges.1981[S. 111] einen Korrektur-Faktor $J$ für $g$ vor $g^* = g \cdot J$ (die entsprechenden Formeln sind in der [Formelsammlung](formelsammlung.html)).
 
 Auch $g^*$ ist wieder keine komplett neue Effektstärke, sondern nur für eine natürlich auftretende positive Verzerrung korrigiert und lässt sich deshalb genau so interpretieren, wie die beiden vorigen Effektstärken.
 
-Welche sollte man nun also nehmen? **Mit Hedges' $g^*$ ist man immer auf der richtigen Seite!**
+Welche sollte man nun also nehmen? **Mit Hedges' $g^*$ ist man immer auf der richtigen Seite!** Ist die Stichprobengröße nämlich groß, nähern sich $d$, $g$ und $g^*$ dem selben Wert an, aber wann ist eine Stichprobe dafür ausreichend groß? Das kann man vorher nie so genau sagen und deshalb ist es immer sinnvoll, den konservativsten Wert zu nehmen, um den beobachteten Effekt nicht zu überschätzen.
 
 ### Glass' $\Delta$
-Zu den bereits gängigen Effektstärken gibt es noch eine weitere, nämlich Glass' $\Delta$. Sie berechnet sich als $$\Delta = \dfrac{\mu_1 - \mu_2}{\sigma_\text{Kontrollgruppe}}$$ Die Idee soll sein, dass die Varianz der Kontrollgruppe (oder deren Wurzel daraus, also $\sigma$) eher die der Population widerspiegelt, weil man mit ihr "noch nichts gemacht hat", weil sie z.B. keine Behandlung bekommen hat. Hier habe ich sie eher aus historischen Gründen aufgeführt.
+Zu den bereits gängigen Effektstärken gibt es noch eine weitere, nämlich Glass' $\Delta$. Sie berechnet sich durch die Differenz der Mittelwerte, geteilt durch die Standardabweichung der Kontrollgruppe (die entsprechenden Formeln sind in der [Formelsammlung](formelsammlung.html)). Die Idee soll sein, dass die Varianz der Kontrollgruppe (oder deren Wurzel daraus, also die Standardabweichung) eher die der Population widerspiegelt, weil man mit ihr "noch nichts gemacht hat", weil sie z.B. keine Behandlung bekommen hat. Hier habe ich sie eher aus historischen Gründen aufgeführt.
 
 ## Zusammenhänge
 ### Pearsons $r$
-Einer der bekanntesten Effektstärken von Zusammenhängen ist der (stinknormale) Korrelationskoeffizient nach Pearson $r$ $$r = \dfrac{1}{n-1}\sum_{i = 1}^n{\left(\frac{x_i - \bar{x}}{s_x}\right)\left(\frac{y_i - \bar{y}}{s_y}\right)}$$
+Einer der bekanntesten Effektstärken von Zusammenhängen ist der (stinknormale) Korrelationskoeffizient nach Pearson $r$ (die entsprechenden Formeln sind in der [Formelsammlung](formelsammlung.html)).
 
 # Robust
 ## Gruppenunterschiede (unabhängig)

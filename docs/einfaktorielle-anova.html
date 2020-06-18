@@ -534,6 +534,9 @@ div.tocify {
       <a href="voraussetzungen.html">Voraussetzungen im GLM</a>
     </li>
     <li>
+      <a href="formelsammlung.html">Formelsammlung</a>
+    </li>
+    <li>
       <a href="zentraler-grenzwertsatz.html">Zentraler Grenzwertsatz</a>
     </li>
   </ul>
@@ -565,7 +568,8 @@ div.tocify {
 <p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien und <code>rstatix</code> für statistische Analysen.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(haven)</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rstatix)</span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rstatix)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(costatcompanion)</span></code></pre></div>
 </div>
 <div id="beispiel" class="section level1">
 <h1>Beispiel</h1>
@@ -601,12 +605,13 @@ div.tocify {
 <span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw">group_by</span>(backpack) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 14
-##   backpack variable     n   min   max median    q1    q3   iqr   mad  mean    sd    se    ci
-##   &lt;fct&gt;    &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 None     joy         42     6    10    9.5     8 10     2    0.741  9.07  1.14 0.175 0.354
-## 2 Light    joy         53     3    10    7       6  8     2    1.48   7.06  1.57 0.216 0.434
-## 3 Heavy    joy         56     3    10    6.5     6  7.25  1.25 0.741  6.46  1.63 0.218 0.436
-## 4 Handcart joy         35     0     5    3       2  4     2    1.48   2.63  1.40 0.236 0.479</code></pre>
+##   backpack variable     n   min   max median    q1    q3   iqr   mad  mean    sd
+##   &lt;fct&gt;    &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 None     joy         42     6    10    9.5     8 10     2    0.741  9.07  1.14
+## 2 Light    joy         53     3    10    7       6  8     2    1.48   7.06  1.57
+## 3 Heavy    joy         56     3    10    6.5     6  7.25  1.25 0.741  6.46  1.63
+## 4 Handcart joy         35     0     5    3       2  4     2    1.48   2.63  1.40
+## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
 <p><img src="einfaktorielle-anova_files/figure-html/unnamed-chunk-6-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Wir bekommen den ersten Wind in den Segeln unserer Hypothese. Im Mittel scheinen Besucher des Phantasialands mehr Spaß zu haben, wenn sie weniger Gepäck tragen müssen. Aufgrund der Gruppengröße (jeweils <span class="math inline">\(n &gt; 30\)</span>) und des zentralen Grenzwertsatzes, müssen wir uns um die <a href="voraussetzungen.html">Voraussetzung der Normalverteilung</a> keine Gedanken machen. Im Boxplot der Daten sind leicht unterschiedliche Varianzen pro Faktorstufe zu erkennen. Um sicherzugehen, dass wir die Voraussetzung der Varianzhomogenität nicht verletzen, können wir einen Levene-Test berechnen.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>phantasialand <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -643,15 +648,16 @@ div.tocify {
 <p>Einen Überblick über und Empfehlungen zu Einsatzsituationen vieler Post-hoc-Tests gibt <span class="citation">Toothaker (<a href="#ref-Toothaker.1993" role="doc-biblioref">1993</a>)</span>. Ein guter Post-hoc-Test bei gleich großen Gruppengrößen und angenommener Varianzhomogenität ist der Tukey-HSD (Tukey Honest Significance Difference).</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>phantasialand <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb11-2"><a href="#cb11-2"></a><span class="st">  </span><span class="kw">tukey_hsd</span>(joy <span class="op">~</span><span class="st"> </span>backpack)</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 8
-##   term     group1 group2   estimate conf.low conf.high    p.adj p.adj.signif
-## * &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
-## 1 backpack None   Light      -2.01     -2.80    -1.23  2.20e- 9 ****        
-## 2 backpack None   Heavy      -2.61     -3.39    -1.83  6.93e-14 ****        
-## 3 backpack None   Handcart   -6.44     -7.32    -5.57  1.73e-14 ****        
-## 4 backpack Light  Heavy      -0.592    -1.32     0.139 1.57e- 1 ns          
-## 5 backpack Light  Handcart   -4.43     -5.26    -3.60  1.73e-14 ****        
-## 6 backpack Heavy  Handcart   -3.84     -4.66    -3.01  2.01e-14 ****</code></pre>
+<pre><code>## # A tibble: 6 x 9
+##   term  group1 group2 null.value estimate conf.low conf.high    p.adj
+## * &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 back~ None   Light           0   -2.01     -2.80    -1.23  2.20e- 9
+## 2 back~ None   Heavy           0   -2.61     -3.39    -1.83  6.93e-14
+## 3 back~ None   Handc~          0   -6.44     -7.32    -5.57  1.73e-14
+## 4 back~ Light  Heavy           0   -0.592    -1.32     0.139 1.57e- 1
+## 5 back~ Light  Handc~          0   -4.43     -5.26    -3.60  1.73e-14
+## 6 back~ Heavy  Handc~          0   -3.84     -4.66    -3.01  2.01e-14
+## # ... with 1 more variable: p.adj.signif &lt;chr&gt;</code></pre>
 <p>Aus den vielen paarweisen Vergleichen geht hervor, dass sich die Gruppe derer, die ohne Handgepäck unterwegs ist, signifikant von allen anderen Gruppen unterscheidet. Das betrifft auch die Gruppe derjenigen, die mit einem Bollerwagen (“Handcart”) unterwegs sind. Interessant ist, dass sich die Besucher mit leichtem und schwerem Handgepäck <em>nicht</em> signifikant voneinander unterscheiden. Um die ganzen Vergeliche zu durchdringen, nimmt man sich am besten den Boxplot von oben und zeichnet alle signifikanten Unterschiede ein. Man wird dann feststellen, dass wir drei homogene Gruppen haben. In der einen Gruppe sind die Besucher ohne Handgepäck (die glücklichsten), dann kommt die Gruppe derjenigen mit leichtem oder schwerem Handgepäck (etwas weniger glücklich) und “zum Schluss” diejenigen, die einen Bollerwagen ziehen müssen. Die letzte Gruppe hat mit Abstand am wenigsten Freude.</p>
 </div>
 <div id="berichten" class="section level3">
@@ -763,11 +769,12 @@ div.tocify {
 <span id="cb27-2"><a href="#cb27-2"></a><span class="st">  </span><span class="kw">group_by</span>(phallus) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb27-3"><a href="#cb27-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 14
-##   phallus               variable     n   min   max median    q1    q3   iqr   mad  mean    sd    se    ci
-##   &lt;fct&gt;                 &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 No Coronal Ridge      displace     5  21.5  61.7   35.5  22.0  35.8 13.8  20.0   35.3 16.3   7.30 20.3 
-## 2 Minimal Coronal Ridge displace     5  80.8  97.4   93.1  91.1  93.2  2.11  3.06  91.1  6.23  2.79  7.73
-## 3 Coronal Ridge         displace     5  79.7  99.2   91.0  86.9  99.2 12.3  12.2   91.2  8.35  3.74 10.4</code></pre>
+##   phallus variable     n   min   max median    q1    q3   iqr   mad  mean    sd
+##   &lt;fct&gt;   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 No Cor~ displace     5  21.5  61.7   35.5  22.0  35.8 13.8  20.0   35.3 16.3 
+## 2 Minima~ displace     5  80.8  97.4   93.1  91.1  93.2  2.11  3.06  91.1  6.23
+## 3 Corona~ displace     5  79.7  99.2   91.0  86.9  99.2 12.3  12.2   91.2  8.35
+## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
 <p>Aufgrund der deskriptiven Statistiken könnten wir vermuten, dass die Form des Phallus tatsächlich einen Einfluss darauf hat, wie viel Sperma aus der Vagina entfernt werden kann. Ein Dildo ohne Eichel-Kante entfernt im Mittel <span class="math inline">\(M = 35.3, SD = 16.3\)</span> Prozent des enthaltenen Spermas. Die beiden anderen Dildos schaffen beide über 90%. Der Unterschied wird vor allem in der Abbildung schön deutlich.</p>
 <p><img src="einfaktorielle-anova_files/figure-html/unnamed-chunk-18-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Da wir relativ wening Datenpunkte haben, sollten wir die Voraussetzungen prüfen.</p>
@@ -877,12 +884,13 @@ div.tocify {
 <p>Alternativ hätten wir Post-hoc-Tests berechnen können, mit denen wir auf das identische Ergebnis gekommen wären.</p>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a>penis <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb41-2"><a href="#cb41-2"></a><span class="st">  </span><span class="kw">tukey_hsd</span>(displace <span class="op">~</span><span class="st"> </span>phallus)</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 8
-##   term    group1                group2                estimate conf.low conf.high     p.adj p.adj.signif
-## * &lt;chr&gt;   &lt;chr&gt;                 &lt;chr&gt;                    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;       
-## 1 phallus No Coronal Ridge      Minimal Coronal Ridge   55.8       36.9      74.7 0.0000121 ****        
-## 2 phallus No Coronal Ridge      Coronal Ridge           55.9       37.0      74.8 0.0000118 ****        
-## 3 phallus Minimal Coronal Ridge Coronal Ridge            0.114    -18.8      19.0 1         ns</code></pre>
+<pre><code>## # A tibble: 3 x 9
+##   term  group1 group2 null.value estimate conf.low conf.high   p.adj
+## * &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 phal~ No Co~ Minim~          0   55.8       36.9      74.7 1.21e-5
+## 2 phal~ No Co~ Coron~          0   55.9       37.0      74.8 1.18e-5
+## 3 phal~ Minim~ Coron~          0    0.114    -18.8      19.0 1.00e+0
+## # ... with 1 more variable: p.adj.signif &lt;chr&gt;</code></pre>
 </div>
 <div id="berichten-1" class="section level3">
 <h3>Berichten</h3>
@@ -908,10 +916,14 @@ div.tocify {
 <pre><code>## Call:
 ## lincon(formula = displace ~ phallus, data = penis)
 ## 
-##                                               psihat  ci.lower  ci.upper p.value
-## No Coronal Ridge vs. Minimal Coronal Ridge -61.33214 -99.06445 -23.59983 0.01728
-## No Coronal Ridge vs. Coronal Ridge         -61.26282 -91.61190 -30.91375 0.00528
-## Minimal Coronal Ridge vs. Coronal Ridge      0.06931 -30.82820  30.96683 0.99045</code></pre>
+##                                               psihat  ci.lower  ci.upper
+## No Coronal Ridge vs. Minimal Coronal Ridge -61.33214 -99.06445 -23.59983
+## No Coronal Ridge vs. Coronal Ridge         -61.26282 -91.61190 -30.91375
+## Minimal Coronal Ridge vs. Coronal Ridge      0.06931 -30.82820  30.96683
+##                                            p.value
+## No Coronal Ridge vs. Minimal Coronal Ridge 0.01728
+## No Coronal Ridge vs. Coronal Ridge         0.00528
+## Minimal Coronal Ridge vs. Coronal Ridge    0.99045</code></pre>
 <p>Mit den robusten Tests würden wir auf dasselbe Ergebnis kommen: Es gibt einen signifikanten Unterschied zwischen den Dildos in Bezug auf die durchschnittliche Menge des entfernten Spermas, <span class="math inline">\(F_t(2, 2.81) = 39.57, p = .009, \xi = .91\)</span>. Die Post-hoc-Tests zeigen, dass sich beide Dildos mit Eichel-Kante vom Dildo ohne Kante unterscheiden.</p>
 </div>
 <div id="non-parametrisch-1" class="section level2">
@@ -935,11 +947,11 @@ div.tocify {
 <span id="cb51-2"><a href="#cb51-2"></a>penis <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb51-3"><a href="#cb51-3"></a><span class="st">  </span><span class="kw">dunn_test</span>(displace <span class="op">~</span><span class="st"> </span>phallus)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 9
-##   .y.      group1                group2                   n1    n2 statistic       p  p.adj p.adj.signif
-## * &lt;chr&gt;    &lt;chr&gt;                 &lt;chr&gt;                 &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;       
-## 1 displace No Coronal Ridge      Minimal Coronal Ridge     5     5    2.69   0.00721 0.0216 *           
-## 2 displace No Coronal Ridge      Coronal Ridge             5     5    2.62   0.00889 0.0216 *           
-## 3 displace Minimal Coronal Ridge Coronal Ridge             5     5   -0.0707 0.944   0.944  ns</code></pre>
+##   .y.    group1     group2        n1    n2 statistic       p  p.adj p.adj.signif
+## * &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;      &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;       
+## 1 displ~ No Corona~ Minimal C~     5     5    2.69   0.00721 0.0216 *           
+## 2 displ~ No Corona~ Coronal R~     5     5    2.62   0.00889 0.0216 *           
+## 3 displ~ Minimal C~ Coronal R~     5     5   -0.0707 0.944   0.944  ns</code></pre>
 <p>Auch der Kruskal-Wallis-Test kommt zu dem Ergebnis, dass sich die Mittelwerte signifikant voneinander unterscheiden, <span class="math inline">\(H(2) = 9.38, p = .009, \eta^2[H] = .62\)</span>. Die Post-hoc-Tests nach Dunn zeigten ebenfalls einen signifikanten Unterschied zwischen den Dildos mit Eichel-Kante und jenem ohne.</p>
 </div>
 </div>

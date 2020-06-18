@@ -534,6 +534,9 @@ div.tocify {
       <a href="voraussetzungen.html">Voraussetzungen im GLM</a>
     </li>
     <li>
+      <a href="formelsammlung.html">Formelsammlung</a>
+    </li>
+    <li>
       <a href="zentraler-grenzwertsatz.html">Zentraler Grenzwertsatz</a>
     </li>
   </ul>
@@ -799,10 +802,11 @@ div.tocify {
 <span id="cb12-10"><a href="#cb12-10"></a><span class="st">  </span><span class="kw">group_by</span>(cycle) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb12-11"><a href="#cb12-11"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 14
-##   cycle variable                n   min   max median    q1    q3   iqr   mad  mean    sd    se    ci
-##   &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 moon  aggressive_behavior    15  0.33  6      3.33 2.34   3.67 1.34  0.979 3.02  1.50  0.387 0.83 
-## 2 other aggressive_behavior    15  0.11  1.59   0.4  0.285  0.67 0.385 0.297 0.589 0.445 0.115 0.246</code></pre>
+##   cycle variable     n   min   max median    q1    q3   iqr   mad  mean    sd
+##   &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 moon  aggress~    15  0.33  6      3.33 2.34   3.67 1.34  0.979 3.02  1.50 
+## 2 other aggress~    15  0.11  1.59   0.4  0.285  0.67 0.385 0.297 0.589 0.445
+## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
 <p>Anhand der deskriptiven Kennwerte können wir die Tendenz erahnen, dass sich die untersuchten Patienten mit Demenz in Mondphasen störender verhielten (<span class="math inline">\(M = 3.02, SD = 1.50\)</span>) als in anderen Mondphasen (<span class="math inline">\(M = 0.59, SD = 0.45\)</span>). Wir haben eine sehr kleine Stichprobe von <span class="math inline">\(n = 15\)</span> Probanden mit zwei Messungen. Wir sollten unsere Voraussetzungen also auf jeden Fall gründlich prüfen. Bei dem <span class="math inline">\(t\)</span>-Test mit verbundenen Stichproben müssen die Differenzen normalverteilt sein.</p>
 <p><img src="t-test-abhaengig_files/figure-html/unnamed-chunk-12-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Aus Abbildungen A (der Kerndichteschätzung der Differenzen) und B (dem QQ-Plot der Differenzen) können wir entnehmen, dass das ganz gut aussieht. Bis auf einen kleinen bumper am Ende sehen die Daten recht normalverteilt aus. Was sagt der Shapiro-Wilk-Test?</p>
