@@ -9,7 +9,7 @@ editor_options:
 
 ```{r echo=FALSE, message=FALSE}
 library(tidyverse)
-theme_set(theme_light())
+theme_set(ggplot2::theme_minimal())
 
 knitr::opts_chunk$set(fig.align = "center", dpi = 350)
 ```

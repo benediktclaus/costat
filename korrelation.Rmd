@@ -265,7 +265,7 @@ Ein super interessantes Beispiel bescheren uns @Stulp.2013. Sie sammelten Daten 
 ## Klassisch
 Den Datensatz finden wir in der Excel-Datei `president_heights.xlsx` (zu finden im Ordner `data` des [GitHub-Repositories](https://github.com/benediktclaus/costat/tree/master/data)) und ist eine gekürzte Fassung des von @Stulp.2013 zur Verfügung gestellten Datensatzes. Da es sich hier um eine Excel-Datei handelt, benötigen wir das Paket `readxl` aus dem Tidyverse, um diese Daten einzulesen. Um unseren einheitlichen Stil umzusetzen, bereinigen wir die Variablen-Namen direkt mit der Funktion `clean_names()` aus dem Paket `janitor`.
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 # Pakets laden
 library(readxl)
 library(janitor)
@@ -279,7 +279,7 @@ presidents_heights
 
 Wir betrachten hier einen Datensatz mit 61 Zeilen ("Wahlen") und 10 Variablen. In der Variable `president` ist der Name des Präsidenten eingetragen, in `election_year` das Wahljahr, dann die Stelle des gewählten Kandidaten in der Reihenfolge der Präsidenten (`president_number`), die Partei (`party`), die Größe des gewählten Präsidenten (`height`), die Größe des erfolgreichsten Gegenkandidaten (`height_most_popular_opponent`), der *popular vote* für den gewählten Präsidenten (`popular_vote_president`) und selbes für den erfolgreichsten Gegenkandidaten (`popvote_most_popular_opponent`). Die letzten beiden Variablen sind jeweils das Verhältnis der Größe und des *popular vote* von gewähltem Präsidenten und Gegenkandidaten.
 
-Wann immer solche Prozentsätze, Summen oder Mittelwerte gebildet wurden, dürfen wir berechtigterweise skeptisch sein (auch in der Forschung wird so etwas, je nach Kenntnisstand des Ausfüllenden auch noch mal per Hand gemacht) und solche Werte selbst berechnen^[In diesem Fall war jemand fähiges am Werke, denn die Daten stimmen. Wer möchte, kann also darauf verzichten, die Verhältnisse selbst zu berechnen, es ist jedoch eine schöne Übung.]. Das machen wir doch direkt mal: Für die relative Größe des Gewinners teilen wir die Größe des Gewinners durch die des erfolgreichsten Gegenkandidaten. Beim *popular vote* handelt es sich bereits um Prozente, für den relativen Anteil teilen wir also den *popuar vote* des Präsidenten durch die Summe des *popular votes* des Präsidenten und des erfolgreichsten Gegenkandidaten. $$\text{ratio_vote} = \dfrac{\text{vote president}}{\text{vote president} \cdot \text{vote opponent}}$$
+Wann immer solche Prozentsätze, Summen oder Mittelwerte gebildet wurden, dürfen wir berechtigterweise skeptisch sein (auch in der Forschung wird so etwas, je nach Kenntnisstand des Ausfüllenden auch noch mal per Hand gemacht) und solche Werte selbst berechnen^[In diesem Fall war jemand fähiges am Werke, denn die Daten stimmen. Wer möchte, kann also darauf verzichten, die Verhältnisse selbst zu berechnen, es ist jedoch eine schöne Übung.]. Das machen wir doch direkt mal: Für die relative Größe des Gewinners teilen wir die Größe des Gewinners durch die des erfolgreichsten Gegenkandidaten. Beim *popular vote* handelt es sich bereits um Prozente, für den relativen Anteil teilen wir also den *popuar vote* des Präsidenten durch die Summe des *popular votes* des Präsidenten und des erfolgreichsten Gegenkandidaten. $$\text{ratio_vote} = \dfrac{\text{vote president}}{\text{vote president} + \text{vote opponent}}$$
 
 ```{r}
 presidents_heights <- presidents_heights %>% 
