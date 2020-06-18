@@ -9,7 +9,7 @@ editor_options:
 
 ```{r echo=FALSE}
 knitr::opts_chunk$set(fig.align = "center", dpi = 350)
-ggplot2::theme_set(ggplot2::theme_light())
+ggplot2::theme_set(ggplot2::theme_minimal())
 
 
 library(benelib)
@@ -116,7 +116,7 @@ with(
 )
 ```
 
-Die *percentage bend correlation* beträgt $\rho_{pb} = .823, p < .001$ und die Korrelation basierend auf winsorized Daten $\rho_w = ,789, p < .001$.
+Die *percentage bend correlation* beträgt $\rho_{pb} = .823, p < .001$ und die Korrelation basierend auf winsorized Daten $\rho_w = .789, p < .001$.
 
 ## Non-parametrisch
 Wer [entgegen aller Empfehlungen](voraussetzungen.html) trotzdem non-parametrisch rechnen möchte, der kann auf zwei bekannte Verfahren zurückgreifen. Zum einen den Korrelationskoeffizinten nach Spearman ($r_s$), gelegentlich auch Spearmans Rho ($\rho$) bezeichnet, und zum anderen Kendalls Tau ($\tau$). Nach @Howell.1997 ist $\tau$ zu bevorzugen. Berechnen tun wir beide non-parametrischen Varianten mit derselben Funktion wie Pearsons $r$, geben jedoch unser gewünschtes Verfahren als Metode an.
@@ -165,7 +165,7 @@ Wer sich für die linke Seite entschieden hat, ist nicht alleine und liegt gleic
 
 Die Stärke eines Zusammenhangs gibt nicht an, wie "steil" die Punkt sind, sondern wie eng sie um eine Linie fallen. Je enger die Punkte um die eingezeichnete Linie fallen, desto größer ist die Korrelation. Wie "steil" die Gerade ist, wie *groß* also der Zusammenhang zwischen zwei Variablen ist, ist eine Frage, auf die die **Regression** Antworten hat.
 
-Was folgt daraus? Die Stärke und die Größe eines Zusammenhangs sind voneinander unabhängig und müssen immer einzeln beurteilt werden. Es kann bspw. sein, dass es Zusammenhänge gibt, die total klein, aber extrem stark sind. Hier muss man sich dann die Frage stellen, ob dieser Zusammenhang irgendwelche klinischen/bedeutenden Implikationen mit sich bringt.
+Was folgt daraus? Die Stärke und die Größe eines Zusammenhangs sind voneinander unabhängig und müssen immer einzeln beurteilt werden. Es kann bspw. sein, dass es Zusammenhänge gibt, die total klein, aber extrem stark sind (wie in der folgenden Abbildung). Hier muss man sich dann die Frage stellen, ob dieser Zusammenhang irgendwelche klinischen/bedeutenden Implikationen mit sich bringt.
 
 ```{r echo=FALSE, message=FALSE}
 MASS::mvrnorm(500, mu = c(0,0), Sigma = matrix(c(1,0.90,0.90,1), ncol = 2), empirical = TRUE) %>% 
@@ -175,7 +175,7 @@ MASS::mvrnorm(500, mu = c(0,0), Sigma = matrix(c(1,0.90,0.90,1), ncol = 2), empi
          y = y * 0.2) %>% 
   ggplot(aes(x, y)) +
   geom_point() +
-  expand_limits(y = c(-3, 3))
+  expand_limits(y = c(-10, 10))
 ```
 
 ## Korrelation und Kausalität
@@ -260,21 +260,108 @@ water_park %>%
 
 
 # Aus der Praxis
-Folgt.
+Ein super interessantes Beispiel bescheren uns @Stulp.2013. Sie sammelten Daten zur Größe von US-Präsidenten und untersuchten, ob die Größe eines Präsidentschaftskandidaten einen Einfluss auf das Wählerverhalten der US-Amerikaner hat. Sie untersuchten unter anderem die Hypothese, ob die relative Größe, also das Verhältnis der Größe des gewählten Präsidenten zu der des erfolgreichsten Gegenkandidaten, einen Einfluss auf den *popular vote* hatte. In den USA gibt es das Wahlmänner-System: Die Wähler wählen Wahlmänner (*electoral college*), die dann erst in einem nächsten Schritt den Präsidenten wählen (*electoral vote*). Mit dem *popular vote* bezeichnet man den "eigentlichen" prozentualen Anteil der Wähler, die einen Präsidenten gewählt haben. Wichtig hierbei ist, dass sich *popular vote* und *electoral vote* unterscheiden können -- ein Kanditat muss so nicht mehr als die Hälfte der Wähler (> 50% des *popular vote*) von sich überzeugen, um Präsident zu werden.
 
 ## Klassisch
+Den Datensatz finden wir in der Excel-Datei `president_heights.xlsx` (zu finden im Ordner `data` des [GitHub-Repositories](https://github.com/benediktclaus/costat/tree/master/data)) und ist eine gekürzte Fassung des von @Stulp.2013 zur Verfügung gestellten Datensatzes. Da es sich hier um eine Excel-Datei handelt, benötigen wir das Paket `readxl` aus dem Tidyverse, um diese Daten einzulesen. Um unseren einheitlichen Stil umzusetzen, bereinigen wir die Variablen-Namen direkt mit der Funktion `clean_names()` aus dem Paket `janitor`.
+
+```{r}
+# Pakets laden
+library(readxl)
+library(janitor)
+
+# Daten laden
+presidents_heights <- read_excel("data/presidents_heights.xlsx") %>% 
+  clean_names()
+
+presidents_heights
+```
+
+Wir betrachten hier einen Datensatz mit 61 Zeilen ("Wahlen") und 10 Variablen. In der Variable `president` ist der Name des Präsidenten eingetragen, in `election_year` das Wahljahr, dann die Stelle des gewählten Kandidaten in der Reihenfolge der Präsidenten (`president_number`), die Partei (`party`), die Größe des gewählten Präsidenten (`height`), die Größe des erfolgreichsten Gegenkandidaten (`height_most_popular_opponent`), der *popular vote* für den gewählten Präsidenten (`popular_vote_president`) und selbes für den erfolgreichsten Gegenkandidaten (`popvote_most_popular_opponent`). Die letzten beiden Variablen sind jeweils das Verhältnis der Größe und des *popular vote* von gewähltem Präsidenten und Gegenkandidaten.
+
+Wann immer solche Prozentsätze, Summen oder Mittelwerte gebildet wurden, dürfen wir berechtigterweise skeptisch sein (auch in der Forschung wird so etwas, je nach Kenntnisstand des Ausfüllenden auch noch mal per Hand gemacht) und solche Werte selbst berechnen^[In diesem Fall war jemand fähiges am Werke, denn die Daten stimmen. Wer möchte, kann also darauf verzichten, die Verhältnisse selbst zu berechnen, es ist jedoch eine schöne Übung.]. Das machen wir doch direkt mal: Für die relative Größe des Gewinners teilen wir die Größe des Gewinners durch die des erfolgreichsten Gegenkandidaten. Beim *popular vote* handelt es sich bereits um Prozente, für den relativen Anteil teilen wir also den *popuar vote* des Präsidenten durch die Summe des *popular votes* des Präsidenten und des erfolgreichsten Gegenkandidaten. $$\text{ratio_vote} = \dfrac{\text{vote president}}{\text{vote president} \cdot \text{vote opponent}}$$
+
+```{r}
+presidents_heights <- presidents_heights %>% 
+  mutate(
+    ratio_height = height / height_most_popular_opponent,
+    ratio_vote = popular_vote_president / (popular_vote_president + popvote_most_popular_opponent),
+  )
+```
+
+
 ### EDA
+Wie immer, ist es eine gute Idee, die Daten erst einmal zu betrachten, bevor wir anfangen, wilde Modelle zu berechnen. Uns interessiert der Zusammenhang zwischen zwei Variablen: Der relativen Größe des Präsidenten mit dem relativen Anteil am *popular vote*.
+
+```{r}
+presidents_heights %>% 
+  select(ratio_height, ratio_vote) %>% 
+  get_summary_stats()
+```
+
+```{r echo=FALSE, warning=FALSE}
+presidents_heights %>% 
+  select(president, ratio_height, ratio_vote) %>% 
+  pivot_longer(
+    cols = -president,
+    names_to = "outcome",
+    names_prefix = "ratio_",
+    names_transform = list(outcome = str_to_title),
+    values_to = "ratio"
+  ) %>% 
+  ggplot(aes(ratio, fill = outcome, color = outcome)) +
+  geom_density(alpha = 0.4) +
+  facet_wrap(~ outcome, scales = "free") +
+  scale_fill_personal() +
+  scale_color_personal() +
+  theme(legend.position = "bottom") +
+  labs(x = "Ratio", y = "Density", color = "Variable", fill = "Variable")
+```
+
+
+Lut deskriptiver Statistiken und Abbildungen haben wir keine unplausiblen Werte oder Ausreißer in diesem Datensatz. Betrachten wir anschließend das Streudiagramm der beiden Variablen.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+presidents_heights %>% 
+  ggplot(aes(ratio_height, ratio_vote)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Height Ratio", y = "Vote Ratio") 
+```
+
+Wir können relativ leicht erkennen, dass es einen positiven Zusammenhang zwischen dem Verhältnis der Größen der beiden Kandidaten mit dem Verhältnis des *popular vote* gibt. Je größer ein Kandidat also im Vergleich zu seinem Gegner ist, desto größer ist der Anteil des *popular vote*, den der Kandidat abgreifen kann.
 
 ### Durchführung
+Die Durchführung ist wie immer kurz und schmerzlos.
 
+```{r}
+presidents_heights %>% 
+  select(ratio_height, ratio_vote) %>% 
+  cor_test()
+```
+
+Die sich ergebende Korrelation ist identisch mit der der Autoren [@Stulp.2013, S. 163], $r = .39, p = .007$. An dieser Stelle wieder der Hinweis, dass es sich *nicht* um einen Kausalen Zusammenhang handeln muss. Relativ größere Kandidaten fahren relativ gesehen mehr Stimmen ein, aber wir wissen nicht, ob das tatsächlich *wegen* der Größe so ist.
 
 ### Berichten
+We found a significant correlation between the height ratio of presidential candidates with their most popular opponent and the ratio of the popular vote, $r = .39, p = .007$.
 
-## Robust {#beispiel_robust}
+## Robust
+Auch robust können wir einen Zusammenhang feststellen. Wir haben oben zwei Verfahren kennengelernt, die *percentage bend correlation* und die Korrelation basierend auf "winsorizierten" Daten.
 
+```{r}
+# Percentage Bend Correlation
+with(
+  presidents_heights,
+  pbcor(ratio_height, ratio_vote)
+)
+
+# Winsorized Correlation
+with(
+  presidents_heights,
+  wincor(ratio_height, ratio_vote)
+)
+```
+
+Die Korrelationen wären, je nach Methode, $\rho_{pb} = .413, p = .004$ (für die *percentage bend correlation*) oder $\rho_w = .402, p = .007$ (für die *winsorized correlation*).
 
 # Literatur
-
-```{r echo=FALSE}
-remove(list = ls())
-```
