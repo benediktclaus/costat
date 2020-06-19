@@ -7,13 +7,14 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r echo=FALSE}
-knitr::opts_chunk$set(fig.align = "center", dpi = 350)
-ggplot2::theme_set(ggplot2::theme_minimal())
-
-
-library(benelib)
+```{r echo=FALSE, message=FALSE}
+knitr::read_chunk("setup.R")
 ```
+
+```{r echo=FALSE, message=FALSE}
+<<setup>>
+```
+
 
 ![](images/runner_r.jpg)
 
@@ -294,7 +295,7 @@ runners_motivation %>%
   stat_summary(fun.data = "mean_sd", geom = "errorbar", width = 0.1, position = dodge_width, size = 1) +
   expand_limits(y = 0) +
   theme(legend.position = "bottom") +
-  labs(x = "Music Type", y = "Endurance") +
+  labs(x = "Music Type", y = "Endurance", color = "Motivation") +
   scale_color_personal()
 ```
 
@@ -327,7 +328,3 @@ Gibt es nur für einfaktorielle ANOVAs.
 Gibt es nur für einfaktorielle ANOVAs.
 
 # Literatur
-
-```{r echo=FALSE}
-remove(list = ls())
-```

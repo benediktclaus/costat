@@ -43,8 +43,4 @@ Der Mittelwert aller ganzen Zahlen von 1 bis 10 ist somit 5.5. Ich habe das Obje
 
 Weitere Informationen findest Du in den ersten Kapiteln von @Wickham.2017.
 
-```{r echo=FALSE}
-rm(list = ls())
-```
-
 # Literatur

@@ -23,6 +23,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="shortcut icon" href="images/broom.ico">
@@ -565,10 +566,11 @@ div.tocify {
 <p>Mit einer (allgemeinen) faktoriellen ANOVA kann man mehr als zwei Gruppenmittelwerte in Abhängigkeit von kategorialen Prädiktoren vergleichen. Da die ANOVA ein Omnibus-Test ist, und so nur anzeigt, ob irgendwo ein signifikanter Unterschied zwischen den betrachteten Mittelwerten besteht, nutzt man entweder Kontraste oder Post-hoc-Tests, um herauszufinden, welche Mittelwerte sich letztendlich signifikant voneinander unterscheiden. Zusätzlich kann eine <em>Simple Effects Analysis</em> dazu genutzt werden, Unterschiede auf einzelnen Faktorstufen festzustellen.</p>
 <div id="pakete" class="section level1">
 <h1>Pakete</h1>
-<p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien und <code>rstatix</code> für statistische Analysen.</p>
+<p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien und <code>rstatix</code> für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket <code>costatcompanion</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(haven)</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rstatix)</span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rstatix)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(costatcompanion)</span></code></pre></div>
 </div>
 <div id="beispiel" class="section level1">
 <h1>Beispiel</h1>
@@ -636,7 +638,7 @@ div.tocify {
 ## 8 Champ~ Male  yummine~    20     2    13     10  8.75    11  2.25  1.48   9.2
 ## # ... with 3 more variables: sd &lt;dbl&gt;, se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
 <p>Wir haben Daten zu vier Eissorten. Verköstigt wurden am häufigsten Schokolade (<span class="math inline">\(n = 81\)</span>) und Cookie (<span class="math inline">\(n = 80\)</span>); bewertet wurden am besten Vanille (<span class="math inline">\(M = 16.57, SD = 2.18\)</span>) und Schokolade (<span class="math inline">\(M = 17.16, SD = 1.68\)</span>). Insgesamt haben <span class="math inline">\(N = 295\)</span> Passanten an der Untersuchung teilgenommen, wovon <span class="math inline">\(n = 162\)</span> Frauen und <span class="math inline">\(n = 133\)</span> Männer waren.</p>
-<p><img src="faktorielle-anova_files/figure-html/unnamed-chunk-7-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="faktorielle-anova_files/figure-html/unnamed-chunk-9-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Aufgrund der Abbildung bekommen wir eine grobe Idee davon, dass die untersuchten Frauen alle Eissorten in etwa gleich lecker fanden. Die Männer jedoch stehen weniger auf Cookie und überhaupt nicht auf Champagner. (Bah!) Jetzt ist die Frage, ob unsere Einschätzung, dass sich die Mittelwerte tatsächlich signifikant unterscheiden, richtig ist. Dafür berechnen wir die ANOVA.</p>
 </div>
 <div id="durchführung" class="section level3">
@@ -660,7 +662,7 @@ div.tocify {
 ## 3 flavor:sex   3 287  25.377 1.37e-14     * 0.210</code></pre>
 <p>An dieser Stelle lohnt es sich etwas, auf die Interpretation der Ergebnisse einzugehen. In den Zeilen <code>flavor</code> und <code>sex</code> sind die Haupteffekte dieser beiden Faktoren zu finden. Hat der Faktor “flavor” (= Eissorte) allein einen Einfluss auf die Einschätzung der Probanden? Ja, der Haupteffekt für “flavor” ist signifikant, da <span class="math inline">\(p &lt; .05\)</span>. Das gleiche gilt für den Haupteffekt, und somit Einfluss, von “sex” (= Geschlecht); auch hier ist <span class="math inline">\(p &lt; .05\)</span>. In der dritten Zeile finden wir den <strong>Interaktionseffekt</strong> von “flavor” und “sex”. Mit diesem wird also angegeben, ob es zwischen den beiden Faktoren eine Interaktion gibt. Eine Interaktion würde bedeuten, dass der Faktor “flavor” die abhängige Variable “yumminess” nicht in allen Faktorstufen von “sex” gleich beeinflusst. Der Einfluss von “flavor” auf “yumminess” wäre also zwischen den Geschlechtern unterschiedlich. Man kann das natrülich auch andersrum sagen: Der Interaktionseffekt gibt an, ob der Einfluss des Faktors “sex” auf “yumminess” in allen Faktorstufen von “flavor” gleich ist. Hier ist der ebenfalls signifikant, da <span class="math inline">\(p &lt; .05\)</span>.</p>
 <p>Bei diesem Versuch einer Beschreibung des Interaktionseffekts kann einem der Kopf rauchen. Deshalb ist es immer sinnvoll, sich die Daten in Diagrammen anzuschauen. Unten findest du die Daten auf zwei unterschiedliche Weisen präsentiert: Einmal ist “flavor” auf der <span class="math inline">\(x\)</span>-Achse und die Linien sind getrennt nach “sex” (A; diese Abbildung sollte Dir bekannt vorkommen, weil sie identisch mit der oberen ist). Das andere Mal ist “sex” auf der <span class="math inline">\(x\)</span>-Achse und die Linien sind nach “flavor” getrennt (B).</p>
-<p><img src="faktorielle-anova_files/figure-html/unnamed-chunk-10-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="faktorielle-anova_files/figure-html/unnamed-chunk-12-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Diese Abbildungen zeigen beide denselben Sachverhalt, nur “von einer anderen Seite”. Welche Seite man darstellen sollte, hängt von verschiedenen Faktoren ab. Einerseits natürlich von der untersuchten Fragestellung. In diesem Fall wollten wir untersuchen, ob sich die “yumminess” von Eissorten unterscheidet, also haben wir die Eissorten auf die <span class="math inline">\(x\)</span>-Achse gepackt. Zusätzlich dazu interessierte uns der Einfluss des Geschlechts, anhand dessen wir dann die Linien getrennt haben. Hätten wir uns jedoch eher gefragt, ob sich Frauen oder Männer generell in ihrer Einschätzung der Eissorten-“yumminess” unterscheiden, hätten wir wahrscheinlich “sex” auf die <span class="math inline">\(x\)</span>-Achse schmeißen können, genau wie in Abbildung B.</p>
 <p>Andererseits ist es wichtig auf dem Schirm zu haben, was das menschliche Gehirn noch verstehen und analysieren kann. Wir sind zwar mit einer großen rechenleistung ausgestattet, aber Bilder vermögen uns doch auch zu täuschen oder zu verwirren. Genrell kann man sagen, <strong>dass ein Interaktionseffekt vorliegt, wenn die eingezeichneten Linien nicht parallel verlaufen</strong>. Aus welcher Abbildung das besser hervorgeht, sollte man immer im Einzelfall entscheiden.</p>
 <p>Wir haben jetzt also geklärt, dass ein Interaktionseffekt vorliegt. Nun sind beide Haupteffekte signifikant und der Interaktionseffekt noch dazu. Was bedeutet das jetzt? Irgendwie haben also die Eissorte und das Geschlecht der Passanten (“flavor” und “sex”) einen Einfluss auf die “yumminess” (als Haupteffekte), aber dieser Einfluss variiert, je nach Geschmack oder Geschlecht (Interaktionseffekt)?! Im Prinzip kann man sagen: Jap, genau. Und an dieser Stelle wird deutlich, was viele falsch machen, denn <strong>die Interpretation von Haupteffekten bei einem signifikanten Interaktionseffekt ist sinnlos</strong>. Statistisch sind die Haupteffekte zwar signifikant (ignoriert man das Geschlecht, hat also die Eissorte im Mittel einen Einfluss auf die “yumminess” und ignoriert man die Eissorte, hat Geschlecht im Mittel einen Einfluss auf die “yumminess”), aber diese Effekte <em>variieren</em> ja gerade in Abhängigkeit von den jeweiligen Faktorstufen, was uns der signifikante Interaktionseffekt ja mitteilt. Bei einem signifikanten Interaktionseffekt konzentrieren wir uns also nur auf diesen.</p>
@@ -709,7 +711,7 @@ div.tocify {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#lvmipwvwyd .gt_table {
+#zijbqemejf .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -732,7 +734,7 @@ div.tocify {
   border-left-color: #D3D3D3;
 }
 
-#lvmipwvwyd .gt_heading {
+#zijbqemejf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -744,7 +746,7 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#lvmipwvwyd .gt_title {
+#zijbqemejf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -754,7 +756,7 @@ div.tocify {
   border-bottom-width: 0;
 }
 
-#lvmipwvwyd .gt_subtitle {
+#zijbqemejf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -764,13 +766,13 @@ div.tocify {
   border-top-width: 0;
 }
 
-#lvmipwvwyd .gt_bottom_border {
+#zijbqemejf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#lvmipwvwyd .gt_col_headings {
+#zijbqemejf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -785,7 +787,7 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#lvmipwvwyd .gt_col_heading {
+#zijbqemejf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -805,7 +807,7 @@ div.tocify {
   overflow-x: hidden;
 }
 
-#lvmipwvwyd .gt_column_spanner_outer {
+#zijbqemejf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -817,15 +819,15 @@ div.tocify {
   padding-right: 4px;
 }
 
-#lvmipwvwyd .gt_column_spanner_outer:first-child {
+#zijbqemejf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#lvmipwvwyd .gt_column_spanner_outer:last-child {
+#zijbqemejf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#lvmipwvwyd .gt_column_spanner {
+#zijbqemejf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -837,7 +839,7 @@ div.tocify {
   width: 100%;
 }
 
-#lvmipwvwyd .gt_group_heading {
+#zijbqemejf .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -859,7 +861,7 @@ div.tocify {
   vertical-align: middle;
 }
 
-#lvmipwvwyd .gt_empty_group_heading {
+#zijbqemejf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -874,19 +876,19 @@ div.tocify {
   vertical-align: middle;
 }
 
-#lvmipwvwyd .gt_striped {
+#zijbqemejf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#lvmipwvwyd .gt_from_md > :first-child {
+#zijbqemejf .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#lvmipwvwyd .gt_from_md > :last-child {
+#zijbqemejf .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#lvmipwvwyd .gt_row {
+#zijbqemejf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -905,7 +907,7 @@ div.tocify {
   overflow-x: hidden;
 }
 
-#lvmipwvwyd .gt_stub {
+#zijbqemejf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -917,7 +919,7 @@ div.tocify {
   padding-left: 12px;
 }
 
-#lvmipwvwyd .gt_summary_row {
+#zijbqemejf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -927,7 +929,7 @@ div.tocify {
   padding-right: 5px;
 }
 
-#lvmipwvwyd .gt_first_summary_row {
+#zijbqemejf .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -937,7 +939,7 @@ div.tocify {
   border-top-color: #D3D3D3;
 }
 
-#lvmipwvwyd .gt_grand_summary_row {
+#zijbqemejf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -947,7 +949,7 @@ div.tocify {
   padding-right: 5px;
 }
 
-#lvmipwvwyd .gt_first_grand_summary_row {
+#zijbqemejf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -957,7 +959,7 @@ div.tocify {
   border-top-color: #D3D3D3;
 }
 
-#lvmipwvwyd .gt_table_body {
+#zijbqemejf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -966,7 +968,7 @@ div.tocify {
   border-bottom-color: #D3D3D3;
 }
 
-#lvmipwvwyd .gt_footnotes {
+#zijbqemejf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -980,13 +982,13 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#lvmipwvwyd .gt_footnote {
+#zijbqemejf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#lvmipwvwyd .gt_sourcenotes {
+#zijbqemejf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1000,46 +1002,46 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#lvmipwvwyd .gt_sourcenote {
+#zijbqemejf .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#lvmipwvwyd .gt_left {
+#zijbqemejf .gt_left {
   text-align: left;
 }
 
-#lvmipwvwyd .gt_center {
+#zijbqemejf .gt_center {
   text-align: center;
 }
 
-#lvmipwvwyd .gt_right {
+#zijbqemejf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#lvmipwvwyd .gt_font_normal {
+#zijbqemejf .gt_font_normal {
   font-weight: normal;
 }
 
-#lvmipwvwyd .gt_font_bold {
+#zijbqemejf .gt_font_bold {
   font-weight: bold;
 }
 
-#lvmipwvwyd .gt_font_italic {
+#zijbqemejf .gt_font_italic {
   font-style: italic;
 }
 
-#lvmipwvwyd .gt_super {
+#zijbqemejf .gt_super {
   font-size: 65%;
 }
 
-#lvmipwvwyd .gt_footnote_marks {
+#zijbqemejf .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="lvmipwvwyd" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="zijbqemejf" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -1239,7 +1241,7 @@ div.tocify {
 ## 10 Female Runners        120
 ## # ... with 790 more rows</code></pre>
 <p>Insgesamt wurden unglaubliche <span class="math inline">\(N = 800\)</span> Probanden getestet. Diese teilten sich auf in jeweils <span class="math inline">\(n = 400\)</span> Männer und Frauen und jeweils <span class="math inline">\(n = 400\)</span> Läufer und Kontroll-Probanden, wodurch jede “Zelle” (Kombination aus Geschlecht und Gruppe) aus <span class="math inline">\(n = 200\)</span> Probanden bestand.</p>
-<p><img src="faktorielle-anova_files/figure-html/unnamed-chunk-22-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="faktorielle-anova_files/figure-html/unnamed-chunk-24-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Wir sehen schon bestimmte Trends dahingehend, dass Frauen nach einem kurzen Heimtrainer-Training generell eine höhere Herzrate haben als Männer. Außerdem scheinen die Sportler darüberhinaus eine geringere Herzrate als Stubenhocker (die Kontrollgruppe) zu haben. Zur Varianzhomogenität können wir aus der Abbildung wenig entnehmen, wir sollten also den Levene-Test berechnen. Bei <span class="math inline">\(N = 800\)</span> Probanden können wir jedoch vorab eine gute Schätzung dazu abgeben, ob dieser signifikant sein wird, oder nicht…</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb40-2"><a href="#cb40-2"></a><span class="st">  </span><span class="kw">levene_test</span>(heart_rate <span class="op">~</span><span class="st"> </span>gender <span class="op">*</span><span class="st"> </span>group)</span></code></pre></div>

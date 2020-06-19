@@ -23,6 +23,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="shortcut icon" href="images/broom.ico">
@@ -617,7 +618,7 @@ div.tocify {
 ## 2 neutral    enduran~    51     7    26     16  13.5  18     4.5  2.96 16.2 
 ## 3 favorite   enduran~    51    19    30     24  22.5  26.5   4    2.96 24.6 
 ## # ... with 3 more variables: sd &lt;dbl&gt;, se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
-<p><img src="anova-messwiederholung_files/figure-html/unnamed-chunk-6-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="anova-messwiederholung_files/figure-html/unnamed-chunk-7-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Wir sehen einen deutlichen Trend dahingehend, dass mit “Zunahme” der Valenz der gehörten Musik, also in die Richtung von “schlechter” zu “neutraler” zur “Lieblings-” Musik, auch das eingeschätzte Durchhaltevermögen der Läufer steigt (von <span class="math inline">\(M = 8.89, SD = 3.09\)</span> auf <span class="math inline">\(M = 16.2, SD = 4.00\)</span> auf <span class="math inline">\(M = 24.6, Sd = 2.68\)</span>). Wie immer gibt es mehrere Möglichkeiten, mit denen man das darstellen kann. Entweder als Boxplots mit den originalen Datenpunkten (A) oder als “klassisches” Liniendiagramm mit eingezeichneten Mittelwerten und Fehlerbalken, die <span class="math inline">\(\pm\)</span> 1 Standardabweichung anzeigen. Für ein einfaktorielles Design kann man die Boxplots bevorzugen, weil sie mit gleicher Klarheit deutlich mehr Information anzeigen können (wie z.B. Ausreißer).</p>
 <p>Die Vaoraussetzung der Sphärizität müssen wir vorab nicht zwingend prüfen, weil uns das Paket <code>rstatix</code> unter die Arme greift. Geprüft wird diese mit Mauchlys Test. Ist dieser Test signifikant, also die Voraussetzung der Sphärizität nicht erfüllt, dann müssen die <span class="math inline">\(p\)</span>-Werte korrigiert werden. Bemerkt <code>rtstaix</code> einen signifkanten Wert in Mauchlys Test, dann korrigiert es den <span class="math inline">\(p\)</span>-Wert automatisch.</p>
 </div>
@@ -790,7 +791,7 @@ div.tocify {
 ## 2 pos         reactio~   127  0.64  23.2   2.03  1.29  3.26  1.98  1.20  3.11
 ## 3 none        reactio~   127  0.52  15.3   2.13  1.53  3.48  1.94  1.02  3.49
 ## # ... with 3 more variables: sd &lt;dbl&gt;, se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
-<p><img src="anova-messwiederholung_files/figure-html/unnamed-chunk-16-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="anova-messwiederholung_files/figure-html/unnamed-chunk-17-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Wir bekommen eine leichte Idee dahingehend, dass die untersuchten Kinder deutlich länger gebraucht haben, um ihre Hand auf die Holzkiste mit dem “gefürchteten” Tier zu legen, weil die Reaktionszeiten länger sind. Holzkisten, die vermeintlich freundliche Tiere beinhalten, oder jene, zu denen man nichts weiß, werden schneller berührt. Wie immer bei Reaktionszeiten haben wir jedoch viele, viele Ausreißer. Wir rechnen jetzt einfach mal “normal” weiter, aber behalten im Hinterkopf, dass wir definitiv das robuste Verfahren anwenden sollten<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.</p>
 </div>
 <div id="durchführung-1" class="section level3">
@@ -932,7 +933,7 @@ div.tocify {
 ## 6 favorite   yes        enduran~    51    19    30     25  24      27   3  
 ## # ... with 5 more variables: mad &lt;dbl&gt;, mean &lt;dbl&gt;, sd &lt;dbl&gt;, se &lt;dbl&gt;,
 ## #   ci &lt;dbl&gt;</code></pre>
-<p><img src="anova-messwiederholung_files/figure-html/unnamed-chunk-24-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="anova-messwiederholung_files/figure-html/unnamed-chunk-25-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Aus der Abbildung geht hervor, dass die Art der Musik wahrscheinlich eher einen Einfluss macht, wenn man motiviert ist. Ansonsten scheinen die Leistungen der Läufer nicht wirklich von der Art der Musik abzuhängen (blaue Linie).</p>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>runners_motivation <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb54-2"><a href="#cb54-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> endurance, <span class="dt">wid =</span> id, <span class="dt">within =</span> <span class="kw">c</span>(music_type, motivation))</span></code></pre></div>

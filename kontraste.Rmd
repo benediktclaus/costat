@@ -8,12 +8,18 @@ editor_options:
 ---
 
 ```{r echo=FALSE, message=FALSE}
-knitr::opts_chunk$set(fig.align = "center", dpi = 350)
-ggplot2::theme_set(ggplot2::theme_minimal())
+knitr::read_chunk("setup.R")
+```
 
+```{r echo=FALSE, message=FALSE}
+<<setup>>
+```
+
+```{r echo=FALSE, message=FALSE}
 library(tidyverse)
 library(rstatix)
 library(haven)
+library(costatcompanion)
 ```
 
 ![](images/contrast_r.jpg)
@@ -141,7 +147,3 @@ summary.lm(model_results)
 Hier sind unsere einzelnen Kontraste nun als Prädiktorvariablen (mit Dummy-Codierung) im Rahmen einer linearen Regression aufgelistet, mit entsprechenden $p$-Werten. Alle Kontraste sind signifikant, d.h., dass sich die Gruppe der Besucher ohne Handgepäck signifikant von allen anderen mit Handgepäck unterscheidet. Außerdem unterscheiden sich diejenigen mit leichtem Rucksack signifikant von allen mit schwerem Rucksack und Bollerwagen-Ziehern. Als letztes unterscheiden sich jene mit schwerem Rucksack signifikant von Bollerwagen-Ziehern.
 
 # Literatur
-
-```{r echo=FALSE}
-remove(list = ls())
-```

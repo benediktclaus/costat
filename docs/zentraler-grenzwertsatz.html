@@ -23,6 +23,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="shortcut icon" href="images/broom.ico">
@@ -580,7 +581,7 @@ div.tocify {
 <span id="cb2-7"><a href="#cb2-7"></a>population <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb2-8"><a href="#cb2-8"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> attractiveness)) <span class="op">+</span></span>
 <span id="cb2-9"><a href="#cb2-9"></a><span class="st">  </span><span class="kw">geom_histogram</span>()</span></code></pre></div>
-<p><img src="zentraler-grenzwertsatz_files/figure-html/unnamed-chunk-3-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="zentraler-grenzwertsatz_files/figure-html/unnamed-chunk-4-1.png" width="2450" style="display: block; margin: auto;" /></p>
 </div>
 <div id="stichprobenziehung" class="section level1">
 <h1>Stichprobenziehung</h1>
@@ -604,7 +605,7 @@ div.tocify {
 <span id="cb3-17"><a href="#cb3-17"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> means)) <span class="op">+</span></span>
 <span id="cb3-18"><a href="#cb3-18"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.2</span>) <span class="op">+</span></span>
 <span id="cb3-19"><a href="#cb3-19"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>n)</span></code></pre></div>
-<p><img src="zentraler-grenzwertsatz_files/figure-html/unnamed-chunk-4-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="zentraler-grenzwertsatz_files/figure-html/unnamed-chunk-5-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Und siehe da: Der zentrale Grenzwertsatz scheint zu stimmen. Mit immer größerer Größe der Sticprobe sehen die Stichprobenkennwerteverteilungen immer “normaler” aus. Wir können also festhalten: Nutzt man Methoden aus dem GLM (z.B. <span class="math inline">\(t\)</span>-Tests oder ANOVAs) gilt die Voraussetzung der Normalverteilung der Stichprobenkennwerteverteilung. Diese kann ab einer hinreichend großen Stichprobengröße (ca. <span class="math inline">\(n &gt; 30\)</span>) automatisch angenommen werden. Hat man jedoch kleinere Stichproben, greift der zentrale Grenzwertsatz nicht automatisch und man sollte die Daten auf Normalverteilung prüfen. Denn sind die Daten bei kleinen Stichproben annähernd normalverteilt, können wir auch annehmen, dass die Stichprobenkennwerteverteilung annähernd normalverteilt ist.</p>
 </div>
 <div id="literatur" class="section level1 unnumbered">

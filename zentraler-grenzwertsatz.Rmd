@@ -7,9 +7,12 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r echo=FALSE}
-knitr::opts_chunk$set(fig.align = "center", dpi = 350)
-ggplot2::theme_set(ggplot2::theme_minimal())
+```{r echo=FALSE, message=FALSE}
+knitr::read_chunk("setup.R")
+```
+
+```{r echo=FALSE, message=FALSE}
+<<setup>>
 ```
 
 > Wenn man hinreichend große Stichproben $(n>30)$ untersucht, muss man die Daten nicht auf Normalverteilung prüfen.
@@ -69,7 +72,3 @@ Und siehe da: Der zentrale Grenzwertsatz scheint zu stimmen. Mit immer größere
 
 
 # Literatur
-
-```{r echo=FALSE}
-remove(list = ls())
-```

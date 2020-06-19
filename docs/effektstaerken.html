@@ -23,6 +23,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="shortcut icon" href="images/broom.ico">
@@ -577,7 +578,7 @@ div.tocify {
 </div>
 <div id="cohens-d" class="section level3">
 <h3>Cohens <span class="math inline">\(d\)</span></h3>
-<p>Der Urvater der Effektstärken ist <strong>Cohens <span class="math inline">\(d\)</span></strong> <span class="citation">(Cohen, <a href="#ref-Cohen.1988" role="doc-biblioref">1988</a>)</span>. Cohens <span class="math inline">\(d\)</span> gibt den <strong>standardisierten</strong> Unterschied zwischen zwei Gruppen an. Das macht es besonders breit anwendbar, da viele Studien miteinander verglichen werden können. <span class="citation">(<span class="citeproc-not-found" data-reference-id="Cohen"><strong>???</strong></span> S. 20)</span> schlägt vor, die Mittelwerte beider Gruppen durch die Standardabweichung zu teilen. Nach diesem Vorgehen wird angenommen, dass die Standardabweichungen der Gruppen gleich sind (deshalb teilt man nur durch <em>eine</em> Standardabweichung). Natürlich haben die beiden Gruppen in den seltensten Fällen identische Varianzen, weshalb die Formel für ungleiche Gruppengrößen und -varianzen um die <strong>gepoolte Standardabweichung</strong> erweitert wurde <span class="citation">(Cohen, <a href="#ref-Cohen.1988" role="doc-biblioref">1988</a>, S. 67)</span>. Die entsprechenden Formeln sind in der <a href="formelsammlung.html">Formelsammlung</a>.</p>
+<p>Der Urvater der Effektstärken ist <strong>Cohens <span class="math inline">\(d\)</span></strong> <span class="citation">(Cohen, <a href="#ref-Cohen.1988" role="doc-biblioref">1988</a>)</span>. Cohens <span class="math inline">\(d\)</span> gibt den <strong>standardisierten</strong> Unterschied zwischen zwei Gruppen an. Das macht es besonders breit anwendbar, da viele Studien miteinander verglichen werden können. <span class="citation">Cohen (<a href="#ref-Cohen.1988" role="doc-biblioref">1988</a> S. 20)</span> schlägt vor, die Mittelwerte beider Gruppen durch die Standardabweichung zu teilen. Nach diesem Vorgehen wird angenommen, dass die Standardabweichungen der Gruppen gleich sind (deshalb teilt man nur durch <em>eine</em> Standardabweichung). Natürlich haben die beiden Gruppen in den seltensten Fällen identische Varianzen, weshalb die Formel für ungleiche Gruppengrößen und -varianzen um die <strong>gepoolte Standardabweichung</strong> erweitert wurde <span class="citation">(Cohen, <a href="#ref-Cohen.1988" role="doc-biblioref">1988</a>, S. 67)</span>. Die entsprechenden Formeln sind in der <a href="formelsammlung.html">Formelsammlung</a>.</p>
 <p>In R können wir <span class="math inline">\(d\)</span> relativ einfach berechnen – in SPSS hat man nur mit Mühe eine Chance. Als konkretes Beispiel nutzen wir den Datensatz, den wir bei den unabhängigen <span class="math inline">\(t\)</span>-Tests genauer untersucht haben (<code>chivalry.sav</code>).</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Daten laden</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a>chivalry_data &lt;-<span class="st"> </span><span class="kw">read_spss</span>(<span class="st">&quot;data/chivalry.sav&quot;</span>) <span class="op">%&gt;%</span></span>
@@ -585,7 +586,7 @@ div.tocify {
 <span id="cb1-4"><a href="#cb1-4"></a></span>
 <span id="cb1-5"><a href="#cb1-5"></a><span class="co"># Daten visualisieren</span></span>
 <span id="cb1-6"><a href="#cb1-6"></a><span class="kw">ggplot</span>(chivalry_data, <span class="kw">aes</span>(<span class="dt">x =</span> house, <span class="dt">y =</span> chivalry)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_boxplot</span>()</span></code></pre></div>
-<p><img src="effektstaerken_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="effektstaerken_files/figure-html/unnamed-chunk-4-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Cohens d berechnen</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a>chivalry_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">cohens_d</span>(chivalry <span class="op">~</span><span class="st"> </span>house)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 7
@@ -639,10 +640,10 @@ div.tocify {
 <p><span class="math inline">\(\xi\)</span> (gesprochen “ksi”) wurde von <span class="citation">Wilcox &amp; Tian (<a href="#ref-Wilcox.2011" role="doc-biblioref">2011</a>)</span> vorgeschlagen und verfolgt die Grundidee einer <em>explanatory effect size</em>. Sie gibt also grob an, wie viel Varianz durch den Effekt “erklärt” wird. Besonders elegant ist <span class="math inline">\(\xi\)</span>, weil die Varianzhomogenität nicht vorausgesetzt wird und mehr als zwei Gruppen miteinander verglichen werden können (wie bspw. in ANOVA-Designs). Berechnet wird sie durch:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">yuen.effect.ci</span>(chivalry <span class="op">~</span><span class="st"> </span>house, <span class="dt">data =</span> chivalry_data)</span></code></pre></div>
 <pre><code>## $effsize
-## [1] 0.9836711
+## [1] 0.9822343
 ## 
 ## $CI
-## [1] 0.9505142 0.9957043</code></pre>
+## [1] 0.9479337 0.9922502</code></pre>
 </div>
 </div>
 </div>

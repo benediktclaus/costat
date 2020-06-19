@@ -7,15 +7,18 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r echo=FALSE}
-knitr::opts_chunk$set(fig.align = "center", dpi = 350)
-ggplot2::theme_set(ggplot2::theme_minimal())
+```{r echo=FALSE, message=FALSE}
+knitr::read_chunk("setup.R")
+```
 
+```{r echo=FALSE, message=FALSE}
+<<setup>>
+```
+
+```{r echo=FALSE}
 sea_effect_size <- function(f = F, df = DFd) {
   round(sqrt(f / (f + df)), 2)
 }
-
-library(benelib)
 ```
 
 ![](images/ice-cream_r.jpg)
@@ -23,12 +26,13 @@ library(benelib)
 Mit einer (allgemeinen) faktoriellen ANOVA kann man mehr als zwei Gruppenmittelwerte in Abhängigkeit von kategorialen Prädiktoren vergleichen. Da die ANOVA ein Omnibus-Test ist, und so nur anzeigt, ob irgendwo ein signifikanter Unterschied zwischen den betrachteten Mittelwerten besteht, nutzt man entweder Kontraste oder Post-hoc-Tests, um herauszufinden, welche Mittelwerte sich letztendlich signifikant voneinander unterscheiden. Zusätzlich kann eine *Simple Effects Analysis* dazu genutzt werden, Unterschiede auf einzelnen Faktorstufen festzustellen.
 
 # Pakete 
-Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen.
+Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket `costatcompanion`.
 
 ```{r message=FALSE}
 library(tidyverse)
 library(haven)
 library(rstatix)
+library(costatcompanion)
 ```
 
 ```{r echo=FALSE}

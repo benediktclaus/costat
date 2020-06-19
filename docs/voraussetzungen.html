@@ -23,6 +23,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="shortcut icon" href="images/broom.ico">
@@ -574,7 +575,7 @@ div.tocify {
 <div id="additivität" class="section level1">
 <h1>Additivität</h1>
 <p>Die Annahme der Additivität ist relativ simpel. Im GLM (s.o.) haben wir uns dafür entschieden, alle Zusammenhänge als Additionen darzustellen, somit sollten die Daten auch diese Additivität wiederspiegeln. Für simple Modelle bedeutet das: Der Zusammenhang sollte linear sein. Um diese Annahme zu prüfen, sollte man für sich immer explorative Abbildungen erstellen!</p>
-<p><img src="voraussetzungen_files/figure-html/unnamed-chunk-2-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="voraussetzungen_files/figure-html/unnamed-chunk-4-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Für den linken Datensatz mit jeweils einer kontinuierlichen unabhängigen und abhängigen Variable können wir uns ohne Probleme im GLM bewegen, der Zusammenhang sieht linear aus. Der rechte Datensatz widerum ist überhaupt nicht linear. Wenn wir hier einfach Methoden des GLM zur Auswertung nutzen, werden wir alles, was uns wichtig ist (Parameter, Konfidenzintervalle, Teststatistiken) falsch schätzen.</p>
 </div>
 <div id="normalverteilung" class="section level1">
@@ -583,13 +584,13 @@ div.tocify {
 <p>Wollen wir unsere <strong>Parameter</strong> möglichst gut schätzen (also möglichst ohne bias), dann müssen die Residuen (= Fehler des Modells) normalverteilt sein. Interessierun uns die <strong>Konfidenzintervalle</strong> oder <strong>Signifikanztests</strong>, dann muss die <em>Stichprobenkennwerteverteilung</em> normalverteilt sein <span class="citation">(Bortz &amp; Schuster, <a href="#ref-Bortz.2010" role="doc-biblioref">2010</a>; Eid et al., <a href="#ref-Eid.2017" role="doc-biblioref">2017</a>)</span>. Mal wieder so ein Begriff, mit dem die Statistiker uns das Leben schwer machen.</p>
 <p>Wir zerlegen den Begriff mal in “Stichprobenkennwert” und “Verteilung”. Ein Stichprobenkennwert ist genau das, was es meint, ein Wert, mit dem die Stichprobe beschrieben wird. Am häufigsten benutzen wir da den Mittelwert oder Median der Stichprobe. Deren Verteilung soll normalverteilt sein, was wir nach dem zentralen Grenzwertsatz bei einer hinreichend großen Gruppengröße (ca. <span class="math inline">\(n &gt; 30\)</span>) automatisch annehmen können.</p>
 <p>Zur Ehrenrettung der Normalverteilungs-Tester: Wenn wir mit kleinen Stichproben (<span class="math inline">\(n &lt; 30\)</span>) arbeiten, können wir nicht davon ausgehen, dass der zentrale Grenzwertsatz greift und die Stichprobenkennwerteverteilung automatisch normalverteilt ist. Wenn unsere Daten jedoch normalverteilt sind, könnten wir vermuten, dass auch die Stichprobenkennwerteverteilung normalverteilt ist. Das überprüfen wir dann mit einem QQ-Plot.</p>
-<p><img src="voraussetzungen_files/figure-html/unnamed-chunk-3-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="voraussetzungen_files/figure-html/unnamed-chunk-5-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Normalverteilte Daten erscheinen in einem QQ-Plot als Punkte auf oder an der eingezeichneten Linie. Im linken Beispiel sieht das sehr normalverteilt aus, im rechten jedoch überhaupt nicht. Um das zu überprüfen gibt es Signifikanztests, wie den Kolmogorov–Smirnov- oder Shapiro–Wilk-Test, die die Alternativhypothese testen, dass die Verteilung der betrachteten Variable nicht normalverteilt ist. Diese Tests kann man jedoch nicht empfehlen, weil sie dieselben Schwächen haben, wie alle anderen Null-Hypothesen-Signifikanztests auch. Erstens ist der <span class="math inline">\(p\)</span>-Wert abhängig von der Stichprobengröße, das heißt, dass ich mit zunehmender Stichprobengröße eine höherer Wahrscheinlichkeit habe, ein signifikantes (in diesem Falle unerwünschtes Ergebnis) zu erzielen. Selbst super aussehende Verteilungen sind dann laut Test von der Normalverteilung signifkant verschieden. Zweitens heißt ein nicht signifikantes Ergebnis <em>nicht</em>, dass die Verteilungen gleich sind <span class="citation">(Goodman, <a href="#ref-Goodman.2008" role="doc-biblioref">2008</a>)</span>.</p>
 </div>
 <div id="homoskedastizität" class="section level1">
 <h1>Homoskedastizität</h1>
 <p>Auch bekannt als Varianzhomogenität. Hiermit ist gemeint, dass die Daten für jede Stufe der unabhängigen Variable gleichmäßig streuen. Auch das überprüft man am besten mit einer Abbildung.</p>
-<p><img src="voraussetzungen_files/figure-html/unnamed-chunk-4-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="voraussetzungen_files/figure-html/unnamed-chunk-6-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Homoskedastische Daten, also Daten mit Varianzhomogenität hast Du bereits in der linken Abbildung zur Additivität gesehen, in der die Daten gleichmäßig um die blaue Linie streuten. In diesem Fall jedoch sind die Daten richtig schön nicht varianzhomogen. Zu Beginn sind alle Daten eng um die blaue Linie versammelt, aber je größer <span class="math inline">\(x\)</span> wird, desto breiter streuen die Daten. Anders ausgedrückt könnte man auch sagen, dass die Residuen (die Fehler meiner Schätzung = der Abstand der Punkte von der blauen Linie = <span class="math inline">\(\varepsilon\)</span>) <em>abhängig</em> von meiner unabhängigen Variable sind, und das darf nicht sein!</p>
 <p>Gibt es Methoden, Varianzhomogenität auch mit einem Signifikanztest zu überprüfen? Na klar, Tests gibt’s für alles, aber auch hier rate nicht nur wieder ich vom Gebrauch ab <span class="citation">(Zimmerman, <a href="#ref-Zimmerman.2004" role="doc-biblioref">2004</a>)</span>. Kurz gesagt: Varianzhomogenität ist kein Problem bei gleich großen Gruppen, problemtisch wird’s bei verschieden großen Gruppen. Tests, die Varianzhomogenität prüfen, funktionieren am besten bei gleich großen Gruppen und großen Stichproben. Im Umkehrschluss bedeutet das, dass die Tests genau dann nicht richtig funktionieren, wenn es wirklich problematisch wird, also bei ungleichen Gruppengrößen und kleinen Stichproben. In diesen Fällen kann man die Ergebnisse lieber korrigieren, als die Analyse aufgrund von vorläufigen Tests gar nicht durchzuführen.</p>
 </div>
@@ -658,7 +659,7 @@ div.tocify {
 <div id="vergleich-der-robusten-schätzer" class="section level2">
 <h2>Vergleich der robusten Schätzer</h2>
 <p>Betrachtet man die robusten Schätzer im Vergleich zu den empirischen Daten und der klassischen Methode, stellt man fest, dass die robusten Schätzer ein besseres Bild der Realität wiedergeben.</p>
-<p><img src="voraussetzungen_files/figure-html/unnamed-chunk-8-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="voraussetzungen_files/figure-html/unnamed-chunk-10-1.png" width="2450" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="literatur" class="section level1 unnumbered">

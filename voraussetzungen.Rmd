@@ -8,11 +8,17 @@ editor_options:
 ---
 
 ```{r echo=FALSE, message=FALSE}
-library(tidyverse)
-theme_set(ggplot2::theme_minimal())
-
-knitr::opts_chunk$set(fig.align = "center", dpi = 350)
+knitr::read_chunk("setup.R")
 ```
+
+```{r echo=FALSE, message=FALSE}
+<<setup>>
+```
+
+```{r echo=FALSE, message=FALSE}
+library(tidyverse)
+```
+
 
 
 Wenn wir von Methoden in der Psychologie, oder auch der Medizin reden, meinen wir in den meisten Fällen irgendetwas, das mit dem allgemeinen linearen Modell (**G**enerealized **L**inear **M**odel, kurz **GLM**) zu tun hat. Mit diesem Modell können wir (auch nicht-) lineare Zusammenhänge darstellen und beschreiben. Grunsätzlich nehmen wir vereinfacht an: $$ y = \beta_0 + \beta_1\cdot x + \varepsilon $$

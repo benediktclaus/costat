@@ -7,11 +7,12 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r echo=FALSE}
-knitr::opts_chunk$set(fig.align = "center", dpi = 350)
-ggplot2::theme_set(ggplot2::theme_minimal())
+```{r echo=FALSE, message=FALSE}
+knitr::read_chunk("setup.R")
+```
 
-library(benelib)
+```{r echo=FALSE, message=FALSE}
+<<setup>>
 ```
 
 ![](images/harry-potter-car_r.jpg)
@@ -212,7 +213,3 @@ Der Unterschied in der Menge der abgerufenen Worte unterscheidet sich zwischen d
 We found that moving eyes horizontally during the retention interval reduced the amount of recalled words significantly, $t(40.3) = -2.82, g = -0.80$, with amoderate to large effect size.
 
 # Literatur
-
-```{r echo=FALSE}
-remove(list = ls())
-```

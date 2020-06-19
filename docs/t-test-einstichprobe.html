@@ -23,6 +23,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="shortcut icon" href="images/broom.ico">
@@ -699,9 +700,9 @@ div.tocify {
 </tbody>
 </table>
 <p>Aus der Übersicht können wir entnehmen, dass wir erst einmal Daten von 48 Ravenclaws haben. Der IQ (von mir dreister- und fälschlicherweise als <code>intelligence</code> betitelt) der Stichprobe ist im Mittel bei 121 (sowohl Mittelwert als auch Median) – nicht schlecht! Die Standardabweichung beträgt 13.1, der niedrigste Wert 88.1 und der höchste 150.3. In Ravenclaw scheinen also ganz schöne Brains am Werke zu sein.</p>
-<p><img src="t-test-einstichprobe_files/figure-html/unnamed-chunk-6-1.png" width="1400" style="display: block; margin: auto;" /></p>
+<p><img src="t-test-einstichprobe_files/figure-html/unnamed-chunk-7-1.png" width="1400" style="display: block; margin: auto;" /></p>
 <p>Mit einem Boxplot werden die kennwerte, die uns die Funktion <code>skim()</code> ausgibt noch einmal übersichtlich dargestellt. Die Box an sich (ohne die Whiskers) enthält 50% der Daten und ist somit so lang wie der Interquartilsabstand. Die dicke schwarze Linie kennzeichnet den Median, der in diesem Fall 121 beträgt..</p>
-<p>Die Normalverteilungsannahme können wir mit einem QQ-Plot überprüfen. Wir haben in dieser Stichprobe “nur” 48 Probanden und somit ebenso viele Datenpunkte. Optimal wäre es, wenn alle Punkte möglichst nah an der Diagonalen liegen, was hier ungefähr der Fall ist. Mit mehr Datenpunkten hätten wir vielleicht ein eindeutigeres Muster gehabt, aber so sieht das auch gut aus. <img src="t-test-einstichprobe_files/figure-html/unnamed-chunk-7-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p>Die Normalverteilungsannahme können wir mit einem QQ-Plot überprüfen. Wir haben in dieser Stichprobe “nur” 48 Probanden und somit ebenso viele Datenpunkte. Optimal wäre es, wenn alle Punkte möglichst nah an der Diagonalen liegen, was hier ungefähr der Fall ist. Mit mehr Datenpunkten hätten wir vielleicht ein eindeutigeres Muster gehabt, aber so sieht das auch gut aus. <img src="t-test-einstichprobe_files/figure-html/unnamed-chunk-8-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Auch wenn ich von Tests zur Normalverteilung der Daten <a href="voraussetzungen.html">entschieden abrate</a>, kann man es den Daten trotzdem antun.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>ravenclaw <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb5-2"><a href="#cb5-2"></a><span class="st">  </span><span class="kw">shapiro_test</span>(intelligence)</span></code></pre></div>
