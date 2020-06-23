@@ -1,0 +1,474 @@
+---
+title: "Lineare Regression"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+<!-- Only when working on it -->
+```{r echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(fig.align = "center", dpi = 350)
+ggplot2::theme_set(ggplot2::theme_minimal())
+
+
+library(benelib)
+library(patchwork)
+library(gt)
+```
+
+
+<!-- Use this after finalizing work -->
+<!-- ```{r echo=FALSE, message=FALSE} -->
+<!-- knitr::read_chunk("setup.R") -->
+<!-- ``` -->
+
+<!-- ```{r echo=FALSE, message=FALSE} -->
+<!-- <<setup>> -->
+<!-- ``` -->
+
+<!-- Spanner Image -->
+![](images/swimmer_r.jpg)
+
+Die linerare Regression wird genutzt, um lineare Zusammenhänge in Form eines Modells zu beschreiben, Vorhersagen zu treffen und zu überprüfen, ob Zusammenhänge und das Modell an sich "statistisch signifikant" sind. Gleichzeitig kann man an dieser Stelle die Aufteilung dieser Website infrage Stellen, da die lineare Regression (als Sonderform des Allgemeinen Linearen Modells, oder kurz GLM für *Generalized Linear Model*) z.B. auch zum Vergleich von Mittelwerten oder für Klassifikationen eingesetzt werden kann. Alle klassischen Verfahren im Abschnitt ["Mittelwerte vergleichen"](mittelwerte-vergleichen.html) sind im Kern auch nur lineare Modelle, die einer etwas anderen Form aufgeschrieben wurden. Die zugrundeliegeden Formeln sind jedoch dieselben.
+
+# Pakete 
+Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket `costatcompanion`.
+
+```{r packages, message=FALSE}
+library(tidyverse)
+library(haven)
+library(rstatix)
+library(costatcompanion)
+```
+
+```{r echo=FALSE}
+library(broom)
+library(ggfortify)
+library(faraway)
+```
+
+
+# Beispiel mit einem Prädiktor
+Im Kapitel zur Berechnung und Interpretationen der [Korrelation](korrelation.html) haben wir uns den Datensatz eines kleinen Freibads angeschaut, in dem zu verschiedenen Tagen im Jahr sowohl die Besucherzahl, als auch verschiedene andere Variablen eingetragen waren. Wir haben bereits herausgefunden, dass die Temperatur an einem bestimmten Tag sehr eng mit der Anzahl der Schwimmer im Schwimmbecken korrelierte, aber können wir diesen Zusammenhang genauer beschreiben? Und wie groß ist dieser Zusammenhang? Nur weil es einen starken Zusammenhang gibt, muss das ja nicht bedeuten, dass er auch groß ist.
+
+## Klassisch
+Wir benutzen denselben Datensatz, den wir auch bei den [Korrelationen](korrelation.html) kennengelernt haben. Den Datensatz `water_park` finden wir also im Paket `costatcompanion`. In der ersten Spalte (`day_id`) finden wir eine individuelle ID des beobachteten Tages (in zufälliger Reihenfolge). Nachfolgend finden wir vier Variablen, die an jedem Tag gemessen wurden. Dazu zählen die Durchschnitts-Temperatur (`temperature`), die Anzahl der Schwimmer im Schwimmbecken (`swimmers`), den Tages-Umsatz des Freibad-Kiosks in Euro (`sales`) und die Anzahl der Schlägereien, wegen der die Polizei gerufen werden musste (`beatings`).
+
+Wir interessieren uns für den Zusammenhang zwischen der gemessenen Temperatur mit der Anzahl der beobachteten Schwimmer im Schwimmbecken.
+
+```{r}
+costatcompanion::water_park
+```
+
+### Voraussetzungen
+Da wir uns im GLM bewegen, gelten die üblichen [Voraussetzungen](voraussetzungen.html). Vor allem sollten die Daten jedoch auf Linearität und potenzielle Ausreißer geprüft werden! Außerdem sollten die Modell-Residuen normalverteilt und die unabhängigen Variablen sollten nicht multikollinear sein. Zudem sollten die unabhängigen Variablen Varianz aufweisen.
+
+### EDA
+```{r}
+# Deskriptive Statistiken
+water_park %>% 
+  select(temperature, swimmers) %>% 
+  get_summary_stats()
+
+# Outliers
+water_park %>% 
+  identify_outliers(temperature)
+
+water_park %>% 
+  identify_outliers(swimmers)
+```
+
+Nach den mathematischen Verfahren sind in den Variablen `temperature` und `swimmers` jeweils ein Outlier (Ausreißer) vorhanden, die wir auch in den Boxplots (s.u.) sehen. Ob diese beiden einen Einfluss auf unser Modell haben, sollten wir als Fragestellung im Hinterkopf behalten. Man sollte auf jeden Fall untersuchen, warum ein Datenpunkt ein Outlier ist. In diesem Falle ist es einfach ein besonders heißer Tag mit besonders vielen Besuchern. Wir haben also keinen Grund anzunehmen,w arum hier etwas falsch gelaufen sein könnte, deshalb lassen wir diesen Datenpunkt im Datensatz und behandeln ihn wie jeden anderen.
+
+```{r descr_figures, echo=FALSE, message=FALSE}
+water_box <- water_park %>%
+  select(day_id, temperature, swimmers) %>% 
+  pivot_longer(
+    cols = -day_id,
+    names_to = "outcome"
+  ) %>% 
+  ggplot(aes(outcome, value)) +
+  geom_boxplot(outlier.color = NA) +
+  geom_jitter(width = 0.1, alpha = 0.2) +
+  scale_x_discrete(labels = c(swimmers = "Swimmers", temperature = "Temperature")) +
+  labs(x = NULL, y = "Value")
+
+water_scatter <- water_park %>% 
+  ggplot(aes(temperature, swimmers)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Temperature", y = "Swimmers")
+
+water_box + water_scatter
+```
+
+Anhand der Abbildungen können wir feststellen, dass die Verteilungen relativ regelmäßig sind und  es einen linearen Zusammenhang zwischen der gemessenen Durchschnittstemperatur eines Tages und der Anzahl von Schwimmern im Schwimmbecken gibt. An dieser Stelle habe ich bereits etwas geschummelt, indem ich in die rechte Abbildung eine blaue Linie eingezeichnet habe. Das ist tatsächlich schon die regressionsgerade, die wir mit der linearen Regression schätzen/herausfinden wollen.
+
+### Durchführung
+Diese Linie zu schätzen ist in R so einfach die Torte essen. Wir arbeiten hier hauptsächlich mit dem Befehl `lm()`, der für *Linear Model* steht. Da es sich hierbei um eine native Funktion von R handelt, ist die Schreibweise und Reihenfolge der Argumente etwas ungewont, lässt sich aber fix lernen. Wir geben als erstes Argument die Formel an, anhand derer wir einen Zusammenhäng schätzen wollen. Auf der linken  Seite der Formel steht immer die abhängige Variable. Dann kommt eine Tilde (`~`) und anschließend die unabhängige(n) Variable(n), also jene, die wir heranziehen, um die abhängige Variable zu erklären. Genau so kann man die Formel dann auch lesen: `diese_variable ~ jene_variable` heißt so viel wie "Diese Variable wird erklärt durch jene Variable". In unserem Beispiel versuchen wir die Anzahl der beobachteten Schwimmer in Abhänigkeit der gemessenen Durchschnittstemperatur vorherzusagen, also lautet unsere Formel `swimmers ~ temperature`. Als zweites Argument geben wir den Datensatz an, der dem Modell zugrunde liegen soll (in diesem Falle `water_park`). Bei **fehlenden Werten** sollte man das Argument `na.action = na.exclude` mitgeben, da es sonst zu einem Fehler kommt und R kein Ergebnis ausspuckt (weil es nicht weiß, wie es mit fehlenden Werten umgehen soll).
+
+```{r}
+lm(swimmers ~ temperature, data = water_park)
+```
+
+Wenn wir diesen Befehl ausführen, bekommen wir einen recht sparsamen Überblick über das geschätzte Modell, d.h. den $y$-Achsen-Abschnitt und die Steigung der geschätzten Gerade. Um noch mehr aus diesem Modell zu quätschen, müssen wir uns eine Zusammenfassung ansehen, die wir mit der Funktion `summary()` erhalten. Dabei kann man zwei Wege wählen: Entweder speichert man das geschätzte Modell in einer Variablen, oder man "pipet" das Modell direkt in die Funktion `summary()`.
+
+```{r eval=FALSE}
+# Erste Möglichkeit
+water_model <- lm(swimmers ~ temperature, data = water_park)
+summary(water_model)
+
+# Zweite Möglichkeit
+lm(swimmers ~ temperature, data = water_park) %>% 
+  summary()
+```
+
+```{r echo=FALSE}
+water_model <- lm(swimmers ~ temperature, data = water_park)
+summary(water_model)
+```
+
+
+Beide Möglichkeiten führen zum identischen Ergebnis. Es ist jedoch immer eine gute Idee, das geschätzte Modell an sich abzuspeichern, um damit noch andere Dinge anzustellen. Der Output entspricht so gar nicht unserem "tidy way of life", den wir durch die Benutzung des [Tidyverse](pakete.html) leben wollen. Gucken wir ihn uns trotzdem einmal an:
+
+- Wir erhalten eine Info über den eigentlichen *Call*, also den Befehl, den wir zur Erstellung des Modells eingegeben haben
+- anschließend gibt es eine Übersicht über die Residuen des Modells
+- dann die Koeffizienten mit entsprechenden Signifikanztests
+- und einige Angaben zum Modell an sich
+
+Anhand des Outputs können wir feststellen, dass der Einfluss der Temperatur auf die beobachtete Anzahl der Schwimmer signifikant ist, $b_1 = 4.30, p < .001$. Wie interpretiert man diesen Koeffizienten nun? Der Regressionskoeffizient eines **Prädiktors** (einer unabhängigen Variable) sagt und immer folgendes: **Erhöht man diesen Prädiktor um eine Einheit, dann ändert sich das Kriterium (die abhängige Variable) um genau diese Menge**. In diesem Fall bedeutet das also: Steigt die Durchschnittstemperatur um 1 Grad Celsius, dann werden 4.30 Schwimmer mehr beobachtet, bzw. *geschätzt*. Zudem erhalten wir $R^2$ (den **Determinationskoeffizienten**, bzw. das **Bestimmtheitsmaß**) und seine korrigierte Form, $R^2_\text{adj}$. Man sollte immer die korrigierte Version, also $R^2_\text{adj}$ angeben, was in diesem Fall $R^2_\text{adj} = .737$ ist und uns sagt, dass wir durch unser lineares Modell 73.7% der Varianz in den Daten erklären können. Ob dieser Wert größer als 0 ist, kann uns der $F$-Test sagen, der ebenfalls mit ausgegeben wird (ganz am Ende des Outputs). Dieser ist signifikant, $F(1, 98) = 278, p < .001$, also ist $R^2 > 0$.
+
+### Tidy Modelle
+Um unsere Grundphilosophie nicht ins Wanken zu bringen, können wir das Paket [`broom`](https://broom.tidymodels.org/) nutzen, dass "messy" Outputs, wie den der Funktion `lm()` nimmt und "tidy" macht. Dafür beinhaltet das Paket drei Grundfunktionen, deren Nutzen man grob kennen sollte.
+
+- `tidy()` nimmt die Koeffizienten eines Modells und überführt diese in eine saubere Tabelle (*tibble*)
+- `glance()` nimmt die Angaben zur Modellgüte und überführt diese ebenfalls in eine saubere Tabelle (*tibble*)
+- `augment()` nimmt Angaben zu jedem originalen Datenpunkt (z.B. die Residuen) und fügt diese dem Datensatz hinzu
+
+Wer das Paket noch nicht installiert hat, kann dies wie immer ganz einfach nachholen.
+
+```{r eval=FALSE}
+install.packages("broom")
+
+library(broom)
+```
+
+
+Wenn wir uns die Koeffizienten mit Signifikanztests ausgeben lassen wollen, nutzen wir also `tidy()`. So erhalten wir eine ganz simple, saubere und allumfassende Übersicht über unsere Modell-Koeffizienten.
+
+```{r}
+tidy(water_model)
+```
+
+
+Angaben zur Modellgüte können wir mit `glance()` auslesen. Hier bekommen wir sogar wesentlich mehr Informationen als durch die normale `summary()`.
+
+```{r}
+glance(water_model)
+```
+
+Residuen, Distanzen und ähnliches werden mit `augment()` an den ursprünglichen Datensatz angehängt.
+
+```{r}
+augment(water_model)
+```
+
+Die angehängten Variablen sind netteweise mit einem "." als Präfix versehne, wodurch wir erkennen können, welche Werte neu sind. Wir erhalten die geschätzten Werte (`.fitted`), die im Grunde die Werte einer jeden Beobachtung auf der Regressionsgeraden sind. Dann erhalten wir die rohen Residuen (`.resid`) und die standardisierten Residuen (`.std.resid`), sowie die Hebelwerte (*hat values*, `.hat`), den Cook-Abstand (`.cooksd`) und die Standardabweichung der Residuen, wenn die jeweilige Beobachtung ausgeschlossen werden würde (`.sigma`).
+
+### Modell-Diagnostik
+Vor allem mit den Ergebnissen von `augment()` können wir die Voraussetzungen einer linearen Regression prüfen. Unter anderem sollen die
+
+- **Residuen** normalverteilt,
+- der Betrag eines standardisierten Residuums nicht größer 3.29 [@Field.2018],
+- Cook-Abstand nicht größer als 1 sein [@Cook.1982],
+- und die Hebelwerte (*hat values*) nicht größer als zweimal der durchschnittliche Hebelwert [@Hoaglin.1978]. Der durchschnittliche Hebelwert ist $$\dfrac{(k+1)}{n}$$ mit $k$ als Anzahl der Prädiktoren und $n$ als Anzahl der Beobachtungen. Somit sollte der Betrag der *hat values* nicht größer sein als^[Manche Autoren empfehlen auch, dass die Hebelwerte nicht größer als *drei* mal der durchschnittliche Hebelwert sein sollten [@Field.2018]] $$2 \cdot \dfrac{(k+1)}{n}$$
+
+Das könnten wir nun ganz einfach überprüfen. Da das jedoch Schritte sind, die wir für jede Regression durchlaufen sollten, und sie somit Standard sind, gibt es kluge Köpfe, die Abbildungen zur Modelldiagnostik für verschiedenen Verfahren im Paket [`ggfortify`](https://github.com/sinhrks/ggfortify) zusammengestellt haben.
+
+```{r eval=FALSE}
+install.packages("ggfortify")
+
+library(ggfortify)
+```
+
+Diese Abbildungen sehen für unser Modell folgendermaßen aus. In diesem Fall ist alles im großen und ganzen in Ordnung.
+
+```{r}
+autoplot(water_model, which = 1:6)
+```
+
+Natürlich können wir die oben dargestellten Kriterien zur Modell-Diagnostik auch an "harten Zahlen" prüfen und müssen uns nicht auf Abbildungen verlassen. Wobei wir die Normalverteilung von Variablen doch schon anhand eines QQ-Plots beurteilen sollten (Abbildung "Normal Q-Q", die von `ggfortif` ausgegeben wird), was in diesem Falle in Ordnung war. Des weiteren sollte der Betrag eines standardisierten Residuums nicht größer als 3.29 sein. Auch sollte der Cook-Abstand kleiner gleich 1 sein (also nicht größer als 1) und die Hebelwerte kleiner als der doppelte durchschnittliche Hebelwert. Das können wir mithilfe von `augment()` ganz einfach lösen. Zunächst berechnen wir jedoch die Schwelle für problematische Hebelwerte nach der obigen Formel.
+
+```{r}
+# Anzahl der Prädiktoren
+k <- 1
+
+# Anzahl der Beobachtungen
+n <- nrow(water_park)
+
+hat_threshold <- 2 * (k + 1) / n
+```
+
+Hebelwerte, die größer als 0.04 sind, sollten also untersucht werden. Um unsere Diagnostiken zu berechnen, erstellen wir mit `mutate()` einfach vier neue Variablen: Jeweils eine, die angibt, wenn es ein Problem in dem jeweiligen Diagnostik-Outcome gibt (codiert als 1) und dann die Summe dieser Variablen. Weist ein Fall "keine Probleme" auf, dann hat er in diesen neuen Variablen einen Wert von jeweils 0 und somit ist auch die Summe dieser neuen Variablen 0. Ist ein Wert problematisch, ergibt das in der Summe 1, bei zwei problematischen Werten 2 und wenn alle drei Werte problematisch sind, dann ergibt die Summe 3. Anschließend können wir uns jene Fälle rausfiltern, in denen Probleme aufgetreten sind.
+
+```{r}
+water_augmented <- augment(water_model)
+
+water_augmented %>% 
+  mutate(
+    diag_resid = if_else(abs(.std.resid) > 3.29, 1, 0),
+    diag_cook = if_else(.cooksd > 1, 1, 0),
+    diag_hat = if_else(.hat > hat_threshold, 1, 0),
+    diag_sum = diag_resid + diag_cook + diag_hat
+  ) %>% 
+  filter(diag_sum != 0)
+```
+
+Wir erhalten somit 6 Fälle in denen die Hebelwerte größer als die errechnete Schwelle (0.04) sind. Was macht man jetzt mit einem solchen Ergebnis? Man diskutiert es! **Fälle einfach auf Basis problematischer Diagnostiken auszuschließen, geht nicht!** Diese Diagnostiken sind nur ein Mittel, um zu beurteilen, wie gut oder schlecht unser Modell ist. In diesem Fall sind 4 von 100 Hebelwerten leicht über der errechneten Schwelle (zwei sind deutlich darüber). Das Modell ist also gar nicht so schlecht und wir können es so beibehalten.
+O
+### Berichten
+We found the mean daily temperature to predict te amount of swimmers in a pool significantly. The overall model was statistically significant, $F(1, 98) = 278, p < .001, R^2_\text{adj} = .737$. The model coefficients can be found in the following table.
+
+```{r echo=FALSE}
+tidy(water_model) %>% 
+  gt() %>% 
+  fmt_number(columns = 2:5, decimals = 3) %>% 
+  fmt_number(vars(p.value), rows = p.value < .001, pattern = "< .001") %>% 
+  cols_label(term = "Term",
+             estimate = md("*b*"),
+             std.error = md("*SE*"),
+             statistic = md("*t*"),
+             p.value = md("*p*")) %>% 
+  cols_align(align = "center", columns = 2:5)
+```
+
+
+## Robust
+Folgt.
+
+
+# Beispiel mit mehreren Prädiktoren
+Einige aufmerksame Leser werden bereits festgestelt haben, dass es im Datensatz `water_park` mehr als nur zwei Variablen (`swimmers` und `temperature`) gibt. Es findet sich auch eine Variable `sales`, mit der die Umsätze des Freibad-Kiosks in Euro festgehalten ist, sowie die Variable `beatings`, in der die Anzahl der Schlägereien aufgeführt ist, wegen derer die Polizei gerufen werden musste.
+
+```{r}
+water_park
+```
+
+Wir ändern unsere Fragestellung etwas und fragen nun: Können wir die Anzahl der Schlägereien durch die anderen Variablen erklären? Na klar! Außer, dass wir jetzt weitere Variablen als Prädiktoren benutzen, ändert sich nichts. Dennoch geben wir dem ganzen einen neuen Namen: **Multiple Regression** (also eine lineare Regression mit mehreren Prädiktoren).
+
+## EDA
+Zu Beginn ist es immer ratsam zu untersuchen, ob die potenziellen Prädiktoren keine Ausreißer enthalten und mit dem Kriterium (der abhängigen Variable) linear zusammenhängen. Dafür nutzen wir wieder deskriptive Statistiken und Abbildungen. Um zu überprüfen, wie stark die potenziellen Prädiktoren mit dem Kriterium (Anzahl der Schlägereien) zusammenhängen, können wir auch Korrelationen berechnen.
+
+```{r}
+water_park %>% 
+  select(-day_id) %>% 
+  get_summary_stats()
+```
+
+```{r echo=FALSE, message=FALSE}
+# Helper Function for Plotting
+plot_predictors <- function(data = data, x_label = "Label") {
+  ggplot(data, aes(value, beatings)) +
+    geom_jitter(width = 0, height = 0.05, alpha = 0.4) +
+    geom_smooth(method = "lm", se = FALSE) +
+    labs(x = x_label, y = "Beatings")
+}
+
+# Pairwise Plots
+water_park %>% 
+  pivot_longer(
+    cols = -c(day_id, beatings),
+    names_to = "predictor",
+    names_ptypes = list(predictor = factor()),
+    values_to = "value"
+  ) %>% 
+  nest_by(predictor) %>% 
+  mutate(
+    predictor = str_to_title(predictor),
+    plots = list(plot_predictors(data, x_label = predictor)),
+  ) %>% 
+  pluck("plots") %>% 
+  wrap_plots()
+```
+
+```{r fig.width=3, fig.height=3, echo=FALSE, message=FALSE}
+library(corrgram)
+
+water_park %>% 
+  select(-day_id) %>% 
+  corrgram(upper.panel = panel.conf, lower.panel = panel.fill)
+```
+
+Wir können so relativ leicht erkennen, dass alle potenziellen Prädiktoren mit dem Kriterium `beatings` signifikant korrelieren. Ein Problem könnte jedoch auftreten, wenn die Prädiktoren "zu gut" miteinander korrelieren; dieses Problem nennt man Multikollinearität.
+
+## Multikollinearität
+**Multikollinearität** ist ein Problem und tritt bei linearen Regressionen auf, wenn zwei oder mehr Prädiktoren zu hohe Korrelationen miteinander haben. Das sorgt dafür, dass die Schätzungen der Modellparameter ungenau bis falsch werden, aber auch die Modellinterpretation kann problematisch werden, wenn Prädiktoren miteinander hoch korreliert sind. Eine Möglichkeit, Multikollinearität aufzudecken, ist die Analyse der Korrelationen der Prädiktoren untereinander. Aus der obigen Abbildung geht hervor, dass die höchste Korrelation zwischen den Prädiktoren $r = .95$ ist (jene zwischen der Anzahl der Schwimmer und dem Kiosk-Umsatz), was probleatisch sein könnte.
+
+Eine weitere Möglichkeit ist der sogenannte **Varianzinflationsfaktor (VIF)** oder sein Kehrwert, die **Toleranz**. Im Paket `faraway` gibt es die Funktion `vif()` die ein lineares Modell als Argument nimmt und uns den VIF berechnet. Nach @Field.2018 sind Werte größer 10 ein Problem. Wir müssen das Modell also einmal schätzen, um uns den VIF für jeden Prädiktor ausgeben zu lassen. Das Modell erweitern wir mit einem ganz normalen `+`. Wer das Paket `faraway` noch nicht installiert hat, kann das natürlich sofort nachholen.
+
+```{r eval=FALSE}
+install.packages("faraway")
+
+library(faraway)
+```
+
+```{r}
+water_big_model <- lm(beatings ~ swimmers + temperature + sales, data = water_park)
+
+vif(water_big_model)
+```
+
+Der VIF von `swimmers` ist mit 15.36 deutlich über 10 und wir sollten darüber nachdenken, diesen zu entfernen. Das machen wir nun auch und gucken uns den VIF dann erneut an.
+
+```{r}
+water_medium_model <- lm(beatings ~ temperature + sales, data = water_park)
+
+vif(water_medium_model)
+```
+
+Und schon haben wir kein Problem mehr.
+
+## Modell
+Das Modell haben wir im vorigen Schritt bereits definiert und schätzen lassen, können es uns also direkt anschauen. Wir haben ein im allgemeinen signifikantes Modell, das viel Varianz aufklärt, $F(2, 97) = 69.7, p < .001, R^2_\text{adj} = .581$. Außerdem sind alle Prädiktoren signifikant, da alle $p < .05$.
+
+```{r}
+# Koeffizienten anzeigen
+tidy(water_medium_model)
+
+# Modellgüte anzeigen
+glance(water_medium_model)
+```
+
+## Modell-Diagnostik
+Wir gehen genauso vor wie oben, wo wir nur einen Prädiktor hatten; alle Diagnostik-Kriterien bleiben bestehen.
+
+```{r}
+# Anzahl der Prädiktoren
+k <- 2
+
+# Anzahl der Beobachtungen
+n <- nrow(water_park)
+
+# Schwelle berechnen
+hat_threshold <- 2 * (k + 1) / n
+
+# Residuen, Distanzen und Hebelwerte zum Datensatz hinzufügen
+water_medium_augmented <- augment(water_medium_model)
+
+water_medium_augmented %>% 
+  mutate(
+    diag_resid = if_else(abs(.std.resid) > 3.29, 1, 0),
+    diag_cook = if_else(.cooksd > 1, 1, 0),
+    diag_hat = if_else(.hat > hat_threshold, 1, 0),
+    diag_sum = diag_resid + diag_cook + diag_hat
+  ) %>% 
+  filter(diag_sum != 0)
+```
+
+Dieses Mal finden wir sechs "problematische" Fälle, in denen wieder die Schwelle des Hebelwerts (0.06) leicht überschritten wurde. Wir tun ansonsten ist alles in Ordnung, also werden wir an dieser Stelle keine Maßnahmen ergreifen und dieses Ergebnis für eine eventuelle Diskussion im Hinterkopf behalten.
+
+## Standardisierte Koeffizienten
+Wenn wir uns die Koeffizienten anschauen, könnten wir etwas stutzig werden.
+
+```{r}
+tidy(water_medium_model)
+```
+
+Man könnte meinen, dass die Temperatur einen viel größeren Einfluss auf die Anzahl der Schlägereien hätte als der Kiosk-Umsatz, da der Regressionskoeffizient ($b$) von `temperature` um ein vielfaches höher ist als der von `sales`. Dieser Eindruck täuscht aber. Was diese Koeffizienten bedeuten, haben wir bereits geklärt: Erhöhrt man den Prädiktor um eine Einheit, erhöht sich das Kriterium um den Wert des Koeffizienten.
+
+Bei der Interpretation von Koeffizienten muss man bei multiplen Regressionen jedoch etwas aufpassen, denn diese Änderung des Kriteriums gilt nur, **wenn man alle anderen Prädiktoren konstant hält**. Also, mit jedem Grad Durchschnittstemperatur mehr, finden 0.17 Schlägereien statt, *wenn man alle anderen Prädiktoren konstant hält.* Das macht auch viel Sinn, denn wenn die Durchschnittstemperatur ein Grad höher ist, aber auch der Umsatz des Kiosks gestiegen ist, dann ändert sich das Kriterium ja um den Einfluss von `temperature` und `sales` gleichzeitig. Will man den Effekt jedoch isoliert berichten und verstehen, muss man immer angeben, dass dieser Effekt nur so groß ist, wenn alle anderen Prädiktoren *konstant gehalten werden.*
+
+So erkennen wir auch, warum der Einfluss von `sales` so klein erscheint: Die Skala von `sales` ist eine komplett andere als die von `temperature`. Wenn wir uns die deskriptiven Statistiken von oben noch einmal in Errinnerung rufen, ist die Range der Werte von `temperature` zwischen 11.9 und 45.6 Grad Celsius. Die von `sales` jedoch zwischen 410 und 2837 Euro. Um den Einfluss von Prädiktoren, die verschiedene Einheiten haben, besser nachvollziehen zu können, kann man die Regressionskoeffizienten **standardisieren**. Diese standardisierten Koeffizienten nennen die meisten dann $\beta$ (im gegensatz zu $b$). Die Einheit dieser $\beta$ ist dann für alle Prädiktoren identisch (nämlich Standardabwechungen), wodurch man sie besser vergleichen kann.
+
+Dafür kann man einen von zwei Wegen wählen: Entweder alle Variablen bereits vor der Regression standardisieren und die Regression dann "neu" berechnen, oder die Regressionskoeffizienten anhand der Formel $$\beta_j = b_j \cdot \dfrac{s_{x_i}}{s_y}$$ umwandeln. Dabei ist $b_j$ der rohe Koeffizient, $s_{x_i}$ die Standardabweichung des jeweiligen Prädiktors und $s_y$ die Standardabweichung des Kriteriums.
+
+Zusammen mit den deskriptiven Statistiken würden wir in diesem Falle die folgenden standardisierten Koeffizienten erhalten.
+
+```{r}
+beta_temperature <- 0.173 * 6.00 / 2.02
+beta_sales <- 0.00119 * 500 / 2.02
+
+beta_temperature
+beta_sales
+```
+
+Eine gute Übung ist es jedoch, die Variablen vorher auch mal zu standardisieren und das Modell erneut zu schätzen. Die Funktion, mit der man in R standardisieren kann, ist `scale()`.
+
+```{r}
+# Alle nummerischen Variablen standardisieren
+water_park_scaled <- water_park %>% 
+  mutate(
+    across(where(is.numeric), ~ scale(.)[,1], .names = "scaled_{col}")
+  )
+
+# Das neue Modell schätzen
+water_scaled_model <- lm(scaled_beatings ~ scaled_temperature + scaled_sales, data = water_park_scaled)
+
+# Standardisierte Koeffizienten ausgeben lassen
+tidy(water_scaled_model)
+```
+
+Die standardisierten Regressionskoeffizienten ($\beta$) interpretiert man genau so, wie die rohen Koeffizienten ($b$), außer, dass sich die Einheit der Variablen in Standardabweichungen geändert hat. Erhöht sich die **Temperatur** um eine Standardabweichung, dann erhöht sich die Anzahl der Schlägereien um 0.514 Standardabweichungen. Das kann man mithilfe der Standardabweichungen (siehe unten) wieder in verständliche Einheiten umrechnen. Erhöht sich die Temperatur um eine Standardabweichung (6 Grad Celsius), dann erhöht sich die Anzahl der Schlägereien um $0.514 \cdot 2.02 = 1.04$, wenn alle anderen Prädiktoren konstant gehalten werden.
+
+Erhöht sich der **Kiosk-Umsatz** um eine Standardabweichung (500 Euro), dann erhöht sich die Anzahl der Schlägereien um $0.294 * 2.02 = 0.59$. Nun können wir mit Sicherheit sagen, dass die Temperatur einen größeren Einfluss auf die Anzahl der Schlägereien im Schwimmbad hat.
+
+```{r}
+water_park %>% 
+  select(beatings, temperature, sales) %>% 
+  get_summary_stats(type = "mean_sd")
+```
+
+## Berichten
+We found daily temperature and sales to predict the amount of beatings significantly, $F(2, 97) = 69.7, p < .001, R^2_\text{adj} = .581$. The raw and standardized regression coefficients can be found in the following table.
+
+```{r echo=FALSE}
+coefficients <- tidy(water_medium_model)
+
+betas <- tidy(water_scaled_model) %>% select(beta = estimate)
+
+add_column(coefficients, betas, .after = "std.error") %>%
+  gt() %>%
+  fmt_number(columns = 2:6, decimals = 3) %>%
+  fmt_number(columns = 6, rows = p.value < .001, pattern = "< .001") %>%
+  cols_label(
+    term = "",
+    estimate = md("*b*"),
+    std.error = md("*SE*"),
+    beta = html(text = "&beta;"),
+    statistic = md("*t*"),
+    p.value = md("*p*")
+  )
+```
+
+## Modellvergleiche
+Ist unser Modell mit zwei Prädiktoren eigentlich signifikant besser als ein Modell mit nur einem Prädiktor? Das können wir ganz einfach testen lassen. Zunächst müssen wir die beiden Modelle definieren. Wir betrachten das korrigierte $R^2_\text{adj}$ und stellen eine leichte Verbesserung von .553 (Modell 1) auf .581 (Modell 2) fest. Aber ist dieser Unterschied signifikant?
+
+```{r}
+model_1 <- lm(beatings ~ temperature, data = water_park)
+
+model_2 <- lm(beatings ~ temperature + sales, data = water_park)
+
+glance(model_1)
+glance(model_2)
+```
+
+Diese Frage können wir mit einem Chi-Quadrat-Differenztest berechnen, den R (verwirrenderweise) in der Funktion `anova()` zur Verfügung stellt.
+
+```{r}
+anova(model_1, model_2)
+```
+
+Und wir stellen fest, dass unser Modell durch das Aufnehmen von `sales` als Prädiktor signifikant verbessert wird, $\chi^2(1) = 7.66, p = .007$.
+
+# Aus der Praxis
+## Klassisch
+### EDA
+### Durchführung
+### Berichten
+
+## Robust
+Folgt.
+
+# Literatur

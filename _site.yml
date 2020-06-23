@@ -29,6 +29,7 @@ navbar:
        - text: "Korrelation"
          href: korrelation.html
        - text: "Lineare Regression"
+         href: lineare-regression.html
     - text: Mittelwerte vergleichen
       menu:
        - text: "Überblick"
