@@ -46,7 +46,7 @@ library(costatcompanion)
 ```{r echo=FALSE}
 library(broom)
 library(ggfortify)
-library(faraway)
+library(car)
 ```
 
 
@@ -306,12 +306,12 @@ Wir können so relativ leicht erkennen, dass alle potenziellen Prädiktoren mit 
 ## Multikollinearität
 **Multikollinearität** ist ein Problem und tritt bei linearen Regressionen auf, wenn zwei oder mehr Prädiktoren zu hohe Korrelationen miteinander haben. Das sorgt dafür, dass die Schätzungen der Modellparameter ungenau bis falsch werden, aber auch die Modellinterpretation kann problematisch werden, wenn Prädiktoren miteinander hoch korreliert sind. Eine Möglichkeit, Multikollinearität aufzudecken, ist die Analyse der Korrelationen der Prädiktoren untereinander. Aus der obigen Abbildung geht hervor, dass die höchste Korrelation zwischen den Prädiktoren $r = .95$ ist (jene zwischen der Anzahl der Schwimmer und dem Kiosk-Umsatz), was probleatisch sein könnte.
 
-Eine weitere Möglichkeit ist der sogenannte **Varianzinflationsfaktor (VIF)** oder sein Kehrwert, die **Toleranz**. Im Paket `faraway` gibt es die Funktion `vif()` die ein lineares Modell als Argument nimmt und uns den VIF berechnet. Nach @Field.2018 sind Werte größer 10 ein Problem. Wir müssen das Modell also einmal schätzen, um uns den VIF für jeden Prädiktor ausgeben zu lassen. Das Modell erweitern wir mit einem ganz normalen `+`. Wer das Paket `faraway` noch nicht installiert hat, kann das natürlich sofort nachholen.
+Eine weitere Möglichkeit ist der sogenannte **Varianzinflationsfaktor (VIF)** oder sein Kehrwert, die **Toleranz**. Im Paket `car` gibt es die Funktion `vif()` die ein lineares Modell als Argument nimmt und uns den VIF berechnet. Nach @Field.2018 sind Werte größer 10 ein Problem. Wir müssen das Modell also einmal schätzen, um uns den VIF für jeden Prädiktor ausgeben zu lassen. Das Modell erweitern wir mit einem ganz normalen `+`. Wer das Paket `car` noch nicht installiert hat, kann das natürlich sofort nachholen.
 
 ```{r eval=FALSE}
-install.packages("faraway")
+install.packages("car")
 
-library(faraway)
+library(car)
 ```
 
 ```{r}
@@ -369,6 +369,13 @@ water_medium_augmented %>%
 
 Dieses Mal finden wir sechs "problematische" Fälle, in denen wieder die Schwelle des Hebelwerts (0.06) leicht überschritten wurde. Wir tun ansonsten ist alles in Ordnung, also werden wir an dieser Stelle keine Maßnahmen ergreifen und dieses Ergebnis für eine eventuelle Diskussion im Hinterkopf behalten.
 
+Natürlich könnten wor auch `ggfortify` zur Hilfe nehmen und uns diagnostische Plots ausgeben lassen. Auch hier gibt es keine großen Probleme, die Residuen erscheinen homogen, die Daten ans ich normalverteilt und auch bezüglich des Cook-Abstands und den Hebelwerten gibt es keine dramatischen Fälle.
+
+```{r}
+autoplot(water_medium_model, which = 1:6)
+```
+
+
 ## Standardisierte Koeffizienten
 Wenn wir uns die Koeffizienten anschauen, könnten wir etwas stutzig werden.
 
@@ -382,7 +389,7 @@ Bei der Interpretation von Koeffizienten muss man bei multiplen Regressionen jed
 
 So erkennen wir auch, warum der Einfluss von `sales` so klein erscheint: Die Skala von `sales` ist eine komplett andere als die von `temperature`. Wenn wir uns die deskriptiven Statistiken von oben noch einmal in Errinnerung rufen, ist die Range der Werte von `temperature` zwischen 11.9 und 45.6 Grad Celsius. Die von `sales` jedoch zwischen 410 und 2837 Euro. Um den Einfluss von Prädiktoren, die verschiedene Einheiten haben, besser nachvollziehen zu können, kann man die Regressionskoeffizienten **standardisieren**. Diese standardisierten Koeffizienten nennen die meisten dann $\beta$ (im gegensatz zu $b$). Die Einheit dieser $\beta$ ist dann für alle Prädiktoren identisch (nämlich Standardabwechungen), wodurch man sie besser vergleichen kann.
 
-Dafür kann man einen von zwei Wegen wählen: Entweder alle Variablen bereits vor der Regression standardisieren und die Regression dann "neu" berechnen, oder die Regressionskoeffizienten anhand der Formel $$\beta_j = b_j \cdot \dfrac{s_{x_i}}{s_y}$$ umwandeln. Dabei ist $b_j$ der rohe Koeffizient, $s_{x_i}$ die Standardabweichung des jeweiligen Prädiktors und $s_y$ die Standardabweichung des Kriteriums.
+Dafür kann man einen von zwei Wegen wählen: Entweder alle Variablen bereits vor der Regression standardisieren und die Regression dann "neu" berechnen, oder die Regressionskoeffizienten anhand der Formel $$\beta_j = b_j \cdot \dfrac{s_{x_j}}{s_y}$$ umwandeln. Dabei ist $b_j$ der rohe Koeffizient, $s_{x_i}$ die Standardabweichung des jeweiligen Prädiktors und $s_y$ die Standardabweichung des Kriteriums.
 
 Zusammen mit den deskriptiven Statistiken würden wir in diesem Falle die folgenden standardisierten Koeffizienten erhalten.
 
