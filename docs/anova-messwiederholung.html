@@ -472,7 +472,9 @@ div.tocify {
     <li>
       <a href="korrelation.html">Korrelation</a>
     </li>
-    <li class="dropdown-header">Lineare Regression</li>
+    <li>
+      <a href="lineare-regression.html">Lineare Regression</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -572,6 +574,7 @@ div.tocify {
 <span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(haven)</span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rstatix)</span>
 <span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(costatcompanion)</span></code></pre></div>
+<pre><code>## Warning: package &#39;patchwork&#39; was built under R version 4.0.2</code></pre>
 </div>
 <div id="beispiel-1" class="section level1">
 <h1>Beispiel 1</h1>
@@ -579,7 +582,7 @@ div.tocify {
 <div id="klassisch" class="section level2">
 <h2>Klassisch</h2>
 <p>Die Daten sind in der Datei <code>runners.sav</code> oder im Paket <code>costatcompanion</code> unter demselben Namen. Der Datensatz enthält drei Variablen: Die ID der Läufer (<code>id</code>), den für den Lauf gehörten Typ von Musik (<code>music_type</code>) und das nach dem Lauf eingeschätzte Durchhaltevermögen während des Laufes (<code>endurance</code>). Wir untersuchen also eine einfaktorielle Varianzanalyse mit dem Innersubjektfaktor “Music Type” mit drei Faktorstufen (“bad”, “neutral”, und “favorite”).</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>costatcompanion<span class="op">::</span>runners</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>costatcompanion<span class="op">::</span>runners</span></code></pre></div>
 <pre><code>## # A tibble: 153 x 3
 ##    id    music_type endurance
 ##    &lt;chr&gt; &lt;fct&gt;          &lt;dbl&gt;
@@ -601,16 +604,16 @@ div.tocify {
 <div id="eda" class="section level3">
 <h3>EDA</h3>
 <p>Zu Beginn, schauen wir uns die Daten einmal an und lassen und deskriptive Statistiken ausgeben.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 13
 ##   variable     n   min   max median    q1    q3   iqr   mad  mean    sd    se
 ##   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1 enduran~   153     4    30     16    11    23    12  8.90  16.6  7.20 0.582
 ## # ... with 1 more variable: ci &lt;dbl&gt;</code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="st">  </span><span class="kw">group_by</span>(music_type) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="st">  </span><span class="kw">group_by</span>(music_type) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 14
 ##   music_type variable     n   min   max median    q1    q3   iqr   mad  mean
 ##   &lt;fct&gt;      &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -625,8 +628,8 @@ div.tocify {
 <div id="durchführung" class="section level3">
 <h3>Durchführung</h3>
 <p>Die eigentliche Durchführung ist, wie immer, kurz und schmerzlos.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> endurance, <span class="dt">wid =</span> id, <span class="dt">within =</span> music_type)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> endurance, <span class="dt">wid =</span> id, <span class="dt">within =</span> music_type)</span></code></pre></div>
 <pre><code>## ANOVA Table (type III tests)
 ## 
 ## $ANOVA
@@ -643,17 +646,17 @@ div.tocify {
 ##   p[HF]&lt;.05
 ## 1         *</code></pre>
 <p>Wenn wir diesen Befehl ausführen, dann sehen wir, dass Mauchlys-Test signifikant ist – die Variassetzung der Sphärizität ist nicht erfüllt. Eine gute Methode, um den <span class="math inline">\(p\)</span>-Wert nun zu korrigieren, ist die Methode nach Greenhouse und Geisser <span class="citation">(Greenhouse &amp; Geisser, <a href="#ref-Greenhouse.1959" role="doc-biblioref">1959</a>)</span>. Um diese Korrektur<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, wie versprochen, automatisch zu erhalten, lassen wir uns anschließend mit <code>get_anova_table()</code>, angehängt an den bereits ausgeführten Befehl, die ANOVA-Ergebnisse ausgeben.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> endurance, <span class="dt">wid =</span> id, <span class="dt">within =</span> music_type) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="kw">get_anova_table</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> endurance, <span class="dt">wid =</span> id, <span class="dt">within =</span> music_type) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="kw">get_anova_table</span>()</span></code></pre></div>
 <pre><code>## ANOVA Table (type III tests)
 ## 
 ##       Effect  DFn   DFd       F        p p&lt;.05   ges
 ## 1 music_type 1.72 85.75 272.105 1.11e-35     * 0.792</code></pre>
 <p>Das <span class="math inline">\(p\)</span> ist nun identisch mit dem <code>p[GG]</code> im vorigen Output. Empfehlen würde ich jedoch, diese Schritt nicht durchzuführen und auf <code>get_anova_table()</code> zu verzichten, da wir Informationen aus dem vorigen Schritt (<code>anova_test()</code>) beim Berichten angeben müssen. Dazu zählt insbesondere der Wert (<span class="math inline">\(\varepsilon\)</span>), um den letztendlich korrigiert wurde. Standardmäßig bekommen wir zwei Korrekturen angeboten: Die bereits erwähnt nach Greenhouse und Geisser und die nach Huynh und Feldt <span class="citation">(Huynh &amp; Feldt, <a href="#ref-Huynh.1976" role="doc-biblioref">1976</a>)</span>. Um kenntlich zu machen, welche Korrektur man genommen hat, gibt man als Index am <span class="math inline">\(\varepsilon\)</span> am besten die Autorenkürzel an, also <span class="math inline">\(\varepsilon_\text{GG}\)</span> für Greenhouse-Geisser und <span class="math inline">\(\varepsilon_\text{HF}\)</span> für Huynh-Feldt.</p>
 <p>Auch hier ist die ANOVA wieder nur ein <strong>Omnibus-Test</strong>, wir wissen also nun, dass sich die Werte zwischen unseren Gruppen irgendwo unterscheiden, aber nicht genau wo. Um das zu überprüfen, können wir <a href="post-hoc-tests.html">Post-hoc-Tests</a> nutzen.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="st">  </span><span class="kw">pairwise_t_test</span>(endurance <span class="op">~</span><span class="st"> </span>music_type, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;holm&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="st">  </span><span class="kw">pairwise_t_test</span>(endurance <span class="op">~</span><span class="st"> </span>music_type, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;holm&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 10
 ##   .y.   group1 group2    n1    n2 statistic    df        p    p.adj p.adj.signif
 ## * &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
@@ -661,8 +664,8 @@ div.tocify {
 ## 2 endu~ bad    favor~    51    51    -28.9     50 7.32e-33 2.20e-32 ****        
 ## 3 endu~ neutr~ favor~    51    51    -12.6     50 4.37e-17 8.74e-17 ****</code></pre>
 <p>Es unterscheiden sich alle Gruppen signifikant voneinander.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb14-2"><a href="#cb14-2"></a><span class="st">  </span><span class="kw">cohens_d</span>(endurance <span class="op">~</span><span class="st"> </span>music_type, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>, <span class="dt">paired =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="st">  </span><span class="kw">cohens_d</span>(endurance <span class="op">~</span><span class="st"> </span>music_type, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>, <span class="dt">paired =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 7
 ##   .y.       group1  group2   effsize    n1    n2 magnitude
 ## * &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;ord&gt;    
@@ -678,11 +681,11 @@ div.tocify {
 <div id="robust" class="section level2">
 <h2>Robust</h2>
 <p>Natürlich hat Rand <span class="citation">Wilcox (<a href="#ref-Wilcox.2017" role="doc-biblioref">2017</a>)</span> auch für ANOVAS mit Messwiederholung eine robuste Alternative entwickelt und im Paket <code>WRS2</code> <span class="citation">(Mair &amp; Wilcox, <a href="#ref-Mair.2020" role="doc-biblioref">2020</a>)</span> zur Verfügung gestellt. Diese kann mit dem Befehl <code>rmanova()</code> ausgeführt werden; Post-hoc-Tests mit <code>rmmcp()</code>, die Ausführung des Befehls weicht allerdings etwas von der bekannten Syntax ab.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">library</span>(WRS2)</span>
-<span id="cb16-2"><a href="#cb16-2"></a></span>
-<span id="cb16-3"><a href="#cb16-3"></a><span class="co"># Robuste ANOVA mit Messwiederholung</span></span>
-<span id="cb16-4"><a href="#cb16-4"></a><span class="kw">with</span>(runners,</span>
-<span id="cb16-5"><a href="#cb16-5"></a>     <span class="kw">rmanova</span>(<span class="dt">y =</span> endurance, <span class="dt">groups =</span> music_type, <span class="dt">block =</span> id))</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">library</span>(WRS2)</span>
+<span id="cb17-2"><a href="#cb17-2"></a></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="co"># Robuste ANOVA mit Messwiederholung</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a><span class="kw">with</span>(runners,</span>
+<span id="cb17-5"><a href="#cb17-5"></a>     <span class="kw">rmanova</span>(<span class="dt">y =</span> endurance, <span class="dt">groups =</span> music_type, <span class="dt">block =</span> id))</span></code></pre></div>
 <pre><code>## Call:
 ## rmanova(y = endurance, groups = music_type, blocks = id)
 ## 
@@ -690,9 +693,9 @@ div.tocify {
 ## Degrees of freedom 1: 1.9 
 ## Degrees of freedom 2: 56.92 
 ## p-value: 0</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Robuste Post-hoc-Tests</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a><span class="kw">with</span>(runners,</span>
-<span id="cb18-3"><a href="#cb18-3"></a>     <span class="kw">rmmcp</span>(<span class="dt">y =</span> endurance, <span class="dt">groups =</span> music_type, <span class="dt">blocks =</span> id))</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Robuste Post-hoc-Tests</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="kw">with</span>(runners,</span>
+<span id="cb19-3"><a href="#cb19-3"></a>     <span class="kw">rmmcp</span>(<span class="dt">y =</span> endurance, <span class="dt">groups =</span> music_type, <span class="dt">blocks =</span> id))</span></code></pre></div>
 <pre><code>## Call:
 ## rmmcp(y = endurance, groups = music_type, blocks = id)
 ## 
@@ -705,23 +708,23 @@ div.tocify {
 <div id="non-parametrisch" class="section level2">
 <h2>Non-parametrisch</h2>
 <p>Friedman-ANOVA, allerdings nur für einfaktoriellen Designs. Wenn es mehrere Faktoren sein sollen, gibt es nur noch die robusten Alternativen (s.o.). Die Effektstärke für eine Friedman-ANOVA ist Kendalls <span class="math inline">\(W\)</span>, welches sich mit <code>friedman_effsize()</code> berechnen lässt. Als Post-hoc-Test wird der Wilcoxon signed-rank test genutzt. Dabei muss darauf geachtet werden, dass die Daten in der richtigen Reihenfolge sind! D.h., dass die Daten innerhalb eines Probanden immer in derselben Reihenfolge stehen müssen (hier immer die Abfolge von “bad”, “neutral” und “favorite”).</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Friedman-ANOVA</span></span>
-<span id="cb20-2"><a href="#cb20-2"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb20-3"><a href="#cb20-3"></a><span class="st">  </span><span class="kw">friedman_test</span>(endurance <span class="op">~</span><span class="st"> </span>music_type <span class="op">|</span><span class="st"> </span>id)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># Friedman-ANOVA</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb21-3"><a href="#cb21-3"></a><span class="st">  </span><span class="kw">friedman_test</span>(endurance <span class="op">~</span><span class="st"> </span>music_type <span class="op">|</span><span class="st"> </span>id)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 6
 ##   .y.           n statistic    df        p method       
 ## * &lt;chr&gt;     &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;        
 ## 1 endurance    51      96.1     2 1.38e-21 Friedman test</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Kendalls W</span></span>
-<span id="cb22-2"><a href="#cb22-2"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb22-3"><a href="#cb22-3"></a><span class="st">  </span><span class="kw">friedman_effsize</span>(endurance <span class="op">~</span><span class="st"> </span>music_type <span class="op">|</span><span class="st"> </span>id)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># Kendalls W</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb23-3"><a href="#cb23-3"></a><span class="st">  </span><span class="kw">friedman_effsize</span>(endurance <span class="op">~</span><span class="st"> </span>music_type <span class="op">|</span><span class="st"> </span>id)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 5
 ##   .y.           n effsize method    magnitude
 ## * &lt;chr&gt;     &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;     &lt;ord&gt;    
 ## 1 endurance    51   0.942 Kendall W large</code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># Post-hoc-Test</span></span>
-<span id="cb24-2"><a href="#cb24-2"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb24-3"><a href="#cb24-3"></a><span class="st">  </span><span class="kw">wilcox_test</span>(endurance <span class="op">~</span><span class="st"> </span>music_type, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;holm&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># Post-hoc-Test</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="st">  </span><span class="kw">wilcox_test</span>(endurance <span class="op">~</span><span class="st"> </span>music_type, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;holm&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 9
 ##   .y.      group1 group2     n1    n2 statistic        p      p.adj p.adj.signif
 ## * &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;       
@@ -734,9 +737,9 @@ div.tocify {
 <div id="aus-der-praxis" class="section level1">
 <h1>Aus der Praxis</h1>
 <p>Ein wirklich tolles Experiment zur Akquisition von Ängsten bei Kindern führte <span class="citation">Field (<a href="#ref-Field.2006" role="doc-biblioref">2006</a>)</span> durch. Er lud eine Reihe Kinder in sein Labor ein und erzählte ihnen Geschichten zu drei neuen Tieren (dem Quoll, dem Quokka und dem Cuscus). Dabei wurde zu einem Tier eine negative, “angsteinflößende”, Geschichte erzählt, zum dem zweiten Tier eine positive und zum dritten Tier gar keine. Nun zeigte Field den Kindern drei Holzboxen, und die Kinder sollten ihre Hand auf diese Boxen legen. Der Haken an der Sache war allerdings, dass Field den Kindern erklärte, dass in diesen Holzkisten nun jeweils eines der drei vorher vorgestellten Tiere lebte. Um zu untersuchen, ob die Kinder Angst vor dem Tier mit der negativen Geschichte hatten, maß er die Zeit, die die Kinder benötigten, um ihre Hand auf die Holzkisten zu legen. Um seine Hypothese zu überprüfen, führte er eine einfaktorielle ANOVA mit Messwiederholung durch, mit dem Innersubjektfaktor “Information” mit drei Faktorstufen (negativ, positiv, keine). Die Daten finden sich in der Datei <code>field_2006.sav</code> und stammen von der <a href="https://edge.sagepub.com/field5e">begleitenden Website</a> von <span class="citation">Field (<a href="#ref-Field.2018" role="doc-biblioref">2018</a>)</span>. Bei Daten mit Messwiederholung erhält man meistens “unsaubere” Daten im <a href="data-wrangling.html#wide_long">wide-Format</a>, wie auch in diesem Fall.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>animals &lt;-<span class="st"> </span><span class="kw">read_spss</span>(<span class="st">&quot;data/field_2006.sav&quot;</span>)</span>
-<span id="cb26-2"><a href="#cb26-2"></a></span>
-<span id="cb26-3"><a href="#cb26-3"></a>animals</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>animals &lt;-<span class="st"> </span><span class="kw">read_spss</span>(<span class="st">&quot;data/field_2006.sav&quot;</span>)</span>
+<span id="cb27-2"><a href="#cb27-2"></a></span>
+<span id="cb27-3"><a href="#cb27-3"></a>animals</span></code></pre></div>
 <pre><code>## # A tibble: 127 x 4
 ##     code bhvneg bhvpos bhvnone
 ##    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
@@ -752,16 +755,16 @@ div.tocify {
 ## 10    10   2.24   1.67    2.34
 ## # ... with 117 more rows</code></pre>
 <p>Unsere erste Aufgabe besteht also nun darin, die Daten ins “saubere” long-Format zu überführen. Dazu nutzen wir <code>pivot_longer()</code>. Als kleines Schmankerl geben wir noch das Argument <code>names_prefix = "bhv"</code> mit, dann werden die Buchstaben “bhv” automatisch entfernt und es bleiben nur noch “neg”, “pos” und “none” als Werte in der neuen Variable “information” übrig. Anschließend ändern wir unsere neue Variable “information” so, dass sie ein Faktor wird<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>animals_long &lt;-<span class="st"> </span>animals <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb28-2"><a href="#cb28-2"></a><span class="st">  </span><span class="kw">pivot_longer</span>(</span>
-<span id="cb28-3"><a href="#cb28-3"></a>    <span class="dt">cols =</span> <span class="op">-</span>code,</span>
-<span id="cb28-4"><a href="#cb28-4"></a>    <span class="dt">names_to =</span> <span class="st">&quot;information&quot;</span>,</span>
-<span id="cb28-5"><a href="#cb28-5"></a>    <span class="dt">names_prefix =</span> <span class="st">&quot;bhv&quot;</span>,</span>
-<span id="cb28-6"><a href="#cb28-6"></a>    <span class="dt">values_to =</span> <span class="st">&quot;reaction_time&quot;</span></span>
-<span id="cb28-7"><a href="#cb28-7"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb28-8"><a href="#cb28-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">information =</span> <span class="kw">as_factor</span>(information))</span>
-<span id="cb28-9"><a href="#cb28-9"></a></span>
-<span id="cb28-10"><a href="#cb28-10"></a>animals_long</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>animals_long &lt;-<span class="st"> </span>animals <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb29-2"><a href="#cb29-2"></a><span class="st">  </span><span class="kw">pivot_longer</span>(</span>
+<span id="cb29-3"><a href="#cb29-3"></a>    <span class="dt">cols =</span> <span class="op">-</span>code,</span>
+<span id="cb29-4"><a href="#cb29-4"></a>    <span class="dt">names_to =</span> <span class="st">&quot;information&quot;</span>,</span>
+<span id="cb29-5"><a href="#cb29-5"></a>    <span class="dt">names_prefix =</span> <span class="st">&quot;bhv&quot;</span>,</span>
+<span id="cb29-6"><a href="#cb29-6"></a>    <span class="dt">values_to =</span> <span class="st">&quot;reaction_time&quot;</span></span>
+<span id="cb29-7"><a href="#cb29-7"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb29-8"><a href="#cb29-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">information =</span> <span class="kw">as_factor</span>(information))</span>
+<span id="cb29-9"><a href="#cb29-9"></a></span>
+<span id="cb29-10"><a href="#cb29-10"></a>animals_long</span></code></pre></div>
 <pre><code>## # A tibble: 381 x 3
 ##     code information reaction_time
 ##    &lt;dbl&gt; &lt;fct&gt;               &lt;dbl&gt;
@@ -781,9 +784,9 @@ div.tocify {
 <div id="eda-1" class="section level3">
 <h3>EDA</h3>
 <p>Zu Beginn gucken wir uns die Daten wie immer einfach mal an. Um die <a href="voraussetzungen.html">Voraussetzung der Normalverteilung</a> müssen wir uns keine Sorgen machen, da wir Daten von 127 Kindern, also einer großen Stichprobe, vorliegen haben.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb30-2"><a href="#cb30-2"></a><span class="st">  </span><span class="kw">group_by</span>(information) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb30-3"><a href="#cb30-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>(reaction_time)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb31-2"><a href="#cb31-2"></a><span class="st">  </span><span class="kw">group_by</span>(information) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb31-3"><a href="#cb31-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>(reaction_time)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 14
 ##   information variable     n   min   max median    q1    q3   iqr   mad  mean
 ##   &lt;fct&gt;       &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -797,8 +800,8 @@ div.tocify {
 <div id="durchführung-1" class="section level3">
 <h3>Durchführung</h3>
 <p>Die Durchführung ist, wie immer, kurz und schmerzlos.</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb32-2"><a href="#cb32-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> reaction_time, <span class="dt">wid =</span> code, <span class="dt">within =</span> information)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb33-2"><a href="#cb33-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> reaction_time, <span class="dt">wid =</span> code, <span class="dt">within =</span> information)</span></code></pre></div>
 <pre><code>## ANOVA Table (type III tests)
 ## 
 ## $ANOVA
@@ -816,8 +819,8 @@ div.tocify {
 ## 1         *</code></pre>
 <p>Mauchlys Test auf Sphärizität ist signifikant (<span class="math inline">\(W = 0.798, p &lt; .001\)</span>), weshalb wir schleunigst eine Korrektur der Freiheitsgrade nach Greenhouse-Geisser anstreben sollten (<span class="math inline">\(\varepsilon_\text{GG} = .832\)</span>). Dazu aber beim “Berichten” mehr.</p>
 <p>Wir wissen nun, dass sich die Reaktionszeiten der Kinder <em>irgendwo</em> unterschieden, aber wo genau? Dem kommen wir mit Post-hoc-Tests auf die Schliche.</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb34-2"><a href="#cb34-2"></a><span class="st">  </span><span class="kw">pairwise_t_test</span>(reaction_time <span class="op">~</span><span class="st"> </span>information, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;holm&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb35-2"><a href="#cb35-2"></a><span class="st">  </span><span class="kw">pairwise_t_test</span>(reaction_time <span class="op">~</span><span class="st"> </span>information, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;holm&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 10
 ##   .y.   group1 group2    n1    n2 statistic    df        p    p.adj p.adj.signif
 ## * &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
@@ -826,8 +829,8 @@ div.tocify {
 ## 3 reac~ pos    none     127   127     -1.57   126 1.19e- 1 1.19e- 1 ns</code></pre>
 <p>Unser erster Eindruck bestätigt sich. Die Hand auf eine Holzkiste zu legen, in der ein “furchterregendes” Tier hockt, dauert im Vergleich zu “freundlichen” Tieren, oder jenen ohne Informationen, signifikant länger (beide <span class="math inline">\(p &lt; .001\)</span>). Der Unterschied in der Reaktionszeit zwischen Tieren mit positiver oder gar keiner Geschichte ist nicht signifikant, <span class="math inline">\(p = .119\)</span>.</p>
 <p>Effektstärken können wir uns natürlich auch wieder berechnen lassen.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb36-2"><a href="#cb36-2"></a><span class="st">  </span><span class="kw">cohens_d</span>(reaction_time <span class="op">~</span><span class="st"> </span>information, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb37-2"><a href="#cb37-2"></a><span class="st">  </span><span class="kw">cohens_d</span>(reaction_time <span class="op">~</span><span class="st"> </span>information, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 7
 ##   .y.           group1 group2 effsize    n1    n2 magnitude 
 ## * &lt;chr&gt;         &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;ord&gt;     
@@ -843,9 +846,9 @@ div.tocify {
 <div id="beispiel_robust" class="section level2">
 <h2>Robust</h2>
 <p>Wie wir bereits bei der explorativen Datenanalyse festgestellt haben, gibt es in diesem Datensatz eine Menge Ausreißer. Deshalb lont es sich, hier robust zu rechnen.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="co"># Robuste ANOVA mit Messwiederholung</span></span>
-<span id="cb38-2"><a href="#cb38-2"></a><span class="kw">with</span>(animals_long,</span>
-<span id="cb38-3"><a href="#cb38-3"></a>     <span class="kw">rmanova</span>(<span class="dt">y =</span> reaction_time, <span class="dt">groups =</span> information, <span class="dt">block =</span> code))</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="co"># Robuste ANOVA mit Messwiederholung</span></span>
+<span id="cb39-2"><a href="#cb39-2"></a><span class="kw">with</span>(animals_long,</span>
+<span id="cb39-3"><a href="#cb39-3"></a>     <span class="kw">rmanova</span>(<span class="dt">y =</span> reaction_time, <span class="dt">groups =</span> information, <span class="dt">block =</span> code))</span></code></pre></div>
 <pre><code>## Call:
 ## rmanova(y = reaction_time, groups = information, blocks = code)
 ## 
@@ -853,9 +856,9 @@ div.tocify {
 ## Degrees of freedom 1: 1.24 
 ## Degrees of freedom 2: 94.32 
 ## p-value: 0</code></pre>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="co"># Robuste Post-hoc-Tests</span></span>
-<span id="cb40-2"><a href="#cb40-2"></a><span class="kw">with</span>(animals_long,</span>
-<span id="cb40-3"><a href="#cb40-3"></a>     <span class="kw">rmmcp</span>(<span class="dt">y =</span> reaction_time, <span class="dt">groups =</span> information, <span class="dt">block =</span> code))</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="co"># Robuste Post-hoc-Tests</span></span>
+<span id="cb41-2"><a href="#cb41-2"></a><span class="kw">with</span>(animals_long,</span>
+<span id="cb41-3"><a href="#cb41-3"></a>     <span class="kw">rmmcp</span>(<span class="dt">y =</span> reaction_time, <span class="dt">groups =</span> information, <span class="dt">block =</span> code))</span></code></pre></div>
 <pre><code>## Call:
 ## rmmcp(y = reaction_time, groups = information, blocks = code)
 ## 
@@ -868,23 +871,23 @@ div.tocify {
 <div id="non-paramterisch" class="section level2">
 <h2>Non-paramterisch</h2>
 <p>Wer in Anbetracht der viel besser geeigneten robusten Verfahren dennoch auf non-paramtrisch setzen möchte, der führt hier die Friedman-ANOVA durch.</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="co"># Friedman-ANOVA</span></span>
-<span id="cb42-2"><a href="#cb42-2"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb42-3"><a href="#cb42-3"></a><span class="st">  </span><span class="kw">friedman_test</span>(reaction_time <span class="op">~</span><span class="st"> </span>information <span class="op">|</span><span class="st"> </span>code)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="co"># Friedman-ANOVA</span></span>
+<span id="cb43-2"><a href="#cb43-2"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb43-3"><a href="#cb43-3"></a><span class="st">  </span><span class="kw">friedman_test</span>(reaction_time <span class="op">~</span><span class="st"> </span>information <span class="op">|</span><span class="st"> </span>code)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 6
 ##   .y.               n statistic    df        p method       
 ## * &lt;chr&gt;         &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;        
 ## 1 reaction_time   127      140.     2 3.33e-31 Friedman test</code></pre>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="co"># Kendalls W</span></span>
-<span id="cb44-2"><a href="#cb44-2"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb44-3"><a href="#cb44-3"></a><span class="st">  </span><span class="kw">friedman_effsize</span>(reaction_time <span class="op">~</span><span class="st"> </span>information <span class="op">|</span><span class="st"> </span>code)</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="co"># Kendalls W</span></span>
+<span id="cb45-2"><a href="#cb45-2"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb45-3"><a href="#cb45-3"></a><span class="st">  </span><span class="kw">friedman_effsize</span>(reaction_time <span class="op">~</span><span class="st"> </span>information <span class="op">|</span><span class="st"> </span>code)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 5
 ##   .y.               n effsize method    magnitude
 ## * &lt;chr&gt;         &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;     &lt;ord&gt;    
 ## 1 reaction_time   127   0.553 Kendall W large</code></pre>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a><span class="co"># Post-hoc-Test</span></span>
-<span id="cb46-2"><a href="#cb46-2"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb46-3"><a href="#cb46-3"></a><span class="st">  </span><span class="kw">wilcox_test</span>(reaction_time <span class="op">~</span><span class="st"> </span>information, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;holm&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="co"># Post-hoc-Test</span></span>
+<span id="cb47-2"><a href="#cb47-2"></a>animals_long <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb47-3"><a href="#cb47-3"></a><span class="st">  </span><span class="kw">wilcox_test</span>(reaction_time <span class="op">~</span><span class="st"> </span>information, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;holm&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 9
 ##   .y.         group1 group2    n1    n2 statistic        p    p.adj p.adj.signif
 ## * &lt;chr&gt;       &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
@@ -897,7 +900,7 @@ div.tocify {
 <div id="beispiel-2" class="section level1">
 <h1>Beispiel 2</h1>
 <p>Auch bei ANOVAs mit Messwiederholung können natürlich mehrere Faktoren berücksichtigt werden. Unser Beispieldatensatz wurde z.B. um die Variable <code>motivation</code> erweitert, in der festgehalten wurde, ob ein Läufer zusätzlich zur gehörten Musik, an diesem Tag überhaupt motiviert war, zu laufen (daher die zwei Faktorstufen “yes” vs. “no”). Wir haben also neue Läufer rekrutiert und neue Daten gesammelt.</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a>costatcompanion<span class="op">::</span>runners_motivation</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1"></a>costatcompanion<span class="op">::</span>runners_motivation</span></code></pre></div>
 <pre><code>## # A tibble: 306 x 4
 ##    id    music_type motivation endurance
 ##    &lt;chr&gt; &lt;fct&gt;      &lt;fct&gt;          &lt;dbl&gt;
@@ -912,16 +915,16 @@ div.tocify {
 ##  9 2     favorite   no                13
 ## 10 2     bad        yes                3
 ## # ... with 296 more rows</code></pre>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>runners_motivation <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb50-2"><a href="#cb50-2"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a>runners_motivation <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb51-2"><a href="#cb51-2"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 13
 ##   variable     n   min   max median    q1    q3   iqr   mad  mean    sd    se
 ##   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1 enduran~   306     3    30     13    10    17     7  5.19  14.2  6.29 0.359
 ## # ... with 1 more variable: ci &lt;dbl&gt;</code></pre>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a>runners_motivation <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb52-2"><a href="#cb52-2"></a><span class="st">  </span><span class="kw">group_by</span>(music_type, motivation) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb52-3"><a href="#cb52-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a>runners_motivation <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb53-2"><a href="#cb53-2"></a><span class="st">  </span><span class="kw">group_by</span>(music_type, motivation) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb53-3"><a href="#cb53-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 15
 ##   music_type motivation variable     n   min   max median    q1    q3   iqr
 ##   &lt;fct&gt;      &lt;fct&gt;      &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -935,8 +938,8 @@ div.tocify {
 ## #   ci &lt;dbl&gt;</code></pre>
 <p><img src="anova-messwiederholung_files/figure-html/unnamed-chunk-25-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Aus der Abbildung geht hervor, dass die Art der Musik wahrscheinlich eher einen Einfluss macht, wenn man motiviert ist. Ansonsten scheinen die Leistungen der Läufer nicht wirklich von der Art der Musik abzuhängen (blaue Linie).</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>runners_motivation <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb54-2"><a href="#cb54-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> endurance, <span class="dt">wid =</span> id, <span class="dt">within =</span> <span class="kw">c</span>(music_type, motivation))</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1"></a>runners_motivation <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb55-2"><a href="#cb55-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> endurance, <span class="dt">wid =</span> id, <span class="dt">within =</span> <span class="kw">c</span>(music_type, motivation))</span></code></pre></div>
 <pre><code>## ANOVA Table (type III tests)
 ## 
 ## $ANOVA
@@ -959,12 +962,12 @@ div.tocify {
 ## 2 9.85e-33         *</code></pre>
 <p>Mauchlys Test auf Sphärizität fällt für uns positiv aus (nicht signifikante Ergebnisse, da <span class="math inline">\(p = .355\)</span> und <span class="math inline">\(p = .810\)</span> und somit beide <span class="math inline">\(p &gt; .05\)</span>), weshalb wir eine “normale” ANOVA mit Messwiederholung berechnen können, ohne die Freiheitsgrade der Teststaistik im Anschluss zu korrigieren. Wir erhalten einen signifikanten Haupteffekt für den Faktor “Art der Musik”, <span class="math inline">\(F(2, 100) = 222.43, p &lt; . 001, \eta_G^2 = .599\)</span>, und einen signifikanten Haupteffekt für den Faktor “Motivation beim Laufen”, <span class="math inline">\(F(1, 50) = 96.01, p &lt; 001, \eta_G^2 = .288\)</span>. Viel wichtiger ist an dieser Stelle der signifikante <strong>Interaktionseffekt</strong>, <span class="math inline">\(F(2, 100) = 168.33, p &lt; .001, \eta_G^2 = .482\)</span>. Wenn der Interaktionseffekt signifikant ist, <em>können wir die Haupteffekte nicht einzeln interpretieren</em>. Bzw. wir können es schon (niemand hält uns davon ab), aber es macht keinen Sinn.</p>
 <p>Bei einer ANOVA mit Messwiederholung können wir dem Interaktionseffekt wieder mit einer <em>Simple Effects Analysis</em> (siehe <a href="faktorielle-anova.html">faktorielle ANOVA</a>) entgegentreten. Dabei betrachten wir den Unterschied in der gefühlten Ausdauer zwischen den Läufern pro Faktorstufe von “Art der Musik” und berechnen jeweils einfaktorielle ANOVAS. Anschließend ist es eine gute Idee, die <span class="math inline">\(p\)</span>-Werte aufgrund multipler Testungen mit <code>adjust_pvalue()</code> zu korrigieren. Mit <code>add_significance()</code> können wir unsere so heiß geliebten Signifikanzsternchen ("*") ausgeben lassen.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a>runners_motivation <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb56-2"><a href="#cb56-2"></a><span class="st">  </span><span class="kw">group_by</span>(music_type) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb56-3"><a href="#cb56-3"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> endurance, <span class="dt">wid =</span> id, <span class="dt">within =</span> motivation) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb56-4"><a href="#cb56-4"></a><span class="st">  </span><span class="kw">get_anova_table</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb56-5"><a href="#cb56-5"></a><span class="st">  </span><span class="kw">adjust_pvalue</span>(<span class="dt">method =</span> <span class="st">&quot;holm&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb56-6"><a href="#cb56-6"></a><span class="st">  </span><span class="kw">add_significance</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a>runners_motivation <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb57-2"><a href="#cb57-2"></a><span class="st">  </span><span class="kw">group_by</span>(music_type) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb57-3"><a href="#cb57-3"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> endurance, <span class="dt">wid =</span> id, <span class="dt">within =</span> motivation) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb57-4"><a href="#cb57-4"></a><span class="st">  </span><span class="kw">get_anova_table</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb57-5"><a href="#cb57-5"></a><span class="st">  </span><span class="kw">adjust_pvalue</span>(<span class="dt">method =</span> <span class="st">&quot;holm&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb57-6"><a href="#cb57-6"></a><span class="st">  </span><span class="kw">add_significance</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 10
 ##   music_type Effect   DFn   DFd      F        p `p&lt;.05`   ges    p.adj
 ##   &lt;fct&gt;      &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;    &lt;dbl&gt;

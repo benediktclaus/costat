@@ -472,7 +472,9 @@ div.tocify {
     <li>
       <a href="korrelation.html">Korrelation</a>
     </li>
-    <li class="dropdown-header">Lineare Regression</li>
+    <li>
+      <a href="lineare-regression.html">Lineare Regression</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -633,17 +635,27 @@ div.tocify {
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">library</span>(WRS2)</span>
 <span id="cb6-2"><a href="#cb6-2"></a></span>
 <span id="cb6-3"><a href="#cb6-3"></a><span class="kw">akp.effect</span>(chivalry <span class="op">~</span><span class="st"> </span>house, <span class="dt">data =</span> chivalry_data)</span></code></pre></div>
-<pre><code>## [1] 6.717542</code></pre>
+<pre><code>## $AKPeffect
+## [1] 6.717542
+## 
+## $AKPci
+## [1] 4.543997 8.398953
+## 
+## $call
+## akp.effect(formula = chivalry ~ house, data = chivalry_data)
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;AKP&quot;</code></pre>
 </div>
 <div id="xi" class="section level3">
 <h3><span class="math inline">\(\xi\)</span></h3>
 <p><span class="math inline">\(\xi\)</span> (gesprochen “ksi”) wurde von <span class="citation">Wilcox &amp; Tian (<a href="#ref-Wilcox.2011" role="doc-biblioref">2011</a>)</span> vorgeschlagen und verfolgt die Grundidee einer <em>explanatory effect size</em>. Sie gibt also grob an, wie viel Varianz durch den Effekt “erklärt” wird. Besonders elegant ist <span class="math inline">\(\xi\)</span>, weil die Varianzhomogenität nicht vorausgesetzt wird und mehr als zwei Gruppen miteinander verglichen werden können (wie bspw. in ANOVA-Designs). Berechnet wird sie durch:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">yuen.effect.ci</span>(chivalry <span class="op">~</span><span class="st"> </span>house, <span class="dt">data =</span> chivalry_data)</span></code></pre></div>
 <pre><code>## $effsize
-## [1] 0.9822343
+## [1] 0.9834339
 ## 
 ## $CI
-## [1] 0.9479337 0.9922502</code></pre>
+## [1] 0.9497667 0.9939154</code></pre>
 </div>
 </div>
 </div>
