@@ -4,3 +4,5 @@ ggplot2::theme_set(ggplot2::theme_minimal())
 
 
 library(benelib)
+library(gt)
+library(patchwork)

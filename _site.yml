@@ -25,6 +25,7 @@ navbar:
     - text: Regression
       menu:
        - text: "Überblick"
+         href: regression.html
        - text: "--------"
        - text: "Korrelation"
          href: korrelation.html

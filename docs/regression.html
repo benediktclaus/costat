@@ -11,7 +11,7 @@
 
 
 
-<title>Software</title>
+<title>Regression</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -469,46 +469,27 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Software</h1>
+<h1 class="title toc-ignore">Regression</h1>
 
 </div>
 
 
-<p><img src="images/software_r.jpg" /></p>
-<p>Die moderne Datenanalyse findet heutzutage fast ausschließlich am PC statt. Damit ist die Hardware gesichert und es stellt sich die Frage nach der Statistik-Sotfware. Hier ein kleiner, aber feiner, Überblick über die gängige Statistik-Software mit einigen wohlgemeinten, persönlichen Empfehlungen.</p>
-<div id="ibm-spss-statistics" class="section level1">
-<h1>IBM SPSS Statistics</h1>
-<p>Oder einfach nur kurz “SPSS”. Die Abkürzung stand einmal für “Statistical Package for the Social Sciences” und machte deutlich, wo sich IBM mit diesem kommerziellen Produkt sieht. An vielen Universitäten und Forschungseinrichtungen ist es der Standard zur Datenauswertung. Allerdings auch nur da, was angesichts des hohen Preises nicht verwunderlich ist (für Privatpersonen ist es daher eher ungeeignet). Gelegentlich erscheinen neue Versionen (derzeit 26), doch für das Forschungsfeld der Psychologie oder der Medizin sind meiner Meinung nach seit den frühesten Versionen keine aufregenden Neurungen dazugekommen. Im Gegenteil: essentielle Verfahren, wie die Berechnung von Effektstärken – bspw. Cohens <span class="math inline">\(d\)</span> <span class="citation">(Cohen, <a href="#ref-Cohen.1988" role="doc-biblioref">1988</a>)</span> – werden auch 2020 immer noch sehnlichst vermisst.</p>
-<p>Die Standard-Methoden kann man hier über ein Graphical User Interface (GUI), also durch Klicken und Ziehen mit der Maus, ausführen. Gerade für Einsteiger ist das also echt bequem – auch wenn man für den Funktionsumfang auf IBM angewiesen ist. Zudem ist SPSS, wie breits erwähnt, eine kommerzielle Software, d.h., dass alles “hinter verschlossenen Türen” stattfindet, den Quellcode kann man nicht einsehen und man muss darauf vertrauen, dass das Programm macht, was IBM verspricht. Manchmal macht SPSS jedoch Dinge, die man nicht erwartet. Für alle, die bei einer Faktorenanalyse schon einmal die Rotationsmethode “Promax” angewandt haben: SPSS führt dabei vorher eine Kaiser-Normalisierung durch, von der man im <a href="https://www.ibm.com/support/knowledgecenter/de/SSLVMB_26.0.0/statistics_mainhelp_ddita/spss/base/idh_fact_rot.html">offiziellen Support</a> nichts liest.</p>
+<p><em>Das</em> wichtigste Verfahren im allgemeinen linearen Modell, in dem wir uns in der geisteswissenschaftlich-medizinischen Forschung anscheinend ausschließlich aufhalten, ist die lineare Regression. Mit ihr können wir unter bestimmten Voraussetzungen lineare Zusammenhänge beschreiben, sowohl was die Stärke als auch die Größe eines Zusammenhangs angeht. Und nicht nur das, denn das Verfahren kann so erweitert werden, dass wir Mittelwertsunterschiede testen können (daher ist die Aufteilung dieser Website etwas irreführend).</p>
+<div id="korrelation" class="section level1">
+<h1>Korrelation</h1>
+<p>Mit der <a href="korrelation.html"><strong>Korrelation</strong></a> können wir die <strong>Stärke</strong> eines linearen Zusammenhangs beschreiben. Wie stark hängen z.B. die Durchschnittstemperatur mit der Anzahl der Mückenstiche zusammen? Diese Frage beantwortet die Korrelation. Als Ergebnis erhalten wir einen Korrelationskoeffizienten, typischerweise zwischen 0 und 1, der uns eben angibt, ob ein Zusammenhang gar nicht bis schwach vorhanden ist (Werte nahe 0), oder ob ein Zusammenhang sehr stark ist (Werte nahe 1). Die Stärke eines Zusammenhangs aber sagt noch nichts über die <em>Größe</em> dieses Zusammenhangs aus, denn ein Zusammenhang kann sehr stark sein, also das Verhältnis von Prädiktor zu Kriterium fast linear, jedoch die Größe des Effekts minimal. Interessiert man sich für die Größe eines linearen Zusammenhangs, ist man mit dem Verfahren der <strong>linearen Regression</strong> (s.u.) gut bedient.</p>
 </div>
-<div id="r" class="section level1">
-<h1>R</h1>
-<p><a href="https://www.r-project.org/">R</a> ist eine Programmiersprache für statistische Berechnungen und <em>de facto</em> Standard im Bereich Statistik. Sie ist open source, das heißt, dass der Quellcode auch von Dritten eingesehen werden kann. Zudem ist sie <a href="https://www.r-project.org/">frei zugänglich</a>. Die Tatsache, dass es sich bei R um eine Programmiersprache handelt, schreckt viele ab. Anders als bei IBM SPSS Statistics gibt es hier kein GUI, man führt alle Befehle über die Eingabe von Text aus.</p>
-<p>Warum sollte ich es mir dann also schwer machen und R lernen? Weil es unglaublich umfangreich ist (selbst diese Website wurde mit R erstellt)! Durch den Open-Source-Ansatz kann jeder zum Funktionsumfang von R beitragen. Neue Funktionen oder Erweiterungen werden als Pakete auf einem zentralen Platz zur Verfügung gestellt, sind wiederum frei zugänglich und können sofort zur eigenen Arbeit verwendet werden. Zudem können diese Befehle, wie auch bei der SPSS-Syntax, abgespeichert und mit anderen Forschern geteilt werden. Ergebnisse sind so reproduzierbar.</p>
-<p>Ein weiterer Vorteil von R ist, dass es von Statistikern entwickelt wurde – gleichzeitig ist das auch der größte Nachteil. R hat eine flache Lernkurve; man muss sich also damit beschäftigen, bis man Analysen sicher durchführen kann. Zum Glück gibt es Mittel, Wege und diese Website, um auch ohne große Programmierkenntnisse zurechtzukommen.</p>
+<div id="lineare-regression" class="section level1">
+<h1>Lineare Regression</h1>
+<p>Mit der <a href="lineare-regression.html"><strong>linearen Regression</strong></a> kann man die <strong>Größe</strong> eines linearen Zusammenhangs zwischen beliebig vielen Prädiktoren und einem Kriterium beschreiben und Vorhersagen treffen. Dabei kann man sowohl die Größe eines Zusammenhangs ermitteln als auch die Güte des Modells, d.h. ob das gefundene Modell die Daten gut beschreibt, oder ob da etwas nicht ganz stimmt. Als eines der grundlegenden statistischen Verfahren lohnt es sich, dieses gut zu kennen und sicher durchführen zu können.</p>
 </div>
-<div id="rstudio" class="section level1">
-<h1>RStudio</h1>
-<p><a href="https://rstudio.com/">RStudio</a> ist das, was jeden R-Hack am Leben hält. R an sich (auch “base R” genannt) ist voll funktionsfähig, doch das Arbeiten damit alleine ist sehr mühselig. Als Ergänzung zu R gibt es RStudio, ein Programm, dass das Arbeiten mit R deutlich vereinfacht. Hier findet man eine klare Benutzeroberfläche, automatische Code-Ergänzungen, Hilfen, und, und, und. Wer mit R arbeitet, sollte hierauf nicht verzichten und direkt RStudio mit installieren.</p>
-<p>Was mache ich aber, wenn ich keine Zeit habe, R zu lernen und trotzdem einen tollen Funktionsumfang möchte? Dafür gibt es JASP!</p>
+<div id="repeated-measures-correlation" class="section level1">
+<h1>Repeated Measures Correlation</h1>
+<p>Die “normale” Korrelation berechnet die Stärke eines Zusammenhangs nur zwischen zwei unabhängigen Variablen. Was ist aber, wenn ich den Zusammenhang zwischen zwei Variablen zu mehreren Messzeitpunkten erfasst habe? Die Messungen sind ja dann nicht mehr unabhängig und ich habe dann für bspw. einen Probanden mehrere Variablenpaare vorliegen. Hier kommt die <em>repeated measures correlation</em> (<strong>RM Korrelation</strong>) ins Spiel, die genau für diesen Fall vorgesehen ist. Sie nimmt grob gesagt die Variablenpaare zu den jeweiligen Messzeitpunkten und spuckt am Ende auch einen Korrelationskoeffizienten aus. Trotz der Mächtigkeit dieses Verfahrens und seiner weitgreifenden Anwendungsmöglichkeiten, scheint das Verfahren in der Praxis kaum etabliert zu sein.</p>
 </div>
-<div id="jasp" class="section level1">
-<h1>JASP</h1>
-<p><a href="https://jasp-stats.org/">Jeffrey’s Amazing Statistics Program</a> (JASP) ist der lang ersehnte Silberstreif am Horizont. Es bietet alle Vorteile von R und stellt dem Benutzer eine Oberfläche zum Klicken und Ziehen zur Verfüfung. Der Reihe nach: JASP ist open source und frei zugänglich. Es basiert auf R und man kann sich dennoch in einem klar strukturierten GUI bewegen. Der Funktionsumfang ist gigantisch, von klassichen, statistischen Methoden bis hin zu Machine-Learning-Anwendungen und Meta-Analysen ist im Prinzip alles dabei.</p>
-<p>Hinzu kommt, dass eine abgespeicherte JASP-Datei immer den Original-Datensatz und die Ergebnisse enthält. Man muss also nicht Analysen und Output teilen, es reicht eine Datei, in der eine andere Person klar nachvollziehen kann, wie die Daten aussehen, was und mit welchen Einstellungen es berechnet wurde und was am Ende das Ergebnis war. Besonders wertvoll ist, dass man diesen Output direkt im <a href="https://osf.io/">Open Science Framework</a> (OSF) teilen kann, so dass alle Analysen transparent, nachvollziehbar und reproduzierbar sind.</p>
-<p>Wer also als Einsteiger oder Experte das Beste aus beiden Welten will, dem sei JASP ans Herz gelegt.</p>
-</div>
-<div id="worauf-liegt-hier-der-fokus" class="section level1">
-<h1>Worauf liegt hier der Fokus?</h1>
-<p>Der Fokus der Chamber of Statistics liegt auf R. JASP klingt verlockend, und das ist es auch (nutzt es ohne Scheu!), aber in R kann man einfach immer noch am meisten erreichen.</p>
-</div>
-<div id="literatur" class="section level1 unnumbered">
-<h1>Literatur</h1>
-<div id="refs" class="references">
-<div id="ref-Cohen.1988">
-<p>Cohen, J. (1988). <em>Statistical Power Analysis for the Behavioral Sciences</em> (2nd ed.). Lawrence Erlbaum Associates.</p>
-</div>
-</div>
+<div id="multilevel-linear-models" class="section level1">
+<h1>Multilevel Linear Models</h1>
+<p><strong>Multilevel Linear Models</strong> (MLM) sind lineare Regressionen auf Steroiden. Beim genaueren Hinsehen ergeben sich für unsere Anwendungen der linearen Regression teilweise ernsthafte Probleme. Eine <a href="voraussetzungen.html">Voraussetzung im allgemeinen linearen Modell</a> ist bspw. die Unabhängigkeit der Residuen. Aber in vielen Fällen kann diese Annahme verletzt sein. Ein klassisches Beispiel sind messwiederholte Daten, bei denen ich pro Proband mehrere Messzeitpunkte erhebe. Jeder Proband für sich macht aber wahrscheinlich individuelle Fehler, weshalb die Residuen (die Fehler) eben nicht unabhängig sind. Natürlich könnten wir mithilfe der ANOVA mit Messwiederholung stumpf die Mittelwerte prüfen, aber diese hat ernstzunehmende Einschränkungen. Stattdessen kann man die Daten innerhalb verschiedener Ebenen (<em>levels</em>) einteilen und Prädiktoren gezielt den einzelnen Ebenen zuweisen. MLM sind ein elegantes und ungalublich breit einsetzbares wie mächtiges Verfahren.</p>
 </div>
 
 
