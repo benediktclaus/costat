@@ -462,13 +462,4 @@ anova(model_1, model_2)
 
 Und wir stellen fest, dass unser Modell durch das Aufnehmen von `sales` als Prädiktor signifikant verbessert wird, $\chi^2(1) = 7.66, p = .007$.
 
-# Aus der Praxis
-## Klassisch
-### EDA
-### Durchführung
-### Berichten
-
-## Robust
-Folgt.
-
 # Literatur
