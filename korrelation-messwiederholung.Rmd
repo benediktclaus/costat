@@ -15,6 +15,7 @@ ggplot2::theme_set(ggplot2::theme_minimal())
 
 library(benelib)
 library(patchwork)
+library(gt)
 ```
 
 
@@ -28,42 +29,150 @@ library(patchwork)
 <!-- ``` -->
 
 <!-- Spanner Image -->
-![]()
+![](images/typing_r.jpg)
 
-Dieses Verfahren...
+Mit der Korrelation für Messwiederholungen [*repeated measures correlation*; @Bakdash.2017] können wir die die Korrelation von zwei Variablen berechnen, die zu mehreren Messzeitpunkten erhoben wurden. Bei der ["normalen" Korrelation](korrelation.html) haben wir die Stärke eines Zusammenhangs zwischen zwei Variablen berechnet, die einmal erhoben wurden. Es gibt aber Fälle, in denen diese beiden Variablen über mehrere Messzeitpunkte erfasst wurden. Man könnte jetzt natürlich mehrmals eine Korrelation berechnen, aber das ist irgendwie merkwürdig, denn wir Fragen uns ja, was ist denn jetzt insgesamt der Zusammenhang zwischen diesen beiden Variablen? Ein Beispiel: Jeder Psychologe kennt den *speed-accuracy tradeoff*, also das Zusammenspiel zwischen der Geschwindigkeit einer Aufgabe und der Akkuratheit, mit der man diese Aufgabe durchführt, denn je schneller man ist, desto mehr Fehler macht man üblicherweise [@Wickelgren.1977]. Um diese Aussage zu überprüfen, könnten wir untersuchen, wie Geschwindigkeit eines Probanden mit seiner Akkuratheit in einer bestimmten Aufgabe zusammenhängen.
 
 # Pakete 
 Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket `costatcompanion`.
+
+Für dieses Verfahren benötigen wir zusätzlich das Paket `rmcorr`, das ganz normal heruntergeladen und installiert werden kann.
 
 ```{r message=FALSE}
 library(tidyverse)
 library(haven)
 library(rstatix)
 library(costatcompanion)
+library(rmcorr)
 ```
 
 # Beispiel
-## Klassisch
-### Voraussetzungen
-### EDA
-### Durchführung
-### Berichten
+Ein klassisches Beispiel ist die "Tipp-Leistung" auf einer Tastatur. Wir könnten uns zufällig ein paar Probanden, üblicherweise Psychologie-Studenten, ins Labor einladen und ihnen über einen Bildschirm eine Liste von zufälligen Wörtern präsentieren, die sie über eine Computer-Tastatur eingeben sollen. Das lassenw ir usnere Probanden jeweils fünf Mal machen. Dabei messen wir die Geschwindigkeit, mit der sich das machen (in Tastenanschlägen pro Minute) und die Akkuratheit (in Prozent). Eine Akkuratheit von 100 bedeutet dabei, dass keine Fehler gemacht wurden, dass also eben alles akkurat und richtig eingegeben wurde.
 
-## Robust
+Die Daten dazu finden wir entweder in der SPSS-Datei `typing.sav` oder im [Paket `costatcompanion`](pakete.html #costatcompanion) unter demselben Namen. Der Datensatz enthält zunächst die Variable `id`, in der die Probanden-ID eingetragen wurde, dann die Variable `trial`, die angibt, um den wievielten Verusch es sich für diesen Probanden handelt. `speed` ist die Geschwindigkeit eines Probanden pro Durchlauf in Tastenanschlägen pro Minute. Schließlich finden wir die "Leistung" des Probanden in der Spalte `accuracy`.
+
+```{r}
+costatcompanion::typing
+```
 
 
-## Non-parametrisch
+## Voraussetzungen
+Auch mit der Korrelation für Messwiederholungen bewegen wir uns im allgemeinen linearen Modell, also gelten die [üblichen Voraussetzungen](voraussetzungen.html). Eine Ausnahme ist die Unabhängigkeit der Messungen, die wir ja gerade explizit berücksichtigen wollen. Zudem sollten die Residuen normalverteilt sein und ein linearer Zusammenhang zwischen den beiden Variablen bestehen.
+
+## EDA
+Wie immer sollten wir unsere Daten auf Ausreißer und extreme Werte kontrollieren und uns deskriptive Statistiken ausgeben lassen. Dabei gibt es schon einmal keinen Probanden, der alles falsch gemacht hat, aber durchaus welche, die fehlerfrei gearbeitet haben. Zudem haben wir Probanden dabei, die anscheinend mit dem Adler-System tippen (den FInger so lange über der Tastatur kreisen lassen, bis der zu drückende Buchstabe identifiziert ist und angegriffen werden kann) und richtig flinke FInger mit fast 600 Tastenanschlägen pro Minute. Wir werden außerdem feststellen, dass wir Daten von 87 Probanden zu jeweils fünf Messungen vorliegen haben. Zudem ist es bei Korrelationen (und Regressionen) immer eine gute Idee, die Daten als Streudiagramm abzubilden.
+
+```{r}
+# Deskriptive Statistiken
+typing %>% 
+  select(-id, -trial) %>% 
+  get_summary_stats()
+
+# Anzahl der Probanden und Messungen
+typing %>% 
+  count(id, sort = TRUE)
+```
+
+```{r echo=FALSE}
+typing %>% 
+  ggplot(aes(speed, accuracy)) +
+  geom_point() +
+  labs(x = "Speed [keystrokes/minute]", y = "Accuracy [%]")
+```
+
+Hier stellen wir etwas verblüffendes fest: Eigentlich erwarten wir den *speed-accuracy tradeoff*, als eine Verringerung der `accuracy` bei höherem `speed`, aber wir scheinen genau das Gegenteil zu finden. Nach unseren Daten scheint eine höhere Geschwindigkeit der Probanden mit einer höheren Akkuratheit einherzugehen. Was stimmt denn nun? Im Prinzip tatsächlich beides.
+
+## Grundidee
+Bei Messwiederholunegn gehen wir davon aus, dass die Daten eines einzelnen Probanden innerhalb dieses Probanden ähnlicher sind als die Daten zwischen Probanden. Uns interessiert außerdem der Zusammenhang zwischen Geschwindigkeit und Akkuratheit *innerhalb* eines Probanden, aber gemittelt für alle getesteten Probanden. Nun gibt es aber jene Probanden, die den Computer meiden wie der Teufel das Weihwasser. Auf der anderen Seite gibt es die Probanden, die vielleicht mehrere Stunden täglich am Computer arbeiten und die Tastatur benutzen müssen. Wir haben in unserer Stichprobe also die Anfänger und die Experten. Was uns jetzt nicht interessiert, ist der Zusammenhang über alle Probanden hinweg (also das, was wir in unserem Streudiagramm gezeichnet haben), sondern der intrapersonelle Zusammenhang, unabhängig von interpersonellen Eigenschaften. Genau da kommt die Korrelation mit Messwiederholungen ins Spiel. Vereinfacht gesagt nehmen wir uns den Zusammenhang jeweils pro Proband und "mitteln" diesen über alle Probanden.
+
+## Falsche Ansätze
+### Gesamte Korrelation
+Natürlich könnte man die Korrelation von `speed` und `accuracy` über alle Probanden und Messungen hinweg berechnen, also *zwischen* den Probanden und nicht *innerhalb* der Probanden. Das wollen wir zwar nicht, aber wir können es ja mal versuchen. Es ergibt sich eine sehr starke *positive* Korrelation zwischen `speed` und `accuracy`.
+
+```{r}
+typing %>% 
+  cor_test(vars = c(speed, accuracy))
+```
+
+
+### Getrennte Korrelationen
+Ein (verständlicher) Ansatz wäre es, die Korrelation zwischen `speed` und `accuracy` für jeden Messzeitpunkt zu errechnen. Dabei kommen wir allerdings auf 5 Korrelationskoeffizienten und betrachten den Zusammenhang wieder *zwischen* den Probanden und nicht *innerhalb* der Probanden. Auch hier ergeben sich wieder starke *positive* Korrelationen zwischen `speed` und `accuracy`.
+
+```{r}
+typing %>% 
+  nest_by(trial) %>% 
+  mutate(
+    correlations = list(cor_test(data, vars = c(speed, accuracy)))
+  ) %>% 
+  unnest(correlations)
+```
+
+### Mittelwerte pro Proband
+Genauso verheerend ist es, erst die Mittelwerte pro Proband zu ermitteln und dann eine einfache Korrelation, weil wir genau den Zusammenhang *innerhalb* der Probanden, den wir ermitteln wollen, durch die Bildung des Mittelwerts eliminieren. Übrig belibt der nicht gewollte Zusammenhang *zwischen* den Probanden.
+
+```{r}
+# Mittelwert von speed und accuracy pro Proband
+participant_means <- typing %>%
+  group_by(id) %>% 
+  summarise(across(c(speed, accuracy), mean))
+
+# Korrelation dieser Mittelwerte
+participant_means %>% 
+  cor_test(vars = c(speed, accuracy))
+```
+
+```{r echo=FALSE}
+participant_means %>% 
+  ggplot(aes(speed, accuracy)) +
+  geom_point()
+```
+
+Warum gehe ich so ausführlich auf das ein, was falsch ist? Weil es immer noch oft gemacht wird, und ich ein Bewusstsein dafür schaffen möchte, dass es anders gehen muss.
+
+## Durchführung
+Das richtige Verfahren ist, wie gesagt, die Korrelation für Messwiederholungen. Diese ist mit der Funktion `rmcorr()` sehr einfach durchzuführen. Das Ergebnis speichern wir in einem Objekt, dessen Namen wir frei bestimmen. Um nun endlich die Korrelation zu erhalten, rufen wir das Objekt einfach auf. Unter Umständen erhält man eine Warnung darüber, dass die Variable, die die Probanden angibt (in diesem Falle `id`) in einen Faktor überführt wurde. Das können wir einfach so hinnehmen und muss uns nicht weiter stören.
+
+```{r warning=FALSE}
+rm_typing <- rmcorr(participant = "id", measure1 = speed, measure2 = accuracy, dataset = typing)
+
+rm_typing
+```
+
+Und tatsächlich erhalten wir hier eine signifikante, negative Korrelation zwischen `speed` und `accuracy`, $r_{rm}(347) = -.80 [-.83, -.76], p < .001$. Was hat `rmcorr()` nun unter der Haube gemacht? Es hat den Zusammenhang zwischen unseren beiden Variablen *innerhalb* der Probanden betrachtet. Das ist fast so, also würde man für jeden Probanden eine eigene Regressionsgerade einzeichnen, allerdings mit einigen Einschränkungen (bspw. haben alle Geraden pro Proband bei dieser Methode dieselbe Steigung).
+
+Das kann man sich auch mit dem nativen R-Befehl `plot()` ansehen. Hier sieht man, wie jeder Proband eine eigene Farbe bekommen hat und pro Proband eine "Regressionsgerade" geschätzt wurde. Zusätzlich kann man sich mit dem Argument `overall = TRUE` anzeigen lassen, wie die Korrelation aussehen würde, wenn wir die Messwiederholung *nicht* beachten würden.
+
+
+```{r}
+plot(rm_typing)
+```
+
+```{r}
+plot(rm_typing, overall = TRUE)
+```
+
+Wie man sich das mit `ggplot2` erstellen kann, betrachten wir bei Multilevel Linear Models.
+
+```{r echo=FALSE, message=FALSE}
+lme4::lmer(accuracy ~ speed + (1|id), data = typing) %>% 
+  broom.mixed::augment() %>% 
+  ggplot(aes(speed, .fitted, color = id)) +
+  geom_point(aes(x = speed, y = accuracy), alpha = 0.4) +
+  geom_line(aes(group = id)) +
+  scale_color_personal() +
+  theme(legend.position = "none") +
+  labs(x = "Speed [keystrokes/minute]", y = "Accuracy [%]")
+```
+
+
+## Berichten
+We found a negative, significant repeated measures correlation between speed and accuracy, indicating less accuracy with greater speed in a typing task, $r_{rm}(347) = -.80 [-.83, -.76], p < .001$.
 
 
 # Aus der Praxis
-## Klassisch
-### EDA
-### Durchführung
-### Berichten
-
-## Robust
-
-## Non-parametrisch
+## EDA
+## Durchführung
+## Berichten
 
 
 # Literatur

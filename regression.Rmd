@@ -15,7 +15,7 @@ Mit der [**Korrelation**](korrelation.html) können wir die **Stärke** eines li
 # Lineare Regression
 Mit der [**linearen Regression**](lineare-regression.html) kann man die **Größe** eines linearen Zusammenhangs zwischen beliebig vielen Prädiktoren und einem Kriterium beschreiben und Vorhersagen treffen. Dabei kann man sowohl die Größe eines Zusammenhangs ermitteln als auch die Güte des Modells, d.h. ob das gefundene Modell die Daten gut beschreibt, oder ob da etwas nicht ganz stimmt. Als eines der grundlegenden statistischen Verfahren lohnt es sich, dieses gut zu kennen und sicher durchführen zu können.
 
-# Repeated Measures Correlation
+# Korrelation mit Messwiederholung
 Die "normale" Korrelation berechnet die Stärke eines Zusammenhangs nur zwischen zwei unabhängigen Variablen. Was ist aber, wenn ich den Zusammenhang zwischen zwei Variablen zu mehreren Messzeitpunkten erfasst habe? Die Messungen sind ja dann nicht mehr unabhängig und ich habe dann für bspw. einen Probanden mehrere Variablenpaare vorliegen. Hier kommt die *repeated measures correlation* (**RM Korrelation**) ins Spiel, die genau für diesen Fall vorgesehen ist. Sie nimmt grob gesagt die Variablenpaare zu den jeweiligen Messzeitpunkten und spuckt am Ende auch einen Korrelationskoeffizienten aus. Trotz der Mächtigkeit dieses Verfahrens und seiner weitgreifenden Anwendungsmöglichkeiten, scheint das Verfahren in der Praxis kaum etabliert zu sein.
 
 # Multilevel Linear Models

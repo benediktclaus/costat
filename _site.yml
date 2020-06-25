@@ -29,6 +29,8 @@ navbar:
        - text: "--------"
        - text: "Korrelation"
          href: korrelation.html
+       - text: "Korrelation mit Messwiederholung"
+         href: korrelation-messwiederholung.html
        - text: "Lineare Regression"
          href: lineare-regression.html
     - text: Mittelwerte vergleichen

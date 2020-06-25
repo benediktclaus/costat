@@ -61,7 +61,7 @@ unclean_names <- tibble(
 clean_names(unclean_names)
 ```
 
-# costatcompanion
+# costatcompanion {#costatcompanion}
 Auf das Arbeiten mit dieser Website abgestimmt ist das Paket `costatcompanion` -- der perfekte Begleiter für die Kammer der Statistik. Das Paket enthält kleinere Hilfs-Funktionen und vor allem alle behandelten Datensätze. Es its nicht über CRAN verfügbar und muss von GitHub installiert werden. Eingebunden wird es über den normalen `library()` Befehl.
 
 ```{r eval=FALSE}
