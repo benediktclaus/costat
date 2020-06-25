@@ -138,7 +138,7 @@ rm_typing <- rmcorr(participant = "id", measure1 = speed, measure2 = accuracy, d
 rm_typing
 ```
 
-Und tatsächlich erhalten wir hier eine signifikante, negative Korrelation zwischen `speed` und `accuracy`, $r_{rm}(347) = -.80 [-.83, -.76], p < .001$. Was hat `rmcorr()` nun unter der Haube gemacht? Es hat den Zusammenhang zwischen unseren beiden Variablen *innerhalb* der Probanden betrachtet. Das ist fast so, also würde man für jeden Probanden eine eigene Regressionsgerade einzeichnen, allerdings mit einigen Einschränkungen (bspw. haben alle Geraden pro Proband bei dieser Methode dieselbe Steigung).
+Und tatsächlich erhalten wir hier eine signifikante, negative Korrelation zwischen `speed` und `accuracy`, $r_{rm}(347) = -.80, 95\% \text{CI} [-.83, -.76], p < .001$. Was hat `rmcorr()` nun unter der Haube gemacht? Es hat den Zusammenhang zwischen unseren beiden Variablen *innerhalb* der Probanden betrachtet. Das ist fast so, also würde man für jeden Probanden eine eigene Regressionsgerade einzeichnen, allerdings mit einigen Einschränkungen (bspw. haben alle Geraden pro Proband bei dieser Methode dieselbe Steigung).
 
 Das kann man sich auch mit dem nativen R-Befehl `plot()` ansehen. Hier sieht man, wie jeder Proband eine eigene Farbe bekommen hat und pro Proband eine "Regressionsgerade" geschätzt wurde. Zusätzlich kann man sich mit dem Argument `overall = TRUE` anzeigen lassen, wie die Korrelation aussehen würde, wenn wir die Messwiederholung *nicht* beachten würden.
 
@@ -151,7 +151,7 @@ plot(rm_typing)
 plot(rm_typing, overall = TRUE)
 ```
 
-Wie man sich das mit `ggplot2` erstellen kann, betrachten wir bei Multilevel Linear Models.
+Wie man sich diese nützliche Abbildung mit dem umfangreichen `ggplot2` erstellen kann, betrachten wir bei Multilevel Linear Models.
 
 ```{r echo=FALSE, message=FALSE}
 lme4::lmer(accuracy ~ speed + (1|id), data = typing) %>% 
@@ -166,13 +166,46 @@ lme4::lmer(accuracy ~ speed + (1|id), data = typing) %>%
 
 
 ## Berichten
-We found a negative, significant repeated measures correlation between speed and accuracy, indicating less accuracy with greater speed in a typing task, $r_{rm}(347) = -.80 [-.83, -.76], p < .001$.
+We found a negative, significant repeated measures correlation between speed and accuracy, indicating less accuracy with greater speed in a typing task, $r_{rm}(347) = -.80, 95\% \text{CI} [-.83, -.76], p < .001$.
 
 
 # Aus der Praxis
+@Claus.2020 haben sich den Placebo-Effekt von Antidepressiva vorgenommen. Ein Großteil, wenn nicht sogar die gesamte der Wirkung, von Antidepressiva ist nämlich auf den Placebo-Effekt zurückzuführen [@Kirsch.2010; @Whitaker.2015; @Moncrieff.2004]. Sollte dem tatsächlich so sein, dann könnte man die Wirkung von Antidepressiva deutlich erhöhen, indem man den Placebo-Effekt an sich verstärkt. Genau das versuchten die Autoren, indem sie eine kognitiv-verhaltenstherapeutische Intervention entwickelten, die genau diesen Effekt für Patienten mit uniplorarer depressiver STörung direkt verstärken sollte. Diese Intervention testeten sie im Rahmen einer randomisierten Kontrollstudie auf ihre Wirksamkeit. Einer der treibenden Kräfte des Placebo-Effekts scheint die Erwartung eines Patienten zu sein, auf jeden Fall eine Verbesserung zu erleben [@Kirsch.2011]. Diese Erwartung, so wie andere klinische Maße, erhoben sie in vier aufeinanderfolgenden Wochen an ihren Patienten.
+
+Die Daten lassen sich in der Datei `placebo_amplification.sav` oder [Paket `costatcompanion`](pakete.html #costatcompanion) unter demselben Namen. Die Erwartung eines Patienten, durch die Therapie sicher eine Verbesserung zu erwarten, ist in der Variable `exp_certain` zu finden und kann Werte zwischen 0 und 100 annehmen (Überzeugungsrating in Prozent). Die Autoren interessierte vor allen Dingen die selbst eingeschätzte Depressivität der Patienten, die sie mit Becks Depressions-Inventar (BDI) erhoben haben, dessen Daten in der Variable `bdi` zu finden sind.
+
+```{r}
+costatcompanion::placebo_amplification
+```
+
 ## EDA
+```{r}
+placebo_amplification %>% 
+  select(exp_certain, bdi) %>% 
+  get_summary_stats()
+```
+
+```{r echo=FALSE}
+lme4::lmer(bdi ~ exp_certain + (1 | id), data = placebo_amplification) %>% 
+  broom.mixed::augment() %>% 
+  ggplot(aes(exp_certain, .fitted, color = id)) +
+  geom_point(aes(y = bdi), alpha = 0.4) +
+  geom_line(aes(group = id)) +
+  scale_color_personal() +
+  theme(legend.position = "none") +
+  labs(x = "Expected Certainty of an Improvement", y = "BDI score")
+```
+
+
 ## Durchführung
+Die Durchführung ist wie immer kurz und schmerzlos.
+
+```{r warning=FALSE}
+rmcorr("id", measure1 = exp_certain, measure2 = bdi, dataset = placebo_amplification)
+```
+
 ## Berichten
+We found the expected size of an improvement to be significantly and negatively correlated with the patients' BDI-scores across all measurements, $r_{rm}(119) = -.49, 95\% \text{CI} [-.62, -34], p < .001$.
 
 
 # Literatur
