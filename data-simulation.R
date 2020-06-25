@@ -1,13 +1,12 @@
 # Pakete ------------------------------------------------------------------
 library(tidyverse)
-library(MASS)
 library(haven)
 
 
 # Regression --------------------------------------------------------------
-# Korrelation
+# Korrelation und Regression
 set.seed(20200609)
-mvrnorm(100, mu = c(0,0,0,0), Sigma = matrix(c(1, 0.86, 0.79, 0.75, 0.86, 1, 0.95, 0.80, 0.79, 0.95, 1, 0.70, 0.75, 0.80, 0.70, 1), ncol = 4), empirical = TRUE) %>% 
+MASS::mvrnorm(100, mu = c(0,0,0,0), Sigma = matrix(c(1, 0.86, 0.79, 0.75, 0.86, 1, 0.95, 0.80, 0.79, 0.95, 1, 0.70, 0.75, 0.80, 0.70, 1), ncol = 4), empirical = TRUE) %>% 
   as_tibble(.name_repair = "unique") %>% 
   rename(temperature = "...1", swimmers = "...2", sales = "...3", beatings = "...4") %>% 
   mutate(temperature = round(temperature * 6 + 25, 1),
@@ -16,6 +15,43 @@ mvrnorm(100, mu = c(0,0,0,0), Sigma = matrix(c(1, 0.86, 0.79, 0.75, 0.86, 1, 0.9
          beatings = round(beatings * 2 + 5)) %>% 
   rownames_to_column(var = "day_id") %>% 
   write_sav("data/swimmers.sav")
+
+# Repeated Measures Korrelation
+compute_rmcorr_data <- function(n = 5, mean_x = 0, mean_y = 0, correlation = -0.80, speed_scaling = 1) {
+  MASS::mvrnorm(
+    n = n,
+    mu = c(mean_x, mean_y),
+    Sigma = matrix(
+      c(1, correlation, correlation, 1),
+      nrow = 2,
+      dimnames = list(c("speed", "accuracy"))
+    ),
+    empirical = TRUE
+  ) %>%
+    as_tibble() %>% 
+    mutate(speed = speed * speed_scaling)
+}
+
+set.seed(20200624)
+tibble(
+  x = runif(100, 5, 110),
+  y_fitted = x * 0.8 + 10,
+  errors = rnorm(100, sd = 5),
+  y = pmin(y_fitted + errors, 100)
+) %>%
+  select(x, y) %>%
+  filter(y > 25) %>% 
+  rownames_to_column(var = "id") %>%
+  rowwise() %>%
+  mutate(
+    individual_data = list(compute_rmcorr_data(mean_x = x, mean_y = y, speed_scaling = 5))
+  ) %>%
+  unnest(individual_data) %>%
+  mutate(
+    accuracy = pmin(accuracy, 100)
+  ) %>% 
+  select(id, speed, accuracy) %>% 
+  write_sav("data/typing.sav")
 
 
 # t-Tests -----------------------------------------------------------------
