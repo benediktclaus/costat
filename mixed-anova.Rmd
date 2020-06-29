@@ -1,0 +1,69 @@
+---
+title: "Mixed ANOVA"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+<!-- Only when working on it -->
+```{r echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(fig.align = "center", dpi = 350)
+ggplot2::theme_set(ggplot2::theme_minimal())
+
+
+library(benelib)
+library(patchwork)
+```
+
+
+<!-- Use this after finalizing work -->
+<!-- ```{r echo=FALSE, message=FALSE} -->
+<!-- knitr::read_chunk("setup.R") -->
+<!-- ``` -->
+
+<!-- ```{r echo=FALSE, message=FALSE} -->
+<!-- <<setup>> -->
+<!-- ``` -->
+
+<!-- Spanner Image -->
+![](images/students_r.jpg)
+
+Die mixed ANOVA, oder auch gemischte ANOVA, nutzt man, wenn man die Einflüsse von sowohl Zwischensubjekt- als auch Innersubjektfaktoren gleichzeitig untersuchen will. Bis jetzt haben wir nur die Einflüsse von *entweder* Zwischensubjekt- oder Innersubjektfktoren untersucht. Ziemlich häufig kommt es aber auch vor, dass wir beides gleichzeitig untersuchen wollen. Beispielweise erheben wir im Rahmen einer klinischen Studie Daten über die Zeit hinweg, so etwa vor und nach einer Therapie. Der entsprechende Innersubjektfaktor wäre hier etwas wie "Zeit", weil wir diese beiden Messungen pro Proband ("innerhalb" der Probanden) durchführen. Gleichzeitig haben wir die zu untersuchende Therapie auch gegen eine Kontrollgruppe getestet, also bekamen einige Probanden die zu untersuchende Therapie und einige einen Placebo. Jetzt haben wir gleichzeitig auch ein Zwischensubjekt-Design, weil die Probanden natürlich nicht in beiden Gruppen, sondern nur in einer waren.
+
+# Pakete 
+Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket `costatcompanion`.
+
+```{r message=FALSE}
+library(tidyverse)
+library(haven)
+library(rstatix)
+library(costatcompanion)
+```
+
+# Beispiel
+## Klassisch
+### Voraussetzungen
+### EDA
+### Durchführung
+### Berichten
+
+## Robust
+
+
+## Non-parametrisch
+
+
+# Aus der Praxis
+## Klassisch
+### EDA
+### Durchführung
+### Berichten
+
+## Robust
+
+## Non-parametrisch
+
+
+# Literatur
