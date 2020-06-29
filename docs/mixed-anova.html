@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Mixed ANOVA</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link rel="shortcut icon" href="images/broom.ico">
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Chamber of Statistics</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Allgemeines
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="software.html">Software</a>
+    </li>
+    <li>
+      <a href="r-basics.html">R Basics</a>
+    </li>
+    <li>
+      <a href="stil.html">Stil</a>
+    </li>
+    <li>
+      <a href="pakete.html">Pakete</a>
+    </li>
+    <li>
+      <a href="daten-import.html">Daten-Import</a>
+    </li>
+    <li>
+      <a href="data-wrangling.html">Data Wrangling</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="regression.html">Überblick</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="korrelation.html">Korrelation</a>
+    </li>
+    <li>
+      <a href="korrelation-messwiederholung.html">Korrelation mit Messwiederholung</a>
+    </li>
+    <li>
+      <a href="lineare-regression.html">Lineare Regression</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Mittelwerte vergleichen
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="mittelwerte-vergleichen.html">Überblick</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">t-Tests</li>
+    <li>
+      <a href="t-test-einstichprobe.html">Bei einer Stichprobe</a>
+    </li>
+    <li>
+      <a href="t-test-unabhaengig.html">Bei unabhängigen Stichproben</a>
+    </li>
+    <li>
+      <a href="t-test-abhaengig.html">Bei abhängigen Stichproben</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">ANOVAs</li>
+    <li>
+      <a href="einfaktorielle-anova.html">Einfaktorielle ANOVA</a>
+    </li>
+    <li>
+      <a href="faktorielle-anova.html">Faktorielle ANOVA</a>
+    </li>
+    <li class="dropdown-header">ANCOVA</li>
+    <li>
+      <a href="anova-messwiederholung.html">ANOVA mit Messwiederholung</a>
+    </li>
+    <li class="dropdown-header">Mixed ANOVA</li>
+    <li>
+      <a href="kontraste.html">Geplante Kontraste</a>
+    </li>
+    <li>
+      <a href="post-hoc-tests.html">Post-hoc-Tests</a>
+    </li>
+    <li class="divider"></li>
+  </ul>
+</li>
+<li>
+  <a href="effektstaerken.html">Effektstärken</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-question"></span>
+     
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="voraussetzungen.html">Voraussetzungen im GLM</a>
+    </li>
+    <li>
+      <a href="formelsammlung.html">Formelsammlung</a>
+    </li>
+    <li>
+      <a href="zentraler-grenzwertsatz.html">Zentraler Grenzwertsatz</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">
+    <span class="fa fa-info"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Mixed ANOVA</h1>
+
+</div>
+
+
+<!-- Only when working on it -->
+<!-- Use this after finalizing work -->
+<!-- ```{r echo=FALSE, message=FALSE} -->
+<!-- knitr::read_chunk("setup.R") -->
+<!-- ``` -->
+<!-- ```{r echo=FALSE, message=FALSE} -->
+<!-- <<setup>> -->
+<!-- ``` -->
+<!-- Spanner Image -->
+<p><img src="images/students_r.jpg" /></p>
+<p>Die mixed ANOVA, oder auch gemischte ANOVA, nutzt man, wenn man die Einflüsse von sowohl Zwischensubjekt- als auch Innersubjektfaktoren gleichzeitig untersuchen will. Bis jetzt haben wir nur die Einflüsse von <em>entweder</em> Zwischensubjekt- oder Innersubjektfktoren untersucht. Ziemlich häufig kommt es aber auch vor, dass wir beides gleichzeitig untersuchen wollen. Beispielweise erheben wir im Rahmen einer klinischen Studie Daten über die Zeit hinweg, so etwa vor und nach einer Therapie. Der entsprechende Innersubjektfaktor wäre hier etwas wie “Zeit”, weil wir diese beiden Messungen pro Proband (“innerhalb” der Probanden) durchführen. Gleichzeitig haben wir die zu untersuchende Therapie auch gegen eine Kontrollgruppe getestet, also bekamen einige Probanden die zu untersuchende Therapie und einige einen Placebo. Jetzt haben wir gleichzeitig auch ein Zwischensubjekt-Design, weil die Probanden natürlich nicht in beiden Gruppen, sondern nur in einer waren. Der wirklich interessante Effekt einer mixed ANOVA ist der <strong>Interaktionseffekt</strong> zwischen der Innersubjekt- und der Zwischensubjektvariablen, weil dieser angeben würde, ob der Einfluss der Innersubjektfaktors zwischen den Gruppen unterschiedlich ist (<em>vice versa</em>).</p>
+<div id="pakete" class="section level1">
+<h1>Pakete</h1>
+<p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien und <code>rstatix</code> für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket <code>costatcompanion</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(haven)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rstatix)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(costatcompanion)</span></code></pre></div>
+</div>
+<div id="beispiel" class="section level1">
+<h1>Beispiel</h1>
+<p>Wir interessieren uns für den Verlauf des Stress-Niveaus von Studenten kurz vor, während und nach einer Klausur. Dabei betrachten wir gleichzeitig zwei Gruppen, nämlich jene Studenten, die sich auf die Klausur explizit vorbereitet haben und jene, die lieber den botanischen Garten der Ruhr-Universität Bochum, oder die Sonne am Aasee in Münster genossen haben.</p>
+<div id="klassisch" class="section level2">
+<h2>Klassisch</h2>
+<p>Die Daten finden wir im <code>costatcompanion</code> als <code>exam_stress</code>, oder, wie immer, als SPSS-Datei im <a href="https://github.com/benediktclaus/costat/tree/master/data">Daten-Ordner des GitHub Repositories</a>. Der Datensatz enthält vier Variablen: Die Probanden-ID (<code>id</code>), den Hinweis darauf, ob sich derjenige Proband auf die Klausur vorbereitet hat (<code>preparation</code>, mit den Faktor-Levels “No” und “Yes”), den Zeitpunkt der Messung (<code>time</code>, mit den Faktor-Levels “Before”, “During” und “After”) und das Stress-Niveau auf einer Skala von 0 – 50 (<code>stress</code>). Dabei bedeuten niedrige Werte wenig Stress und hohe Werte viel Stress. Wir berechnen also eine 2 <span class="math inline">\(\times\)</span> 3 gemischte ANOVA mit dem Zwischensubjektfaktor “Vorbereitung” mit zwei Faktor-Levels und dem Innersubjektfaktor “Zeit” mit drei Faktor-Levels.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>costatcompanion<span class="op">::</span>exam_stress</span></code></pre></div>
+<pre><code>## # A tibble: 288 x 4
+##       id preparation time   stress
+##    &lt;int&gt; &lt;fct&gt;       &lt;fct&gt;   &lt;dbl&gt;
+##  1     1 No          Before     39
+##  2     1 No          During     43
+##  3     1 No          After      44
+##  4     2 Yes         Before     38
+##  5     2 Yes         During     30
+##  6     2 Yes         After      13
+##  7     3 No          Before     33
+##  8     3 No          During     49
+##  9     3 No          After      38
+## 10     4 Yes         Before     36
+## # ... with 278 more rows</code></pre>
+<div id="voraussetzungen" class="section level3">
+<h3>Voraussetzungen</h3>
+<p>Auch mit mixed ANOVAs bewegen wir uns im allgemeinen linearen Modell, weshalb hier auch die <a href="voraussetzungen.html">üblichen Voraussetzungen</a> gelten. Wir müssen unsere Aufmerksamkeit jedoch explizit auf die Varianzhomogenität und die Sphärizität richten.</p>
+</div>
+<div id="eda" class="section level3">
+<h3>EDA</h3>
+<p>Wie immer beginnen wir damit, uns die basalen deskriptiven Statistiken ausgeben zu lassen und die Daten in Abbildungen zusammenzufassen.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>exam_stress <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw">group_by</span>(preparation, time) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>(stress)</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 15
+##   preparation time  variable     n   min   max median    q1    q3   iqr   mad
+##   &lt;fct&gt;       &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 No          Befo~ stress      48    23    45   34.5 32       38  6     3.71
+## 2 No          Duri~ stress      48    40    50   47   44.8     49  4.25  2.96
+## 3 No          After stress      48    29    50   38.5 35       41  6     4.45
+## 4 Yes         Befo~ stress      48    26    42   33.5 31.8     37  5.25  3.71
+## 5 Yes         Duri~ stress      48    12    32   21   17       22  5     2.96
+## 6 Yes         After stress      48     3    21   10    7.75    14  6.25  4.45
+## # ... with 4 more variables: mean &lt;dbl&gt;, sd &lt;dbl&gt;, se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
+<p><img src="mixed-anova_files/figure-html/unnamed-chunk-5-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p>Wir bekommen eine relativ gute Idee davon, dass beide Gruppen ungefähr auf einem gleichen Stress-Niveau starten, dann nimmt der Stress für die Gruppe der nicht vorbereiteten jedoch während der Klausur zu und nimmt nach der Klausur zwar ab, bleibt aber über dem Ausgangs-Niveau. Die Gruppe der Vorbereiteten hingegen erlebt während und im Anschluss an die Klausur einen Abfall des Stress-Niveaus.</p>
+<p>Die Voraussetzung der Sphärizität wird während der Durchführung der ANOVA automatisch geprüft, deshalb müssen wir sie nicht vorher prüfen.</p>
+</div>
+<div id="durchführung" class="section level3">
+<h3>Durchführung</h3>
+<p>Die Durchführung ist wie immer kurz und schmerzlos.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>exam_stress <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> stress, <span class="dt">wid =</span> id, <span class="dt">between =</span> preparation, <span class="dt">within =</span> time, <span class="dt">type =</span> <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## ANOVA Table (type III tests)
+## 
+## $ANOVA
+##             Effect DFn DFd        F        p p&lt;.05   ges
+## 1      preparation   1  94 1346.963 1.62e-57     * 0.844
+## 2             time   2 188  192.452 3.24e-46     * 0.560
+## 3 preparation:time   2 188  368.335 9.29e-66     * 0.709
+## 
+## $`Mauchly&#39;s Test for Sphericity`
+##             Effect    W     p p&lt;.05
+## 1             time 0.93 0.034     *
+## 2 preparation:time 0.93 0.034     *
+## 
+## $`Sphericity Corrections`
+##             Effect   GGe       DF[GG]    p[GG] p[GG]&lt;.05   HFe       DF[HF]
+## 1             time 0.934 1.87, 175.68 2.28e-43         * 0.953 1.91, 179.11
+## 2 preparation:time 0.934 1.87, 175.68 1.24e-61         * 0.953 1.91, 179.11
+##      p[HF] p[HF]&lt;.05
+## 1 3.68e-44         *
+## 2 8.79e-63         *</code></pre>
+<p>Unser erster Blick geht in Richtung Mauchlys Test auf Sphärizität. Dieser zeigt uns für unseren Fall an, dass die Voraussetzung der Sphärizität <em>nicht</em> erfüllt ist, da beide <span class="math inline">\(p &lt; .05\)</span>. An dieser Stelle müssen wir unsere Freiheitsgrade wieder korrigieren, wobei wir uns der Korrekatur nach <span class="citation">Greenhouse &amp; Geisser (<a href="#ref-Greenhouse.1959" role="doc-biblioref">1959</a>)</span> bedienen. Wir erhalten somit sowohl signifikante Haupteffekte (Vorbereitung: <span class="math inline">\(F(1, 94) = 1347.00, p &lt; .001, \eta^2_G = .844\)</span>, Zeit: <span class="math inline">\(F(1.87, 175.68) = 192.45, p &lt; .001, \eta^2_G = .560\)</span>), wie auch einen signifikanten Interationseffekt (Vorbereitung <span class="math inline">\(\times\)</span> Zeit), <span class="math inline">\(F(1.87, 175.68) = 368.34, p &lt; .001, \eta^2_G = .709\)</span>. Immer, wenn der Interaktionseffekt signifkant ist, konzentrieren wir uns nur auf diesen, <strong>weil die Interpretation von Haupteffekten dann sinlos ist</strong>.</p>
+<div id="simple-effects-analysis" class="section level4">
+<h4>Simple Effects Analysis</h4>
+<p><img src="mixed-anova_files/figure-html/unnamed-chunk-7-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p>Mit der <em>simple effects analysis</em> können wir nun mehrere DInge überprüfen, die wir in der obigen Abbildung aufgezeichnet haben. Einmal könnten wir überprüfen, ob sich die Stress-Werte der Probanden zwischen den Gruppen zu jedem Zeitpunkt unterscheiden (ob also in Abbildung A die Mittelwerte pro Messung signifikant auseinander liegen), oder ob sich die Stress-Werte pro Gruppe zu allen Zeitpunkten unterschieden. Damit würden wir überprüfen, ob sich beispielsweise die Stress-Mittelwerte der Gruppe der nicht vorbereiteten signifikant voneinander unterscheiden (Abbildung B).</p>
+<p>Dafür gruppieren wir die Daten anhand unseres gewünschten Faktors, führen einzelne ANOVAs durch und korrigieren die <span class="math inline">\(p\)</span>-Werte anschließend, weil wir multiple Vergleiche auf einmal durchgeführt haben. Wollten wir den “Effekt” in der linken Abbildung berechnen, würden wir das wie folgt machen.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>exam_stress <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="st">  </span><span class="kw">group_by</span>(time) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> stress, <span class="dt">between =</span> preparation, <span class="dt">type =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="st">  </span><span class="kw">adjust_pvalue</span>(<span class="dt">method =</span> <span class="st">&quot;holm&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="st">  </span><span class="kw">add_significance</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 3 x 10
+##   time   Effect    DFn   DFd      F        p `p&lt;.05`   ges    p.adj p.adj.signif
+##   &lt;fct&gt;  &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
+## 1 Before prepar~     1    94 1.31e0 2.55e- 1 &quot;&quot;      0.014 2.55e- 1 ns          
+## 2 During prepar~     1    94 1.22e3 1.41e-55 &quot;*&quot;     0.928 4.23e-55 ****        
+## 3 After  prepar~     1    94 1.04e3 1.03e-52 &quot;*&quot;     0.917 2.06e-52 ****</code></pre>
+<p>So könnten wir sagen, dass sich die Stress-Niveaus der Probanden zwischen den Gruppen vor der Klausur nicht signifikant voneinander unterschieden haben (<span class="math inline">\(F(1, 94) = 1.31, p_\text{adj} = .255, \eta^2_G = .014\)</span>). Während und nach der Klausur war der Unterschied in den Stress-Niveaus zwischen den beiden Gruppen jedoch signifikant (Während: <span class="math inline">\(F(1, 94) = 1216, p_\text{adj} &lt; .001, \eta^2_G = .928\)</span>, Nachher: <span class="math inline">\(F(1, 94) = 1045, p_\text{adj} &lt; .001, \eta^2_G = .917\)</span>). Dafür ließe sich Hedges’ <span class="math inline">\(g\)</span> als Effektstärke berechnen.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>exam_stress <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="st">  </span><span class="kw">group_by</span>(time) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="kw">cohens_d</span>(stress <span class="op">~</span><span class="st"> </span>preparation, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 3 x 8
+##   .y.    group1 group2 effsize time      n1    n2 magnitude
+## * &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;fct&gt;  &lt;int&gt; &lt;int&gt; &lt;ord&gt;    
+## 1 stress No     Yes      0.232 Before    48    48 small    
+## 2 stress No     Yes      7.06  During    48    48 large    
+## 3 stress No     Yes      6.55  After     48    48 large</code></pre>
+<p>Wollen wir für die beiden Gruppen untersuchen, ob sich jeweils die drei Mittelwerte zu den unterschiedlichen Messzeitpunkten voneinander unterscheiden (Abbildung B), könnten wir nach dem Faktor “Vorbereitung” gruppieren.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>exam_stress <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="st">  </span><span class="kw">group_by</span>(preparation) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> stress, <span class="dt">wid =</span> id, <span class="dt">within =</span> time) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="st">  </span><span class="kw">get_anova_table</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="st">  </span><span class="kw">adjust_pvalue</span>(<span class="dt">method =</span> <span class="st">&quot;holm&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-6"><a href="#cb12-6"></a><span class="st">  </span><span class="kw">add_significance</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 10
+##   preparation Effect   DFn   DFd     F        p `p&lt;.05`   ges    p.adj
+##   &lt;fct&gt;       &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+## 1 No          time    1.76  82.8  136. 2.42e-25 *       0.617 2.42e-25
+## 2 Yes         time    2     94    394. 1.94e-46 *       0.852 3.88e-46
+## # ... with 1 more variable: p.adj.signif &lt;chr&gt;</code></pre>
+<p>So erhalten wir das Ergebnis, dass sich die Mittelwerte derer, die sich nicht vorbereitet haben, signifikant voneinander unterscheiden, <span class="math inline">\(F(1.76, 82.8) = 136, p_\text{adj} &lt; .001, \varepsilon_\text{GG} = .881, \eta^2_G = .617\)</span>, genauso wie die Mittelwerte derer, die sich vorbereitet haben, <span class="math inline">\(F(2, 94) = 394, p_\text{adj} &lt; .001, \eta^2_G = .852\)</span>.</p>
+</div>
+</div>
+<div id="berichten" class="section level3">
+<h3>Berichten</h3>
+<p>We found stress levels of students regarding an exam to be dependent on the time of measurement (i.e. before, during, or after an exam) as well as on the fact that a student was prepared for the exam (significant interaction effect of time <span class="math inline">\(\times\)</span> preparation, <span class="math inline">\(F(1.87, 175.68) = 368.34, p &lt; .001, \eta^2_G = .709\)</span>). Simple main effects analyses revealed that stress-levels were equal for both preparation groups before the exam, but during and after an exam, these levels were significantly different with effect sizes ranging from Hedges’ <span class="math inline">\(g = 0.23\)</span> before the exam to <span class="math inline">\(g = 7.06\)</span> during and <span class="math inline">\(g = 6.55\)</span> after the exam.</p>
+</div>
+</div>
+<div id="robust" class="section level2">
+<h2>Robust</h2>
+<p>Natürlich hat Rand <span class="citation">Wilcox (<a href="#ref-Wilcox.2017" role="doc-biblioref">2017</a>)</span> auch für mixed ANOVAs vorgesorgt und die entsprechenden Funktionen im Paket <code>WRS2</code> <span class="citation">(Mair &amp; Wilcox, <a href="#ref-Mair.2020" role="doc-biblioref">2020</a>)</span> zur Verfügung gestellt. Die Kernfunktion ist <code>bwtrim()</code>.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">library</span>(WRS2)</span>
+<span id="cb14-2"><a href="#cb14-2"></a></span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="kw">bwtrim</span>(<span class="dt">formula =</span> stress <span class="op">~</span><span class="st"> </span>time <span class="op">*</span><span class="st"> </span>preparation, <span class="dt">id =</span> id, <span class="dt">data =</span> exam_stress)</span></code></pre></div>
+<pre><code>## Call:
+## bwtrim(formula = stress ~ time * preparation, id = id, data = exam_stress)
+## 
+##                      value df1     df2 p.value
+## preparation      1230.0558   1 54.1155       0
+## time              126.6340   2 51.2131       0
+## preparation:time  320.3507   2 51.2131       0</code></pre>
+<p>Auch hier erhalten wir einen signifikanten Interaktionseffekt, <span class="math inline">\(p &lt; .001\)</span>. Post-hoc-Tests lassen sich mit <code>sppba()</code>, <code>sppbb()</code> und <code>sppbi()</code> für den ersten Haupteffekt, den zweiten Haupteffekt und den Interaktionseffekt ausgeben.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">sppbi</span>(<span class="dt">formula =</span> stress <span class="op">~</span><span class="st"> </span>time <span class="op">*</span><span class="st"> </span>preparation, <span class="dt">id =</span> id, <span class="dt">data =</span> exam_stress)</span></code></pre></div>
+<pre><code>## Call:
+## sppbi(formula = stress ~ time * preparation, id = id, data = exam_stress)
+## 
+## Test statistics:
+##                      Estimate
+## Before-During No-Yes  -25.638
+## Before-After No-Yes   -27.727
+## During-After No-Yes    -1.961
+## 
+## Test whether the corrresponding population parameters are the same:
+## p-value: 0</code></pre>
+</div>
+<div id="non-parametrisch" class="section level2">
+<h2>Non-parametrisch</h2>
+<p>Gibt es nicht.</p>
+</div>
+</div>
+<div id="aus-der-praxis" class="section level1">
+<h1>Aus der Praxis</h1>
+<div id="klassisch-1" class="section level2">
+<h2>Klassisch</h2>
+<div id="eda-1" class="section level3">
+<h3>EDA</h3>
+</div>
+<div id="durchführung-1" class="section level3">
+<h3>Durchführung</h3>
+</div>
+<div id="berichten-1" class="section level3">
+<h3>Berichten</h3>
+</div>
+</div>
+<div id="robust-1" class="section level2">
+<h2>Robust</h2>
+</div>
+<div id="non-parametrisch-1" class="section level2">
+<h2>Non-parametrisch</h2>
+</div>
+</div>
+<div id="literatur" class="section level1 unnumbered">
+<h1>Literatur</h1>
+<div id="refs" class="references">
+<div id="ref-Greenhouse.1959">
+<p>Greenhouse, S. W., &amp; Geisser, S. (1959). On methods in the analysis of profile data. <em>Psychometrika</em>, <em>24</em>(2), 95–112. <a href="https://doi.org/10.1007/BF02289823">https://doi.org/10.1007/BF02289823</a></p>
+</div>
+<div id="ref-Mair.2020">
+<p>Mair, P., &amp; Wilcox, R. R. (2020). Robust statistical methods in R using the WRS2 package. <em>Behavior Research Methods</em>, <em>52</em>(2), 464–488. <a href="https://doi.org/10.3758/s13428-019-01246-w">https://doi.org/10.3758/s13428-019-01246-w</a></p>
+</div>
+<div id="ref-Wilcox.2017">
+<p>Wilcox, R. R. (2017). <em>Introduction to Robust Estimation and Hypothesis Testing</em> (4th ed.). Elsevier Academic Press.</p>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

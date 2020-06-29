@@ -174,17 +174,12 @@ tibble(
     across(.fns = ~ round(., 0)),
     across(.fns = ~ pmax(., 0)),
     across(.fns = ~ pmin(., 50))
-  ) %>%
+  ) %>% 
   pivot_longer(
     cols = everything(),
-    names_to = c("time", "preparation"),
-    names_sep = "_",
-    names_ptype = list(time = factor()),
-    values_to = "stress"
-  ) %>%
-  mutate(
-    across(c(time, preparation), str_to_title),
-    id = rep(1:96, each = 3)
-  ) %>%
-  relocate(id, preparation, time, stress) %>% 
+    names_to = c(".value", "preparation"),
+    names_sep = "_"
+  ) %>% 
+  rownames_to_column(var = "id") %>% 
+  relocate(id, preparation) %>% 
   write_sav("data/exam_stress.sav")

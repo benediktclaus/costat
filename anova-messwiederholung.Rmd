@@ -93,7 +93,7 @@ runners %>%
   anova_test(dv = endurance, wid = id, within = music_type)
 ```
 
-Wenn wir diesen Befehl ausführen, dann sehen wir, dass Mauchlys-Test signifikant ist -- die Variassetzung der Sphärizität ist nicht erfüllt. Eine gute Methode, um den $p$-Wert nun zu korrigieren, ist die Methode nach Greenhouse und Geisser [@Greenhouse.1959]. Um diese Korrektur^[Korrigiert werden einfach nur die Freiheitsgrade der Fehler, sie werden mit dem $\varepsilon$ der Korrektur-Methode multipliziert.], wie versprochen, automatisch zu erhalten, lassen wir uns anschließend mit `get_anova_table()`, angehängt an den bereits ausgeführten Befehl, die ANOVA-Ergebnisse ausgeben.
+Wenn wir diesen Befehl ausführen, dann sehen wir, dass Mauchlys-Test signifikant ist -- die Voraussetzung der Sphärizität ist nicht erfüllt. Eine gute Methode, um den $p$-Wert nun zu korrigieren, ist die Methode nach Greenhouse und Geisser [@Greenhouse.1959]. Um diese Korrektur^[Korrigiert werden einfach nur die Freiheitsgrade der Fehler, sie werden mit dem $\varepsilon$ der Korrektur-Methode multipliziert.], wie versprochen, automatisch zu erhalten, lassen wir uns anschließend mit `get_anova_table()`, angehängt an den bereits ausgeführten Befehl, die ANOVA-Ergebnisse ausgeben.
 
 ```{r}
 runners %>% 

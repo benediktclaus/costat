@@ -30,7 +30,7 @@ library(patchwork)
 <!-- Spanner Image -->
 ![](images/students_r.jpg)
 
-Die mixed ANOVA, oder auch gemischte ANOVA, nutzt man, wenn man die Einflüsse von sowohl Zwischensubjekt- als auch Innersubjektfaktoren gleichzeitig untersuchen will. Bis jetzt haben wir nur die Einflüsse von *entweder* Zwischensubjekt- oder Innersubjektfktoren untersucht. Ziemlich häufig kommt es aber auch vor, dass wir beides gleichzeitig untersuchen wollen. Beispielweise erheben wir im Rahmen einer klinischen Studie Daten über die Zeit hinweg, so etwa vor und nach einer Therapie. Der entsprechende Innersubjektfaktor wäre hier etwas wie "Zeit", weil wir diese beiden Messungen pro Proband ("innerhalb" der Probanden) durchführen. Gleichzeitig haben wir die zu untersuchende Therapie auch gegen eine Kontrollgruppe getestet, also bekamen einige Probanden die zu untersuchende Therapie und einige einen Placebo. Jetzt haben wir gleichzeitig auch ein Zwischensubjekt-Design, weil die Probanden natürlich nicht in beiden Gruppen, sondern nur in einer waren.
+Die mixed ANOVA, oder auch gemischte ANOVA, nutzt man, wenn man die Einflüsse von sowohl Zwischensubjekt- als auch Innersubjektfaktoren gleichzeitig untersuchen will. Bis jetzt haben wir nur die Einflüsse von *entweder* Zwischensubjekt- oder Innersubjektfktoren untersucht. Ziemlich häufig kommt es aber auch vor, dass wir beides gleichzeitig untersuchen wollen. Beispielweise erheben wir im Rahmen einer klinischen Studie Daten über die Zeit hinweg, so etwa vor und nach einer Therapie. Der entsprechende Innersubjektfaktor wäre hier etwas wie "Zeit", weil wir diese beiden Messungen pro Proband ("innerhalb" der Probanden) durchführen. Gleichzeitig haben wir die zu untersuchende Therapie auch gegen eine Kontrollgruppe getestet, also bekamen einige Probanden die zu untersuchende Therapie und einige einen Placebo. Jetzt haben wir gleichzeitig auch ein Zwischensubjekt-Design, weil die Probanden natürlich nicht in beiden Gruppen, sondern nur in einer waren. Der wirklich interessante Effekt einer mixed ANOVA ist der **Interaktionseffekt** zwischen der Innersubjekt- und der Zwischensubjektvariablen, weil dieser angeben würde, ob der Einfluss der Innersubjektfaktors zwischen den Gruppen unterschiedlich ist (*vice versa*).
 
 # Pakete 
 Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket `costatcompanion`.
@@ -43,16 +43,135 @@ library(costatcompanion)
 ```
 
 # Beispiel
+Wir interessieren uns für den Verlauf des Stress-Niveaus von Studenten kurz vor, während und nach einer Klausur. Dabei betrachten wir gleichzeitig zwei Gruppen, nämlich jene Studenten, die sich auf die Klausur explizit vorbereitet haben und jene, die lieber den botanischen Garten der Ruhr-Universität Bochum, oder die Sonne am Aasee in Münster genossen haben.
+
 ## Klassisch
+Die Daten finden wir im `costatcompanion` als `exam_stress`, oder, wie immer, als SPSS-Datei im [Daten-Ordner des GitHub Repositories](https://github.com/benediktclaus/costat/tree/master/data). Der Datensatz enthält vier Variablen: Die Probanden-ID (`id`), den Hinweis darauf, ob sich derjenige Proband auf die Klausur vorbereitet hat (`preparation`, mit den Faktor-Levels "No" und "Yes"), den Zeitpunkt der Messung (`time`, mit den Faktor-Levels "Before", "During" und "After") und das Stress-Niveau auf einer Skala von 0 -- 50 (`stress`). Dabei bedeuten niedrige Werte wenig Stress und hohe Werte viel Stress. Wir berechnen also eine 2 $\times$ 3 gemischte ANOVA mit dem Zwischensubjektfaktor "Vorbereitung" mit zwei Faktor-Levels und dem Innersubjektfaktor "Zeit" mit drei Faktor-Levels.
+
+```{r}
+costatcompanion::exam_stress
+```
+
+
 ### Voraussetzungen
+Auch mit mixed ANOVAs bewegen wir uns im allgemeinen linearen Modell, weshalb hier auch die [üblichen Voraussetzungen](voraussetzungen.html) gelten. Wir müssen unsere Aufmerksamkeit jedoch explizit auf die Varianzhomogenität und die Sphärizität richten.
+
 ### EDA
+Wie immer beginnen wir damit, uns die basalen deskriptiven Statistiken ausgeben zu lassen und die Daten in Abbildungen zusammenzufassen.
+
+```{r}
+exam_stress %>% 
+  group_by(preparation, time) %>% 
+  get_summary_stats(stress)
+```
+
+```{r echo=FALSE}
+dodge_position <- position_dodge(width = 0.2)
+
+exam_stress %>% 
+  ggplot(aes(time, stress, color = preparation)) +
+  stat_summary(fun.data = "mean_sd", geom = "errorbar", width = 0.1, position = dodge_position) +
+  stat_summary(fun.data = "mean_sd", geom = "point", position = dodge_position) +
+  stat_summary(aes(group = preparation), fun.data = "mean_sd", geom = "line", position = dodge_position) +
+  geom_point(alpha = 0.2, position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.2)) +
+  scale_color_personal() +
+  theme(legend.position = "bottom") +
+  labs(x = "Time", y = "Stress", color = "Preparation")
+```
+
+Wir bekommen eine relativ gute Idee davon, dass beide Gruppen ungefähr auf einem gleichen Stress-Niveau starten, dann nimmt der Stress für die Gruppe der nicht vorbereiteten jedoch während der Klausur zu und nimmt nach der Klausur zwar ab, bleibt aber über dem Ausgangs-Niveau. Die Gruppe der Vorbereiteten hingegen erlebt während und im Anschluss an die Klausur einen Abfall des Stress-Niveaus.
+
+Die Voraussetzung der Sphärizität wird während der Durchführung der ANOVA automatisch geprüft, deshalb müssen wir sie nicht vorher prüfen.
+
 ### Durchführung
+Die Durchführung ist wie immer kurz und schmerzlos.
+
+```{r}
+exam_stress %>% 
+  anova_test(dv = stress, wid = id, between = preparation, within = time, type = 3)
+```
+
+Unser erster Blick geht in Richtung Mauchlys Test auf Sphärizität. Dieser zeigt uns für unseren Fall an, dass die Voraussetzung der Sphärizität *nicht* erfüllt ist, da beide $p < .05$. An dieser Stelle müssen wir unsere Freiheitsgrade wieder korrigieren, wobei wir uns der Korrekatur nach @Greenhouse.1959 bedienen. Wir erhalten somit sowohl signifikante Haupteffekte (Vorbereitung: $F(1, 94) = 1347.00, p < .001, \eta^2_G = .844$, Zeit: $F(1.87, 175.68) = 192.45, p < .001, \eta^2_G = .560$), wie auch einen signifikanten Interationseffekt (Vorbereitung $\times$ Zeit), $F(1.87, 175.68) = 368.34, p < .001, \eta^2_G = .709$. Immer, wenn der Interaktionseffekt signifkant ist, konzentrieren wir uns nur auf diesen, **weil die Interpretation von Haupteffekten dann sinlos ist**.
+
+#### Simple Effects Analysis
+```{r echo=FALSE}
+plot_a <- exam_stress %>% 
+  ggplot(aes(time, stress, color = preparation)) +
+  stat_summary(fun.data = "mean_sd", geom = "errorbar", width = 0.1, position = dodge_position) +
+  stat_summary(fun.data = "mean_sd", geom = "point", position = dodge_position) +
+  stat_summary(aes(group = preparation), fun.data = "mean_sd", geom = "line", position = dodge_position) +
+  geom_point(alpha = 0.2, position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.2)) +
+  scale_color_personal() +
+  theme(legend.position = "bottom") +
+  labs(x = "Time", y = "Stress", color = "Preparation")
+
+plot_b <- exam_stress %>% 
+  ggplot(aes(preparation, stress, color = time)) +
+  stat_summary(fun.data = "mean_sd", geom = "errorbar", width = 0.1, position = dodge_position) +
+  stat_summary(fun.data = "mean_sd", geom = "point", position = dodge_position) +
+  stat_summary(aes(group = time), fun.data = "mean_sd", geom = "line", position = dodge_position) +
+  geom_point(alpha = 0.2, position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.2)) +
+  scale_color_personal() +
+  theme(legend.position = "bottom") +
+  labs(x = "Preparation", y = "Stress", color = "Time")
+
+plot_a + plot_b + plot_annotation(tag_levels = "A")
+```
+
+Mit der *simple effects analysis* können wir nun mehrere DInge überprüfen, die wir in der obigen Abbildung aufgezeichnet haben. Einmal könnten wir überprüfen, ob sich die Stress-Werte der Probanden zwischen den Gruppen zu jedem Zeitpunkt unterscheiden (ob also in Abbildung A die Mittelwerte pro Messung signifikant auseinander liegen), oder ob sich die Stress-Werte pro Gruppe zu allen Zeitpunkten unterschieden. Damit würden wir überprüfen, ob sich beispielsweise die Stress-Mittelwerte der Gruppe der nicht vorbereiteten signifikant voneinander unterscheiden (Abbildung B).
+
+Dafür gruppieren wir die Daten anhand unseres gewünschten Faktors, führen einzelne ANOVAs durch und korrigieren die $p$-Werte anschließend, weil wir multiple Vergleiche auf einmal durchgeführt haben. Wollten wir den "Effekt" in der linken Abbildung berechnen, würden wir das wie folgt machen.
+
+```{r message=FALSE}
+exam_stress %>% 
+  group_by(time) %>% 
+  anova_test(dv = stress, between = preparation, type = 3) %>% 
+  adjust_pvalue(method = "holm") %>% 
+  add_significance()
+```
+
+So könnten wir sagen, dass sich die Stress-Niveaus der Probanden zwischen den Gruppen vor der Klausur nicht signifikant voneinander unterschieden haben ($F(1, 94) = 1.31, p_\text{adj} = .255, \eta^2_G = .014$). Während und nach der Klausur war der Unterschied in den Stress-Niveaus zwischen den beiden Gruppen jedoch signifikant (Während: $F(1, 94) = 1216, p_\text{adj} < .001, \eta^2_G = .928$, Nachher: $F(1, 94) = 1045, p_\text{adj} < .001, \eta^2_G = .917$). Dafür ließe sich Hedges' $g$ als Effektstärke berechnen.
+
+```{r}
+exam_stress %>% 
+  group_by(time) %>% 
+  cohens_d(stress ~ preparation, hedges.correction = TRUE)
+```
+
+Wollen wir für die beiden Gruppen untersuchen, ob sich jeweils die drei Mittelwerte zu den unterschiedlichen Messzeitpunkten voneinander unterscheiden (Abbildung B), könnten wir nach dem Faktor "Vorbereitung" gruppieren.
+
+```{r}
+exam_stress %>% 
+  group_by(preparation) %>% 
+  anova_test(dv = stress, wid = id, within = time) %>% 
+  get_anova_table() %>% 
+  adjust_pvalue(method = "holm") %>% 
+  add_significance()
+```
+
+So erhalten wir das Ergebnis, dass sich die Mittelwerte derer, die sich nicht vorbereitet haben, signifikant voneinander unterscheiden, $F(1.76, 82.8) = 136, p_\text{adj} < .001, \varepsilon_\text{GG} = .881, \eta^2_G = .617$, genauso wie die Mittelwerte derer, die sich vorbereitet haben, $F(2, 94) = 394, p_\text{adj} < .001, \eta^2_G = .852$.
+
 ### Berichten
+We found stress levels of students regarding an exam to be dependent on the time of measurement (i.e. before, during, or after an exam) as well as on the fact that a student was prepared for the exam (significant interaction effect of time $\times$ preparation, $F(1.87, 175.68) = 368.34, p < .001, \eta^2_G = .709$). Simple main effects analyses revealed that stress-levels were equal for both preparation groups before the exam, but during and after an exam, these levels were significantly different with effect sizes ranging from Hedges' $g = 0.23$ before the exam to $g = 7.06$ during and $g = 6.55$ after the exam.
 
 ## Robust
+Natürlich hat Rand @Wilcox.2017 auch für mixed ANOVAs vorgesorgt und die entsprechenden Funktionen im Paket `WRS2` [@Mair.2020] zur Verfügung gestellt. Die Kernfunktion ist `bwtrim()`.
+
+```{r}
+library(WRS2)
+
+bwtrim(formula = stress ~ time * preparation, id = id, data = exam_stress)
+```
+
+Auch hier erhalten wir einen signifikanten Interaktionseffekt, $p < .001$. Post-hoc-Tests lassen sich mit `sppba()`, `sppbb()` und `sppbi()` für den ersten Haupteffekt, den zweiten Haupteffekt und den Interaktionseffekt ausgeben.
+
+```{r}
+sppbi(formula = stress ~ time * preparation, id = id, data = exam_stress)
+```
 
 
 ## Non-parametrisch
+Gibt es nicht.
 
 
 # Aus der Praxis
