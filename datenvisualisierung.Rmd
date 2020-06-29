@@ -103,7 +103,7 @@ reproducibility_complete %>%
 
 Das sieht schon besser aus. Aus der Vorlage geht hervor, dass die Einfärbung der Fransen auf der $x$-Achse nicht anhand der Signifikanz in der Replikation erfolgen soll (also nicht anhand `sig_replication`), sondern in Bezug auf die Signifikanz in der Original-Studie (also `sig_original`). Auch das können wir ganz einfach umsetzen, indem wir jeweils ein `geom_rug()` für die beiden Achsen mit unterschiedlichen *aesthetics* einzeichnen.
 
-```{r}
+```{r warning=FALSE}
 reproducibility_complete %>% 
   ggplot(aes(x = es_original, y = es_replication, color = sig_replication)) +
   geom_point(aes(size = power_r), alpha = 0.4) +
@@ -111,12 +111,192 @@ reproducibility_complete %>%
   geom_rug(aes(color = sig_replication), sides = "l")
 ```
 
+In unserer Vorlage aus der Original-Arbeit haben die Autoren noch zwei Hilfslinien eingezeichnet: Eine horizontale, die durch den $y$-Achsen-Abschnitt 0 geht und eine schräge, die die Steigung 1 hat und $y$ auch bei 0 schneidet. Eine horizontale Linie können wir mit `geom_hline()` zeichnen lassen, eine schräge mit `geom_abline()`. Den Linientyp können wir mit dem Argument `linetype` beeinflussen, das wir bei der horizontalen Linie auf `"dashed"` setzen.
 
-In unserer Vorlage aus der Original-Arbeit haben die Autoren noch zwei Hilfslinien eingezeichnet: Eine horizontale, die durch den $y$-Achsen-Abschnitt 0 geht und eine schräge, die die Steigung 1 hat und $y$ auch bei 0 schneidet. Eine horizontale Linie können wir mit `geom_hline()` zeichnen lassen, eine schräge mit `geom_abline()`.
+```{r warning=FALSE}
+reproducibility_complete %>% 
+  ggplot(aes(x = es_original, y = es_replication, color = sig_replication)) +
+  geom_point(aes(size = power_r), alpha = 0.4) +
+  geom_rug(aes(color = sig_original), sides = "b") +
+  geom_rug(aes(color = sig_replication), sides = "l") +
+  geom_hline(yintercept = 0, linetype = "dashed")
 
-```{r}
-
+reproducibility_complete %>% 
+  ggplot(aes(x = es_original, y = es_replication, color = sig_replication)) +
+  geom_point(aes(size = power_r), alpha = 0.4) +
+  geom_rug(aes(color = sig_original), sides = "b") +
+  geom_rug(aes(color = sig_replication), sides = "l") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_abline(slope = 1, intercept = 0)
 ```
 
+Da fehlen nur noch die korrekten Beschriftungen und ein bisschen Arbeit am generellen *theme*. Die Beschriftungen können wir über den Befehl `labs()` steuern.
+
+```{r warning=FALSE}
+reproducibility_complete %>% 
+  ggplot(aes(x = es_original, y = es_replication, color = sig_replication)) +
+  geom_point(aes(size = power_r), alpha = 0.4) +
+  geom_rug(aes(color = sig_original), sides = "b") +
+  geom_rug(aes(color = sig_replication), sides = "l") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_abline(slope = 1, intercept = 0) +
+  labs(x = "Original Effect Size",
+       y = "Replication Effect Size",
+       color = "p-value",
+       size = "Replication Power")
+```
+
+
+Zu guter letzt können wir der Abbildung noch ein schlichtes *theme*, wie etwa `theme_classic()`, zuweisen.
+
+```{r warning=FALSE}
+reproducibility_complete %>% 
+  ggplot(aes(x = es_original, y = es_replication, color = sig_replication)) +
+  geom_point(aes(size = power_r), alpha = 0.4) +
+  geom_rug(aes(color = sig_original), sides = "b") +
+  geom_rug(aes(color = sig_replication), sides = "l") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_abline(slope = 1, intercept = 0) +
+  labs(x = "Original Effect Size",
+       y = "Replication Effect Size",
+       color = "p-value",
+       size = "Replication Power") +
+  theme_classic()
+```
+
+Das kommt der Vorlage schon recht nahe. Lassen wir das erstmal so stehen und kümmern uns um die Kerndichteschätzungen.
+
+## Dichte-Plot $x$-Achse
+Die Kerndichteschätzung, die über dem Basis-Plot liegen soll, zeigt die Verteilung der Effektstärken der Original-Studien an, farblich getrennt für signifikante und nicht signifikante Studien. Dichte-Verteilungen können wir mit `geom_density()` erstellen. Dazu mappen wir die Effektstärke der Original-Studie auf der $x$-Achse, die $y$-Achse wird bei Kerndichteschätzungen für uns berechnet.
+
+```{r}
+reproducibility_complete %>% 
+  ggplot(aes(x = es_original)) +
+  geom_density()
+```
+
+Nun wollen wir farblich kenntlich machen, welche Studien signifikant waren oder nicht.
+
+```{r}
+reproducibility_complete %>% 
+  ggplot(aes(x = es_original, color = sig_original)) +
+  geom_density()
+```
+
+In der Vorlage ist jedoch nicht nur die Kontur farbig (also nicht ur die `color`), sondern auch die Füllung (das `fill`).
+
+```{r}
+reproducibility_complete %>% 
+  ggplot(aes(x = es_original, color = sig_original, fill = sig_original)) +
+  geom_density()
+```
+
+Auch hier müssen wir etwas mit unserer Transparenz arbeiten, um das gewünschte Ergebnis zu erzielen.
+
+```{r}
+reproducibility_complete %>% 
+  ggplot(aes(x = es_original, color = sig_original, fill = sig_original)) +
+  geom_density(alpha = 0.4)
+```
+
+Das sieht schon gut aus. Bei gestapelten Kerndichteschätzungen (also jenen, bei denen mehrere Dichten übereinander liegen) müssen wir jedoch beachten, dass wir in den seltensten Fällen die "rohe" Dichte an sich ausgeben wollen, sondern eher die Dichte, gewichtet anhand der Anzahl der Beobachtungen. Dazu müssen wir die zugrundeliegende Statistik der Dichte-Funktion ändern, was wir mit dem Argument `after_stat()` in den *aesthetics* umsetzen können.
+
+```{r}
+reproducibility_complete %>% 
+  ggplot(aes(x = es_original, color = sig_original, fill = sig_original, after_stat(count))) +
+  geom_density(alpha = 0.4)
+```
+
+Zuletzt werden wir noch die Legende und alle Achsen los. Die Legende lassen wir mit `theme(legend.position = "none")` verschwinden, und eine *theme* ohne Achsen ist `theme_void()`.
+
+```{r}
+reproducibility_complete %>% 
+  ggplot(aes(x = es_original, color = sig_original, fill = sig_original, after_stat(count))) +
+  geom_density(alpha = 0.4) +
+  theme_void()
+
+reproducibility_complete %>% 
+  ggplot(aes(x = es_original, color = sig_original, fill = sig_original, after_stat(count))) +
+  geom_density(alpha = 0.4) +
+  theme_void() +
+  theme(legend.position = "none")
+```
+
+## Dichte-Plot $y$-Achse
+Der Dichte-Plot auf der $y$-Achse, also rechts neben dem Basis-Plot ist derselbe, wie der entlang der $x$-Achse, jedoch mit den korrespondierenden Variablen für die Replikations-Studien (`es_replication` und `sig_replication`).
+
+```{r}
+reproducibility_complete %>% 
+  ggplot(aes(x = es_replication, color = sig_replication, fill = sig_replication, after_stat(count))) +
+  geom_density(alpha = 0.4) +
+  theme_void() +
+  theme(legend.position = "none")
+```
+
+Um den Plot zu drehen, benutzen wir `coord_flip()`.
+
+```{r}
+reproducibility_complete %>% 
+  ggplot(aes(x = es_replication, color = sig_replication, fill = sig_replication, after_stat(count))) +
+  geom_density(alpha = 0.4) +
+  theme_void() +
+  theme(legend.position = "none") +
+  coord_flip()
+```
+
+## Plots zusammenfügen
+Wir haben jetzt alle "Sub-Plots" erfolgreich erstellt. Die Aufgabe besteht un darin, diese Zusammenzufügen. Das geniale Paket, das wir verwenden werden, heißt [`patchwork`](https://patchwork.data-imaginist.com/index.html)^[Ähnliche Ergebnisse ließen sich mit Claus Wilkes Paket `cowplot` erzielen.] und stammt von einem der Mitarbeiter von `ggplot2`; ist also explizit darauf abgestimmt. Wir machen uns, weil es sich hier um ein sehr spezielles Layout handelt, eine spezielle Funktion von `patchwork` zu nutze, mit der wir unser Plot-Layout direkt definieren können.
+
+```{r}
+library(patchwork)
+
+arrangement <- "
+BBB#
+AAAC
+AAAC
+AAAC
+"
+```
+
+So haben wir angegeben, dass Plot A (unser Basis-Plot) in der linken, unteren Ecke sein soll, und zwar dreimal so hoch und breit, wie die jeweiligen Dichte-Plots. Der Dichte-Plot für die $x$-Achse (Plot B) wird über Plot A sein und genau so breit, der Dichte-Plot für die $y$-Achse wird rechts neben Plot A sein, aber genau so hoch wie dieser. Dadurch entsteht ein Weißraum in der rechten oberen Ecke. Die Plots müssen wir nun Objekten zuweisen und dann zusammenfügen.
+
+```{r warning=FALSE}
+plot_a <- reproducibility_complete %>% 
+  ggplot(aes(x = es_original, y = es_replication, color = sig_replication)) +
+  geom_point(aes(size = power_r), alpha = 0.4) +
+  geom_rug(aes(color = sig_original), sides = "b") +
+  geom_rug(aes(color = sig_replication), sides = "l") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_abline(slope = 1, intercept = 0) +
+  labs(x = "Original Effect Size",
+       y = "Replication Effect Size",
+       color = "p-value",
+       size = "Replication Power") +
+  theme_classic()
+
+plot_b <- reproducibility_complete %>% 
+  ggplot(aes(x = es_original, color = sig_original, fill = sig_original, after_stat(count))) +
+  geom_density(alpha = 0.4) +
+  theme_void() +
+  theme(legend.position = "none")
+
+plot_c <- reproducibility_complete %>% 
+  ggplot(aes(x = es_replication, color = sig_replication, fill = sig_replication, after_stat(count))) +
+  geom_density(alpha = 0.4) +
+  theme_void() +
+  theme(legend.position = "none") +
+  coord_flip()
+
+plot_a + plot_b + plot_c + plot_layout(design = arrangement)
+```
+
+Zuletzt kann man die Legende noch an den Rand bringen.
+
+```{r warning=FALSE}
+plot_a + plot_b + plot_c + plot_layout(design = arrangement, guides = "collect")
+```
+
+# Weiterführende Literatur
+Exzellente Bücher zu dem Thema Datenvisualisierung, auch in Bezug auf `ggplot2`, finden sich bei @Wickham.2016, @Healy.2018 und @Wilke.2020.
 
 # Literatur

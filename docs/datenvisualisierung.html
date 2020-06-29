@@ -646,23 +646,205 @@ div.tocify {
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb8-2"><a href="#cb8-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">y =</span> es_replication, <span class="dt">color =</span> sig_replication, <span class="dt">size =</span> power_r)) <span class="op">+</span></span>
 <span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw">geom_point</span>()</span></code></pre></div>
-<pre><code>## Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
 <p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>Das ist schon gar nicht schlecht, aber wir haben jetzt das Problem von “overplotting”, also, dass viele Datenpukte übereinander liegen könnten, ohne, dass wir das mitbekommen. Eine gute Lösung ist es, die einzelnen Punkte transparent zu machen. Wir wollen, dass das ausschließlich die Punkte betrifft, weshalb wir diese Transformation auch nur in der Ebene der Punkte angeben können.</p>
+<p>Das ist schon gar nicht schlecht, aber wir haben jetzt das Problem von “overplotting”, also, dass viele Datenpukte übereinander liegen könnten, ohne, dass wir das mitbekommen. Eine gute Lösung ist es, die einzelnen Punkte transparent zu machen. Wir wollen, dass das ausschließlich die Punkte betrifft, weshalb wir diese Transformation auch nur in der Ebene der Punkte angeben können. Transparenz steuert man über das Argument <code>alpha</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">y =</span> es_replication, <span class="dt">color =</span> sig_replication, <span class="dt">size =</span> power_r)) <span class="op">+</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.4</span>)</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Das sieht schon ziemlich professionell aus, und tatsächlich gibt es einige Cluster von Punkten, die ziemlich genau übereinander liegen. Um das auch etwas klarer zu machen, wurden “Fransen”-Achsen eingezeichnet, die die Verteilung der Datenpunkte noch einmal genauer darstellen. Diese können wir mit <code>geom_rug()</code> erstellen.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb10-2"><a href="#cb10-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">y =</span> es_replication, <span class="dt">color =</span> sig_replication, <span class="dt">size =</span> power_r)) <span class="op">+</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.4</span>)</span></code></pre></div>
-<pre><code>## Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
-<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="st">  </span><span class="kw">geom_rug</span>()</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Wir stellen jedoch fest, dass die Größe der Fransen nicht stimmt und die Farbe der Fransen auf der <span class="math inline">\(x\)</span>-Achse nicht stimmt. Das Problem der Größe erhalten wir dadurch, dass wir die Größe als “allgemeine” <em>aesthetic</em> zugeornet haben. Wir wollen jedoch nur, dass die Punkte von der Größe beeinflusst werden, weshalb wir diese <em>aesthetic</em> nun nur in der Ebene der Punkte mappen.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">y =</span> es_replication, <span class="dt">color =</span> sig_replication)) <span class="op">+</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> power_r), <span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span><span class="kw">geom_rug</span>()</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Das sieht schon besser aus. Aus der Vorlage geht hervor, dass die Einfärbung der Fransen auf der <span class="math inline">\(x\)</span>-Achse nicht anhand der Signifikanz in der Replikation erfolgen soll (also nicht anhand <code>sig_replication</code>), sondern in Bezug auf die Signifikanz in der Original-Studie (also <code>sig_original</code>). Auch das können wir ganz einfach umsetzen, indem wir jeweils ein <code>geom_rug()</code> für die beiden Achsen mit unterschiedlichen <em>aesthetics</em> einzeichnen.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">y =</span> es_replication, <span class="dt">color =</span> sig_replication)) <span class="op">+</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> power_r), <span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="kw">aes</span>(<span class="dt">color =</span> sig_original), <span class="dt">sides =</span> <span class="st">&quot;b&quot;</span>) <span class="op">+</span></span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="kw">aes</span>(<span class="dt">color =</span> sig_replication), <span class="dt">sides =</span> <span class="st">&quot;l&quot;</span>)</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>In unserer Vorlage aus der Original-Arbeit haben die Autoren noch zwei Hilfslinien eingezeichnet: Eine horizontale, die durch den <span class="math inline">\(y\)</span>-Achsen-Abschnitt 0 geht und eine schräge, die die Steigung 1 hat und <span class="math inline">\(y\)</span> auch bei 0 schneidet. Eine horizontale Linie können wir mit <code>geom_hline()</code> zeichnen lassen, eine schräge mit <code>geom_abline()</code>. Den Linientyp können wir mit dem Argument <code>linetype</code> beeinflussen, das wir bei der horizontalen Linie auf <code>"dashed"</code> setzen.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">y =</span> es_replication, <span class="dt">color =</span> sig_replication)) <span class="op">+</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> power_r), <span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="kw">aes</span>(<span class="dt">color =</span> sig_original), <span class="dt">sides =</span> <span class="st">&quot;b&quot;</span>) <span class="op">+</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="kw">aes</span>(<span class="dt">color =</span> sig_replication), <span class="dt">sides =</span> <span class="st">&quot;l&quot;</span>) <span class="op">+</span></span>
+<span id="cb13-6"><a href="#cb13-6"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>)</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">y =</span> es_replication, <span class="dt">color =</span> sig_replication)) <span class="op">+</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> power_r), <span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="kw">aes</span>(<span class="dt">color =</span> sig_original), <span class="dt">sides =</span> <span class="st">&quot;b&quot;</span>) <span class="op">+</span></span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="kw">aes</span>(<span class="dt">color =</span> sig_replication), <span class="dt">sides =</span> <span class="st">&quot;l&quot;</span>) <span class="op">+</span></span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span></span>
+<span id="cb14-7"><a href="#cb14-7"></a><span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">slope =</span> <span class="dv">1</span>, <span class="dt">intercept =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-12-2.png" width="672" /></p>
+<p>Da fehlen nur noch die korrekten Beschriftungen und ein bisschen Arbeit am generellen <em>theme</em>. Die Beschriftungen können wir über den Befehl <code>labs()</code> steuern.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">y =</span> es_replication, <span class="dt">color =</span> sig_replication)) <span class="op">+</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> power_r), <span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="kw">aes</span>(<span class="dt">color =</span> sig_original), <span class="dt">sides =</span> <span class="st">&quot;b&quot;</span>) <span class="op">+</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="kw">aes</span>(<span class="dt">color =</span> sig_replication), <span class="dt">sides =</span> <span class="st">&quot;l&quot;</span>) <span class="op">+</span></span>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a><span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">slope =</span> <span class="dv">1</span>, <span class="dt">intercept =</span> <span class="dv">0</span>) <span class="op">+</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Original Effect Size&quot;</span>,</span>
+<span id="cb15-9"><a href="#cb15-9"></a>       <span class="dt">y =</span> <span class="st">&quot;Replication Effect Size&quot;</span>,</span>
+<span id="cb15-10"><a href="#cb15-10"></a>       <span class="dt">color =</span> <span class="st">&quot;p-value&quot;</span>,</span>
+<span id="cb15-11"><a href="#cb15-11"></a>       <span class="dt">size =</span> <span class="st">&quot;Replication Power&quot;</span>)</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>Zu guter letzt können wir der Abbildung noch ein schlichtes <em>theme</em>, wie etwa <code>theme_classic()</code>, zuweisen.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">y =</span> es_replication, <span class="dt">color =</span> sig_replication)) <span class="op">+</span></span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> power_r), <span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="kw">aes</span>(<span class="dt">color =</span> sig_original), <span class="dt">sides =</span> <span class="st">&quot;b&quot;</span>) <span class="op">+</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="kw">aes</span>(<span class="dt">color =</span> sig_replication), <span class="dt">sides =</span> <span class="st">&quot;l&quot;</span>) <span class="op">+</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">slope =</span> <span class="dv">1</span>, <span class="dt">intercept =</span> <span class="dv">0</span>) <span class="op">+</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Original Effect Size&quot;</span>,</span>
+<span id="cb16-9"><a href="#cb16-9"></a>       <span class="dt">y =</span> <span class="st">&quot;Replication Effect Size&quot;</span>,</span>
+<span id="cb16-10"><a href="#cb16-10"></a>       <span class="dt">color =</span> <span class="st">&quot;p-value&quot;</span>,</span>
+<span id="cb16-11"><a href="#cb16-11"></a>       <span class="dt">size =</span> <span class="st">&quot;Replication Power&quot;</span>) <span class="op">+</span></span>
+<span id="cb16-12"><a href="#cb16-12"></a><span class="st">  </span><span class="kw">theme_classic</span>()</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>Das kommt der Vorlage schon recht nahe. Lassen wir das erstmal so stehen und kümmern uns um die Kerndichteschätzungen.</p>
 </div>
+<div id="dichte-plot-x-achse" class="section level2">
+<h2>Dichte-Plot <span class="math inline">\(x\)</span>-Achse</h2>
+<p>Die Kerndichteschätzung, die über dem Basis-Plot liegen soll, zeigt die Verteilung der Effektstärken der Original-Studien an, farblich getrennt für signifikante und nicht signifikante Studien. Dichte-Verteilungen können wir mit <code>geom_density()</code> erstellen. Dazu mappen wir die Effektstärke der Original-Studie auf der <span class="math inline">\(x\)</span>-Achse, die <span class="math inline">\(y\)</span>-Achse wird bei Kerndichteschätzungen für uns berechnet.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original)) <span class="op">+</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="st">  </span><span class="kw">geom_density</span>()</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>Nun wollen wir farblich kenntlich machen, welche Studien signifikant waren oder nicht.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">color =</span> sig_original)) <span class="op">+</span></span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="st">  </span><span class="kw">geom_density</span>()</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>In der Vorlage ist jedoch nicht nur die Kontur farbig (also nicht ur die <code>color</code>), sondern auch die Füllung (das <code>fill</code>).</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">color =</span> sig_original, <span class="dt">fill =</span> sig_original)) <span class="op">+</span></span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="st">  </span><span class="kw">geom_density</span>()</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>Auch hier müssen wir etwas mit unserer Transparenz arbeiten, um das gewünschte Ergebnis zu erzielen.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">color =</span> sig_original, <span class="dt">fill =</span> sig_original)) <span class="op">+</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">alpha =</span> <span class="fl">0.4</span>)</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>Das sieht schon gut aus. Bei gestapelten Kerndichteschätzungen (also jenen, bei denen mehrere Dichten übereinander liegen) müssen wir jedoch beachten, dass wir in den seltensten Fällen die “rohe” Dichte an sich ausgeben wollen, sondern eher die Dichte, gewichtet anhand der Anzahl der Beobachtungen. Dazu müssen wir die zugrundeliegende Statistik der Dichte-Funktion ändern, was wir mit dem Argument <code>after_stat()</code> in den <em>aesthetics</em> umsetzen können.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">color =</span> sig_original, <span class="dt">fill =</span> sig_original, <span class="kw">after_stat</span>(count))) <span class="op">+</span></span>
+<span id="cb21-3"><a href="#cb21-3"></a><span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">alpha =</span> <span class="fl">0.4</span>)</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>Zuletzt werden wir noch die Legende und alle Achsen los. Die Legende lassen wir mit <code>theme(legend.position = "none")</code> verschwinden, und eine <em>theme</em> ohne Achsen ist <code>theme_void()</code>.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">color =</span> sig_original, <span class="dt">fill =</span> sig_original, <span class="kw">after_stat</span>(count))) <span class="op">+</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="st">  </span><span class="kw">theme_void</span>()</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">color =</span> sig_original, <span class="dt">fill =</span> sig_original, <span class="kw">after_stat</span>(count))) <span class="op">+</span></span>
+<span id="cb23-3"><a href="#cb23-3"></a><span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></span>
+<span id="cb23-4"><a href="#cb23-4"></a><span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span></span>
+<span id="cb23-5"><a href="#cb23-5"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-20-2.png" width="672" /></p>
+</div>
+<div id="dichte-plot-y-achse" class="section level2">
+<h2>Dichte-Plot <span class="math inline">\(y\)</span>-Achse</h2>
+<p>Der Dichte-Plot auf der <span class="math inline">\(y\)</span>-Achse, also rechts neben dem Basis-Plot ist derselbe, wie der entlang der <span class="math inline">\(x\)</span>-Achse, jedoch mit den korrespondierenden Variablen für die Replikations-Studien (<code>es_replication</code> und <code>sig_replication</code>).</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb24-2"><a href="#cb24-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_replication, <span class="dt">color =</span> sig_replication, <span class="dt">fill =</span> sig_replication, <span class="kw">after_stat</span>(count))) <span class="op">+</span></span>
+<span id="cb24-3"><a href="#cb24-3"></a><span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></span>
+<span id="cb24-4"><a href="#cb24-4"></a><span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span></span>
+<span id="cb24-5"><a href="#cb24-5"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>Um den Plot zu drehen, benutzen wir <code>coord_flip()</code>.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_replication, <span class="dt">color =</span> sig_replication, <span class="dt">fill =</span> sig_replication, <span class="kw">after_stat</span>(count))) <span class="op">+</span></span>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></span>
+<span id="cb25-4"><a href="#cb25-4"></a><span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span></span>
+<span id="cb25-5"><a href="#cb25-5"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span></span>
+<span id="cb25-6"><a href="#cb25-6"></a><span class="st">  </span><span class="kw">coord_flip</span>()</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+</div>
+<div id="plots-zusammenfügen" class="section level2">
+<h2>Plots zusammenfügen</h2>
+<p>Wir haben jetzt alle “Sub-Plots” erfolgreich erstellt. Die Aufgabe besteht un darin, diese Zusammenzufügen. Das geniale Paket, das wir verwenden werden, heißt <a href="https://patchwork.data-imaginist.com/index.html"><code>patchwork</code></a><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> und stammt von einem der Mitarbeiter von <code>ggplot2</code>; ist also explizit darauf abgestimmt. Wir machen uns, weil es sich hier um ein sehr spezielles Layout handelt, eine spezielle Funktion von <code>patchwork</code> zu nutze, mit der wir unser Plot-Layout direkt definieren können.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">library</span>(patchwork)</span>
+<span id="cb26-2"><a href="#cb26-2"></a></span>
+<span id="cb26-3"><a href="#cb26-3"></a>arrangement &lt;-<span class="st"> &quot;</span></span>
+<span id="cb26-4"><a href="#cb26-4"></a><span class="st">BBB#</span></span>
+<span id="cb26-5"><a href="#cb26-5"></a><span class="st">AAAC</span></span>
+<span id="cb26-6"><a href="#cb26-6"></a><span class="st">AAAC</span></span>
+<span id="cb26-7"><a href="#cb26-7"></a><span class="st">AAAC</span></span>
+<span id="cb26-8"><a href="#cb26-8"></a><span class="st">&quot;</span></span></code></pre></div>
+<p>So haben wir angegeben, dass Plot A (unser Basis-Plot) in der linken, unteren Ecke sein soll, und zwar dreimal so hoch und breit, wie die jeweiligen Dichte-Plots. Der Dichte-Plot für die <span class="math inline">\(x\)</span>-Achse (Plot B) wird über Plot A sein und genau so breit, der Dichte-Plot für die <span class="math inline">\(y\)</span>-Achse wird rechts neben Plot A sein, aber genau so hoch wie dieser. Dadurch entsteht ein Weißraum in der rechten oberen Ecke. Die Plots müssen wir nun Objekten zuweisen und dann zusammenfügen.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>plot_a &lt;-<span class="st"> </span>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">y =</span> es_replication, <span class="dt">color =</span> sig_replication)) <span class="op">+</span></span>
+<span id="cb27-3"><a href="#cb27-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> power_r), <span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></span>
+<span id="cb27-4"><a href="#cb27-4"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="kw">aes</span>(<span class="dt">color =</span> sig_original), <span class="dt">sides =</span> <span class="st">&quot;b&quot;</span>) <span class="op">+</span></span>
+<span id="cb27-5"><a href="#cb27-5"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="kw">aes</span>(<span class="dt">color =</span> sig_replication), <span class="dt">sides =</span> <span class="st">&quot;l&quot;</span>) <span class="op">+</span></span>
+<span id="cb27-6"><a href="#cb27-6"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span></span>
+<span id="cb27-7"><a href="#cb27-7"></a><span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">slope =</span> <span class="dv">1</span>, <span class="dt">intercept =</span> <span class="dv">0</span>) <span class="op">+</span></span>
+<span id="cb27-8"><a href="#cb27-8"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Original Effect Size&quot;</span>,</span>
+<span id="cb27-9"><a href="#cb27-9"></a>       <span class="dt">y =</span> <span class="st">&quot;Replication Effect Size&quot;</span>,</span>
+<span id="cb27-10"><a href="#cb27-10"></a>       <span class="dt">color =</span> <span class="st">&quot;p-value&quot;</span>,</span>
+<span id="cb27-11"><a href="#cb27-11"></a>       <span class="dt">size =</span> <span class="st">&quot;Replication Power&quot;</span>) <span class="op">+</span></span>
+<span id="cb27-12"><a href="#cb27-12"></a><span class="st">  </span><span class="kw">theme_classic</span>()</span>
+<span id="cb27-13"><a href="#cb27-13"></a></span>
+<span id="cb27-14"><a href="#cb27-14"></a>plot_b &lt;-<span class="st"> </span>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb27-15"><a href="#cb27-15"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_original, <span class="dt">color =</span> sig_original, <span class="dt">fill =</span> sig_original, <span class="kw">after_stat</span>(count))) <span class="op">+</span></span>
+<span id="cb27-16"><a href="#cb27-16"></a><span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></span>
+<span id="cb27-17"><a href="#cb27-17"></a><span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span></span>
+<span id="cb27-18"><a href="#cb27-18"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span>
+<span id="cb27-19"><a href="#cb27-19"></a></span>
+<span id="cb27-20"><a href="#cb27-20"></a>plot_c &lt;-<span class="st"> </span>reproducibility_complete <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb27-21"><a href="#cb27-21"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> es_replication, <span class="dt">color =</span> sig_replication, <span class="dt">fill =</span> sig_replication, <span class="kw">after_stat</span>(count))) <span class="op">+</span></span>
+<span id="cb27-22"><a href="#cb27-22"></a><span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></span>
+<span id="cb27-23"><a href="#cb27-23"></a><span class="st">  </span><span class="kw">theme_void</span>() <span class="op">+</span></span>
+<span id="cb27-24"><a href="#cb27-24"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span></span>
+<span id="cb27-25"><a href="#cb27-25"></a><span class="st">  </span><span class="kw">coord_flip</span>()</span>
+<span id="cb27-26"><a href="#cb27-26"></a></span>
+<span id="cb27-27"><a href="#cb27-27"></a>plot_a <span class="op">+</span><span class="st"> </span>plot_b <span class="op">+</span><span class="st"> </span>plot_c <span class="op">+</span><span class="st"> </span><span class="kw">plot_layout</span>(<span class="dt">design =</span> arrangement)</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>Zuletzt kann man die Legende noch an den Rand bringen.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>plot_a <span class="op">+</span><span class="st"> </span>plot_b <span class="op">+</span><span class="st"> </span>plot_c <span class="op">+</span><span class="st"> </span><span class="kw">plot_layout</span>(<span class="dt">design =</span> arrangement, <span class="dt">guides =</span> <span class="st">&quot;collect&quot;</span>)</span></code></pre></div>
+<p><img src="datenvisualisierung_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+</div>
+</div>
+<div id="weiterführende-literatur" class="section level1">
+<h1>Weiterführende Literatur</h1>
+<p>Exzellente Bücher zu dem Thema Datenvisualisierung, auch in Bezug auf <code>ggplot2</code> finden sich bei <span class="citation">Wickham (<a href="#ref-Wickham.2016" role="doc-biblioref">2016</a>)</span>, <span class="citation">Healy (<a href="#ref-Healy.2018" role="doc-biblioref">2018</a>)</span> und <span class="citation">Wilke (<a href="#ref-Wilke.2020" role="doc-biblioref">2020</a>)</span>.</p>
 </div>
 <div id="literatur" class="section level1 unnumbered">
 <h1>Literatur</h1>
 <div id="refs" class="references">
+<div id="ref-Healy.2018">
+<p>Healy, K. J. (2018). <em>Data Visualization: A practical introduction</em>. Princeton University Press. <a href="https://socviz.co/index.html">https://socviz.co/index.html</a></p>
+</div>
 <div id="ref-OpenScienceCollaboration.2015">
 <p>Open Science Collaboration. (2015). Estimating the reproducibility of psychological science. <em>Science</em>, <em>349</em>(6251), aac4716. <a href="https://doi.org/10.1126/science.aac4716">https://doi.org/10.1126/science.aac4716</a></p>
 </div>
+<div id="ref-Wickham.2016">
+<p>Wickham, H. (2016). <em>ggplot2: Elegant graphics for data analysis</em> (2nd ed.). Springer. <a href="https://ggplot2-book.org/">https://ggplot2-book.org/</a></p>
 </div>
+<div id="ref-Wilke.2020">
+<p>Wilke, C. O. (2020). <em>Fundamentals of Data Visualization</em>. O’Reilly. <a href="https://serialmentor.com/dataviz/">https://serialmentor.com/dataviz/</a></p>
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Ähnliche Ergebnisse ließen sich mit Claus Wilkes Paket <code>cowplot</code> erzielen.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 
 
