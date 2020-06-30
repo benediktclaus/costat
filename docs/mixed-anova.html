@@ -593,7 +593,7 @@ div.tocify {
 <p>Wir interessieren uns für den Verlauf des Stress-Niveaus von Studenten kurz vor, während und nach einer Klausur. Dabei betrachten wir gleichzeitig zwei Gruppen, nämlich jene Studenten, die sich auf die Klausur explizit vorbereitet haben und jene, die lieber den botanischen Garten der Ruhr-Universität Bochum, oder die Sonne am Aasee in Münster genossen haben.</p>
 <div id="klassisch" class="section level2">
 <h2>Klassisch</h2>
-<p>Die Daten finden wir im <code>costatcompanion</code> als <code>exam_stress</code>, oder, wie immer, als SPSS-Datei im <a href="https://github.com/benediktclaus/costat/tree/master/data">Daten-Ordner des GitHub Repositories</a>. Der Datensatz enthält vier Variablen: Die Probanden-ID (<code>id</code>), den Hinweis darauf, ob sich derjenige Proband auf die Klausur vorbereitet hat (<code>preparation</code>, mit den Faktor-Levels “No” und “Yes”), den Zeitpunkt der Messung (<code>time</code>, mit den Faktor-Levels “Before”, “During” und “After”) und das Stress-Niveau auf einer Skala von 0 – 50 (<code>stress</code>). Dabei bedeuten niedrige Werte wenig Stress und hohe Werte viel Stress. Wir berechnen also eine 2 <span class="math inline">\(\times\)</span> 3 gemischte ANOVA mit dem Zwischensubjektfaktor “Vorbereitung” mit zwei Faktor-Levels und dem Innersubjektfaktor “Zeit” mit drei Faktor-Levels.</p>
+<p>Die Daten finden wir im <code>costatcompanion</code> als <code>exam_stress</code>, oder, wie immer, als SPSS-Datei im <a href="https://github.com/benediktclaus/costat/tree/master/data">Daten-Ordner des GitHub Repositories</a>. Der Datensatz enthält vier Variablen: Die Probanden-ID (<code>id</code>), den Hinweis darauf, ob sich derjenige Proband auf die Klausur vorbereitet hat (<code>preparation</code>, mit den Faktorstufen “No” und “Yes”), den Zeitpunkt der Messung (<code>time</code>, mit den Faktorstufen “Before”, “During” und “After”) und das Stress-Niveau auf einer Skala von 0 – 50 (<code>stress</code>). Dabei bedeuten niedrige Werte wenig Stress und hohe Werte viel Stress. Wir berechnen also eine 2 <span class="math inline">\(\times\)</span> 3 gemischte ANOVA mit dem Zwischensubjektfaktor “Vorbereitung” mit zwei Faktorstufen und dem Innersubjektfaktor “Zeit” mit drei Faktorstufen.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>costatcompanion<span class="op">::</span>exam_stress</span></code></pre></div>
 <pre><code>## # A tibble: 288 x 4
 ##       id preparation time   stress
@@ -740,23 +740,112 @@ div.tocify {
 </div>
 <div id="aus-der-praxis" class="section level1">
 <h1>Aus der Praxis</h1>
+<p><span class="citation">Ryan et al. (<a href="#ref-Ryan.2013" role="doc-biblioref">2013</a>)</span> untersuchten unter anderem, welche Faktoren die Feindseligkeit gegenüber einem Insekt beeinflussen. Dazu zeigten sie einer Reihe von Probanden Bilder von Insekten und ließen deren Feindseligkeit einschätzen. Dabei haben sie die Insekten aufgeteilt in jene, die eher wenig oder total ekelig waren, und jene, die wenig oder total angsterregend waren. Zudem erhoben sie das Geschlecht der Probanden. Die Daten sind aus der <a href="https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf">JASP Data Library</a> <span class="citation">(JASP Team, <a href="#ref-JASPTeam.2019" role="doc-biblioref">2019</a>)</span> und in der Datei <code>bugs.csv</code></p>
 <div id="klassisch-1" class="section level2">
 <h2>Klassisch</h2>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">read_csv</span>(<span class="st">&quot;data/bugs.csv&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 93 x 8
+##    Subject Gender Region Education `Lo D, Lo F` `Lo D, Hi F` `Hi D, Lo F`
+##      &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;            &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+##  1       1 Female North  some               6            6            9  
+##  2       2 Female North  advance           10           NA           10  
+##  3       3 Female Europe college            5           10           10  
+##  4       4 Female North  college            6            9            6  
+##  5       5 Female North  some               3            6.5          5.5
+##  6       6 Female Europe some               2            0.5          7.5
+##  7       7 Female North  some              10           10           10  
+##  8       8 Female North  high              10           10            9  
+##  9       9 Female North  high               9.5          9.5          6  
+## 10      10 Female Other  high               8.5         10            7  
+## # ... with 83 more rows, and 1 more variable: `Hi D, Hi F` &lt;dbl&gt;</code></pre>
+<p>Zu Beginn müssen wir die Daten erstmal etwas bereinigen und in die richtige Form bringen. Die Daten müssen länger werden, also nutzen wir <code>pivot_longer()</code>, jedoch müssen wir hier aufgrund der Variablennamen <a href="https://r4ds.had.co.nz/strings.html#matching-patterns-with-regular-expressions"><em>regular expressions</em></a> nutzen, um die Gruppen voneinander zu trennen. Außerdem entfernen wir die Variablen <code>education</code> und <code>region</code>, weil wir diese für unsere Analyse nicht brauchen.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>bugs &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/bugs.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>education, <span class="op">-</span>region) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb20-4"><a href="#cb20-4"></a><span class="st">  </span><span class="kw">pivot_longer</span>(</span>
+<span id="cb20-5"><a href="#cb20-5"></a>    <span class="dt">cols =</span> lo_d_lo_f<span class="op">:</span><span class="kw">last_col</span>(),</span>
+<span id="cb20-6"><a href="#cb20-6"></a>    <span class="dt">names_to =</span> <span class="kw">c</span>(<span class="st">&quot;disgust&quot;</span>, <span class="st">&quot;fear&quot;</span>),</span>
+<span id="cb20-7"><a href="#cb20-7"></a>    <span class="dt">names_pattern =</span> <span class="st">&quot;(^[:alpha:]{2})_d_([:alpha:]{2})_f$&quot;</span>,</span>
+<span id="cb20-8"><a href="#cb20-8"></a>    <span class="dt">names_ptype =</span> <span class="kw">list</span>(</span>
+<span id="cb20-9"><a href="#cb20-9"></a>      <span class="dt">disgust =</span> <span class="kw">factor</span>(),</span>
+<span id="cb20-10"><a href="#cb20-10"></a>      <span class="dt">fear =</span> <span class="kw">factor</span>()</span>
+<span id="cb20-11"><a href="#cb20-11"></a>    ),</span>
+<span id="cb20-12"><a href="#cb20-12"></a>    <span class="dt">values_to =</span> <span class="st">&quot;hostility&quot;</span></span>
+<span id="cb20-13"><a href="#cb20-13"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb20-14"><a href="#cb20-14"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb20-15"><a href="#cb20-15"></a>    <span class="kw">across</span>(<span class="kw">c</span>(gender), as_factor),</span>
+<span id="cb20-16"><a href="#cb20-16"></a>    <span class="kw">across</span>(<span class="kw">c</span>(disgust, fear), fct_recode, <span class="dt">low =</span> <span class="st">&quot;lo&quot;</span>, <span class="dt">high =</span> <span class="st">&quot;hi&quot;</span>)</span>
+<span id="cb20-17"><a href="#cb20-17"></a>  )</span>
+<span id="cb20-18"><a href="#cb20-18"></a></span>
+<span id="cb20-19"><a href="#cb20-19"></a>bugs</span></code></pre></div>
+<pre><code>## # A tibble: 372 x 5
+##    subject gender disgust fear  hostility
+##      &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt;     &lt;dbl&gt;
+##  1       1 Female low     low           6
+##  2       1 Female low     high          6
+##  3       1 Female high    low           9
+##  4       1 Female high    high         10
+##  5       2 Female low     low          10
+##  6       2 Female low     high         NA
+##  7       2 Female high    low          10
+##  8       2 Female high    high         10
+##  9       3 Female low     low           5
+## 10       3 Female low     high         10
+## # ... with 362 more rows</code></pre>
 <div id="eda-1" class="section level3">
 <h3>EDA</h3>
+<p>Gucken wir uns zunächst einmal die deskriptiven Statistiken an.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>bugs <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="st">  </span><span class="kw">group_by</span>(gender, disgust, fear) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>(hostility)</span></code></pre></div>
+<pre><code>## # A tibble: 12 x 16
+##    gender disgust fear  variable     n   min   max median    q1    q3   iqr
+##    &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 Female low     low   hostili~    63   0    10     6     3.75   8.5  4.75
+##  2 Female low     high  hostili~    61   0.5  10     8.5   6     10    4   
+##  3 Female high    low   hostili~    61   0    10     7.5   4.5    9.5  5   
+##  4 Female high    high  hostili~    62   2    10     9.25  7.12  10    2.88
+##  5 Male   low     low   hostili~    29   0    10     6     3.5    7    3.5 
+##  6 Male   low     high  hostili~    29   1.5  10     8     6      8.5  2.5 
+##  7 Male   high    low   hostili~    29   0    10     8     4.5    9.5  5   
+##  8 Male   high    high  hostili~    29   0    10     7.5   6      9    3   
+##  9 &lt;NA&gt;   low     low   hostili~     1   8     8     8     8      8    0   
+## 10 &lt;NA&gt;   low     high  hostili~     1   8.5   8.5   8.5   8.5    8.5  0   
+## 11 &lt;NA&gt;   high    low   hostili~     1   8     8     8     8      8    0   
+## 12 &lt;NA&gt;   high    high  hostili~     1   9.5   9.5   9.5   9.5    9.5  0   
+## # ... with 5 more variables: mad &lt;dbl&gt;, mean &lt;dbl&gt;, sd &lt;dbl&gt;, se &lt;dbl&gt;,
+## #   ci &lt;dbl&gt;</code></pre>
+<p>Die unschönen vier letzten Reihen werden durch einen Probanden erzeugt, für den kein Geschlecht hinterlegt wurde.</p>
+<p><img src="mixed-anova_files/figure-html/unnamed-chunk-16-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p>Frauen scheinen Insekten generell feindlicher gegenüber zu stehen, wenn diese hoch angstauslösend sind (grüne Linie). Außerdem werden Insekten hier auch als feindseliger angesehen, wenn sie hoch ekelig sein. Bei Männern ist das Bild nicht so klar, denn hier scheint es einen Interaktionseffekt zu geben: Bei niedrigem Ekel werden Insekten, die wenig angstauslösend sind, als weniger feindselig eingeschätzt, aber bei hohem Ekel scheint es keinen Unterschied mehr zu machen, wie angstauslösend die Insekten sind, hier scheinen alle Insekten gleich feindselig eingeschätzt zu werden. Das sind Effekte, die in einer gemischten ANOVA untersucht werden können.</p>
+<p>Hier untersuchen wir eine 2 <span class="math inline">\(\times\)</span> 2 <span class="math inline">\(\times\)</span> 2 gemischte ANOVA mit dem Zwischensubjektfaktor “Geschlecht” mit zwei Faktorstufen (“Female” und “Male”) und den Innersubjektfaktoren “Ekel” (mit den zwei Faktorstufen “low” und “high”), sowie “Angst” (mit den zwei Faktorstufen “low” und “high”).</p>
 </div>
 <div id="durchführung-1" class="section level3">
 <h3>Durchführung</h3>
+<p>Die eigentliche Durchführung ist wie immer kurz und schmerzlos.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>bugs <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb24-2"><a href="#cb24-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> hostility, <span class="dt">wid =</span> subject, <span class="dt">between =</span> gender, <span class="dt">within =</span> <span class="kw">c</span>(disgust, fear), <span class="dt">type =</span> <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## ANOVA Table (type III tests)
+## 
+##                Effect DFn DFd      F        p p&lt;.05      ges
+## 1              gender   1  85  0.996 3.21e-01       0.007000
+## 2             disgust   1  85 12.061 8.12e-04     * 0.019000
+## 3                fear   1  85 32.122 1.94e-07     * 0.052000
+## 4      gender:disgust   1  85  0.432 5.13e-01       0.000696
+## 5         gender:fear   1  85  1.285 2.60e-01       0.002000
+## 6        disgust:fear   1  85  4.688 3.30e-02     * 0.005000
+## 7 gender:disgust:fear   1  85  4.688 3.30e-02     * 0.005000</code></pre>
+<p>Wir erhalten signifikante Haupteffekte für die Innersubjekteffekte “Ekel” (<span class="math inline">\(F(1, 85) = 12.06, p &lt; .001, \eta^2_G = .019\)</span>) und “Angst” (<span class="math inline">\(F(1, 85) = 32.12, p &lt; .001, \eta^2_G = .052\)</span>). Darüber hinaus sind zwei Interaktionseffekte signifikant; der zwischen Ekel und Angst (<span class="math inline">\(F(1, 85) = 4.69, p = .033, \eta^2_G = .005\)</span>) und der zwischen Geschlecht, Ekel und Angst (<span class="math inline">\(F(1, 85) = 4.69, p = .033, \eta^2_G = .005\)</span>). Ins interessiert im Falle signifikanter Interaktionseffekte immer nur der mit den meisten beteiligten Variablen, <strong>weil die einzelne Interpretation aller anderen Effekte im wahrsten Sinne des Wortes sinnlos ist</strong>.</p>
+<p>Für unsere Ergebnisse heißt das, dass der Zusammenhang zwischen Ekel eines Insekts und Feindseligkeit zu diesem sowohl durch die Angst, die es auslöst, beeinflusst wird, aber auch durch das Geschlecht der Probanden. Bei Frauen finden wir keinen Interaktionseffekt zwischen Ekel und Angst, bei Männern hingegen schon; und genau das sagt uns dieser dreifach-Interaktionseffekt. Es gibt unterschiedliche Verläufe zwischen Männern und Frauen (wie in der obigen Abbildung deutlich wurde).</p>
 </div>
 <div id="berichten-1" class="section level3">
 <h3>Berichten</h3>
+<p>We found a significant three-way interaction between the participants’ gender and the insects’ perceived disgut and fear regarding it’s hostility, <span class="math inline">\(F(1, 85) = 4.69, p = .033, \eta^2_G = .005\)</span>.</p>
 </div>
 </div>
 <div id="robust-1" class="section level2">
 <h2>Robust</h2>
-</div>
-<div id="non-parametrisch-1" class="section level2">
-<h2>Non-parametrisch</h2>
+<p>Robuste Verfahren gibt es nur für zweifaktorielle mixed ANOVAs.</p>
 </div>
 </div>
 <div id="literatur" class="section level1 unnumbered">
@@ -765,8 +854,14 @@ div.tocify {
 <div id="ref-Greenhouse.1959">
 <p>Greenhouse, S. W., &amp; Geisser, S. (1959). On methods in the analysis of profile data. <em>Psychometrika</em>, <em>24</em>(2), 95–112. <a href="https://doi.org/10.1007/BF02289823">https://doi.org/10.1007/BF02289823</a></p>
 </div>
+<div id="ref-JASPTeam.2019">
+<p>JASP Team. (2019). <em>The JASP Data Library: Version 2</em>. JASP Publishing. <a href="https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf">https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf</a></p>
+</div>
 <div id="ref-Mair.2020">
 <p>Mair, P., &amp; Wilcox, R. R. (2020). Robust statistical methods in R using the WRS2 package. <em>Behavior Research Methods</em>, <em>52</em>(2), 464–488. <a href="https://doi.org/10.3758/s13428-019-01246-w">https://doi.org/10.3758/s13428-019-01246-w</a></p>
+</div>
+<div id="ref-Ryan.2013">
+<p>Ryan, R. S., Wilde, M., &amp; Crist, S. (2013). Compared to a small, supervised lab experiment, a large, unsupervised web-based experiment on a previously unknown effect has benefits that outweigh its potential costs. <em>Computers in Human Behavior</em>, <em>29</em>(4), 1295–1301. <a href="https://doi.org/10.1016/j.chb.2013.01.024">https://doi.org/10.1016/j.chb.2013.01.024</a></p>
 </div>
 <div id="ref-Wilcox.2017">
 <p>Wilcox, R. R. (2017). <em>Introduction to Robust Estimation and Hypothesis Testing</em> (4th ed.). Elsevier Academic Press.</p>

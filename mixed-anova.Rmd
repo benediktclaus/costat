@@ -46,7 +46,7 @@ library(costatcompanion)
 Wir interessieren uns für den Verlauf des Stress-Niveaus von Studenten kurz vor, während und nach einer Klausur. Dabei betrachten wir gleichzeitig zwei Gruppen, nämlich jene Studenten, die sich auf die Klausur explizit vorbereitet haben und jene, die lieber den botanischen Garten der Ruhr-Universität Bochum, oder die Sonne am Aasee in Münster genossen haben.
 
 ## Klassisch
-Die Daten finden wir im `costatcompanion` als `exam_stress`, oder, wie immer, als SPSS-Datei im [Daten-Ordner des GitHub Repositories](https://github.com/benediktclaus/costat/tree/master/data). Der Datensatz enthält vier Variablen: Die Probanden-ID (`id`), den Hinweis darauf, ob sich derjenige Proband auf die Klausur vorbereitet hat (`preparation`, mit den Faktor-Levels "No" und "Yes"), den Zeitpunkt der Messung (`time`, mit den Faktor-Levels "Before", "During" und "After") und das Stress-Niveau auf einer Skala von 0 -- 50 (`stress`). Dabei bedeuten niedrige Werte wenig Stress und hohe Werte viel Stress. Wir berechnen also eine 2 $\times$ 3 gemischte ANOVA mit dem Zwischensubjektfaktor "Vorbereitung" mit zwei Faktor-Levels und dem Innersubjektfaktor "Zeit" mit drei Faktor-Levels.
+Die Daten finden wir im `costatcompanion` als `exam_stress`, oder, wie immer, als SPSS-Datei im [Daten-Ordner des GitHub Repositories](https://github.com/benediktclaus/costat/tree/master/data). Der Datensatz enthält vier Variablen: Die Probanden-ID (`id`), den Hinweis darauf, ob sich derjenige Proband auf die Klausur vorbereitet hat (`preparation`, mit den Faktorstufen "No" und "Yes"), den Zeitpunkt der Messung (`time`, mit den Faktorstufen "Before", "During" und "After") und das Stress-Niveau auf einer Skala von 0 -- 50 (`stress`). Dabei bedeuten niedrige Werte wenig Stress und hohe Werte viel Stress. Wir berechnen also eine 2 $\times$ 3 gemischte ANOVA mit dem Zwischensubjektfaktor "Vorbereitung" mit zwei Faktorstufen und dem Innersubjektfaktor "Zeit" mit drei Faktorstufen.
 
 ```{r}
 costatcompanion::exam_stress
@@ -97,9 +97,9 @@ Unser erster Blick geht in Richtung Mauchlys Test auf Sphärizität. Dieser zeig
 ```{r echo=FALSE}
 plot_a <- exam_stress %>% 
   ggplot(aes(time, stress, color = preparation)) +
-  stat_summary(fun.data = "mean_sd", geom = "errorbar", width = 0.1, position = dodge_position) +
+  stat_summary(fun.data = "mean_sd", geom = "errorbar", width = 0.1, position = dodge_position, size = 1) +
   stat_summary(fun.data = "mean_sd", geom = "point", position = dodge_position) +
-  stat_summary(aes(group = preparation), fun.data = "mean_sd", geom = "line", position = dodge_position) +
+  stat_summary(aes(group = preparation), fun.data = "mean_sd", geom = "line", position = dodge_position, size = 1) +
   geom_point(alpha = 0.2, position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.2)) +
   scale_color_personal() +
   theme(legend.position = "bottom") +
@@ -107,9 +107,9 @@ plot_a <- exam_stress %>%
 
 plot_b <- exam_stress %>% 
   ggplot(aes(preparation, stress, color = time)) +
-  stat_summary(fun.data = "mean_sd", geom = "errorbar", width = 0.1, position = dodge_position) +
+  stat_summary(fun.data = "mean_sd", geom = "errorbar", width = 0.1, position = dodge_position, size = 1) +
   stat_summary(fun.data = "mean_sd", geom = "point", position = dodge_position) +
-  stat_summary(aes(group = time), fun.data = "mean_sd", geom = "line", position = dodge_position) +
+  stat_summary(aes(group = time), fun.data = "mean_sd", geom = "line", position = dodge_position, size = 1) +
   geom_point(alpha = 0.2, position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.2)) +
   scale_color_personal() +
   theme(legend.position = "bottom") +
@@ -175,14 +175,101 @@ Gibt es nicht.
 
 
 # Aus der Praxis
+@Ryan.2013 untersuchten unter anderem, welche Faktoren die Feindseligkeit gegenüber einem Insekt beeinflussen. Dazu zeigten sie einer Reihe von Probanden Bilder von Insekten und ließen deren Feindseligkeit einschätzen. Dabei haben sie die Insekten aufgeteilt in jene, die eher wenig oder total ekelig waren, und jene, die wenig oder total angsterregend waren. Zudem erhoben sie das Geschlecht der Probanden.  Die Daten sind aus der [JASP Data Library](https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf) [@JASPTeam.2019] und in der Datei `bugs.csv`
+
 ## Klassisch
+```{r message=FALSE}
+read_csv("data/bugs.csv")
+```
+
+Zu Beginn müssen wir die Daten erstmal etwas bereinigen und in die richtige Form bringen. Die Daten müssen länger werden, also nutzen wir `pivot_longer()`, jedoch müssen wir hier aufgrund der Variablennamen [*regular expressions*](https://r4ds.had.co.nz/strings.html#matching-patterns-with-regular-expressions) nutzen, um die Gruppen voneinander zu trennen. Außerdem entfernen wir die Variablen `education` und `region`, weil wir diese für unsere Analyse nicht brauchen.
+
+```{r message=FALSE}
+bugs <- read_csv("data/bugs.csv") %>%
+  janitor::clean_names() %>%
+  select(-education, -region) %>% 
+  pivot_longer(
+    cols = lo_d_lo_f:last_col(),
+    names_to = c("disgust", "fear"),
+    names_pattern = "(^[:alpha:]{2})_d_([:alpha:]{2})_f$",
+    names_ptype = list(
+      disgust = factor(),
+      fear = factor()
+    ),
+    values_to = "hostility"
+  ) %>%
+  mutate(
+    across(c(gender), as_factor),
+    across(c(disgust, fear), fct_recode, low = "lo", high = "hi")
+  )
+
+bugs
+```
+
+
 ### EDA
+Gucken wir uns zunächst einmal die deskriptiven Statistiken an.
+
+```{r warning=FALSE}
+bugs %>% 
+  group_by(gender, disgust, fear) %>% 
+  get_summary_stats(hostility)
+```
+
+Die unschönen vier letzten Reihen werden durch einen Probanden erzeugt, für den kein Geschlecht hinterlegt wurde.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+dodge_position <- position_dodge(width = 0.2)
+
+bugs %>% 
+  filter(!is.na(gender)) %>% 
+  ggplot(aes(x = disgust, y = hostility, color = fear)) +
+  geom_point(alpha = 0.1, position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.2)) +
+  stat_summary(geom = "errorbar", width = 0.1, position = dodge_position, size = 1) +
+  stat_summary(aes(group = fear), geom = "line", position = dodge_position, size = 1) +
+  facet_wrap(~ gender) +
+  scale_color_personal() +
+  theme(legend.position = "bottom") +
+  labs(x = "Disgust", y = "Hostility", color = "Fear")
+```
+
+Frauen scheinen Insekten generell feindlicher gegenüber zu stehen, wenn diese hoch angstauslösend sind (grüne Linie). Außerdem werden Insekten hier auch als feindseliger angesehen, wenn sie hoch ekelig sein. Bei Männern ist das Bild nicht so klar, denn hier scheint es einen Interaktionseffekt zu geben: Bei niedrigem Ekel werden Insekten, die wenig angstauslösend sind, als weniger feindselig eingeschätzt, aber bei hohem Ekel scheint es keinen Unterschied mehr zu machen, wie angstauslösend die Insekten sind, hier scheinen alle Insekten gleich feindselig eingeschätzt zu werden. Das sind Effekte, die in einer gemischten ANOVA untersucht werden können.
+
+Hier untersuchen wir eine 2 $\times$ 2 $\times$ 2 gemischte ANOVA mit dem Zwischensubjektfaktor "Geschlecht" mit zwei Faktorstufen ("Female" und "Male") und den Innersubjektfaktoren "Ekel" (mit den zwei Faktorstufen "low" und "high"), sowie "Angst" (mit den zwei Faktorstufen "low" und "high").
+
 ### Durchführung
+Die eigentliche Durchführung ist wie immer kurz und schmerzlos.
+
+```{r warning=FALSE}
+bugs %>% 
+  anova_test(dv = hostility, wid = subject, between = gender, within = c(disgust, fear), type = 3)
+```
+
+Wir erhalten signifikante Haupteffekte für die Innersubjekteffekte "Ekel" ($F(1, 85) = 12.06, p < .001, \eta^2_G = .019$) und "Angst" ($F(1, 85) = 32.12, p < .001, \eta^2_G = .052$). Darüber hinaus sind zwei Interaktionseffekte signifikant; der zwischen Ekel und Angst ($F(1, 85) = 4.69, p = .033, \eta^2_G = .005$) und der zwischen Geschlecht, Ekel und Angst ($F(1, 85) = 4.69, p = .033, \eta^2_G = .005$). Ins interessiert im Falle signifikanter Interaktionseffekte immer nur der mit den meisten beteiligten Variablen, **weil die einzelne Interpretation aller anderen Effekte im wahrsten Sinne des Wortes sinnlos ist**.
+
+Für unsere Ergebnisse heißt das, dass der Zusammenhang zwischen Ekel eines Insekts und Feindseligkeit zu diesem sowohl durch die Angst, die es auslöst, beeinflusst wird, aber auch durch das Geschlecht der Probanden. Bei Frauen finden wir keinen Interaktionseffekt zwischen Ekel und Angst, bei Männern hingegen schon; und genau das sagt uns dieser dreifach-Interaktionseffekt. Es gibt unterschiedliche Verläufe zwischen Männern und Frauen (wie in der obigen Abbildung deutlich wurde). 
+
+Das könnten wir durch zwei einfahe ANOVAs pro Geschlecht weiter aufschlüsseln.
+
+```{r}
+bugs %>% 
+  filter(!is.na(gender)) %>% 
+  group_by(gender) %>% 
+  anova_test(dv = hostility, wid = subject, within = c(disgust, fear), type = 3)
+```
+
+Wir finden also bei den Frauen nur die beiden Haupteffekte. D.h., dass Insekten als feindseliger eingeschätzt werden, wenn sie ekelig ($F(1, 57) = 6.40, p = .014, \eta^2_G = .014$) und angstauslösend sind ($F(1.57) = 37.6, p < .001, \eta^2_G = .078$). Am feindseligsten werden Insekten beurteilt, die sowohl ekelig als auch angstauslösend sind.
+
+Bei den Männern finden wir einen signifikanten Interaktionseffekt, $F(1, 28) = 7.23, p = 0.12, \eta^2_G = .026$, bei dem es bei hohem Ekel keinen Unterschied macht, ob ein Insekt angstauslösend oder nicht ist.
+
 ### Berichten
+We found a significant three-way interaction between the participants' gender and the insects' perceived disgut and fear regarding it's hostility, $F(1, 85) = 4.69, p = .033, \eta^2_G = .005$. Because of that, women rated "high" disgusting insects more hostile than "low" disgusting ones, and "high" fearful insects more hostile than "low" fearful ones. Women rated disgusting and fearful insects as the most hostile.
+
+Men on the other hand had a different pattern in rating fearful insects more hostile than not fearful ones when disgust was low, but mean hostility was the same for insects with high disgust, regardless of fearfulness.
+
 
 ## Robust
-
-## Non-parametrisch
+Robuste Verfahren gibt es nur für zweifaktorielle mixed ANOVAs.
 
 
 # Literatur

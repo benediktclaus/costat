@@ -55,6 +55,7 @@ navbar:
        - text: "ANOVA mit Messwiederholung"
          href: anova-messwiederholung.html
        - text: "Mixed ANOVA"
+         href: mixed-anova.html
        - text: "Geplante Kontraste"
          href: kontraste.html
        - text: "Post-hoc-Tests"
