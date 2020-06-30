@@ -515,7 +515,9 @@ div.tocify {
     <li>
       <a href="anova-messwiederholung.html">ANOVA mit Messwiederholung</a>
     </li>
-    <li class="dropdown-header">Mixed ANOVA</li>
+    <li>
+      <a href="mixed-anova.html">Mixed ANOVA</a>
+    </li>
     <li>
       <a href="kontraste.html">Geplante Kontraste</a>
     </li>
@@ -649,7 +651,7 @@ div.tocify {
 ## 1 music_type 0.858 1.72, 85.75 1.11e-35         * 0.885 1.77, 88.5 9.64e-37
 ##   p[HF]&lt;.05
 ## 1         *</code></pre>
-<p>Wenn wir diesen Befehl ausführen, dann sehen wir, dass Mauchlys-Test signifikant ist – die Variassetzung der Sphärizität ist nicht erfüllt. Eine gute Methode, um den <span class="math inline">\(p\)</span>-Wert nun zu korrigieren, ist die Methode nach Greenhouse und Geisser <span class="citation">(Greenhouse &amp; Geisser, <a href="#ref-Greenhouse.1959" role="doc-biblioref">1959</a>)</span>. Um diese Korrektur<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, wie versprochen, automatisch zu erhalten, lassen wir uns anschließend mit <code>get_anova_table()</code>, angehängt an den bereits ausgeführten Befehl, die ANOVA-Ergebnisse ausgeben.</p>
+<p>Wenn wir diesen Befehl ausführen, dann sehen wir, dass Mauchlys-Test signifikant ist – die Voraussetzung der Sphärizität ist nicht erfüllt. Eine gute Methode, um den <span class="math inline">\(p\)</span>-Wert nun zu korrigieren, ist die Methode nach Greenhouse und Geisser <span class="citation">(Greenhouse &amp; Geisser, <a href="#ref-Greenhouse.1959" role="doc-biblioref">1959</a>)</span>. Um diese Korrektur<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, wie versprochen, automatisch zu erhalten, lassen wir uns anschließend mit <code>get_anova_table()</code>, angehängt an den bereits ausgeführten Befehl, die ANOVA-Ergebnisse ausgeben.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>runners <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb10-2"><a href="#cb10-2"></a><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> endurance, <span class="dt">wid =</span> id, <span class="dt">within =</span> music_type) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="kw">get_anova_table</span>()</span></code></pre></div>
