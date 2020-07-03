@@ -1,6 +1,7 @@
 # Pakete ------------------------------------------------------------------
 library(tidyverse)
 library(haven)
+library(lavaan)
 
 
 # Regression --------------------------------------------------------------
@@ -55,6 +56,8 @@ tibble(
   write_sav("data/typing.sav")
 
 
+
+
 # t-Tests -----------------------------------------------------------------
 # Einstichproben-t-Test
 set.seed(20200422)
@@ -81,6 +84,8 @@ tibble(
   unnest(patience) %>% 
   add_column(id = as.character(rep(1:53, 2)), .before = "measurement") %>% 
   write_sav(path = "data/patience.sav")
+
+
 
 
 # ANOVAs ------------------------------------------------------------------
@@ -183,3 +188,32 @@ tibble(
   rownames_to_column(var = "id") %>% 
   relocate(id, preparation) %>% 
   write_sav("data/exam_stress.sav")
+
+
+
+
+# Faktorenanalyse ---------------------------------------------------------
+# EFA
+factor_model <- '
+anticipation =~ 0.9*item_1 + 0.7*item_4 + 0.6*item_7 + 0.6*item_8 + 0.7*item_12 + 0.8*item_13 + -0.7*item_15
+people =~ 0.8*item_2 + -0.7*item_6 + 0.6*item_8 + 0.5*item_9 + 0.9*item_10 + 0.8*item_14
+dancing =~ 0.9*item_3 + 0.75*item_5 + 0.8*item_9 + 0.9*item_11 + 0.5*item_14
+
+people ~ 0.2*dancing
+anticipation ~ 0.4*people
+anticipation ~ 0.4*dancing
+'
+
+set.seed(20200703)
+simulateData(model = factor_model, model.type = "cfa", sample.nobs = 320, ov.var = rep(1.5, times = 15)) %>% 
+  as_tibble() %>% 
+  mutate(across(everything(), ~ . + 5),
+         # across(everything(), round),
+         across(everything(), pmax, 0),
+         across(everything(), pmin, 10)
+  ) %>% 
+  select(
+    num_range("item_", 1:15)
+  ) %>% 
+  rownames_to_column(var = "id") %>% 
+  write_sav("data/party.sav")
