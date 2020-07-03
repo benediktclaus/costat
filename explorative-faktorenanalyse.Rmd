@@ -1,0 +1,67 @@
+---
+title: "Exploratorische Faktorenanalyse"
+bibliography: references.bib
+link-citations: yes
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+<!-- Only when working on it -->
+```{r echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(fig.align = "center", dpi = 350)
+ggplot2::theme_set(ggplot2::theme_minimal())
+
+
+library(benelib)
+library(patchwork)
+```
+
+
+<!-- Use this after finalizing work -->
+<!-- ```{r echo=FALSE, message=FALSE} -->
+<!-- knitr::read_chunk("setup.R") -->
+<!-- ``` -->
+
+<!-- ```{r echo=FALSE, message=FALSE} -->
+<!-- <<setup>> -->
+<!-- ``` -->
+
+<!-- Spanner Image -->
+![](images/party_r.jpg)
+
+Die explorative Faktorenanalyse nutzen wir, um latente (d.h. nicht beobachtete) Faktoren zu finden, die unseren Daten vermutlich zugrundeliegen. Besonders oft wird dieses Verfahren bei der Erstellung und Validierung von Fragebögen eingesetzt, um zu überprüfen, welche latenten Faktoren mit diesem Fragebogen erfasst werden.
+
+# Pakete 
+Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket `costatcompanion`.
+
+Zudem benötigen wir das Paket `psych`, mit dem wir die Faktorenanalyse durchführen werden.
+
+```{r message=FALSE}
+library(tidyverse)
+library(haven)
+library(rstatix)
+library(costatcompanion)
+library(psych)
+```
+
+# Beispiel
+Vielen Leuten macht Feiern einfach Spaß.
+
+## Klassisch
+### Voraussetzungen
+### EDA
+### Durchführung
+### Berichten
+
+
+
+# Aus der Praxis
+## Klassisch
+### EDA
+### Durchführung
+### Berichten
+
+
+
+# Literatur

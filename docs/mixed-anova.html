@@ -572,13 +572,15 @@ div.tocify {
 
 
 <!-- Only when working on it -->
+<!-- # ```{r echo=FALSE, message=FALSE} -->
+<!-- # knitr::opts_chunk$set(fig.align = "center", dpi = 350) -->
+<!-- # ggplot2::theme_set(ggplot2::theme_minimal()) -->
+<!-- #  -->
+<!-- #  -->
+<!-- # library(benelib) -->
+<!-- # library(patchwork) -->
+<!-- # ``` -->
 <!-- Use this after finalizing work -->
-<!-- ```{r echo=FALSE, message=FALSE} -->
-<!-- knitr::read_chunk("setup.R") -->
-<!-- ``` -->
-<!-- ```{r echo=FALSE, message=FALSE} -->
-<!-- <<setup>> -->
-<!-- ``` -->
 <!-- Spanner Image -->
 <p><img src="images/students_r.jpg" /></p>
 <p>Die mixed ANOVA, oder auch gemischte ANOVA, nutzt man, wenn man die Einflüsse von sowohl Zwischensubjekt- als auch Innersubjektfaktoren gleichzeitig untersuchen will. Bis jetzt haben wir nur die Einflüsse von <em>entweder</em> Zwischensubjekt- oder Innersubjektfktoren untersucht. Ziemlich häufig kommt es aber auch vor, dass wir beides gleichzeitig untersuchen wollen. Beispielweise erheben wir im Rahmen einer klinischen Studie Daten über die Zeit hinweg, so etwa vor und nach einer Therapie. Der entsprechende Innersubjektfaktor wäre hier etwas wie “Zeit”, weil wir diese beiden Messungen pro Proband (“innerhalb” der Probanden) durchführen. Gleichzeitig haben wir die zu untersuchende Therapie auch gegen eine Kontrollgruppe getestet, also bekamen einige Probanden die zu untersuchende Therapie und einige einen Placebo. Jetzt haben wir gleichzeitig auch ein Zwischensubjekt-Design, weil die Probanden natürlich nicht in beiden Gruppen, sondern nur in einer waren. Der wirklich interessante Effekt einer mixed ANOVA ist der <strong>Interaktionseffekt</strong> zwischen der Innersubjekt- und der Zwischensubjektvariablen, weil dieser angeben würde, ob der Einfluss der Innersubjektfaktors zwischen den Gruppen unterschiedlich ist (<em>vice versa</em>).</p>
@@ -631,7 +633,7 @@ div.tocify {
 ## 5 Yes         Duri~ stress      48    12    32   21   17       22  5     2.96
 ## 6 Yes         After stress      48     3    21   10    7.75    14  6.25  4.45
 ## # ... with 4 more variables: mean &lt;dbl&gt;, sd &lt;dbl&gt;, se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
-<p><img src="mixed-anova_files/figure-html/unnamed-chunk-5-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="mixed-anova_files/figure-html/unnamed-chunk-6-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Wir bekommen eine relativ gute Idee davon, dass beide Gruppen ungefähr auf einem gleichen Stress-Niveau starten, dann nimmt der Stress für die Gruppe der nicht vorbereiteten jedoch während der Klausur zu und nimmt nach der Klausur zwar ab, bleibt aber über dem Ausgangs-Niveau. Die Gruppe der Vorbereiteten hingegen erlebt während und im Anschluss an die Klausur einen Abfall des Stress-Niveaus.</p>
 <p>Die Voraussetzung der Sphärizität wird während der Durchführung der ANOVA automatisch geprüft, deshalb müssen wir sie nicht vorher prüfen.</p>
 </div>
@@ -663,7 +665,7 @@ div.tocify {
 <p>Unser erster Blick geht in Richtung Mauchlys Test auf Sphärizität. Dieser zeigt uns für unseren Fall an, dass die Voraussetzung der Sphärizität <em>nicht</em> erfüllt ist, da beide <span class="math inline">\(p &lt; .05\)</span>. An dieser Stelle müssen wir unsere Freiheitsgrade wieder korrigieren, wobei wir uns der Korrekatur nach <span class="citation">Greenhouse &amp; Geisser (<a href="#ref-Greenhouse.1959" role="doc-biblioref">1959</a>)</span> bedienen. Wir erhalten somit sowohl signifikante Haupteffekte (Vorbereitung: <span class="math inline">\(F(1, 94) = 1347.00, p &lt; .001, \eta^2_G = .844\)</span>, Zeit: <span class="math inline">\(F(1.87, 175.68) = 192.45, p &lt; .001, \eta^2_G = .560\)</span>), wie auch einen signifikanten Interationseffekt (Vorbereitung <span class="math inline">\(\times\)</span> Zeit), <span class="math inline">\(F(1.87, 175.68) = 368.34, p &lt; .001, \eta^2_G = .709\)</span>. Immer, wenn der Interaktionseffekt signifkant ist, konzentrieren wir uns nur auf diesen, <strong>weil die Interpretation von Haupteffekten dann sinlos ist</strong>.</p>
 <div id="simple-effects-analysis" class="section level4">
 <h4>Simple Effects Analysis</h4>
-<p><img src="mixed-anova_files/figure-html/unnamed-chunk-7-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="mixed-anova_files/figure-html/unnamed-chunk-8-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Mit der <em>simple effects analysis</em> können wir nun mehrere DInge überprüfen, die wir in der obigen Abbildung aufgezeichnet haben. Einmal könnten wir überprüfen, ob sich die Stress-Werte der Probanden zwischen den Gruppen zu jedem Zeitpunkt unterscheiden (ob also in Abbildung A die Mittelwerte pro Messung signifikant auseinander liegen), oder ob sich die Stress-Werte pro Gruppe zu allen Zeitpunkten unterschieden. Damit würden wir überprüfen, ob sich beispielsweise die Stress-Mittelwerte der Gruppe der nicht vorbereiteten signifikant voneinander unterscheiden (Abbildung B).</p>
 <p>Dafür gruppieren wir die Daten anhand unseres gewünschten Faktors, führen einzelne ANOVAs durch und korrigieren die <span class="math inline">\(p\)</span>-Werte anschließend, weil wir multiple Vergleiche auf einmal durchgeführt haben. Wollten wir den “Effekt” in der linken Abbildung berechnen, würden wir das wie folgt machen.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>exam_stress <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -818,7 +820,7 @@ div.tocify {
 ## # ... with 5 more variables: mad &lt;dbl&gt;, mean &lt;dbl&gt;, sd &lt;dbl&gt;, se &lt;dbl&gt;,
 ## #   ci &lt;dbl&gt;</code></pre>
 <p>Die unschönen vier letzten Reihen werden durch einen Probanden erzeugt, für den kein Geschlecht hinterlegt wurde.</p>
-<p><img src="mixed-anova_files/figure-html/unnamed-chunk-16-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="mixed-anova_files/figure-html/unnamed-chunk-17-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Frauen scheinen Insekten generell feindlicher gegenüber zu stehen, wenn diese hoch angstauslösend sind (grüne Linie). Außerdem werden Insekten hier auch als feindseliger angesehen, wenn sie hoch ekelig sein. Bei Männern ist das Bild nicht so klar, denn hier scheint es einen Interaktionseffekt zu geben: Bei niedrigem Ekel werden Insekten, die wenig angstauslösend sind, als weniger feindselig eingeschätzt, aber bei hohem Ekel scheint es keinen Unterschied mehr zu machen, wie angstauslösend die Insekten sind, hier scheinen alle Insekten gleich feindselig eingeschätzt zu werden. Das sind Effekte, die in einer gemischten ANOVA untersucht werden können.</p>
 <p>Hier untersuchen wir eine 2 <span class="math inline">\(\times\)</span> 2 <span class="math inline">\(\times\)</span> 2 gemischte ANOVA mit dem Zwischensubjektfaktor “Geschlecht” mit zwei Faktorstufen (“Female” und “Male”) und den Innersubjektfaktoren “Ekel” (mit den zwei Faktorstufen “low” und “high”), sowie “Angst” (mit den zwei Faktorstufen “low” und “high”).</p>
 </div>
