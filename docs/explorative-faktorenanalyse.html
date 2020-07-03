@@ -530,6 +530,19 @@ div.tocify {
 <li>
   <a href="effektstaerken.html">Effektstärken</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Faktorenanalyse
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="explorative-faktorenanalyse.html">Explorative Faktorenanalyse</a>
+    </li>
+    <li class="dropdown-header">Konfirmatorische Faktorenanalyse</li>
+  </ul>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
@@ -594,52 +607,1049 @@ div.tocify {
 </div>
 <div id="beispiel" class="section level1">
 <h1>Beispiel</h1>
-<p>Vielen Leuten macht Feiern einfach Spaß.</p>
-<div id="klassisch" class="section level2">
-<h2>Klassisch</h2>
-<div id="voraussetzungen" class="section level3">
-<h3>Voraussetzungen</h3>
+<p>Vielen Leuten macht Feiern einfach Spaß. Deshalb hat ein kluger Kopf einen Fragebogen entwckelt, der abbilden soll, wie sehr sich jemand auf Feiern freut. Der <em>Fragebogen zur Freude an Festivitäten</em> (FFF) umfasst 15 Fragen, die auf einer visuellen Analogskala (VAS) auf einer Skala von 0 (keine Zustimmung) bis 10 (vollste Zustimmung) eingeschätzt werden können.</p>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#qmmhmyipfa .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#qmmhmyipfa .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qmmhmyipfa .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#qmmhmyipfa .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#qmmhmyipfa .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qmmhmyipfa .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qmmhmyipfa .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#qmmhmyipfa .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#qmmhmyipfa .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#qmmhmyipfa .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#qmmhmyipfa .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#qmmhmyipfa .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#qmmhmyipfa .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#qmmhmyipfa .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#qmmhmyipfa .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#qmmhmyipfa .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#qmmhmyipfa .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#qmmhmyipfa .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#qmmhmyipfa .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qmmhmyipfa .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#qmmhmyipfa .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qmmhmyipfa .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#qmmhmyipfa .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qmmhmyipfa .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qmmhmyipfa .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#qmmhmyipfa .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qmmhmyipfa .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#qmmhmyipfa .gt_left {
+  text-align: left;
+}
+
+#qmmhmyipfa .gt_center {
+  text-align: center;
+}
+
+#qmmhmyipfa .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#qmmhmyipfa .gt_font_normal {
+  font-weight: normal;
+}
+
+#qmmhmyipfa .gt_font_bold {
+  font-weight: bold;
+}
+
+#qmmhmyipfa .gt_font_italic {
+  font-style: italic;
+}
+
+#qmmhmyipfa .gt_super {
+  font-size: 65%;
+}
+
+#qmmhmyipfa .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="qmmhmyipfa" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Item</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Text</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left">1</td>
+      <td class="gt_row gt_left">Wenn ich an das Wochenende denke, werde ich aufgeregt.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">2</td>
+      <td class="gt_row gt_left">Ich mag es, mich mit anderen Menschen zu unterhalten.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">3</td>
+      <td class="gt_row gt_left">Mich findet man ab 20:00 Uhr auf der Tanzfläche.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">4</td>
+      <td class="gt_row gt_left">Eine spontane Feier wäre jetzt was.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">5</td>
+      <td class="gt_row gt_left">Ich könnte die ganze Nacht durchtanzen.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">6</td>
+      <td class="gt_row gt_left">Andere Menschen sind mir zuwider.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">7</td>
+      <td class="gt_row gt_left">Ich freue mich auf meinen Geburtstag.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">8</td>
+      <td class="gt_row gt_left">Ich freue mich auf die Geburtstage meiner Freunde.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">9</td>
+      <td class="gt_row gt_left">Ich tanze gerne mit anderen Menschen zusammen.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">10</td>
+      <td class="gt_row gt_left">Ich lerne auf Feiern gerne andere Menschen kennen.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">11</td>
+      <td class="gt_row gt_left">Two-Step, Air-Punches und Wave sind meine Sprache.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">12</td>
+      <td class="gt_row gt_left">Ich organisiere gerne Feiern.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">13</td>
+      <td class="gt_row gt_left">Ich freue mich darüber, Einladungen zu Feiern zu erhalten.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">14</td>
+      <td class="gt_row gt_left">Ich feiere gerne mit anderen Menschen.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">15</td>
+      <td class="gt_row gt_left">Es geht mir gut, wenn ich weiß, dass keine Feier ansteht.</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
+<p>Wir wollen nun herausfinden, welche nicht beobachteten Fakoren hinter diesen 15 Fragen, oder auch Items, stecken könnten.</p>
+<div id="voraussetzungen" class="section level2">
+<h2>Voraussetzungen</h2>
+<p>Wir brauchen Leute, Leute, Leute! Die mit Abstand wichtigste Voraussetzung ist die <strong>Stichprobengröße</strong>, d.h. alles ab 300 ist okay, ab 1000 super – alles darunter ist wirklich schlech <span class="citation">(Field, <a href="#ref-Field.2018" role="doc-biblioref">2018</a>)</span>. Zudem gibt es das <strong>Kaiser-Meyer-Olkin-Kriterium (KMO)</strong>, das nahe 1 sein sollte. Eine einflussreiche Quelle scheinen hier <span class="citation">Hutcheson &amp; Sofroniou (<a href="#ref-Hutcheson.1999" role="doc-biblioref">1999</a>)</span> zu sein, die “cut-offs” bezüglich akzeptabler KMO-Werte gebildet haben. Nach ihnen sollte der KMO definitiv größer .70 sein.</p>
+<p>Zudem gibt es den <strong>Bartlett-Test</strong>, der die Hypothese prüft, dass die Korrelationsmatrix der Items eine Einheitsmatrix ist. Eine Einheitsmatrix hat auf der Diagonalen Einsen und an allen anderen Stellen Nullen. Eine Korrelationsmatrix, die so aussehen würde, läge nahe, dass die Variablen nicht miteinander korrelieren. Die Basis für eine Faktorenanalyse sind aber Korrelationen.</p>
 </div>
-<div id="eda" class="section level3">
-<h3>EDA</h3>
+<div id="daten" class="section level2">
+<h2>Daten</h2>
+<p>Die Daten sind wie immer im Daten-Ordner des <a href="https://github.com/benediktclaus/costat/tree/master/data">Git-Repositories</a> (<code>party.sav</code>), oder im <a href="pakete.html#costatcompanion"><code>costatcompanion</code></a> zu finden.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>party</span></code></pre></div>
+<pre><code>## # A tibble: 320 x 16
+##    id    item_1 item_2 item_3 item_4 item_5 item_6 item_7 item_8 item_9 item_10
+##    &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1 1       6.13   6.47   7.16   7.38   7.77   2.38   6.79   5.73   7.50    4.48
+##  2 2       5.24   4.42   1.39   4.84   5.42   5.89   7.04   6.97   3.29    4.62
+##  3 3       4.01   5.90   4.46   4.55   4.87   1.53   4.92   5.57   3.93    5.85
+##  4 4       4.99   3.40   7.63   4.81   6.35   6.31   2.60   5.89   4.88    3.90
+##  5 5       6.85   4.58   5.42   5.30   6.19   4.55   6.34   4.14   6.05    4.52
+##  6 6       5.16   4.48   7.32   6.24   5.88   7.29   4.80   3.59   5.84    4.36
+##  7 7       5.87   6.66   4.29   4.24   6.19   4.40   3.78   4.14   6.11    4.03
+##  8 8       6.69   7.12   8.37   8.10   6.51   2.85   6.84   8.31   6.29    3.77
+##  9 9       5.05   2.65   6.61   5.87   6.54   5.19   5.43   6.27   4.87    3.73
+## 10 10      6.54   4.56   4.41   5.32   5.50   3.55   5.66   5.07   4.38    5.97
+## # ... with 310 more rows, and 5 more variables: item_11 &lt;dbl&gt;, item_12 &lt;dbl&gt;,
+## #   item_13 &lt;dbl&gt;, item_14 &lt;dbl&gt;, item_15 &lt;dbl&gt;</code></pre>
+<p>In der ersten Spalte (<code>id</code>) sind die Probanden-IDs eingetragen, in den folgenden Spalten die Einschätzung jedes Probanden zu den obigen Aussagen des Fragebogens.</p>
 </div>
-<div id="durchführung" class="section level3">
-<h3>Durchführung</h3>
+<div id="eda" class="section level2">
+<h2>EDA</h2>
+<p>Aus den Dimensionen des Datensatzes geht hervor, dass wir eine Stichprobengröße von <span class="math inline">\(N = 320\)</span> haben, was gut ist. Zudem ist es immer eine gute Idee, sich die Korrelationen der Variablen untereinander anzusehen – am besten in einem Korrelogramm. Zunächst werden wir aber einmal die Spalte <code>id</code> los, die zwar für die Dateneingabe sinnvoll und nützlich ist, in den weiteren Analysen aber nur stört.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>party_raw &lt;-<span class="st"> </span>party <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>id)</span>
+<span id="cb4-3"><a href="#cb4-3"></a></span>
+<span id="cb4-4"><a href="#cb4-4"></a>party_raw</span></code></pre></div>
+<pre><code>## # A tibble: 320 x 15
+##    item_1 item_2 item_3 item_4 item_5 item_6 item_7 item_8 item_9 item_10
+##     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1   6.13   6.47   7.16   7.38   7.77   2.38   6.79   5.73   7.50    4.48
+##  2   5.24   4.42   1.39   4.84   5.42   5.89   7.04   6.97   3.29    4.62
+##  3   4.01   5.90   4.46   4.55   4.87   1.53   4.92   5.57   3.93    5.85
+##  4   4.99   3.40   7.63   4.81   6.35   6.31   2.60   5.89   4.88    3.90
+##  5   6.85   4.58   5.42   5.30   6.19   4.55   6.34   4.14   6.05    4.52
+##  6   5.16   4.48   7.32   6.24   5.88   7.29   4.80   3.59   5.84    4.36
+##  7   5.87   6.66   4.29   4.24   6.19   4.40   3.78   4.14   6.11    4.03
+##  8   6.69   7.12   8.37   8.10   6.51   2.85   6.84   8.31   6.29    3.77
+##  9   5.05   2.65   6.61   5.87   6.54   5.19   5.43   6.27   4.87    3.73
+## 10   6.54   4.56   4.41   5.32   5.50   3.55   5.66   5.07   4.38    5.97
+## # ... with 310 more rows, and 5 more variables: item_11 &lt;dbl&gt;, item_12 &lt;dbl&gt;,
+## #   item_13 &lt;dbl&gt;, item_14 &lt;dbl&gt;, item_15 &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>party_raw <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="st">  </span>corrgram<span class="op">::</span><span class="kw">corrgram</span>(<span class="dt">order =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>## Registered S3 method overwritten by &#39;seriation&#39;:
+##   method         from 
+##   reorder.hclust gclus</code></pre>
+<p><img src="explorative-faktorenanalyse_files/figure-html/unnamed-chunk-5-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p>Uns wird hier auffallen, dass zwei Items (15 und 6) mit allen anderen negativ korrelieren. Das kann passieren, wenn die Items “falsch herum” codiert wurden. In diesem Fall können wir die Annahme bestätigen, denn dies sind die einzigen beiden Fragen, die “entgegen” der Richtung des Fragebogens sind. Alle anderen Fragen bedeuten bei größerer Zustimmung mehr Spaß beim Feiern, diese beiden jedoch nicht. Wir sollten sie also umcodieren.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>party_recoded &lt;-<span class="st"> </span>party_raw <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb8-3"><a href="#cb8-3"></a>    <span class="kw">across</span>(<span class="kw">c</span>(item_<span class="dv">6</span>, item_<span class="dv">15</span>), <span class="op">~</span><span class="st"> </span><span class="dv">10</span> <span class="op">-</span><span class="st"> </span>.)</span>
+<span id="cb8-4"><a href="#cb8-4"></a>  )</span>
+<span id="cb8-5"><a href="#cb8-5"></a></span>
+<span id="cb8-6"><a href="#cb8-6"></a>party_recoded <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="st">  </span>corrgram<span class="op">::</span><span class="kw">corrgram</span>(<span class="dt">order =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<p><img src="explorative-faktorenanalyse_files/figure-html/unnamed-chunk-6-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p>Und schon sind alle Items miteinander positiv korreliert. Anhand der bereits sichtbaren Clusterung können wir davon ausgehen, dass mindestens ein latenter Faktor vorhanden ist.</p>
+<div id="bartlett-test" class="section level3">
+<h3>Bartlett-Test</h3>
+<p>Den Bartlett-Test kann man folgendermaßen ausführen. Das Ergebnis ist signifikant, <span class="math inline">\(K^2(14) = 56.075, p &lt; .001\)</span>, und bedeutet, dass unsere Korrelationsmatrix <em>keine</em> Einheitsmatrix ist. Also alles super!</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">bartlett.test</span>(party_recoded)</span></code></pre></div>
+<pre><code>## 
+##  Bartlett test of homogeneity of variances
+## 
+## data:  party_recoded
+## Bartlett&#39;s K-squared = 56.075, df = 14, p-value = 5.653e-07</code></pre>
 </div>
-<div id="berichten" class="section level3">
-<h3>Berichten</h3>
+<div id="kmo" class="section level3">
+<h3>KMO</h3>
+<p>Auch der KMO ist sehr einfach auszuführen. Unser KMO ist .88, also alles super. Unsere Daten eignen sich also für eine EFA.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">KMO</span>(party_recoded)</span></code></pre></div>
+<pre><code>## Kaiser-Meyer-Olkin factor adequacy
+## Call: KMO(r = party_recoded)
+## Overall MSA =  0.88
+## MSA for each item = 
+##  item_1  item_2  item_3  item_4  item_5  item_6  item_7  item_8  item_9 item_10 
+##    0.90    0.88    0.85    0.92    0.83    0.80    0.89    0.90    0.87    0.84 
+## item_11 item_12 item_13 item_14 item_15 
+##    0.85    0.92    0.90    0.88    0.91</code></pre>
 </div>
 </div>
-<div id="robust" class="section level2">
-<h2>Robust</h2>
+<div id="anzahl-der-zu-extrahierenden-faktoren" class="section level2">
+<h2>Anzahl der zu extrahierenden Faktoren</h2>
+<div id="scree-plot" class="section level3">
+<h3>Scree-Plot</h3>
+<p>Die Situation bei der EFA ist etwas misslich: Wir wollen latente Faktoren “entdecken”, müssen dem Verfahren aber vorher sagen, wie viele Faktoren wir eigentlich extrahieren/finden wollen. Deshalb kommt der Bestimmung der Anzahl der zu extrahierenden Faktoren eine besondere Bedeutung zu.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">scree</span>(party_recoded, <span class="dt">factors =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">tibble</span>(</span>
+<span id="cb14-2"><a href="#cb14-2"></a>  <span class="dt">Eigenvalue =</span> parallel_analysis<span class="op">$</span>pc.values</span>
+<span id="cb14-3"><a href="#cb14-3"></a>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="st">  </span><span class="kw">rownames_to_column</span>(<span class="dt">var =</span> <span class="st">&quot;factor_number&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">factor_number =</span> <span class="kw">as.numeric</span>(factor_number)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(factor_number, Eigenvalue, <span class="dt">group =</span> <span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb14-7"><a href="#cb14-7"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
+<span id="cb14-8"><a href="#cb14-8"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb14-9"><a href="#cb14-9"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Factor Number&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Eigenvalue&quot;</span>)</span></code></pre></div>
+<p><img src="explorative-faktorenanalyse_files/figure-html/unnamed-chunk-11-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p>Im Scree-Plot suchen wir nach dem “Knick” in der Linie der Eigenwerte. Nach diesem “Knick” sollen die restlichen Eigenwerte nur noch wie “Geröll” (engl. <em>scree</em>) aussehen, also flach ablaufen. Dabei gibt es jedoch unterschiedliche Auffassungen darüber, ob man den letzten Punkt vor dem Knick noch mit aufnimmt, oder nicht. In diesem Beispiel ist das Ergebnis recht klar, wir würden drei Faktoren extrahieren. Beachten sollte man jedoch, dass der Scree-Test ein rein subjektives Verfahren und somit kein wirklicher “Test” ist.</p>
 </div>
-<div id="non-parametrisch" class="section level2">
-<h2>Non-parametrisch</h2>
+<div id="parallelanalyse" class="section level3">
+<h3>Parallelanalyse</h3>
+<p>In SPSS wäre man ohne weiteres Zutun nun aufgeschmissen, in R gibt es zum Glück die Parallelanalyse, mit der sich die Anzahl der zu extrahierenden Faktoren objektiv bestimmen lässt. Dazu werden anhand der Dimensionen des Datensatzes zufällige Daten generiert und die dem entsprechenden Eigenwerte in den Scree-Plot eingezeichnet. Extrahieren würden wir so viele Faktoren, deren Eigenwert über denen der zufälligen Simulationen liegt.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">fa.parallel</span>(party_recoded, <span class="dt">fa =</span> <span class="st">&quot;pc&quot;</span>)</span></code></pre></div>
+<p><img src="explorative-faktorenanalyse_files/figure-html/unnamed-chunk-13-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p>Wir würden also auch anhand des Ergebnisses des Scree-Tests drei Faktoren extrahieren.</p>
+</div>
+</div>
+<div id="rotation" class="section level2">
+<h2>Rotation</h2>
+<p>Um die Faktoren möglichst gut auseinanderhalten zu können, ist es eine gute Idee, die Koordinatenachsen im <span class="math inline">\(n\)</span>-Dimensionalen Raum zu rotieren (<span class="math inline">\(n\)</span> ist dabei die Anzahl der Faktoren). Dabei kann man zwischen <strong>orthogonalen</strong> und <strong>obliquen</strong> Rotationen unterscheiden. Bei orthogonalen Rotationen postuliert man, dass die Faktoren nicht miteinander korrlieren, bei obliquen Rotationen geht man von einer Korrelation der Faktoren aus (wie es in der Psychologie üblich ist).</p>
+<p>Gute orthogonale Rotation sind Varimax und Quartimax; gute oblique sind Oblimin und Promax.</p>
+</div>
+<div id="durchführung" class="section level2">
+<h2>Durchführung</h2>
+<p>In meiner Benutzung des Begriffs “Faktorenalayse” habe ich bisher etwas geschummelt. Streng genommen machen wir nämlich keine Faktorenanalyse, sondern eine <strong>Hauptkomponentenanalyse</strong>. Bei einer Faktorenanalyse versuchen wir – ganz vereinfacht gesagt – latente Faktoren durch die Items zu erklären. Bei der Hauptkomponentenanalyse gehen wir jedoch davon aus, das der Zusammenhang genau anders herum ist: Wie denken uns, dass es irgendwo diese latenten Faktoren gibt und diese dann die Antworten der Probanden auf den Items beeinflussen. Wir schätzen die Faktoren zwar anhand der Items, aber wir unterstellen den Zusammenhang von den latenten Faktoren auf die Items.</p>
+<p>Die Hauptkomponentenanalyse führen wir mit der Funktion <code>principal()</code> aus. Als Argument <code>nfactors</code> geben wir die Anzahl der zu extrahierenden Faktoren ans, als <code>rotate</code> die Rotationsmethode.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>party_efa &lt;-<span class="st"> </span><span class="kw">principal</span>(party_recoded, <span class="dt">nfactors =</span> <span class="dv">3</span>, <span class="dt">rotate =</span> <span class="st">&quot;oblimin&quot;</span>)</span></code></pre></div>
+<p>Wir erhalten so einen ganz “messy” Output, in dem uns einiges mitgeteilt wird: Da ist zunächst die Strukturmatrix, in der pro Item die standardisierten Ladungen auf jeden Faktor angegeben sind (sowie die Kommunalitäten in <code>h2</code>, Uniqueness in <code>u2</code>, und die Komplexität in <code>com</code>). Die Faktorladungen nutzen wir, um herauszufinden, auf welchem Faktor ein Item “lädt”; je höher die Ladung, desto mehr “lädt” das Item auf dem Faktor, desto mehr gehört es zu dem Faktor.</p>
+<p>Anschließend erhalten wir Angaben zu den extrahierten Faktoren an sich, unter anderem die erklärten Varianzen. Danach gibt es die Korrelation der latenten Faktoren untereinander und noch einige Angaben zur Modellgüte.</p>
+<p>Uns interessieren zu Beginn vor allem die Faktorladungen, welche wir uns so ausgeben lassen können.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">loadings</span>(party_efa)</span></code></pre></div>
+<pre><code>## 
+## Loadings:
+##         TC1    TC2    TC3   
+## item_1   0.786              
+## item_2                 0.702
+## item_3          0.790       
+## item_4   0.690  0.123       
+## item_5          0.788       
+## item_6                 0.746
+## item_7   0.691 -0.111       
+## item_8   0.604         0.403
+## item_9          0.634  0.309
+## item_10                0.777
+## item_11         0.754       
+## item_12  0.694        -0.138
+## item_13  0.785              
+## item_14         0.390  0.543
+## item_15  0.672  0.107       
+## 
+##                  TC1   TC2   TC3
+## SS loadings    3.513 2.428 2.239
+## Proportion Var 0.234 0.162 0.149
+## Cumulative Var 0.234 0.396 0.545</code></pre>
+<p>Wir erhalten also die Strukturmatrix von oben, aber schon mit einigen Änderungen. Hier wurden bereits kleine Faktorladungen entfernt. Dieses Verhalten können wir weiter beeinflussen. Üblicherweise werden Faktorladungen bis (je nach Autor) 0.30, bzw. 0.40 nicht beachtet. Außerdem können wir uns die Ausgabe auch sortieren lassen, damit passende Items untereinanderstehen.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">print.psych</span>(party_efa, <span class="dt">cut =</span> <span class="fl">0.40</span>, <span class="dt">sort =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>## Principal Components Analysis
+## Call: principal(r = party_recoded, nfactors = 3, rotate = &quot;oblimin&quot;)
+## Standardized loadings (pattern matrix) based upon correlation matrix
+##         item   TC1   TC2   TC3   h2   u2 com
+## item_1     1  0.79             0.63 0.37 1.0
+## item_13   13  0.79             0.60 0.40 1.0
+## item_12   12  0.69             0.49 0.51 1.1
+## item_7     7  0.69             0.45 0.55 1.1
+## item_4     4  0.69             0.53 0.47 1.1
+## item_15   15  0.67             0.50 0.50 1.1
+## item_8     8  0.60        0.40 0.65 0.35 1.8
+## item_3     3        0.79       0.66 0.34 1.0
+## item_5     5        0.79       0.58 0.42 1.0
+## item_11   11        0.75       0.60 0.40 1.0
+## item_9     9        0.63       0.62 0.38 1.5
+## item_10   10              0.78 0.60 0.40 1.0
+## item_6     6              0.75 0.54 0.46 1.0
+## item_2     2              0.70 0.53 0.47 1.0
+## item_14   14              0.54 0.51 0.49 1.8
+## 
+##                        TC1  TC2  TC3
+## SS loadings           3.62 2.53 2.33
+## Proportion Var        0.24 0.17 0.16
+## Cumulative Var        0.24 0.41 0.57
+## Proportion Explained  0.43 0.30 0.27
+## Cumulative Proportion 0.43 0.73 1.00
+## 
+##  With component correlations of 
+##      TC1  TC2  TC3
+## TC1 1.00 0.33 0.30
+## TC2 0.33 1.00 0.22
+## TC3 0.30 0.22 1.00
+## 
+## Mean item complexity =  1.2
+## Test of the hypothesis that 3 components are sufficient.
+## 
+## The root mean square of the residuals (RMSR) is  0.06 
+##  with the empirical chi square  269.11  with prob &lt;  2.7e-27 
+## 
+## Fit based upon off diagonal values = 0.96</code></pre>
+<p>Ein Bild sagt mehr als tausen Worte, deshalb kann man diese Strukturmatrix auch zeichnen.</p>
+<p><img src="explorative-faktorenanalyse_files/figure-html/unnamed-chunk-17-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p>Die Items, die grün dargestellt sind, sind jene mit standardisierten Faktorladungen über .40. Wir haben nun also pro Komponente (oder Faktor) jene Items isoliert, die auf diesem Faktor am meisten laden. Nun müssen wir uns die Beschreibung der Items von oben holen und diese den Faktoren zuordnen.</p>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#sqsjkzhfth .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#sqsjkzhfth .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#sqsjkzhfth .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#sqsjkzhfth .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#sqsjkzhfth .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#sqsjkzhfth .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#sqsjkzhfth .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#sqsjkzhfth .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#sqsjkzhfth .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#sqsjkzhfth .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#sqsjkzhfth .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#sqsjkzhfth .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#sqsjkzhfth .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#sqsjkzhfth .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#sqsjkzhfth .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#sqsjkzhfth .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#sqsjkzhfth .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#sqsjkzhfth .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#sqsjkzhfth .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#sqsjkzhfth .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#sqsjkzhfth .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#sqsjkzhfth .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#sqsjkzhfth .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#sqsjkzhfth .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#sqsjkzhfth .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#sqsjkzhfth .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#sqsjkzhfth .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#sqsjkzhfth .gt_left {
+  text-align: left;
+}
+
+#sqsjkzhfth .gt_center {
+  text-align: center;
+}
+
+#sqsjkzhfth .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#sqsjkzhfth .gt_font_normal {
+  font-weight: normal;
+}
+
+#sqsjkzhfth .gt_font_bold {
+  font-weight: bold;
+}
+
+#sqsjkzhfth .gt_font_italic {
+  font-style: italic;
+}
+
+#sqsjkzhfth .gt_super {
+  font-size: 65%;
+}
+
+#sqsjkzhfth .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="sqsjkzhfth" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Item</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Text</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">Faktor 1</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">1</td>
+      <td class="gt_row gt_left">Wenn ich an das Wochenende denke, werde ich aufgeregt.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">4</td>
+      <td class="gt_row gt_left">Eine spontane Feier wäre jetzt was.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">7</td>
+      <td class="gt_row gt_left">Ich freue mich auf meinen Geburtstag.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">12</td>
+      <td class="gt_row gt_left">Ich organisiere gerne Feiern.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">13</td>
+      <td class="gt_row gt_left">Ich freue mich darüber, Einladungen zu Feiern zu erhalten.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">15</td>
+      <td class="gt_row gt_left">Es geht mir gut, wenn ich weiß, dass keine Feier ansteht.</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">Faktor 2</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">3</td>
+      <td class="gt_row gt_left">Mich findet man ab 20:00 Uhr auf der Tanzfläche.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">5</td>
+      <td class="gt_row gt_left">Ich könnte die ganze Nacht durchtanzen.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">9</td>
+      <td class="gt_row gt_left">Ich tanze gerne mit anderen Menschen zusammen.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">11</td>
+      <td class="gt_row gt_left">Two-Step, Air-Punches und Wave sind meine Sprache.</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">Faktor 3</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">2</td>
+      <td class="gt_row gt_left">Ich mag es, mich mit anderen Menschen zu unterhalten.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">6</td>
+      <td class="gt_row gt_left">Andere Menschen sind mir zuwider.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">8</td>
+      <td class="gt_row gt_left">Ich freue mich auf die Geburtstage meiner Freunde.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">10</td>
+      <td class="gt_row gt_left">Ich lerne auf Feiern gerne andere Menschen kennen.</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">14</td>
+      <td class="gt_row gt_left">Ich feiere gerne mit anderen Menschen.</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
+<p>Nun müssen wir selbst tätig werden, indem wir versuchen zu interpretieren, was die Items pro Faktor “gemeinsam” haben. Für den Faktor 1 könnte man sich etwas denken wie “Vorfreude auf eine Feier”. Faktor 2 wäre vielleicht etwas wie “Tanzen” und Faktor 3 z.B. “Geselligkeit”.</p>
 </div>
 </div>
 <div id="aus-der-praxis" class="section level1">
 <h1>Aus der Praxis</h1>
-<div id="klassisch-1" class="section level2">
-<h2>Klassisch</h2>
-<div id="eda-1" class="section level3">
-<h3>EDA</h3>
+<div id="eda-1" class="section level2">
+<h2>EDA</h2>
 </div>
-<div id="durchführung-1" class="section level3">
-<h3>Durchführung</h3>
-</div>
-<div id="berichten-1" class="section level3">
-<h3>Berichten</h3>
+<div id="durchführung-1" class="section level2">
+<h2>Durchführung</h2>
 </div>
 </div>
-<div id="robust-1" class="section level2">
-<h2>Robust</h2>
-</div>
-<div id="non-parametrisch-1" class="section level2">
-<h2>Non-parametrisch</h2>
-</div>
-</div>
-<div id="literatur" class="section level1">
+<div id="literatur" class="section level1 unnumbered">
 <h1>Literatur</h1>
+<div id="refs" class="references">
+<div id="ref-Field.2018">
+<p>Field, A. P. (2018). <em>Discovering Statistics using IBM SPSS Statistics</em> (5th ed.). SAGE.</p>
+</div>
+<div id="ref-Hutcheson.1999">
+<p>Hutcheson, G., &amp; Sofroniou, N. (1999). <em>The multivariate social scientist: Introductory statistics using generalized linear models</em>. Sage Publications. <a href="https://doi.org/10.4135/9780857028075">https://doi.org/10.4135/9780857028075</a></p>
+</div>
+</div>
 </div>
 
 

@@ -15,6 +15,7 @@ ggplot2::theme_set(ggplot2::theme_minimal())
 
 library(benelib)
 library(patchwork)
+library(gt)
 ```
 
 
@@ -46,21 +47,237 @@ library(psych)
 ```
 
 # Beispiel
-Vielen Leuten macht Feiern einfach Spaß.
+Vielen Leuten macht Feiern einfach Spaß. Deshalb hat ein kluger Kopf einen Fragebogen entwckelt, der abbilden soll, wie sehr sich jemand auf Feiern freut. Der *Fragebogen zur Freude an Festivitäten* (FFF) umfasst 15 Fragen, die auf einer visuellen Analogskala (VAS) auf einer Skala von 0 (keine Zustimmung) bis 10 (vollste Zustimmung) eingeschätzt werden können.
 
-## Klassisch
-### Voraussetzungen
-### EDA
-### Durchführung
-### Berichten
+```{r echo=FALSE}
+tribble(
+  ~ Text,
+"Wenn ich an das Wochenende denke, werde ich aufgeregt.", 
+"Ich mag es, mich mit anderen Menschen zu unterhalten.", 
+"Mich findet man ab 20:00 Uhr auf der Tanzfläche.", 
+"Eine spontane Feier wäre jetzt was.", 
+"Ich könnte die ganze Nacht durchtanzen.", 
+"Andere Menschen sind mir zuwider.", 
+"Ich freue mich auf meinen Geburtstag.", 
+"Ich freue mich auf die Geburtstage meiner Freunde.", 
+"Ich tanze gerne mit anderen Menschen zusammen.", 
+"Ich lerne auf Feiern gerne andere Menschen kennen.", 
+"Two-Step, Air-Punches und Wave sind meine Sprache.", 
+"Ich organisiere gerne Feiern.", 
+"Ich freue mich darüber, Einladungen zu Feiern zu erhalten.", 
+"Ich feiere gerne mit anderen Menschen.", 
+"Es geht mir gut, wenn ich weiß, dass keine Feier ansteht."
+) %>% 
+  rownames_to_column(var = "Item") %>% 
+  gt()
+```
+
+Wir wollen nun herausfinden, welche nicht beobachteten Fakoren hinter diesen 15 Fragen, oder auch Items, stecken könnten.
+
+## Voraussetzungen
+Wir brauchen Leute, Leute, Leute! Die mit Abstand wichtigste Voraussetzung ist die **Stichprobengröße**, d.h. alles ab 300 ist okay, ab 1000 super -- alles darunter ist wirklich schlech [@Field.2018]. Zudem gibt es das **Kaiser-Meyer-Olkin-Kriterium (KMO)**, das nahe 1 sein sollte. Eine einflussreiche Quelle scheinen hier @Hutcheson.1999 zu sein, die "cut-offs" bezüglich akzeptabler KMO-Werte gebildet haben. Nach ihnen sollte der KMO definitiv größer .70 sein.
+
+Zudem gibt es den **Bartlett-Test**, der die Hypothese prüft, dass die Korrelationsmatrix der Items eine Einheitsmatrix ist. Eine Einheitsmatrix hat auf der Diagonalen Einsen und an allen anderen Stellen Nullen. Eine Korrelationsmatrix, die so aussehen würde, läge nahe, dass die Variablen nicht miteinander korrelieren. Die Basis für eine Faktorenanalyse sind aber Korrelationen.
+
+## Daten
+Die Daten sind wie immer im Daten-Ordner des [Git-Repositories](https://github.com/benediktclaus/costat/tree/master/data) (`party.sav`), oder im [`costatcompanion`](pakete.html#costatcompanion) zu finden.
+
+```{r}
+party
+```
+
+In der ersten Spalte (`id`) sind die Probanden-IDs eingetragen, in den folgenden Spalten die Einschätzung jedes Probanden zu den obigen Aussagen des Fragebogens.
+
+## EDA
+Aus den Dimensionen des Datensatzes geht hervor, dass wir eine Stichprobengröße von $N = 320$ haben, was gut ist. Zudem ist es immer eine gute Idee, sich die Korrelationen der Variablen untereinander anzusehen -- am besten in einem Korrelogramm. Zunächst werden wir aber einmal die Spalte `id` los, die zwar für die Dateneingabe sinnvoll und nützlich ist, in den weiteren Analysen aber nur stört.
+
+```{r}
+party_raw <- party %>% 
+  select(-id)
+
+party_raw
+
+party_raw %>% 
+  corrgram::corrgram(order = TRUE)
+```
+
+Uns wird hier auffallen, dass zwei Items (15 und 6) mit allen anderen negativ korrelieren. Das kann passieren, wenn die Items "falsch herum" codiert wurden. In diesem Fall können wir die Annahme bestätigen, denn dies sind die einzigen beiden Fragen, die "entgegen" der Richtung des Fragebogens sind. Alle anderen Fragen bedeuten bei größerer Zustimmung mehr Spaß beim Feiern, diese beiden jedoch nicht. Wir sollten sie also umcodieren.
+
+```{r}
+party_recoded <- party_raw %>% 
+  mutate(
+    across(c(item_6, item_15), ~ 10 - .)
+  )
+
+party_recoded %>% 
+  corrgram::corrgram(order = TRUE)
+```
+
+Und schon sind alle Items miteinander positiv korreliert. Anhand der bereits sichtbaren Clusterung können wir davon ausgehen, dass mindestens ein latenter Faktor vorhanden ist.
+
+### Bartlett-Test
+Den Bartlett-Test kann man folgendermaßen ausführen. Das Ergebnis ist signifikant, $K^2(14) = 56.075, p < .001$, und bedeutet, dass unsere Korrelationsmatrix *keine* Einheitsmatrix ist. Also alles super!
+
+```{r}
+bartlett.test(party_recoded)
+```
+
+### KMO
+Auch der KMO ist sehr einfach auszuführen. Unser KMO ist .88, also alles super. Unsere Daten eignen sich also für eine EFA.
+
+```{r}
+KMO(party_recoded)
+```
 
 
+## Anzahl der zu extrahierenden Faktoren
+### Scree-Plot
+Die Situation bei der EFA ist etwas misslich: Wir wollen latente Faktoren "entdecken", müssen dem Verfahren aber vorher sagen, wie viele Faktoren wir eigentlich extrahieren/finden wollen. Deshalb kommt der Bestimmung der Anzahl der zu extrahierenden Faktoren eine besondere Bedeutung zu.
+
+```{r eval=FALSE}
+scree(party_recoded, factors = FALSE)
+```
+
+
+```{r echo=FALSE, message=FALSE, results="hide"}
+parallel_analysis <- fa.parallel(party_recoded, fa = "pc", plot = FALSE)
+```
+
+```{r}
+tibble(
+  Eigenvalue = parallel_analysis$pc.values
+) %>% 
+  rownames_to_column(var = "factor_number") %>% 
+  mutate(factor_number = as.numeric(factor_number)) %>% 
+  ggplot(aes(factor_number, Eigenvalue, group = 1)) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Factor Number", y = "Eigenvalue")
+```
+
+Im Scree-Plot suchen wir nach dem "Knick" in der Linie der Eigenwerte. Nach diesem "Knick" sollen die restlichen Eigenwerte nur noch wie "Geröll" (engl. *scree*) aussehen, also flach ablaufen. Dabei gibt es jedoch unterschiedliche Auffassungen darüber, ob man den letzten Punkt vor dem Knick noch mit aufnimmt, oder nicht. In diesem Beispiel ist das Ergebnis recht klar, wir würden drei Faktoren extrahieren. Beachten sollte man jedoch, dass der Scree-Test ein rein subjektives Verfahren und somit kein wirklicher "Test" ist.
+
+### Parallelanalyse
+In SPSS wäre man ohne weiteres Zutun nun aufgeschmissen, in R gibt es zum Glück die Parallelanalyse, mit der sich die Anzahl der zu extrahierenden Faktoren objektiv bestimmen lässt. Dazu werden anhand der Dimensionen des Datensatzes zufällige Daten generiert und die dem entsprechenden Eigenwerte in den Scree-Plot eingezeichnet. Extrahieren würden wir so viele Faktoren, deren Eigenwert über denen der zufälligen Simulationen liegt.
+
+```{r eval=FALSE}
+fa.parallel(party_recoded, fa = "pc")
+```
+
+```{r echo=FALSE}
+tibble(
+  Actual = parallel_analysis$pc.values,
+  Simulated = parallel_analysis$pc.sim,
+  Resampled = parallel_analysis$pc.simr
+) %>% 
+  rownames_to_column(var = "factor_number") %>% 
+  pivot_longer(
+    cols = -factor_number,
+    names_to = "sample",
+    values_to = "eigenvalue"
+  ) %>% 
+  mutate(sample = as_factor(sample),
+         factor_number = as.numeric(factor_number)) %>% 
+  ggplot(aes(factor_number, eigenvalue, color = sample, group = sample)) +
+  geom_line() +
+  geom_point() +
+  scale_color_personal(reverse = TRUE) +
+  labs(x = "Factor Number", y = "Eigenvalue", color = "Sample") +
+  theme(legend.position = "bottom")
+```
+
+Wir würden also auch anhand des Ergebnisses des Scree-Tests drei Faktoren extrahieren.
+
+## Rotation
+Um die Faktoren möglichst gut auseinanderhalten zu können, ist es eine gute Idee, die Koordinatenachsen im $n$-Dimensionalen Raum zu rotieren ($n$ ist dabei die Anzahl der Faktoren). Dabei kann man zwischen **orthogonalen** und **obliquen** Rotationen unterscheiden. Bei orthogonalen Rotationen postuliert man, dass die Faktoren nicht miteinander korrlieren, bei obliquen Rotationen geht man von einer Korrelation der Faktoren aus (wie es in der Psychologie üblich ist).
+
+Gute orthogonale Rotation sind Varimax und Quartimax; gute oblique sind Oblimin und Promax.
+
+## Durchführung
+In meiner Benutzung des Begriffs "Faktorenalayse" habe ich bisher etwas geschummelt. Streng genommen machen wir nämlich keine Faktorenanalyse, sondern eine **Hauptkomponentenanalyse**. Bei einer Faktorenanalyse versuchen wir -- ganz vereinfacht gesagt -- latente Faktoren durch die Items zu erklären. Bei der Hauptkomponentenanalyse gehen wir jedoch davon aus, das der Zusammenhang genau anders herum ist: Wie denken uns, dass es irgendwo diese latenten Faktoren gibt und diese dann die Antworten der Probanden auf den Items beeinflussen. Wir schätzen die Faktoren zwar anhand der Items, aber wir unterstellen den Zusammenhang von den latenten Faktoren auf die Items.
+
+Die Hauptkomponentenanalyse führen wir mit der Funktion `principal()` aus. Als Argument `nfactors` geben wir die Anzahl der zu extrahierenden Faktoren ans, als `rotate` die Rotationsmethode.
+
+```{r message=FALSE}
+party_efa <- principal(party_recoded, nfactors = 3, rotate = "oblimin")
+```
+
+Wir erhalten so einen ganz "messy" Output, in dem uns einiges mitgeteilt wird: Da ist zunächst die Strukturmatrix, in der pro Item die standardisierten Ladungen auf jeden Faktor angegeben sind (sowie die Kommunalitäten in `h2`, Uniqueness in `u2`, und die Komplexität in `com`). Die Faktorladungen nutzen wir, um herauszufinden, auf welchem Faktor ein Item "lädt"; je höher die Ladung, desto mehr "lädt" das Item auf dem Faktor, desto mehr gehört es zu dem Faktor.
+
+Anschließend erhalten wir Angaben zu den extrahierten Faktoren an sich, unter anderem die erklärten Varianzen. Danach gibt es die Korrelation der latenten Faktoren untereinander und noch einige Angaben zur Modellgüte.
+
+Uns interessieren zu Beginn vor allem die Faktorladungen, welche wir uns so ausgeben lassen können.
+
+```{r}
+loadings(party_efa)
+```
+
+Wir erhalten also die Strukturmatrix von oben, aber schon mit einigen Änderungen. Hier wurden bereits kleine Faktorladungen entfernt. Dieses Verhalten können wir weiter beeinflussen. Üblicherweise werden Faktorladungen bis (je nach Autor) 0.30, bzw. 0.40 nicht beachtet. Außerdem können wir uns die Ausgabe auch sortieren lassen, damit passende Items untereinanderstehen.
+
+```{r}
+print.psych(party_efa, cut = 0.40, sort = TRUE)
+```
+
+Ein Bild sagt mehr als tausen Worte, deshalb kann man diese Strukturmatrix auch zeichnen.
+
+```{r echo=FALSE}
+library(tidytext)
+
+party_efa %>% 
+  loadings() %>% 
+  unclass() %>% 
+  as.data.frame() %>% 
+  rownames_to_column(var = "Item") %>% 
+  rename("Component 1" = TC1, "Component 2" = TC2, "Component 3" = TC3) %>% 
+  pivot_longer(
+    cols = -Item,
+    names_to = "Component",
+    values_to = "Loading"
+  ) %>%
+  mutate(Relevant = if_else(abs(Loading) > .40, TRUE, FALSE),
+         Item = reorder_within(Item, Loading, Component)) %>% 
+  ggplot(aes(Loading, Item, fill = Relevant)) +
+  geom_col() +
+  facet_wrap(~ Component, scales = "free_y") +
+  scale_y_reordered() +
+  scale_fill_personal() +
+  theme(legend.position = "bottom")
+```
+
+Die Items, die grün dargestellt sind, sind jene mit standardisierten Faktorladungen über .40. Wir haben nun also pro Komponente (oder Faktor) jene Items isoliert, die auf diesem Faktor am meisten laden. Nun müssen wir uns die Beschreibung der Items von oben holen und diese den Faktoren zuordnen.
+
+```{r echo=FALSE}
+tribble(
+  ~ Text, ~ Faktor,
+"Wenn ich an das Wochenende denke, werde ich aufgeregt.", 1,
+"Ich mag es, mich mit anderen Menschen zu unterhalten.", 3,
+"Mich findet man ab 20:00 Uhr auf der Tanzfläche.", 2,
+"Eine spontane Feier wäre jetzt was.", 1,
+"Ich könnte die ganze Nacht durchtanzen.", 2,
+"Andere Menschen sind mir zuwider.", 3,
+"Ich freue mich auf meinen Geburtstag.", 1,
+"Ich freue mich auf die Geburtstage meiner Freunde.", 3,
+"Ich tanze gerne mit anderen Menschen zusammen.", 2,
+"Ich lerne auf Feiern gerne andere Menschen kennen.", 3,
+"Two-Step, Air-Punches und Wave sind meine Sprache.", 2,
+"Ich organisiere gerne Feiern.", 1,
+"Ich freue mich darüber, Einladungen zu Feiern zu erhalten.", 1,
+"Ich feiere gerne mit anderen Menschen.", 3,
+"Es geht mir gut, wenn ich weiß, dass keine Feier ansteht.", 1
+) %>% 
+  rownames_to_column(var = "Item") %>% 
+  arrange(Faktor) %>% 
+  mutate(Faktor = str_c("Faktor", Faktor, sep = " ")) %>% 
+  group_by(Faktor) %>% 
+  gt()
+```
+
+Nun müssen wir selbst tätig werden, indem wir versuchen zu interpretieren, was die Items pro Faktor "gemeinsam" haben. Für den Faktor 1 könnte man sich etwas denken wie "Vorfreude auf eine Feier". Faktor 2 wäre vielleicht etwas wie "Tanzen" und Faktor 3 z.B. "Geselligkeit".
 
 # Aus der Praxis
-## Klassisch
-### EDA
-### Durchführung
-### Berichten
+## EDA
+
+## Durchführung
 
 
 

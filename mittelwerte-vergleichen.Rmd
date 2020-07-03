@@ -27,7 +27,7 @@ Der $t$-Test mit unabhängigen Stichproben ist in der Regel schon etwas anwendun
 
 Der $t$-Test für abhängige, oder verbundene, Stichproben kommt zutragen, wenn die Unabhängigkeitsannahme (siehe [Voraussetzungen im GLM](voraussetzungen.html)) verletzt ist. Ein einfaches Beispiel wärst Du, der/die eine tolle Therapie für Patienten mit depressiver Störung entwickelt hat. Nun hast Du ein paar Patienten gefunden, die deine Therapie ausprobieren wollen und erhebst vor und nach der Therapie die mittlere "Depressivität". Im Anschluss daran möchtest Du jetzt herausfinden, ob sich die Werte über die Zeit signifikant verbessert haben. Pro Proband hast du einen Prä- und einen Post-Wert (= vor und nach der Therapie). Das bedeutet jedoch, dass die Unabhängigkeitsannahme verletzt ist, weil mehrere Datenpunkte von einer Person kommen. Kein Problem, bei **zwei Messungen** nutzt Du einfach den $t$-Test für verbundene Stichproben.
 
-Die **Daten zum fleißigen Mitrechnen** findest Du wie immer im [Git-Repository](https://github.com/benediktclaus/costat/tree/master/data).
+Die **Daten zum fleißigen Mitrechnen** findest Du wie immer im [Git-Repository](https://github.com/benediktclaus/costat/tree/master/data) oder im [Paket `costatcompanion`](pakete.html#costatcompanion).
 
 ## ANOVAs
 Die $t$-Tests sind gut und einfach nachzuvollziehen. Mit ihnen können wir zwei Gruppen anhand kontinuierlicher Variablen ganz gut miteinander vergleichen. In den meisten Fällen hat man aber nicht nur zwei Gruppen (oder auch zwei Messzeitpunkte). Möchte man **zwei oder mehr** Mittelwerte nun vergleichen, muss man sich Varianzanalysen (**An**alysis **o**f **Va**riance, ANOVA) genauer anschauen, denn die sind genau für diesen Fall gemacht. Hier behandeln wir verschiedene ANOVAs, nämlich die

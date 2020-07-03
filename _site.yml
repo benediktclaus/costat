@@ -63,6 +63,11 @@ navbar:
        - text: "--------"
     - text: "Effektstärken"
       href: effektstaerken.html
+    - text: "Faktorenanalyse"
+      menu:
+        - text: "Explorative Faktorenanalyse"
+          href: explorative-faktorenanalyse.html
+        - text: "Konfirmatorische Faktorenanalyse"
   right:
     - icon: fa-question
       menu:
