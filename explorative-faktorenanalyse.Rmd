@@ -91,11 +91,14 @@ In der ersten Spalte (`id`) sind die Probanden-IDs eingetragen, in den folgenden
 ## EDA
 Aus den Dimensionen des Datensatzes geht hervor, dass wir eine Stichprobengröße von $N = 320$ haben, was gut ist. Zudem ist es immer eine gute Idee, sich die Korrelationen der Variablen untereinander anzusehen -- am besten in einem Korrelogramm. Zunächst werden wir aber einmal die Spalte `id` los, die zwar für die Dateneingabe sinnvoll und nützlich ist, in den weiteren Analysen aber nur stört.
 
-```{r}
+```{r message=FALSE}
 party_raw <- party %>% 
   select(-id)
 
 party_raw
+
+party_raw %>% 
+  get_summary_stats()
 
 party_raw %>% 
   corrgram::corrgram(order = TRUE)
@@ -306,7 +309,7 @@ In ihrer Analyse der Daten entfernten sie die Items 13, 22, 23, 32 und 34, deswe
 
 ## EDA
 
-```{r}
+```{r warning=FALSE}
 nichols_nicki <- read_spss("data/nichols_nicki_2004.sav") %>% 
   janitor::clean_names() %>% 
   mutate(gender = as_factor(gender))
