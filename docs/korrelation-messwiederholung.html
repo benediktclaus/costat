@@ -530,6 +530,19 @@ div.tocify {
 <li>
   <a href="effektstaerken.html">Effektstärken</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Faktorenanalyse
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="explorative-faktorenanalyse.html">Explorative Faktorenanalyse</a>
+    </li>
+    <li class="dropdown-header">Konfirmatorische Faktorenanalyse</li>
+  </ul>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
@@ -743,17 +756,17 @@ div.tocify {
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>costatcompanion<span class="op">::</span>placebo_amplification</span></code></pre></div>
 <pre><code>## # A tibble: 172 x 13
 ##    id      age sex   treatment measurement exp_size exp_certain exp_speed cgi_s
-##    &lt;chr&gt; &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;     &lt;chr&gt;          &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-##  1 1        54 Male  TAU       1               74.0        12.5      92.7     6
-##  2 1        54 Male  TAU       2               79.8        13.8      88.3     4
-##  3 1        54 Male  TAU       3               85.1        14.9      86.2     4
-##  4 1        54 Male  TAU       4               29.8        16.0      70.2     4
-##  5 2        52 Fema~ EG        1               75.9        61.0      45.3     5
-##  6 2        52 Fema~ EG        2               71.3        56.4      41.5     5
-##  7 2        52 Fema~ EG        3               67.0        54.3      64.9     3
-##  8 2        52 Fema~ EG        4               64.9        59.6      80.8     3
-##  9 3        54 Male  EG        1               92.6        71.6     100       6
-## 10 3        54 Male  EG        2               79.8        94.7     100       5
+##    &lt;chr&gt; &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;           &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+##  1 1        54 Male  TAU                 1     74.0        12.5      92.7     6
+##  2 1        54 Male  TAU                 2     79.8        13.8      88.3     4
+##  3 1        54 Male  TAU                 3     85.1        14.9      86.2     4
+##  4 1        54 Male  TAU                 4     29.8        16.0      70.2     4
+##  5 2        52 Fema~ EG                  1     75.9        61.0      45.3     5
+##  6 2        52 Fema~ EG                  2     71.3        56.4      41.5     5
+##  7 2        52 Fema~ EG                  3     67.0        54.3      64.9     3
+##  8 2        52 Fema~ EG                  4     64.9        59.6      80.8     3
+##  9 3        54 Male  EG                  1     92.6        71.6     100       6
+## 10 3        54 Male  EG                  2     79.8        94.7     100       5
 ## # ... with 162 more rows, and 4 more variables: bdi &lt;dbl&gt;, shaps &lt;dbl&gt;,
 ## #   who &lt;dbl&gt;, hamd &lt;dbl&gt;</code></pre>
 <div id="eda-1" class="section level2">

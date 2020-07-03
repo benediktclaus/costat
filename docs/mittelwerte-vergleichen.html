@@ -438,6 +438,19 @@ div.tocify {
 <li>
   <a href="effektstaerken.html">Effektstärken</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Faktorenanalyse
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="explorative-faktorenanalyse.html">Explorative Faktorenanalyse</a>
+    </li>
+    <li class="dropdown-header">Konfirmatorische Faktorenanalyse</li>
+  </ul>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
@@ -493,7 +506,7 @@ div.tocify {
 <p>Den Einstichproben-<span class="math inline">\(t\)</span>-Test benutzt man, wenn man eine Aussage darüber treffen will, ob sich eine Population im Mittelwert von einem bereits bekannten Wert unterscheidet. Stell Dir vor, Du hast zufällig die Größe von 80 Leuten in der Dortmunder Innenstadt gemessen, die im Schnitt 181 cm groß sind. Nun möchtest Du wissen, ob sich diese mittlere Größe von Dortmundern von beispielweise 170 cm signifikant unterscheidet. Das kannst du mit einem Einstichproben-<span class="math inline">\(t\)</span>-Test überprüfen (auch wenn man diese Fragestellung “in der freien Wildbahn” eigentlich nicht findet).</p>
 <p>Der <span class="math inline">\(t\)</span>-Test mit unabhängigen Stichproben ist in der Regel schon etwas anwendungsnäher, denn bei diesem wird untersucht, ob sich <strong>zwei Gruppen</strong> in ihrem Mittelwert unterscheiden. Beispielsweise möchtest Du untersuchen, ob sich die Kontrollgruppe am Ende einer Interventions-Studie signifikant von Deiner Interventionsgruppe unterscheidet. Im Gegensatz zum vorherigen Test, werden hier beide Mittelwerte erst einmal anhand der Probanden in den Gruppen bestimmt. Sollen also zwei Gruppen anhand einer kontinuierlichen Variable miteinander verglichen werden, ist das ein valider Ansatz. Liegen mehrere Gruppen vor, deren Mittelwerte Du anhand einer Variable auf signifikante Unterschiede vergleichen möchtest, dann solltest du über ein anderes Verfahren, wie die ANOVA (s.u.) nachdenken.</p>
 <p>Der <span class="math inline">\(t\)</span>-Test für abhängige, oder verbundene, Stichproben kommt zutragen, wenn die Unabhängigkeitsannahme (siehe <a href="voraussetzungen.html">Voraussetzungen im GLM</a>) verletzt ist. Ein einfaches Beispiel wärst Du, der/die eine tolle Therapie für Patienten mit depressiver Störung entwickelt hat. Nun hast Du ein paar Patienten gefunden, die deine Therapie ausprobieren wollen und erhebst vor und nach der Therapie die mittlere “Depressivität”. Im Anschluss daran möchtest Du jetzt herausfinden, ob sich die Werte über die Zeit signifikant verbessert haben. Pro Proband hast du einen Prä- und einen Post-Wert (= vor und nach der Therapie). Das bedeutet jedoch, dass die Unabhängigkeitsannahme verletzt ist, weil mehrere Datenpunkte von einer Person kommen. Kein Problem, bei <strong>zwei Messungen</strong> nutzt Du einfach den <span class="math inline">\(t\)</span>-Test für verbundene Stichproben.</p>
-<p>Die <strong>Daten zum fleißigen Mitrechnen</strong> findest Du wie immer im <a href="https://github.com/benediktclaus/costat/tree/master/data">Git-Repository</a>.</p>
+<p>Die <strong>Daten zum fleißigen Mitrechnen</strong> findest Du wie immer im <a href="https://github.com/benediktclaus/costat/tree/master/data">Git-Repository</a> oder im <a href="pakete.html#costatcompanion">Paket <code>costatcompanion</code></a>.</p>
 </div>
 <div id="anovas" class="section level2">
 <h2>ANOVAs</h2>

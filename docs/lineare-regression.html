@@ -530,6 +530,19 @@ div.tocify {
 <li>
   <a href="effektstaerken.html">Effektstärken</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Faktorenanalyse
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="explorative-faktorenanalyse.html">Explorative Faktorenanalyse</a>
+    </li>
+    <li class="dropdown-header">Konfirmatorische Faktorenanalyse</li>
+  </ul>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
@@ -591,6 +604,9 @@ div.tocify {
 <pre><code>## Loading required package: carData</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;car&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:psych&#39;:
+## 
+##     logit</code></pre>
 <pre><code>## The following object is masked from &#39;package:dplyr&#39;:
 ## 
 ##     recode</code></pre>
@@ -605,7 +621,7 @@ div.tocify {
 <h2>Klassisch</h2>
 <p>Wir benutzen denselben Datensatz, den wir auch bei den <a href="korrelation.html">Korrelationen</a> kennengelernt haben. Den Datensatz <code>water_park</code> finden wir also im Paket <code>costatcompanion</code>. In der ersten Spalte (<code>day_id</code>) finden wir eine individuelle ID des beobachteten Tages (in zufälliger Reihenfolge). Nachfolgend finden wir vier Variablen, die an jedem Tag gemessen wurden. Dazu zählen die Durchschnitts-Temperatur (<code>temperature</code>), die Anzahl der Schwimmer im Schwimmbecken (<code>swimmers</code>), den Tages-Umsatz des Freibad-Kiosks in Euro (<code>sales</code>) und die Anzahl der Schlägereien, wegen der die Polizei gerufen werden musste (<code>beatings</code>).</p>
 <p>Wir interessieren uns für den Zusammenhang zwischen der gemessenen Temperatur mit der Anzahl der beobachteten Schwimmer im Schwimmbecken.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>costatcompanion<span class="op">::</span>water_park</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>costatcompanion<span class="op">::</span>water_park</span></code></pre></div>
 <pre><code>## # A tibble: 100 x 5
 ##    day_id temperature swimmers sales beatings
 ##    &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
@@ -626,25 +642,25 @@ div.tocify {
 </div>
 <div id="eda" class="section level3">
 <h3>EDA</h3>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Deskriptive Statistiken</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw">select</span>(temperature, swimmers) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Deskriptive Statistiken</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="st">  </span><span class="kw">select</span>(temperature, swimmers) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 13
 ##   variable     n   min   max median    q1    q3   iqr   mad  mean    sd    se
 ##   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1 swimmers   100  34   195     97    82   121   39    28.2  100.  30.0   3.00
 ## 2 tempera~   100  11.9  45.6   25.1  21.0  28.9  7.98  6.00  25.0  6.00  0.6 
 ## # ... with 1 more variable: ci &lt;dbl&gt;</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Outliers</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="kw">identify_outliers</span>(temperature)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Outliers</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="kw">identify_outliers</span>(temperature)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 7
 ##   day_id temperature swimmers sales beatings is.outlier is.extreme
 ##   &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;      &lt;lgl&gt;     
 ## 1 51            45.6      195  2837       10 TRUE       FALSE</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="st">  </span><span class="kw">identify_outliers</span>(swimmers)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="st">  </span><span class="kw">identify_outliers</span>(swimmers)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 7
 ##   day_id temperature swimmers sales beatings is.outlier is.extreme
 ##   &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;      &lt;lgl&gt;     
@@ -656,7 +672,7 @@ div.tocify {
 <div id="durchführung" class="section level3">
 <h3>Durchführung</h3>
 <p>Diese Linie zu schätzen ist in R so einfach die Torte essen. Wir arbeiten hier hauptsächlich mit dem Befehl <code>lm()</code>, der für <em>Linear Model</em> steht. Da es sich hierbei um eine native Funktion von R handelt, ist die Schreibweise und Reihenfolge der Argumente etwas ungewont, lässt sich aber fix lernen. Wir geben als erstes Argument die Formel an, anhand derer wir einen Zusammenhäng schätzen wollen. Auf der linken Seite der Formel steht immer die abhängige Variable. Dann kommt eine Tilde (<code>~</code>) und anschließend die unabhängige(n) Variable(n), also jene, die wir heranziehen, um die abhängige Variable zu erklären. Genau so kann man die Formel dann auch lesen: <code>diese_variable ~ jene_variable</code> heißt so viel wie “Diese Variable wird erklärt durch jene Variable”. In unserem Beispiel versuchen wir die Anzahl der beobachteten Schwimmer in Abhänigkeit der gemessenen Durchschnittstemperatur vorherzusagen, also lautet unsere Formel <code>swimmers ~ temperature</code>. Als zweites Argument geben wir den Datensatz an, der dem Modell zugrunde liegen soll (in diesem Falle <code>water_park</code>). Bei <strong>fehlenden Werten</strong> sollte man das Argument <code>na.action = na.exclude</code> mitgeben, da es sonst zu einem Fehler kommt und R kein Ergebnis ausspuckt (weil es nicht weiß, wie es mit fehlenden Werten umgehen soll).</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">lm</span>(swimmers <span class="op">~</span><span class="st"> </span>temperature, <span class="dt">data =</span> water_park)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">lm</span>(swimmers <span class="op">~</span><span class="st"> </span>temperature, <span class="dt">data =</span> water_park)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = swimmers ~ temperature, data = water_park)
@@ -665,13 +681,13 @@ div.tocify {
 ## (Intercept)  temperature  
 ##      -7.473        4.297</code></pre>
 <p>Wenn wir diesen Befehl ausführen, bekommen wir einen recht sparsamen Überblick über das geschätzte Modell, d.h. den <span class="math inline">\(y\)</span>-Achsen-Abschnitt und die Steigung der geschätzten Gerade. Um noch mehr aus diesem Modell zu quätschen, müssen wir uns eine Zusammenfassung ansehen, die wir mit der Funktion <code>summary()</code> erhalten. Dabei kann man zwei Wege wählen: Entweder speichert man das geschätzte Modell in einer Variablen, oder man “pipet” das Modell direkt in die Funktion <code>summary()</code>.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Erste Möglichkeit</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a>water_model &lt;-<span class="st"> </span><span class="kw">lm</span>(swimmers <span class="op">~</span><span class="st"> </span>temperature, <span class="dt">data =</span> water_park)</span>
-<span id="cb16-3"><a href="#cb16-3"></a><span class="kw">summary</span>(water_model)</span>
-<span id="cb16-4"><a href="#cb16-4"></a></span>
-<span id="cb16-5"><a href="#cb16-5"></a><span class="co"># Zweite Möglichkeit</span></span>
-<span id="cb16-6"><a href="#cb16-6"></a><span class="kw">lm</span>(swimmers <span class="op">~</span><span class="st"> </span>temperature, <span class="dt">data =</span> water_park) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb16-7"><a href="#cb16-7"></a><span class="st">  </span><span class="kw">summary</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Erste Möglichkeit</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>water_model &lt;-<span class="st"> </span><span class="kw">lm</span>(swimmers <span class="op">~</span><span class="st"> </span>temperature, <span class="dt">data =</span> water_park)</span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="kw">summary</span>(water_model)</span>
+<span id="cb17-4"><a href="#cb17-4"></a></span>
+<span id="cb17-5"><a href="#cb17-5"></a><span class="co"># Zweite Möglichkeit</span></span>
+<span id="cb17-6"><a href="#cb17-6"></a><span class="kw">lm</span>(swimmers <span class="op">~</span><span class="st"> </span>temperature, <span class="dt">data =</span> water_park) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb17-7"><a href="#cb17-7"></a><span class="st">  </span><span class="kw">summary</span>()</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = swimmers ~ temperature, data = water_park)
@@ -708,25 +724,25 @@ div.tocify {
 <li><code>augment()</code> nimmt Angaben zu jedem originalen Datenpunkt (z.B. die Residuen) und fügt diese dem Datensatz hinzu</li>
 </ul>
 <p>Wer das Paket noch nicht installiert hat, kann dies wie immer ganz einfach nachholen.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;broom&quot;</span>)</span>
-<span id="cb18-2"><a href="#cb18-2"></a></span>
-<span id="cb18-3"><a href="#cb18-3"></a><span class="kw">library</span>(broom)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;broom&quot;</span>)</span>
+<span id="cb19-2"><a href="#cb19-2"></a></span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="kw">library</span>(broom)</span></code></pre></div>
 <p>Wenn wir uns die Koeffizienten mit Signifikanztests ausgeben lassen wollen, nutzen wir also <code>tidy()</code>. So erhalten wir eine ganz simple, saubere und allumfassende Übersicht über unsere Modell-Koeffizienten.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">tidy</span>(water_model)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">tidy</span>(water_model)</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic  p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
 ## 1 (Intercept)    -7.47     6.62      -1.13 2.62e- 1
 ## 2 temperature     4.30     0.258     16.7  2.25e-30</code></pre>
 <p>Angaben zur Modellgüte können wir mit <code>glance()</code> auslesen. Hier bekommen wir sogar wesentlich mehr Informationen als durch die normale <code>summary()</code>.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">glance</span>(water_model)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">glance</span>(water_model)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 12
 ##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
 ##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1     0.739         0.737  15.4      278. 2.25e-30     1  -414.  834.  842.
 ## # ... with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
 <p>Residuen, Distanzen und ähnliches werden mit <code>augment()</code> an den ursprünglichen Datensatz angehängt.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">augment</span>(water_model)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="kw">augment</span>(water_model)</span></code></pre></div>
 <pre><code>## # A tibble: 100 x 8
 ##    swimmers temperature .fitted .resid .std.resid   .hat .sigma  .cooksd
 ##       &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
@@ -753,11 +769,11 @@ div.tocify {
 <li>und die Hebelwerte (<em>hat values</em>) nicht größer als zweimal der durchschnittliche Hebelwert <span class="citation">(Hoaglin &amp; Welsch, <a href="#ref-Hoaglin.1978" role="doc-biblioref">1978</a>)</span>. Der durchschnittliche Hebelwert ist <span class="math display">\[\dfrac{(k+1)}{n}\]</span> mit <span class="math inline">\(k\)</span> als Anzahl der Prädiktoren und <span class="math inline">\(n\)</span> als Anzahl der Beobachtungen. Somit sollte der Betrag der <em>hat values</em> nicht größer sein als<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> <span class="math display">\[2 \cdot \dfrac{(k+1)}{n}\]</span></li>
 </ul>
 <p>Das könnten wir nun ganz einfach überprüfen. Da das jedoch Schritte sind, die wir für jede Regression durchlaufen sollten, und sie somit Standard sind, gibt es kluge Köpfe, die Abbildungen zur Modelldiagnostik für verschiedenen Verfahren im Paket <a href="https://github.com/sinhrks/ggfortify"><code>ggfortify</code></a> zusammengestellt haben.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;ggfortify&quot;</span>)</span>
-<span id="cb25-2"><a href="#cb25-2"></a></span>
-<span id="cb25-3"><a href="#cb25-3"></a><span class="kw">library</span>(ggfortify)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;ggfortify&quot;</span>)</span>
+<span id="cb26-2"><a href="#cb26-2"></a></span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="kw">library</span>(ggfortify)</span></code></pre></div>
 <p>Diese Abbildungen sehen für unser Modell folgendermaßen aus. In diesem Fall ist alles im großen und ganzen in Ordnung.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">autoplot</span>(water_model, <span class="dt">which =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">autoplot</span>(water_model, <span class="dt">which =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>)</span></code></pre></div>
 <pre><code>## Warning: `arrange_()` is deprecated as of dplyr 0.7.0.
 ## Please use `arrange()` instead.
 ## See vignette(&#39;programming&#39;) for more help
@@ -765,24 +781,24 @@ div.tocify {
 ## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
 <p><img src="lineare-regression_files/figure-html/unnamed-chunk-14-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Natürlich können wir die oben dargestellten Kriterien zur Modell-Diagnostik auch an “harten Zahlen” prüfen und müssen uns nicht auf Abbildungen verlassen. Wobei wir die Normalverteilung von Variablen doch schon anhand eines QQ-Plots beurteilen sollten (Abbildung “Normal Q-Q”, die von <code>ggfortif</code> ausgegeben wird), was in diesem Falle in Ordnung war. Des weiteren sollte der Betrag eines standardisierten Residuums nicht größer als 3.29 sein. Auch sollte der Cook-Abstand kleiner gleich 1 sein (also nicht größer als 1) und die Hebelwerte kleiner als der doppelte durchschnittliche Hebelwert. Das können wir mithilfe von <code>augment()</code> ganz einfach lösen. Zunächst berechnen wir jedoch die Schwelle für problematische Hebelwerte nach der obigen Formel.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="co"># Anzahl der Prädiktoren</span></span>
-<span id="cb28-2"><a href="#cb28-2"></a>k &lt;-<span class="st"> </span><span class="dv">1</span></span>
-<span id="cb28-3"><a href="#cb28-3"></a></span>
-<span id="cb28-4"><a href="#cb28-4"></a><span class="co"># Anzahl der Beobachtungen</span></span>
-<span id="cb28-5"><a href="#cb28-5"></a>n &lt;-<span class="st"> </span><span class="kw">nrow</span>(water_park)</span>
-<span id="cb28-6"><a href="#cb28-6"></a></span>
-<span id="cb28-7"><a href="#cb28-7"></a>hat_threshold &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(k <span class="op">+</span><span class="st"> </span><span class="dv">1</span>) <span class="op">/</span><span class="st"> </span>n</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># Anzahl der Prädiktoren</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a>k &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb29-3"><a href="#cb29-3"></a></span>
+<span id="cb29-4"><a href="#cb29-4"></a><span class="co"># Anzahl der Beobachtungen</span></span>
+<span id="cb29-5"><a href="#cb29-5"></a>n &lt;-<span class="st"> </span><span class="kw">nrow</span>(water_park)</span>
+<span id="cb29-6"><a href="#cb29-6"></a></span>
+<span id="cb29-7"><a href="#cb29-7"></a>hat_threshold &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(k <span class="op">+</span><span class="st"> </span><span class="dv">1</span>) <span class="op">/</span><span class="st"> </span>n</span></code></pre></div>
 <p>Hebelwerte, die größer als 0.04 sind, sollten also untersucht werden. Um unsere Diagnostiken zu berechnen, erstellen wir mit <code>mutate()</code> einfach vier neue Variablen: Jeweils eine, die angibt, wenn es ein Problem in dem jeweiligen Diagnostik-Outcome gibt (codiert als 1) und dann die Summe dieser Variablen. Weist ein Fall “keine Probleme” auf, dann hat er in diesen neuen Variablen einen Wert von jeweils 0 und somit ist auch die Summe dieser neuen Variablen 0. Ist ein Wert problematisch, ergibt das in der Summe 1, bei zwei problematischen Werten 2 und wenn alle drei Werte problematisch sind, dann ergibt die Summe 3. Anschließend können wir uns jene Fälle rausfiltern, in denen Probleme aufgetreten sind.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>water_augmented &lt;-<span class="st"> </span><span class="kw">augment</span>(water_model)</span>
-<span id="cb29-2"><a href="#cb29-2"></a></span>
-<span id="cb29-3"><a href="#cb29-3"></a>water_augmented <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb29-4"><a href="#cb29-4"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
-<span id="cb29-5"><a href="#cb29-5"></a>    <span class="dt">diag_resid =</span> <span class="kw">if_else</span>(<span class="kw">abs</span>(.std.resid) <span class="op">&gt;</span><span class="st"> </span><span class="fl">3.29</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
-<span id="cb29-6"><a href="#cb29-6"></a>    <span class="dt">diag_cook =</span> <span class="kw">if_else</span>(.cooksd <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
-<span id="cb29-7"><a href="#cb29-7"></a>    <span class="dt">diag_hat =</span> <span class="kw">if_else</span>(.hat <span class="op">&gt;</span><span class="st"> </span>hat_threshold, <span class="dv">1</span>, <span class="dv">0</span>),</span>
-<span id="cb29-8"><a href="#cb29-8"></a>    <span class="dt">diag_sum =</span> diag_resid <span class="op">+</span><span class="st"> </span>diag_cook <span class="op">+</span><span class="st"> </span>diag_hat</span>
-<span id="cb29-9"><a href="#cb29-9"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb29-10"><a href="#cb29-10"></a><span class="st">  </span><span class="kw">filter</span>(diag_sum <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>water_augmented &lt;-<span class="st"> </span><span class="kw">augment</span>(water_model)</span>
+<span id="cb30-2"><a href="#cb30-2"></a></span>
+<span id="cb30-3"><a href="#cb30-3"></a>water_augmented <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb30-4"><a href="#cb30-4"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb30-5"><a href="#cb30-5"></a>    <span class="dt">diag_resid =</span> <span class="kw">if_else</span>(<span class="kw">abs</span>(.std.resid) <span class="op">&gt;</span><span class="st"> </span><span class="fl">3.29</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb30-6"><a href="#cb30-6"></a>    <span class="dt">diag_cook =</span> <span class="kw">if_else</span>(.cooksd <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb30-7"><a href="#cb30-7"></a>    <span class="dt">diag_hat =</span> <span class="kw">if_else</span>(.hat <span class="op">&gt;</span><span class="st"> </span>hat_threshold, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb30-8"><a href="#cb30-8"></a>    <span class="dt">diag_sum =</span> diag_resid <span class="op">+</span><span class="st"> </span>diag_cook <span class="op">+</span><span class="st"> </span>diag_hat</span>
+<span id="cb30-9"><a href="#cb30-9"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb30-10"><a href="#cb30-10"></a><span class="st">  </span><span class="kw">filter</span>(diag_sum <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 12
 ##   swimmers temperature .fitted  .resid .std.resid   .hat .sigma .cooksd
 ##      &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
@@ -799,7 +815,7 @@ div.tocify {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#pynedlwmei .gt_table {
+#rrwzrookft .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -822,7 +838,7 @@ div.tocify {
   border-left-color: #D3D3D3;
 }
 
-#pynedlwmei .gt_heading {
+#rrwzrookft .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -834,7 +850,7 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#pynedlwmei .gt_title {
+#rrwzrookft .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -844,7 +860,7 @@ div.tocify {
   border-bottom-width: 0;
 }
 
-#pynedlwmei .gt_subtitle {
+#rrwzrookft .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -854,13 +870,13 @@ div.tocify {
   border-top-width: 0;
 }
 
-#pynedlwmei .gt_bottom_border {
+#rrwzrookft .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#pynedlwmei .gt_col_headings {
+#rrwzrookft .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -875,7 +891,7 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#pynedlwmei .gt_col_heading {
+#rrwzrookft .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -895,7 +911,7 @@ div.tocify {
   overflow-x: hidden;
 }
 
-#pynedlwmei .gt_column_spanner_outer {
+#rrwzrookft .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -907,15 +923,15 @@ div.tocify {
   padding-right: 4px;
 }
 
-#pynedlwmei .gt_column_spanner_outer:first-child {
+#rrwzrookft .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#pynedlwmei .gt_column_spanner_outer:last-child {
+#rrwzrookft .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#pynedlwmei .gt_column_spanner {
+#rrwzrookft .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -927,7 +943,7 @@ div.tocify {
   width: 100%;
 }
 
-#pynedlwmei .gt_group_heading {
+#rrwzrookft .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -949,7 +965,7 @@ div.tocify {
   vertical-align: middle;
 }
 
-#pynedlwmei .gt_empty_group_heading {
+#rrwzrookft .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -964,19 +980,19 @@ div.tocify {
   vertical-align: middle;
 }
 
-#pynedlwmei .gt_striped {
+#rrwzrookft .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#pynedlwmei .gt_from_md > :first-child {
+#rrwzrookft .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#pynedlwmei .gt_from_md > :last-child {
+#rrwzrookft .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#pynedlwmei .gt_row {
+#rrwzrookft .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -995,7 +1011,7 @@ div.tocify {
   overflow-x: hidden;
 }
 
-#pynedlwmei .gt_stub {
+#rrwzrookft .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1007,7 +1023,7 @@ div.tocify {
   padding-left: 12px;
 }
 
-#pynedlwmei .gt_summary_row {
+#rrwzrookft .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1017,7 +1033,7 @@ div.tocify {
   padding-right: 5px;
 }
 
-#pynedlwmei .gt_first_summary_row {
+#rrwzrookft .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1027,7 +1043,7 @@ div.tocify {
   border-top-color: #D3D3D3;
 }
 
-#pynedlwmei .gt_grand_summary_row {
+#rrwzrookft .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1037,7 +1053,7 @@ div.tocify {
   padding-right: 5px;
 }
 
-#pynedlwmei .gt_first_grand_summary_row {
+#rrwzrookft .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1047,7 +1063,7 @@ div.tocify {
   border-top-color: #D3D3D3;
 }
 
-#pynedlwmei .gt_table_body {
+#rrwzrookft .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1056,7 +1072,7 @@ div.tocify {
   border-bottom-color: #D3D3D3;
 }
 
-#pynedlwmei .gt_footnotes {
+#rrwzrookft .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1070,13 +1086,13 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#pynedlwmei .gt_footnote {
+#rrwzrookft .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#pynedlwmei .gt_sourcenotes {
+#rrwzrookft .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1090,46 +1106,46 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#pynedlwmei .gt_sourcenote {
+#rrwzrookft .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#pynedlwmei .gt_left {
+#rrwzrookft .gt_left {
   text-align: left;
 }
 
-#pynedlwmei .gt_center {
+#rrwzrookft .gt_center {
   text-align: center;
 }
 
-#pynedlwmei .gt_right {
+#rrwzrookft .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#pynedlwmei .gt_font_normal {
+#rrwzrookft .gt_font_normal {
   font-weight: normal;
 }
 
-#pynedlwmei .gt_font_bold {
+#rrwzrookft .gt_font_bold {
   font-weight: bold;
 }
 
-#pynedlwmei .gt_font_italic {
+#rrwzrookft .gt_font_italic {
   font-style: italic;
 }
 
-#pynedlwmei .gt_super {
+#rrwzrookft .gt_super {
   font-size: 65%;
 }
 
-#pynedlwmei .gt_footnote_marks {
+#rrwzrookft .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="pynedlwmei" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="rrwzrookft" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -1169,7 +1185,7 @@ div.tocify {
 <div id="beispiel-mit-mehreren-prädiktoren" class="section level1">
 <h1>Beispiel mit mehreren Prädiktoren</h1>
 <p>Einige aufmerksame Leser werden bereits festgestelt haben, dass es im Datensatz <code>water_park</code> mehr als nur zwei Variablen (<code>swimmers</code> und <code>temperature</code>) gibt. Es findet sich auch eine Variable <code>sales</code>, mit der die Umsätze des Freibad-Kiosks in Euro festgehalten ist, sowie die Variable <code>beatings</code>, in der die Anzahl der Schlägereien aufgeführt ist, wegen derer die Polizei gerufen werden musste.</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>water_park</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>water_park</span></code></pre></div>
 <pre><code>## # A tibble: 100 x 5
 ##    day_id temperature swimmers sales beatings
 ##    &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
@@ -1188,9 +1204,9 @@ div.tocify {
 <div id="eda-1" class="section level2">
 <h2>EDA</h2>
 <p>Zu Beginn ist es immer ratsam zu untersuchen, ob die potenziellen Prädiktoren keine Ausreißer enthalten und mit dem Kriterium (der abhängigen Variable) linear zusammenhängen. Dafür nutzen wir wieder deskriptive Statistiken und Abbildungen. Um zu überprüfen, wie stark die potenziellen Prädiktoren mit dem Kriterium (Anzahl der Schlägereien) zusammenhängen, können wir auch Korrelationen berechnen.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb33-2"><a href="#cb33-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb33-3"><a href="#cb33-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-2"><a href="#cb34-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>day_id) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-3"><a href="#cb34-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 13
 ##   variable     n   min    max median     q1     q3    iqr    mad   mean     sd
 ##   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
@@ -1207,18 +1223,18 @@ div.tocify {
 <h2>Multikollinearität</h2>
 <p><strong>Multikollinearität</strong> ist ein Problem und tritt bei linearen Regressionen auf, wenn zwei oder mehr Prädiktoren zu hohe Korrelationen miteinander haben. Das sorgt dafür, dass die Schätzungen der Modellparameter ungenau bis falsch werden, aber auch die Modellinterpretation kann problematisch werden, wenn Prädiktoren miteinander hoch korreliert sind. Eine Möglichkeit, Multikollinearität aufzudecken, ist die Analyse der Korrelationen der Prädiktoren untereinander. Aus der obigen Abbildung geht hervor, dass die höchste Korrelation zwischen den Prädiktoren <span class="math inline">\(r = .95\)</span> ist (jene zwischen der Anzahl der Schwimmer und dem Kiosk-Umsatz), was probleatisch sein könnte.</p>
 <p>Eine weitere Möglichkeit ist der sogenannte <strong>Varianzinflationsfaktor (VIF)</strong> oder sein Kehrwert, die <strong>Toleranz</strong>. Im Paket <code>car</code> gibt es die Funktion <code>vif()</code> die ein lineares Modell als Argument nimmt und uns den VIF berechnet. Nach <span class="citation">Field (<a href="#ref-Field.2018" role="doc-biblioref">2018</a>)</span> sind Werte größer 10 ein Problem. Wir müssen das Modell also einmal schätzen, um uns den VIF für jeden Prädiktor ausgeben zu lassen. Das Modell erweitern wir mit einem ganz normalen <code>+</code>. Wer das Paket <code>car</code> noch nicht installiert hat, kann das natürlich sofort nachholen.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;car&quot;</span>)</span>
-<span id="cb35-2"><a href="#cb35-2"></a></span>
-<span id="cb35-3"><a href="#cb35-3"></a><span class="kw">library</span>(car)</span></code></pre></div>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>water_big_model &lt;-<span class="st"> </span><span class="kw">lm</span>(beatings <span class="op">~</span><span class="st"> </span>swimmers <span class="op">+</span><span class="st"> </span>temperature <span class="op">+</span><span class="st"> </span>sales, <span class="dt">data =</span> water_park)</span>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;car&quot;</span>)</span>
 <span id="cb36-2"><a href="#cb36-2"></a></span>
-<span id="cb36-3"><a href="#cb36-3"></a><span class="kw">vif</span>(water_big_model)</span></code></pre></div>
+<span id="cb36-3"><a href="#cb36-3"></a><span class="kw">library</span>(car)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>water_big_model &lt;-<span class="st"> </span><span class="kw">lm</span>(beatings <span class="op">~</span><span class="st"> </span>swimmers <span class="op">+</span><span class="st"> </span>temperature <span class="op">+</span><span class="st"> </span>sales, <span class="dt">data =</span> water_park)</span>
+<span id="cb37-2"><a href="#cb37-2"></a></span>
+<span id="cb37-3"><a href="#cb37-3"></a><span class="kw">vif</span>(water_big_model)</span></code></pre></div>
 <pre><code>##    swimmers temperature       sales 
 ##   15.359204    3.954328   10.640960</code></pre>
 <p>Der VIF von <code>swimmers</code> ist mit 15.36 deutlich über 10 und wir sollten darüber nachdenken, diesen zu entfernen. Das machen wir nun auch und gucken uns den VIF dann erneut an.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>water_medium_model &lt;-<span class="st"> </span><span class="kw">lm</span>(beatings <span class="op">~</span><span class="st"> </span>temperature <span class="op">+</span><span class="st"> </span>sales, <span class="dt">data =</span> water_park)</span>
-<span id="cb38-2"><a href="#cb38-2"></a></span>
-<span id="cb38-3"><a href="#cb38-3"></a><span class="kw">vif</span>(water_medium_model)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a>water_medium_model &lt;-<span class="st"> </span><span class="kw">lm</span>(beatings <span class="op">~</span><span class="st"> </span>temperature <span class="op">+</span><span class="st"> </span>sales, <span class="dt">data =</span> water_park)</span>
+<span id="cb39-2"><a href="#cb39-2"></a></span>
+<span id="cb39-3"><a href="#cb39-3"></a><span class="kw">vif</span>(water_medium_model)</span></code></pre></div>
 <pre><code>## temperature       sales 
 ##    2.658403    2.658403</code></pre>
 <p>Und schon haben wir kein Problem mehr.</p>
@@ -1226,16 +1242,16 @@ div.tocify {
 <div id="modell" class="section level2">
 <h2>Modell</h2>
 <p>Das Modell haben wir im vorigen Schritt bereits definiert und schätzen lassen, können es uns also direkt anschauen. Wir haben ein im allgemeinen signifikantes Modell, das viel Varianz aufklärt, <span class="math inline">\(F(2, 97) = 69.7, p &lt; .001, R^2_\text{adj} = .581\)</span>. Außerdem sind alle Prädiktoren signifikant, da alle <span class="math inline">\(p &lt; .05\)</span>.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="co"># Koeffizienten anzeigen</span></span>
-<span id="cb40-2"><a href="#cb40-2"></a><span class="kw">tidy</span>(water_medium_model)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="co"># Koeffizienten anzeigen</span></span>
+<span id="cb41-2"><a href="#cb41-2"></a><span class="kw">tidy</span>(water_medium_model)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 5
 ##   term        estimate std.error statistic    p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
 ## 1 (Intercept) -1.11     0.567        -1.95 0.0538    
 ## 2 temperature  0.173    0.0357        4.85 0.00000469
 ## 3 sales        0.00119  0.000429      2.77 0.00675</code></pre>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="co"># Modellgüte anzeigen</span></span>
-<span id="cb42-2"><a href="#cb42-2"></a><span class="kw">glance</span>(water_medium_model)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="co"># Modellgüte anzeigen</span></span>
+<span id="cb43-2"><a href="#cb43-2"></a><span class="kw">glance</span>(water_medium_model)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 12
 ##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
 ##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -1245,26 +1261,26 @@ div.tocify {
 <div id="modell-diagnostik-1" class="section level2">
 <h2>Modell-Diagnostik</h2>
 <p>Wir gehen genauso vor wie oben, wo wir nur einen Prädiktor hatten; alle Diagnostik-Kriterien bleiben bestehen.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="co"># Anzahl der Prädiktoren</span></span>
-<span id="cb44-2"><a href="#cb44-2"></a>k &lt;-<span class="st"> </span><span class="dv">2</span></span>
-<span id="cb44-3"><a href="#cb44-3"></a></span>
-<span id="cb44-4"><a href="#cb44-4"></a><span class="co"># Anzahl der Beobachtungen</span></span>
-<span id="cb44-5"><a href="#cb44-5"></a>n &lt;-<span class="st"> </span><span class="kw">nrow</span>(water_park)</span>
-<span id="cb44-6"><a href="#cb44-6"></a></span>
-<span id="cb44-7"><a href="#cb44-7"></a><span class="co"># Schwelle berechnen</span></span>
-<span id="cb44-8"><a href="#cb44-8"></a>hat_threshold &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(k <span class="op">+</span><span class="st"> </span><span class="dv">1</span>) <span class="op">/</span><span class="st"> </span>n</span>
-<span id="cb44-9"><a href="#cb44-9"></a></span>
-<span id="cb44-10"><a href="#cb44-10"></a><span class="co"># Residuen, Distanzen und Hebelwerte zum Datensatz hinzufügen</span></span>
-<span id="cb44-11"><a href="#cb44-11"></a>water_medium_augmented &lt;-<span class="st"> </span><span class="kw">augment</span>(water_medium_model)</span>
-<span id="cb44-12"><a href="#cb44-12"></a></span>
-<span id="cb44-13"><a href="#cb44-13"></a>water_medium_augmented <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb44-14"><a href="#cb44-14"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
-<span id="cb44-15"><a href="#cb44-15"></a>    <span class="dt">diag_resid =</span> <span class="kw">if_else</span>(<span class="kw">abs</span>(.std.resid) <span class="op">&gt;</span><span class="st"> </span><span class="fl">3.29</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
-<span id="cb44-16"><a href="#cb44-16"></a>    <span class="dt">diag_cook =</span> <span class="kw">if_else</span>(.cooksd <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
-<span id="cb44-17"><a href="#cb44-17"></a>    <span class="dt">diag_hat =</span> <span class="kw">if_else</span>(.hat <span class="op">&gt;</span><span class="st"> </span>hat_threshold, <span class="dv">1</span>, <span class="dv">0</span>),</span>
-<span id="cb44-18"><a href="#cb44-18"></a>    <span class="dt">diag_sum =</span> diag_resid <span class="op">+</span><span class="st"> </span>diag_cook <span class="op">+</span><span class="st"> </span>diag_hat</span>
-<span id="cb44-19"><a href="#cb44-19"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb44-20"><a href="#cb44-20"></a><span class="st">  </span><span class="kw">filter</span>(diag_sum <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="co"># Anzahl der Prädiktoren</span></span>
+<span id="cb45-2"><a href="#cb45-2"></a>k &lt;-<span class="st"> </span><span class="dv">2</span></span>
+<span id="cb45-3"><a href="#cb45-3"></a></span>
+<span id="cb45-4"><a href="#cb45-4"></a><span class="co"># Anzahl der Beobachtungen</span></span>
+<span id="cb45-5"><a href="#cb45-5"></a>n &lt;-<span class="st"> </span><span class="kw">nrow</span>(water_park)</span>
+<span id="cb45-6"><a href="#cb45-6"></a></span>
+<span id="cb45-7"><a href="#cb45-7"></a><span class="co"># Schwelle berechnen</span></span>
+<span id="cb45-8"><a href="#cb45-8"></a>hat_threshold &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(k <span class="op">+</span><span class="st"> </span><span class="dv">1</span>) <span class="op">/</span><span class="st"> </span>n</span>
+<span id="cb45-9"><a href="#cb45-9"></a></span>
+<span id="cb45-10"><a href="#cb45-10"></a><span class="co"># Residuen, Distanzen und Hebelwerte zum Datensatz hinzufügen</span></span>
+<span id="cb45-11"><a href="#cb45-11"></a>water_medium_augmented &lt;-<span class="st"> </span><span class="kw">augment</span>(water_medium_model)</span>
+<span id="cb45-12"><a href="#cb45-12"></a></span>
+<span id="cb45-13"><a href="#cb45-13"></a>water_medium_augmented <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb45-14"><a href="#cb45-14"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb45-15"><a href="#cb45-15"></a>    <span class="dt">diag_resid =</span> <span class="kw">if_else</span>(<span class="kw">abs</span>(.std.resid) <span class="op">&gt;</span><span class="st"> </span><span class="fl">3.29</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb45-16"><a href="#cb45-16"></a>    <span class="dt">diag_cook =</span> <span class="kw">if_else</span>(.cooksd <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb45-17"><a href="#cb45-17"></a>    <span class="dt">diag_hat =</span> <span class="kw">if_else</span>(.hat <span class="op">&gt;</span><span class="st"> </span>hat_threshold, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb45-18"><a href="#cb45-18"></a>    <span class="dt">diag_sum =</span> diag_resid <span class="op">+</span><span class="st"> </span>diag_cook <span class="op">+</span><span class="st"> </span>diag_hat</span>
+<span id="cb45-19"><a href="#cb45-19"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb45-20"><a href="#cb45-20"></a><span class="st">  </span><span class="kw">filter</span>(diag_sum <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 13
 ##   beatings temperature sales .fitted .resid .std.resid   .hat .sigma .cooksd
 ##      &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
@@ -1278,13 +1294,13 @@ div.tocify {
 ## #   diag_sum &lt;dbl&gt;</code></pre>
 <p>Dieses Mal finden wir sechs “problematische” Fälle, in denen wieder die Schwelle des Hebelwerts (0.06) leicht überschritten wurde. Wir tun ansonsten ist alles in Ordnung, also werden wir an dieser Stelle keine Maßnahmen ergreifen und dieses Ergebnis für eine eventuelle Diskussion im Hinterkopf behalten.</p>
 <p>Natürlich könnten wor auch <code>ggfortify</code> zur Hilfe nehmen und uns diagnostische Plots ausgeben lassen. Auch hier gibt es keine großen Probleme, die Residuen erscheinen homogen, die Daten ans ich normalverteilt und auch bezüglich des Cook-Abstands und den Hebelwerten gibt es keine dramatischen Fälle.</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a><span class="kw">autoplot</span>(water_medium_model, <span class="dt">which =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="kw">autoplot</span>(water_medium_model, <span class="dt">which =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>)</span></code></pre></div>
 <p><img src="lineare-regression_files/figure-html/unnamed-chunk-27-1.png" width="2450" style="display: block; margin: auto;" /></p>
 </div>
 <div id="standardisierte-koeffizienten" class="section level2">
 <h2>Standardisierte Koeffizienten</h2>
 <p>Wenn wir uns die Koeffizienten anschauen, könnten wir etwas stutzig werden.</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="kw">tidy</span>(water_medium_model)</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="kw">tidy</span>(water_medium_model)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 5
 ##   term        estimate std.error statistic    p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
@@ -1296,25 +1312,25 @@ div.tocify {
 <p>So erkennen wir auch, warum der Einfluss von <code>sales</code> so klein erscheint: Die Skala von <code>sales</code> ist eine komplett andere als die von <code>temperature</code>. Wenn wir uns die deskriptiven Statistiken von oben noch einmal in Errinnerung rufen, ist die Range der Werte von <code>temperature</code> zwischen 11.9 und 45.6 Grad Celsius. Die von <code>sales</code> jedoch zwischen 410 und 2837 Euro. Um den Einfluss von Prädiktoren, die verschiedene Einheiten haben, besser nachvollziehen zu können, kann man die Regressionskoeffizienten <strong>standardisieren</strong>. Diese standardisierten Koeffizienten nennen die meisten dann <span class="math inline">\(\beta\)</span> (im gegensatz zu <span class="math inline">\(b\)</span>). Die Einheit dieser <span class="math inline">\(\beta\)</span> ist dann für alle Prädiktoren identisch (nämlich Standardabwechungen), wodurch man sie besser vergleichen kann.</p>
 <p>Dafür kann man einen von zwei Wegen wählen: Entweder alle Variablen bereits vor der Regression standardisieren und die Regression dann “neu” berechnen, oder die Regressionskoeffizienten anhand der Formel <span class="math display">\[\beta_j = b_j \cdot \dfrac{s_{x_j}}{s_y}\]</span> umwandeln. Dabei ist <span class="math inline">\(b_j\)</span> der rohe Koeffizient, <span class="math inline">\(s_{x_i}\)</span> die Standardabweichung des jeweiligen Prädiktors und <span class="math inline">\(s_y\)</span> die Standardabweichung des Kriteriums.</p>
 <p>Zusammen mit den deskriptiven Statistiken würden wir in diesem Falle die folgenden standardisierten Koeffizienten erhalten.</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1"></a>beta_temperature &lt;-<span class="st"> </span><span class="fl">0.173</span> <span class="op">*</span><span class="st"> </span><span class="fl">6.00</span> <span class="op">/</span><span class="st"> </span><span class="fl">2.02</span></span>
-<span id="cb49-2"><a href="#cb49-2"></a>beta_sales &lt;-<span class="st"> </span><span class="fl">0.00119</span> <span class="op">*</span><span class="st"> </span><span class="dv">500</span> <span class="op">/</span><span class="st"> </span><span class="fl">2.02</span></span>
-<span id="cb49-3"><a href="#cb49-3"></a></span>
-<span id="cb49-4"><a href="#cb49-4"></a>beta_temperature</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>beta_temperature &lt;-<span class="st"> </span><span class="fl">0.173</span> <span class="op">*</span><span class="st"> </span><span class="fl">6.00</span> <span class="op">/</span><span class="st"> </span><span class="fl">2.02</span></span>
+<span id="cb50-2"><a href="#cb50-2"></a>beta_sales &lt;-<span class="st"> </span><span class="fl">0.00119</span> <span class="op">*</span><span class="st"> </span><span class="dv">500</span> <span class="op">/</span><span class="st"> </span><span class="fl">2.02</span></span>
+<span id="cb50-3"><a href="#cb50-3"></a></span>
+<span id="cb50-4"><a href="#cb50-4"></a>beta_temperature</span></code></pre></div>
 <pre><code>## [1] 0.5138614</code></pre>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a>beta_sales</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a>beta_sales</span></code></pre></div>
 <pre><code>## [1] 0.2945545</code></pre>
 <p>Eine gute Übung ist es jedoch, die Variablen vorher auch mal zu standardisieren und das Modell erneut zu schätzen. Die Funktion, mit der man in R standardisieren kann, ist <code>scale()</code>.</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a><span class="co"># Alle nummerischen Variablen standardisieren</span></span>
-<span id="cb53-2"><a href="#cb53-2"></a>water_park_scaled &lt;-<span class="st"> </span>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb53-3"><a href="#cb53-3"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
-<span id="cb53-4"><a href="#cb53-4"></a>    <span class="kw">across</span>(<span class="kw">where</span>(is.numeric), <span class="op">~</span><span class="st"> </span><span class="kw">scale</span>(.)[,<span class="dv">1</span>], <span class="dt">.names =</span> <span class="st">&quot;scaled_{col}&quot;</span>)</span>
-<span id="cb53-5"><a href="#cb53-5"></a>  )</span>
-<span id="cb53-6"><a href="#cb53-6"></a></span>
-<span id="cb53-7"><a href="#cb53-7"></a><span class="co"># Das neue Modell schätzen</span></span>
-<span id="cb53-8"><a href="#cb53-8"></a>water_scaled_model &lt;-<span class="st"> </span><span class="kw">lm</span>(scaled_beatings <span class="op">~</span><span class="st"> </span>scaled_temperature <span class="op">+</span><span class="st"> </span>scaled_sales, <span class="dt">data =</span> water_park_scaled)</span>
-<span id="cb53-9"><a href="#cb53-9"></a></span>
-<span id="cb53-10"><a href="#cb53-10"></a><span class="co"># Standardisierte Koeffizienten ausgeben lassen</span></span>
-<span id="cb53-11"><a href="#cb53-11"></a><span class="kw">tidy</span>(water_scaled_model)</span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a><span class="co"># Alle nummerischen Variablen standardisieren</span></span>
+<span id="cb54-2"><a href="#cb54-2"></a>water_park_scaled &lt;-<span class="st"> </span>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb54-3"><a href="#cb54-3"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb54-4"><a href="#cb54-4"></a>    <span class="kw">across</span>(<span class="kw">where</span>(is.numeric), <span class="op">~</span><span class="st"> </span><span class="kw">scale</span>(.)[,<span class="dv">1</span>], <span class="dt">.names =</span> <span class="st">&quot;scaled_{col}&quot;</span>)</span>
+<span id="cb54-5"><a href="#cb54-5"></a>  )</span>
+<span id="cb54-6"><a href="#cb54-6"></a></span>
+<span id="cb54-7"><a href="#cb54-7"></a><span class="co"># Das neue Modell schätzen</span></span>
+<span id="cb54-8"><a href="#cb54-8"></a>water_scaled_model &lt;-<span class="st"> </span><span class="kw">lm</span>(scaled_beatings <span class="op">~</span><span class="st"> </span>scaled_temperature <span class="op">+</span><span class="st"> </span>scaled_sales, <span class="dt">data =</span> water_park_scaled)</span>
+<span id="cb54-9"><a href="#cb54-9"></a></span>
+<span id="cb54-10"><a href="#cb54-10"></a><span class="co"># Standardisierte Koeffizienten ausgeben lassen</span></span>
+<span id="cb54-11"><a href="#cb54-11"></a><span class="kw">tidy</span>(water_scaled_model)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 5
 ##   term               estimate std.error statistic    p.value
 ##   &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
@@ -1323,9 +1339,9 @@ div.tocify {
 ## 3 scaled_sales       2.94e- 1    0.106   2.77e+ 0 0.00675</code></pre>
 <p>Die standardisierten Regressionskoeffizienten (<span class="math inline">\(\beta\)</span>) interpretiert man genau so, wie die rohen Koeffizienten (<span class="math inline">\(b\)</span>), außer, dass sich die Einheit der Variablen in Standardabweichungen geändert hat. Erhöht sich die <strong>Temperatur</strong> um eine Standardabweichung, dann erhöht sich die Anzahl der Schlägereien um 0.514 Standardabweichungen. Das kann man mithilfe der Standardabweichungen (siehe unten) wieder in verständliche Einheiten umrechnen. Erhöht sich die Temperatur um eine Standardabweichung (6 Grad Celsius), dann erhöht sich die Anzahl der Schlägereien um <span class="math inline">\(0.514 \cdot 2.02 = 1.04\)</span>, wenn alle anderen Prädiktoren konstant gehalten werden.</p>
 <p>Erhöht sich der <strong>Kiosk-Umsatz</strong> um eine Standardabweichung (500 Euro), dann erhöht sich die Anzahl der Schlägereien um <span class="math inline">\(0.294 * 2.02 = 0.59\)</span>. Nun können wir mit Sicherheit sagen, dass die Temperatur einen größeren Einfluss auf die Anzahl der Schlägereien im Schwimmbad hat.</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb55-2"><a href="#cb55-2"></a><span class="st">  </span><span class="kw">select</span>(beatings, temperature, sales) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb55-3"><a href="#cb55-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>(<span class="dt">type =</span> <span class="st">&quot;mean_sd&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a>water_park <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb56-2"><a href="#cb56-2"></a><span class="st">  </span><span class="kw">select</span>(beatings, temperature, sales) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb56-3"><a href="#cb56-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>(<span class="dt">type =</span> <span class="st">&quot;mean_sd&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 4
 ##   variable        n    mean     sd
 ##   &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
@@ -1340,7 +1356,7 @@ div.tocify {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#suzqesucvb .gt_table {
+#fxggzhcldk .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1363,7 +1379,7 @@ div.tocify {
   border-left-color: #D3D3D3;
 }
 
-#suzqesucvb .gt_heading {
+#fxggzhcldk .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1375,7 +1391,7 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#suzqesucvb .gt_title {
+#fxggzhcldk .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1385,7 +1401,7 @@ div.tocify {
   border-bottom-width: 0;
 }
 
-#suzqesucvb .gt_subtitle {
+#fxggzhcldk .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1395,13 +1411,13 @@ div.tocify {
   border-top-width: 0;
 }
 
-#suzqesucvb .gt_bottom_border {
+#fxggzhcldk .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#suzqesucvb .gt_col_headings {
+#fxggzhcldk .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1416,7 +1432,7 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#suzqesucvb .gt_col_heading {
+#fxggzhcldk .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1436,7 +1452,7 @@ div.tocify {
   overflow-x: hidden;
 }
 
-#suzqesucvb .gt_column_spanner_outer {
+#fxggzhcldk .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1448,15 +1464,15 @@ div.tocify {
   padding-right: 4px;
 }
 
-#suzqesucvb .gt_column_spanner_outer:first-child {
+#fxggzhcldk .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#suzqesucvb .gt_column_spanner_outer:last-child {
+#fxggzhcldk .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#suzqesucvb .gt_column_spanner {
+#fxggzhcldk .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1468,7 +1484,7 @@ div.tocify {
   width: 100%;
 }
 
-#suzqesucvb .gt_group_heading {
+#fxggzhcldk .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1490,7 +1506,7 @@ div.tocify {
   vertical-align: middle;
 }
 
-#suzqesucvb .gt_empty_group_heading {
+#fxggzhcldk .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1505,19 +1521,19 @@ div.tocify {
   vertical-align: middle;
 }
 
-#suzqesucvb .gt_striped {
+#fxggzhcldk .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#suzqesucvb .gt_from_md > :first-child {
+#fxggzhcldk .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#suzqesucvb .gt_from_md > :last-child {
+#fxggzhcldk .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#suzqesucvb .gt_row {
+#fxggzhcldk .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1536,7 +1552,7 @@ div.tocify {
   overflow-x: hidden;
 }
 
-#suzqesucvb .gt_stub {
+#fxggzhcldk .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1548,7 +1564,7 @@ div.tocify {
   padding-left: 12px;
 }
 
-#suzqesucvb .gt_summary_row {
+#fxggzhcldk .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1558,7 +1574,7 @@ div.tocify {
   padding-right: 5px;
 }
 
-#suzqesucvb .gt_first_summary_row {
+#fxggzhcldk .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1568,7 +1584,7 @@ div.tocify {
   border-top-color: #D3D3D3;
 }
 
-#suzqesucvb .gt_grand_summary_row {
+#fxggzhcldk .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1578,7 +1594,7 @@ div.tocify {
   padding-right: 5px;
 }
 
-#suzqesucvb .gt_first_grand_summary_row {
+#fxggzhcldk .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1588,7 +1604,7 @@ div.tocify {
   border-top-color: #D3D3D3;
 }
 
-#suzqesucvb .gt_table_body {
+#fxggzhcldk .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1597,7 +1613,7 @@ div.tocify {
   border-bottom-color: #D3D3D3;
 }
 
-#suzqesucvb .gt_footnotes {
+#fxggzhcldk .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1611,13 +1627,13 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#suzqesucvb .gt_footnote {
+#fxggzhcldk .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#suzqesucvb .gt_sourcenotes {
+#fxggzhcldk .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1631,46 +1647,46 @@ div.tocify {
   border-right-color: #D3D3D3;
 }
 
-#suzqesucvb .gt_sourcenote {
+#fxggzhcldk .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#suzqesucvb .gt_left {
+#fxggzhcldk .gt_left {
   text-align: left;
 }
 
-#suzqesucvb .gt_center {
+#fxggzhcldk .gt_center {
   text-align: center;
 }
 
-#suzqesucvb .gt_right {
+#fxggzhcldk .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#suzqesucvb .gt_font_normal {
+#fxggzhcldk .gt_font_normal {
   font-weight: normal;
 }
 
-#suzqesucvb .gt_font_bold {
+#fxggzhcldk .gt_font_bold {
   font-weight: bold;
 }
 
-#suzqesucvb .gt_font_italic {
+#fxggzhcldk .gt_font_italic {
   font-style: italic;
 }
 
-#suzqesucvb .gt_super {
+#fxggzhcldk .gt_super {
   font-size: 65%;
 }
 
-#suzqesucvb .gt_footnote_marks {
+#fxggzhcldk .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="suzqesucvb" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="fxggzhcldk" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -1715,24 +1731,24 @@ div.tocify {
 <div id="modellvergleiche" class="section level2">
 <h2>Modellvergleiche</h2>
 <p>Ist unser Modell mit zwei Prädiktoren eigentlich signifikant besser als ein Modell mit nur einem Prädiktor? Das können wir ganz einfach testen lassen. Zunächst müssen wir die beiden Modelle definieren. Wir betrachten das korrigierte <span class="math inline">\(R^2_\text{adj}\)</span> und stellen eine leichte Verbesserung von .553 (Modell 1) auf .581 (Modell 2) fest. Aber ist dieser Unterschied signifikant?</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a>model_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(beatings <span class="op">~</span><span class="st"> </span>temperature, <span class="dt">data =</span> water_park)</span>
-<span id="cb57-2"><a href="#cb57-2"></a></span>
-<span id="cb57-3"><a href="#cb57-3"></a>model_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(beatings <span class="op">~</span><span class="st"> </span>temperature <span class="op">+</span><span class="st"> </span>sales, <span class="dt">data =</span> water_park)</span>
-<span id="cb57-4"><a href="#cb57-4"></a></span>
-<span id="cb57-5"><a href="#cb57-5"></a><span class="kw">glance</span>(model_<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a>model_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(beatings <span class="op">~</span><span class="st"> </span>temperature, <span class="dt">data =</span> water_park)</span>
+<span id="cb58-2"><a href="#cb58-2"></a></span>
+<span id="cb58-3"><a href="#cb58-3"></a>model_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(beatings <span class="op">~</span><span class="st"> </span>temperature <span class="op">+</span><span class="st"> </span>sales, <span class="dt">data =</span> water_park)</span>
+<span id="cb58-4"><a href="#cb58-4"></a></span>
+<span id="cb58-5"><a href="#cb58-5"></a><span class="kw">glance</span>(model_<span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 12
 ##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
 ##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1     0.557         0.553  1.35      123. 4.99e-19     1  -171.  348.  356.
 ## # ... with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a><span class="kw">glance</span>(model_<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a><span class="kw">glance</span>(model_<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 12
 ##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
 ##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1     0.590         0.581  1.31      69.7 1.76e-19     2  -167.  343.  353.
 ## # ... with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
 <p>Diese Frage können wir mit einem Chi-Quadrat-Differenztest berechnen, den R (verwirrenderweise) in der Funktion <code>anova()</code> zur Verfügung stellt.</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a><span class="kw">anova</span>(model_<span class="dv">1</span>, model_<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a><span class="kw">anova</span>(model_<span class="dv">1</span>, model_<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Model 1: beatings ~ temperature

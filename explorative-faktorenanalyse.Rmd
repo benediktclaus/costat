@@ -408,7 +408,7 @@ nichols_efa %>%
   rename(loadings = PC1) %>% 
   ggplot(aes(x = loadings, item, fill = Relevant)) +
   geom_col() +
-  scale_fill_personal() +
+  scale_fill_personal(reverse = TRUE) +
   theme(legend.position = "bottom")
 ```
 
