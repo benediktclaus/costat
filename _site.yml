@@ -68,6 +68,7 @@ navbar:
         - text: "Explorative Faktorenanalyse"
           href: explorative-faktorenanalyse.html
         - text: "Konfirmatorische Faktorenanalyse"
+          href: konfirmatorische-faktorenanalyse.html
   right:
     - icon: fa-question
       menu:

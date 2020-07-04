@@ -100,7 +100,7 @@ party_cfa <-  cfa(party_model, data = party_people)
 summary(party_cfa)
 ```
 
-Der Output ist schon ziemlich ausführlich, aber richtig informativ wird er, wenn wir uns die standardisierten Koeffizienten und zusätzliche Fit-Measures ausgeben lassen.
+Der Output ist schon ziemlich ausführlich, aber richtig informativ wird er, wenn wir uns die standardisierten Koeffizienten und zusätzliche Fit-Measures ausgeben lassen. Die standardisierten Koeffizienten finden wir dann in der Spalte `Std.all`.
 
 ```{r}
 summary(party_cfa, standardized = TRUE, fit.measures = TRUE)
@@ -108,7 +108,7 @@ summary(party_cfa, standardized = TRUE, fit.measures = TRUE)
 
 Diesen Output kann man mit dem Paket `broom` natürlich auch *tidy* machen, um sie weiter verwenden zu können, oder um mit `glance()` einen schnellen Blick auf die Fit-Measures zu kriegen.
 
-```{r}
+```{r eval=FALSE}
 library(broom)
 
 tidy(party_cfa)

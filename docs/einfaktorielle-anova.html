@@ -540,7 +540,9 @@ div.tocify {
     <li>
       <a href="explorative-faktorenanalyse.html">Explorative Faktorenanalyse</a>
     </li>
-    <li class="dropdown-header">Konfirmatorische Faktorenanalyse</li>
+    <li>
+      <a href="konfirmatorische-faktorenanalyse.html">Konfirmatorische Faktorenanalyse</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -710,8 +712,8 @@ div.tocify {
 ## Degrees of freedom 2: 55.94 
 ## p-value: 0 
 ## 
-## Explanatory measure of effect size: 0.9 
-## Bootstrap CI: [0.78; 1.06]</code></pre>
+## Explanatory measure of effect size: 0.89 
+## Bootstrap CI: [0.77; 1.02]</code></pre>
 <p>Wir erhalten ein signifikantes Ergebnis (<span class="math inline">\(F_t(3, 55.94)= 91.24, p &lt; .001, \xi = .91\)</span>), was uns auch hier wieder sagt, dass sich die Gruppenmittelwerte unterscheiden. Robuste Post-hoc-Tests gibt es natürlich auch wieder; bei einfaktoriellen Varianzanalysen nutzt man die Funktion <code>lincon()</code>.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">lincon</span>(joy <span class="op">~</span><span class="st"> </span>backpack, <span class="dt">data =</span> phantasialand)</span></code></pre></div>
 <pre><code>## Call:
@@ -935,7 +937,7 @@ div.tocify {
 ## p-value: 0.00872 
 ## 
 ## Explanatory measure of effect size: 0.91 
-## Bootstrap CI: [0.77; 1.38]</code></pre>
+## Bootstrap CI: [0.77; 1.44]</code></pre>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="co"># Post-hoc-Tests</span></span>
 <span id="cb45-2"><a href="#cb45-2"></a><span class="kw">lincon</span>(displace <span class="op">~</span><span class="st"> </span>phallus, <span class="dt">data =</span> penis)</span></code></pre></div>
 <pre><code>## Call:
