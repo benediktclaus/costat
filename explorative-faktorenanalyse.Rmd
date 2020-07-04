@@ -36,13 +36,14 @@ Die explorative Faktorenanalyse nutzen wir, um latente (d.h. nicht beobachtete) 
 # Pakete 
 Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket `costatcompanion`.
 
-Zudem benötigen wir das Paket `psych`, mit dem wir die Faktorenanalyse durchführen werden.
+Zudem benötigen wir das Paket `psych`, mit dem wir die Faktorenanalyse durchführen werden; für Korrelogramme benötigen wir `corrgram`.
 
 ```{r message=FALSE}
 library(tidyverse)
 library(haven)
 library(rstatix)
 library(costatcompanion)
+library(corrgram)
 library(psych)
 ```
 
@@ -113,7 +114,7 @@ party_recoded <- party_raw %>%
   )
 
 party_recoded %>% 
-  corrgram::corrgram(order = TRUE)
+  corrgram(panel = panel.fill, order = TRUE)
 ```
 
 Und schon sind alle Items miteinander positiv korreliert. Anhand der bereits sichtbaren Clusterung können wir davon ausgehen, dass mindestens ein latenter Faktor vorhanden ist.

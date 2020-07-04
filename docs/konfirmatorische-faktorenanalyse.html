@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Konfirmatorische Faktorenanalyse</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link rel="shortcut icon" href="images/broom.ico">
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Chamber of Statistics</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Allgemeines
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="software.html">Software</a>
+    </li>
+    <li>
+      <a href="r-basics.html">R Basics</a>
+    </li>
+    <li>
+      <a href="stil.html">Stil</a>
+    </li>
+    <li>
+      <a href="pakete.html">Pakete</a>
+    </li>
+    <li>
+      <a href="daten-import.html">Daten-Import</a>
+    </li>
+    <li>
+      <a href="data-wrangling.html">Data Wrangling</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="regression.html">Überblick</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="korrelation.html">Korrelation</a>
+    </li>
+    <li>
+      <a href="korrelation-messwiederholung.html">Korrelation mit Messwiederholung</a>
+    </li>
+    <li>
+      <a href="lineare-regression.html">Lineare Regression</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Mittelwerte vergleichen
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="mittelwerte-vergleichen.html">Überblick</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">t-Tests</li>
+    <li>
+      <a href="t-test-einstichprobe.html">Bei einer Stichprobe</a>
+    </li>
+    <li>
+      <a href="t-test-unabhaengig.html">Bei unabhängigen Stichproben</a>
+    </li>
+    <li>
+      <a href="t-test-abhaengig.html">Bei abhängigen Stichproben</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">ANOVAs</li>
+    <li>
+      <a href="einfaktorielle-anova.html">Einfaktorielle ANOVA</a>
+    </li>
+    <li>
+      <a href="faktorielle-anova.html">Faktorielle ANOVA</a>
+    </li>
+    <li class="dropdown-header">ANCOVA</li>
+    <li>
+      <a href="anova-messwiederholung.html">ANOVA mit Messwiederholung</a>
+    </li>
+    <li>
+      <a href="mixed-anova.html">Mixed ANOVA</a>
+    </li>
+    <li>
+      <a href="kontraste.html">Geplante Kontraste</a>
+    </li>
+    <li>
+      <a href="post-hoc-tests.html">Post-hoc-Tests</a>
+    </li>
+    <li class="divider"></li>
+  </ul>
+</li>
+<li>
+  <a href="effektstaerken.html">Effektstärken</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Faktorenanalyse
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="explorative-faktorenanalyse.html">Explorative Faktorenanalyse</a>
+    </li>
+    <li class="dropdown-header">Konfirmatorische Faktorenanalyse</li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-question"></span>
+     
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="voraussetzungen.html">Voraussetzungen im GLM</a>
+    </li>
+    <li>
+      <a href="formelsammlung.html">Formelsammlung</a>
+    </li>
+    <li>
+      <a href="zentraler-grenzwertsatz.html">Zentraler Grenzwertsatz</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">
+    <span class="fa fa-info"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Konfirmatorische Faktorenanalyse</h1>
+
+</div>
+
+
+<!-- Only when working on it -->
+<!-- Use this after finalizing work -->
+<!-- ```{r echo=FALSE, message=FALSE} -->
+<!-- knitr::read_chunk("setup.R") -->
+<!-- ``` -->
+<!-- ```{r echo=FALSE, message=FALSE} -->
+<!-- <<setup>> -->
+<!-- ``` -->
+<!-- Spanner Image -->
+<p><img src="images/party_r.jpg" /></p>
+<p>Bei der <strong>konfirmatorischen Faktorenanalyse (CFA)</strong> sind wir etwas sicherer als bei der <a href="explorative-faktorenanalyse.html">explorativen Schwester</a>, denn hier haben wir bereits eine Idee davon welche Faktorenstruktur unseren Daten zugrunde liegt. Mit der CFA können wir also überprüfen, ob unsere Daten zu dem theoretischen Modell passen. Das beurteilen wir anhand des <strong>Modell-Fits</strong>.</p>
+<div id="pakete" class="section level1">
+<h1>Pakete</h1>
+<p>Alle Berechnungen und Abbildungen können wir mit unseren <a href="pakete.html">Standardpaketen</a> durchführen. Wir benötigen das <code>tidyverse</code> zum Data Wrangling und zur Visualisierung der Daten. <code>haven</code> benötigen wir für den Import von SPSS-Dateien und <code>rstatix</code> für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket <code>costatcompanion</code>.</p>
+<p>Für die CFA benötigen wir das Paket <code>lavaan</code>, für Korrelogramme das Paket <code>corrgram</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(haven)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(rstatix)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(costatcompanion)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="kw">library</span>(corrgram)</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="kw">library</span>(lavaan)</span></code></pre></div>
+</div>
+<div id="beispiel" class="section level1">
+<h1>Beispiel</h1>
+<p>Bei der <a href="explorative-faktorenanalyse.html">explorativen Faktorenanalyse</a> haben wir bereits den Fragebogen zur Freude an Festivitäten (FFF) kennengelernt, bei dem wir eine zugrundeliegende Struktur mit drei latenten Faktoren vermuten. Diese drei Faktoren waren “Vorfreude”, “Tanzen” und “Geselligkeit”. Nun sind wir auf mehrere Feiern und in Clubs im Raum Dortmund gegangen und haben den Fragebogen 442 Probanden erneut ausfüllen lassen. Nun wollen wir überprüfen, ob die in der ersten Stichprobe gefundene Faktorenstruktur auch für diese Stichprobe angemessen ist.</p>
+<p>Die neuen Daten finden wir in der Datei <code>party_people.sav</code> im <a href="https://github.com/benediktclaus/costat/tree/master/data">GitHub-Repository</a>, oder als <code>party_people</code> im <a href="pakete.html#costatcompanion"><code>costatcompanion</code></a>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>party_people</span></code></pre></div>
+<pre><code>## # A tibble: 442 x 16
+##    id    item_1 item_2 item_3 item_4 item_5 item_6 item_7 item_8 item_9 item_10
+##    &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1 1       5.95   3.96   3.11   4.29   5.69   5.53   7.36   4.82   4.07    6.14
+##  2 2       4.77   2.74   3.80   4.93   4.61   6.83   6.32   6.67   4.70    2.64
+##  3 3       5.34   6.44   6.98   5.24   3.91   3.30   4.90   5.41   4.60    6.24
+##  4 4       3.25   4.61   5.49   2.83   5.03   5.52   2.17   2.72   3.39    3.06
+##  5 5       7.17   6.64   6.28   6.78   5.03   5.17   4.16   5.53   6.29    7.92
+##  6 6       4.29   7.51   6.01   8.74   7.42   3.43   5.67   6.31   7.90   10   
+##  7 7       1.60   2.91   2.99   5.16   4.29   4.16   5.06   6.58   3.48    5.92
+##  8 8       6.20   6.50   3.48   3.33   4.70   3.58   4.94   1.18   4.49    3.72
+##  9 9       6.18   6.05   5.44   5.94   4.28   4.53   3.99   4.13   5.43    6.18
+## 10 10      3.77   6.63   6.01   5.01   5.06   3.65   2.59   3.46   5.26    6.11
+## # ... with 432 more rows, and 5 more variables: item_11 &lt;dbl&gt;, item_12 &lt;dbl&gt;,
+## #   item_13 &lt;dbl&gt;, item_14 &lt;dbl&gt;, item_15 &lt;dbl&gt;</code></pre>
+<div id="voraussetzungen" class="section level2">
+<h2>Voraussetzungen</h2>
+<p>Siehe die <a href="explorative-faktorenanalyse.html#Voraussetzungen">Voraussetzungen bei der EFA</a>, wobei Bartlett und KMO hier entfallen. Die Daten sollten pro Item nicht unbedingt schief sein und jeder Faktor sollte mit mindestens 3 Items/Variablen geschätzt werden.</p>
+</div>
+<div id="vorgehen" class="section level2">
+<h2>Vorgehen</h2>
+<p>Eine gute Übersicht über das Vorgehen ist bei <span class="citation">Schreiber (<a href="#ref-Schreiber.2017" role="doc-biblioref">2017</a>, S. 635)</span> dargestellt.</p>
+</div>
+<div id="eda" class="section level2">
+<h2>EDA</h2>
+<p>Eine gute Idee ist es, wie immer, sich die Daten vorher einmal anzuschauen. Um uns die Arbeit einfacher zu machen, entfernen wir aber zunächst wieder die Probanden ID.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>party_people_raw &lt;-<span class="st"> </span>party_people <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>id)</span>
+<span id="cb4-3"><a href="#cb4-3"></a></span>
+<span id="cb4-4"><a href="#cb4-4"></a>party_people_raw</span></code></pre></div>
+<pre><code>## # A tibble: 442 x 15
+##    item_1 item_2 item_3 item_4 item_5 item_6 item_7 item_8 item_9 item_10
+##     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1   5.95   3.96   3.11   4.29   5.69   5.53   7.36   4.82   4.07    6.14
+##  2   4.77   2.74   3.80   4.93   4.61   6.83   6.32   6.67   4.70    2.64
+##  3   5.34   6.44   6.98   5.24   3.91   3.30   4.90   5.41   4.60    6.24
+##  4   3.25   4.61   5.49   2.83   5.03   5.52   2.17   2.72   3.39    3.06
+##  5   7.17   6.64   6.28   6.78   5.03   5.17   4.16   5.53   6.29    7.92
+##  6   4.29   7.51   6.01   8.74   7.42   3.43   5.67   6.31   7.90   10   
+##  7   1.60   2.91   2.99   5.16   4.29   4.16   5.06   6.58   3.48    5.92
+##  8   6.20   6.50   3.48   3.33   4.70   3.58   4.94   1.18   4.49    3.72
+##  9   6.18   6.05   5.44   5.94   4.28   4.53   3.99   4.13   5.43    6.18
+## 10   3.77   6.63   6.01   5.01   5.06   3.65   2.59   3.46   5.26    6.11
+## # ... with 432 more rows, and 5 more variables: item_11 &lt;dbl&gt;, item_12 &lt;dbl&gt;,
+## #   item_13 &lt;dbl&gt;, item_14 &lt;dbl&gt;, item_15 &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>party_people_raw <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 15 x 13
+##    variable     n   min   max median    q1    q3   iqr   mad  mean    sd    se
+##    &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 item_1     442 0     10      4.80  3.71  6.13  2.42  1.76  4.91  1.78 0.085
+##  2 item_10    442 0.059 10      4.96  3.85  6.13  2.28  1.71  5.01  1.74 0.083
+##  3 item_11    442 0.904  9.60   5.12  4.01  6.16  2.15  1.57  5.14  1.67 0.079
+##  4 item_12    442 0      9.78   5.04  3.90  6.27  2.36  1.72  5.05  1.68 0.08 
+##  5 item_13    442 0     10      5.06  3.76  6.14  2.37  1.74  4.97  1.71 0.081
+##  6 item_14    442 0      9.81   4.97  3.92  6.15  2.22  1.64  4.98  1.74 0.083
+##  7 item_15    442 1.04   9.88   4.99  3.86  6.2   2.34  1.72  5.03  1.61 0.077
+##  8 item_2     442 0.329  9.03   4.94  3.87  6.05  2.17  1.60  5.00  1.62 0.077
+##  9 item_3     442 0      9.93   5.05  3.96  6.22  2.25  1.69  5.07  1.65 0.079
+## 10 item_4     442 0.097 10      4.90  3.91  6.08  2.17  1.65  4.94  1.71 0.081
+## 11 item_5     442 0.213  9.59   5.05  4.14  6.11  1.97  1.52  5.11  1.56 0.074
+## 12 item_6     442 0      9.86   5.03  3.96  6.02  2.06  1.55  4.96  1.50 0.072
+## 13 item_7     442 0.43   8.71   4.93  3.95  5.84  1.89  1.41  4.88  1.48 0.071
+## 14 item_8     442 0.087 10      5.02  3.73  6.32  2.59  1.93  5.00  1.91 0.091
+## 15 item_9     442 0      9.88   5.16  3.90  6.34  2.44  1.79  5.10  1.82 0.086
+## # ... with 1 more variable: ci &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>party_people_raw <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="st">  </span><span class="kw">corrgram</span>(<span class="dt">panel =</span> panel.fill, <span class="dt">order =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<p><img src="konfirmatorische-faktorenanalyse_files/figure-html/unnamed-chunk-4-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p>Bei der CFA müssen wir falsch herum codierte Items übrigens nicht umkodieren; dadurch würde sich nur das Vorzeichen des standardisierten Pfadkoeffizienten ändern, der Modell-Fit jedoch nicht.</p>
+</div>
+<div id="durchführung" class="section level2">
+<h2>Durchführung</h2>
+<p>Zunächst müssen wir das hypothetische Modell definieren. Aus der <a href="explorative-faktorenanalyse.html">EFA</a> ging hervor, dass auf dem Faktor “Vorfreude” die Items 1, 4, 7, 12, 13 und 15 laden. Zum Faktor “Tanzen” sollen die Items 3, 5, 9 und 11 gehören und zum Faktor “Geselligkeit” die Items 2, 6, 8, 10 und 14. Das Modell müssen wir in der lavaan-Syntax formulieren, die relativ selbsterklärend ist. (Reflektive) Faktoren werden durch <code>=~</code> definiert und die Syntax muss in Anführgungszeichen stehen (<code>''</code>).</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>party_model &lt;-<span class="st"> &#39;</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="st">anticipation =~ item_1 + item_4 + item_7 + item_12 + item_13 + item_15</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="st">dancing =~ item_3 + item_5 + item_9 + item_11</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="st">socializing =~ item_2 + item_6 + item_8 + item_10 + item_14</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="st">&#39;</span></span></code></pre></div>
+<p>Dieses Modell können wir dann mit der Funktion <code>cfa()</code> schätzen lassen. Die Ergebnisse speichern wir in einem Objekt, um uns danach eine Zusammenfassung ausgeben zu lassen.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>party_cfa &lt;-<span class="st">  </span><span class="kw">cfa</span>(party_model, <span class="dt">data =</span> party_people)</span>
+<span id="cb10-2"><a href="#cb10-2"></a></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="kw">summary</span>(party_cfa)</span></code></pre></div>
+<pre><code>## lavaan 0.6-6 ended normally after 43 iterations
+## 
+##   Estimator                                         ML
+##   Optimization method                           NLMINB
+##   Number of free parameters                         33
+##                                                       
+##   Number of observations                           442
+##                                                       
+## Model Test User Model:
+##                                                       
+##   Test statistic                               320.076
+##   Degrees of freedom                                87
+##   P-value (Chi-square)                           0.000
+## 
+## Parameter Estimates:
+## 
+##   Standard errors                             Standard
+##   Information                                 Expected
+##   Information saturated (h1) model          Structured
+## 
+## Latent Variables:
+##                    Estimate  Std.Err  z-value  P(&gt;|z|)
+##   anticipation =~                                     
+##     item_1            1.000                           
+##     item_4            0.853    0.069   12.343    0.000
+##     item_7            0.633    0.060   10.589    0.000
+##     item_12           0.835    0.068   12.302    0.000
+##     item_13           0.931    0.070   13.356    0.000
+##     item_15          -0.826    0.065  -12.663    0.000
+##   dancing =~                                          
+##     item_3            1.000                           
+##     item_5            0.766    0.080    9.548    0.000
+##     item_9            1.094    0.099   11.077    0.000
+##     item_11           0.953    0.089   10.738    0.000
+##   socializing =~                                      
+##     item_2            1.000                           
+##     item_6           -0.805    0.080  -10.011    0.000
+##     item_8            1.318    0.108   12.219    0.000
+##     item_10           1.189    0.098   12.111    0.000
+##     item_14           1.005    0.094   10.685    0.000
+## 
+## Covariances:
+##                    Estimate  Std.Err  z-value  P(&gt;|z|)
+##   anticipation ~~                                     
+##     dancing           0.763    0.110    6.948    0.000
+##     socializing       0.853    0.109    7.834    0.000
+##   dancing ~~                                          
+##     socializing       0.562    0.090    6.245    0.000
+## 
+## Variances:
+##                    Estimate  Std.Err  z-value  P(&gt;|z|)
+##    .item_1            1.485    0.127   11.704    0.000
+##    .item_4            1.687    0.131   12.851    0.000
+##    .item_7            1.526    0.112   13.645    0.000
+##    .item_12           1.637    0.127   12.875    0.000
+##    .item_13           1.471    0.121   12.104    0.000
+##    .item_15           1.439    0.114   12.647    0.000
+##    .item_3            1.425    0.133   10.676    0.000
+##    .item_5            1.676    0.131   12.812    0.000
+##    .item_9            1.726    0.161   10.728    0.000
+##    .item_11           1.583    0.138   11.452    0.000
+##    .item_2            1.484    0.120   12.397    0.000
+##    .item_6            1.533    0.115   13.329    0.000
+##    .item_8            1.672    0.151   11.037    0.000
+##    .item_10           1.442    0.128   11.249    0.000
+##    .item_14           1.876    0.145   12.902    0.000
+##     anticipation      1.675    0.203    8.240    0.000
+##     dancing           1.305    0.182    7.168    0.000
+##     socializing       1.124    0.159    7.084    0.000</code></pre>
+<p>Der Output ist schon ziemlich ausführlich, aber richtig informativ wird er, wenn wir uns die standardisierten Koeffizienten und zusätzliche Fit-Measures ausgeben lassen.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">summary</span>(party_cfa, <span class="dt">standardized =</span> <span class="ot">TRUE</span>, <span class="dt">fit.measures =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>## lavaan 0.6-6 ended normally after 43 iterations
+## 
+##   Estimator                                         ML
+##   Optimization method                           NLMINB
+##   Number of free parameters                         33
+##                                                       
+##   Number of observations                           442
+##                                                       
+## Model Test User Model:
+##                                                       
+##   Test statistic                               320.076
+##   Degrees of freedom                                87
+##   P-value (Chi-square)                           0.000
+## 
+## Model Test Baseline Model:
+## 
+##   Test statistic                              2257.910
+##   Degrees of freedom                               105
+##   P-value                                        0.000
+## 
+## User Model versus Baseline Model:
+## 
+##   Comparative Fit Index (CFI)                    0.892
+##   Tucker-Lewis Index (TLI)                       0.869
+## 
+## Loglikelihood and Information Criteria:
+## 
+##   Loglikelihood user model (H0)             -11849.897
+##   Loglikelihood unrestricted model (H1)     -11689.859
+##                                                       
+##   Akaike (AIC)                               23765.794
+##   Bayesian (BIC)                             23900.807
+##   Sample-size adjusted Bayesian (BIC)        23796.080
+## 
+## Root Mean Square Error of Approximation:
+## 
+##   RMSEA                                          0.078
+##   90 Percent confidence interval - lower         0.069
+##   90 Percent confidence interval - upper         0.087
+##   P-value RMSEA &lt;= 0.05                          0.000
+## 
+## Standardized Root Mean Square Residual:
+## 
+##   SRMR                                           0.076
+## 
+## Parameter Estimates:
+## 
+##   Standard errors                             Standard
+##   Information                                 Expected
+##   Information saturated (h1) model          Structured
+## 
+## Latent Variables:
+##                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+##   anticipation =~                                                       
+##     item_1            1.000                               1.294    0.728
+##     item_4            0.853    0.069   12.343    0.000    1.104    0.648
+##     item_7            0.633    0.060   10.589    0.000    0.819    0.553
+##     item_12           0.835    0.068   12.302    0.000    1.081    0.645
+##     item_13           0.931    0.070   13.356    0.000    1.204    0.705
+##     item_15          -0.826    0.065  -12.663    0.000   -1.069   -0.665
+##   dancing =~                                                            
+##     item_3            1.000                               1.142    0.691
+##     item_5            0.766    0.080    9.548    0.000    0.875    0.560
+##     item_9            1.094    0.099   11.077    0.000    1.250    0.689
+##     item_11           0.953    0.089   10.738    0.000    1.089    0.654
+##   socializing =~                                                        
+##     item_2            1.000                               1.060    0.657
+##     item_6           -0.805    0.080  -10.011    0.000   -0.854   -0.568
+##     item_8            1.318    0.108   12.219    0.000    1.397    0.734
+##     item_10           1.189    0.098   12.111    0.000    1.261    0.724
+##     item_14           1.005    0.094   10.685    0.000    1.065    0.614
+## 
+## Covariances:
+##                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+##   anticipation ~~                                                       
+##     dancing           0.763    0.110    6.948    0.000    0.516    0.516
+##     socializing       0.853    0.109    7.834    0.000    0.622    0.622
+##   dancing ~~                                                            
+##     socializing       0.562    0.090    6.245    0.000    0.464    0.464
+## 
+## Variances:
+##                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+##    .item_1            1.485    0.127   11.704    0.000    1.485    0.470
+##    .item_4            1.687    0.131   12.851    0.000    1.687    0.581
+##    .item_7            1.526    0.112   13.645    0.000    1.526    0.695
+##    .item_12           1.637    0.127   12.875    0.000    1.637    0.584
+##    .item_13           1.471    0.121   12.104    0.000    1.471    0.503
+##    .item_15           1.439    0.114   12.647    0.000    1.439    0.557
+##    .item_3            1.425    0.133   10.676    0.000    1.425    0.522
+##    .item_5            1.676    0.131   12.812    0.000    1.676    0.686
+##    .item_9            1.726    0.161   10.728    0.000    1.726    0.525
+##    .item_11           1.583    0.138   11.452    0.000    1.583    0.572
+##    .item_2            1.484    0.120   12.397    0.000    1.484    0.569
+##    .item_6            1.533    0.115   13.329    0.000    1.533    0.678
+##    .item_8            1.672    0.151   11.037    0.000    1.672    0.461
+##    .item_10           1.442    0.128   11.249    0.000    1.442    0.476
+##    .item_14           1.876    0.145   12.902    0.000    1.876    0.623
+##     anticipation      1.675    0.203    8.240    0.000    1.000    1.000
+##     dancing           1.305    0.182    7.168    0.000    1.000    1.000
+##     socializing       1.124    0.159    7.084    0.000    1.000    1.000</code></pre>
+<p>Diesen Output kann man mit dem Paket <code>broom</code> natürlich auch <em>tidy</em> machen, um sie weiter verwenden zu können, oder um mit <code>glance()</code> einen schnellen Blick auf die Fit-Measures zu kriegen.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">library</span>(broom)</span>
+<span id="cb14-2"><a href="#cb14-2"></a></span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="kw">tidy</span>(party_cfa)</span></code></pre></div>
+<pre><code>## # A tibble: 36 x 9
+##    term        op    estimate std.error statistic p.value std.lv std.all std.nox
+##    &lt;chr&gt;       &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1 anticipati~ =~       1        0          NA         NA  1.29    0.728   0.728
+##  2 anticipati~ =~       0.853    0.0691     12.3        0  1.10    0.648   0.648
+##  3 anticipati~ =~       0.633    0.0598     10.6        0  0.819   0.553   0.553
+##  4 anticipati~ =~       0.835    0.0679     12.3        0  1.08    0.645   0.645
+##  5 anticipati~ =~       0.931    0.0697     13.4        0  1.20    0.705   0.705
+##  6 anticipati~ =~      -0.826    0.0652    -12.7        0 -1.07   -0.665  -0.665
+##  7 dancing =~~ =~       1        0          NA         NA  1.14    0.691   0.691
+##  8 dancing =~~ =~       0.766    0.0802      9.55       0  0.875   0.560   0.560
+##  9 dancing =~~ =~       1.09     0.0988     11.1        0  1.25    0.689   0.689
+## 10 dancing =~~ =~       0.953    0.0888     10.7        0  1.09    0.654   0.654
+## # ... with 26 more rows</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">glance</span>(party_cfa)</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 17
+##    agfi    AIC    BIC   cfi chisq  npar  rmsea rmsea.conf.high   srmr   tli
+##   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;           &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1 0.878 23766. 23901. 0.892  320.    33 0.0779          0.0871 0.0761 0.869
+## # ... with 7 more variables: converged &lt;lgl&gt;, estimator &lt;chr&gt;, ngroups &lt;int&gt;,
+## #   missing_method &lt;chr&gt;, nobs &lt;int&gt;, norig &lt;int&gt;, nexcluded &lt;int&gt;</code></pre>
+</div>
+<div id="beurteilung-des-modell-fits" class="section level2">
+<h2>Beurteilung des Modell-Fits</h2>
+<p>Es gibt unzählige “Vorgaben” oder “Grenzen”, in die diese Fit-Measures fallen sollen , damit ein Modell “akzeptabel” ist. Wenn man mit diesen Kriterien arbeiten möchte, ist es falsch, ein “Schwarz-Weiß-”, oder “Alles-oder-Nichts-Denken” an den Tag zu legen. Nur weil ein (willkürlich gewähltes) Kriterium knapp nicht erfüllt wird, muss das Modell nicht schlecht sein. Es kommt, wie immer bei Faktorenanalysen, zunächst einmal auf die <strong>Interpretierbarkeit</strong> des Modells an.</p>
+<p>Wer solche Kriterien nutzen möchte, ist bei <span class="citation">Schreiber (<a href="#ref-Schreiber.2017" role="doc-biblioref">2017</a>, S. 639)</span> gut aufgehoben. Die wichtigsten Fit-Measures sind in der unteren Tabelle.</p>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#jioblivxlz .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#jioblivxlz .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jioblivxlz .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#jioblivxlz .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#jioblivxlz .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jioblivxlz .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jioblivxlz .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#jioblivxlz .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#jioblivxlz .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#jioblivxlz .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#jioblivxlz .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#jioblivxlz .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#jioblivxlz .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#jioblivxlz .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#jioblivxlz .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#jioblivxlz .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#jioblivxlz .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#jioblivxlz .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#jioblivxlz .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jioblivxlz .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#jioblivxlz .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jioblivxlz .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#jioblivxlz .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jioblivxlz .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jioblivxlz .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#jioblivxlz .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jioblivxlz .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#jioblivxlz .gt_left {
+  text-align: left;
+}
+
+#jioblivxlz .gt_center {
+  text-align: center;
+}
+
+#jioblivxlz .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#jioblivxlz .gt_font_normal {
+  font-weight: normal;
+}
+
+#jioblivxlz .gt_font_bold {
+  font-weight: bold;
+}
+
+#jioblivxlz .gt_font_italic {
+  font-style: italic;
+}
+
+#jioblivxlz .gt_super {
+  font-size: 65%;
+}
+
+#jioblivxlz .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="jioblivxlz" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Name</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Abkürzung</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Regel</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">N-sensitiv</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Bestraft Komplexität</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left">Chi-Quadrat</td>
+      <td class="gt_row gt_left">-</td>
+      <td class="gt_row gt_left">Verhältnis von Chi-Quadrat/df &lt; 3 oder &lt; 2 für geschachtelte Modelle</td>
+      <td class="gt_row gt_left">Ja</td>
+      <td class="gt_row gt_left">Nein</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Tucker-Lewis Index</td>
+      <td class="gt_row gt_left">TLI</td>
+      <td class="gt_row gt_left">&gt;= .95, sollte nahe 1 sein</td>
+      <td class="gt_row gt_left">Nein</td>
+      <td class="gt_row gt_left">Ja</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Comparative Fit Index</td>
+      <td class="gt_row gt_left">CFI</td>
+      <td class="gt_row gt_left">&gt;= .95, sollte nahe 1 sein</td>
+      <td class="gt_row gt_left">Nein</td>
+      <td class="gt_row gt_left">Ja</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Root Mean Square Residual</td>
+      <td class="gt_row gt_left">RMR</td>
+      <td class="gt_row gt_left">Je keiner, desto besser; 0 wäre perfekt</td>
+      <td class="gt_row gt_left">Ja</td>
+      <td class="gt_row gt_left">Nein</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Standardized RMR</td>
+      <td class="gt_row gt_left">SRMR</td>
+      <td class="gt_row gt_left">&lt;= .08</td>
+      <td class="gt_row gt_left">Ja</td>
+      <td class="gt_row gt_left">Nein</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Root Mean Square Error of Approximation</td>
+      <td class="gt_row gt_left">RMSEA</td>
+      <td class="gt_row gt_left">&lt; .05</td>
+      <td class="gt_row gt_left">Ja (bei kleinem N)</td>
+      <td class="gt_row gt_left">Ja</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
+<p>Unser Modell passt für diese Daten also nicht optimal, jediglich der SRMR wäre im akzeptierten Bereich. An dieser Stelle aber noch einmal der Hinweis: Diese Grenzen sind willkürlich!</p>
+</div>
+</div>
+<div id="aus-der-praxis" class="section level1">
+<h1>Aus der Praxis</h1>
+<p><span class="citation">Holzinger &amp; Swineford (<a href="#ref-Holzinger.1939" role="doc-biblioref">1939</a>)</span></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>holzinger_model &lt;-<span class="st"> &#39;</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="st">visual  =~ x1 + x2 + x3      </span></span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="st">textual =~ x4 + x5 + x6</span></span>
+<span id="cb18-4"><a href="#cb18-4"></a><span class="st">speed   =~ x7 + x8 + x9</span></span>
+<span id="cb18-5"><a href="#cb18-5"></a><span class="st">&#39;</span></span>
+<span id="cb18-6"><a href="#cb18-6"></a></span>
+<span id="cb18-7"><a href="#cb18-7"></a>holzinger_fit &lt;-<span class="st"> </span><span class="kw">cfa</span>(holzinger_model, <span class="dt">data =</span> HolzingerSwineford1939)</span>
+<span id="cb18-8"><a href="#cb18-8"></a></span>
+<span id="cb18-9"><a href="#cb18-9"></a></span>
+<span id="cb18-10"><a href="#cb18-10"></a><span class="kw">summary</span>(holzinger_fit, <span class="dt">standardized =</span> <span class="ot">TRUE</span>, <span class="dt">fit.measures =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>## lavaan 0.6-6 ended normally after 35 iterations
+## 
+##   Estimator                                         ML
+##   Optimization method                           NLMINB
+##   Number of free parameters                         21
+##                                                       
+##   Number of observations                           301
+##                                                       
+## Model Test User Model:
+##                                                       
+##   Test statistic                                85.306
+##   Degrees of freedom                                24
+##   P-value (Chi-square)                           0.000
+## 
+## Model Test Baseline Model:
+## 
+##   Test statistic                               918.852
+##   Degrees of freedom                                36
+##   P-value                                        0.000
+## 
+## User Model versus Baseline Model:
+## 
+##   Comparative Fit Index (CFI)                    0.931
+##   Tucker-Lewis Index (TLI)                       0.896
+## 
+## Loglikelihood and Information Criteria:
+## 
+##   Loglikelihood user model (H0)              -3737.745
+##   Loglikelihood unrestricted model (H1)      -3695.092
+##                                                       
+##   Akaike (AIC)                                7517.490
+##   Bayesian (BIC)                              7595.339
+##   Sample-size adjusted Bayesian (BIC)         7528.739
+## 
+## Root Mean Square Error of Approximation:
+## 
+##   RMSEA                                          0.092
+##   90 Percent confidence interval - lower         0.071
+##   90 Percent confidence interval - upper         0.114
+##   P-value RMSEA &lt;= 0.05                          0.001
+## 
+## Standardized Root Mean Square Residual:
+## 
+##   SRMR                                           0.065
+## 
+## Parameter Estimates:
+## 
+##   Standard errors                             Standard
+##   Information                                 Expected
+##   Information saturated (h1) model          Structured
+## 
+## Latent Variables:
+##                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+##   visual =~                                                             
+##     x1                1.000                               0.900    0.772
+##     x2                0.554    0.100    5.554    0.000    0.498    0.424
+##     x3                0.729    0.109    6.685    0.000    0.656    0.581
+##   textual =~                                                            
+##     x4                1.000                               0.990    0.852
+##     x5                1.113    0.065   17.014    0.000    1.102    0.855
+##     x6                0.926    0.055   16.703    0.000    0.917    0.838
+##   speed =~                                                              
+##     x7                1.000                               0.619    0.570
+##     x8                1.180    0.165    7.152    0.000    0.731    0.723
+##     x9                1.082    0.151    7.155    0.000    0.670    0.665
+## 
+## Covariances:
+##                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+##   visual ~~                                                             
+##     textual           0.408    0.074    5.552    0.000    0.459    0.459
+##     speed             0.262    0.056    4.660    0.000    0.471    0.471
+##   textual ~~                                                            
+##     speed             0.173    0.049    3.518    0.000    0.283    0.283
+## 
+## Variances:
+##                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+##    .x1                0.549    0.114    4.833    0.000    0.549    0.404
+##    .x2                1.134    0.102   11.146    0.000    1.134    0.821
+##    .x3                0.844    0.091    9.317    0.000    0.844    0.662
+##    .x4                0.371    0.048    7.779    0.000    0.371    0.275
+##    .x5                0.446    0.058    7.642    0.000    0.446    0.269
+##    .x6                0.356    0.043    8.277    0.000    0.356    0.298
+##    .x7                0.799    0.081    9.823    0.000    0.799    0.676
+##    .x8                0.488    0.074    6.573    0.000    0.488    0.477
+##    .x9                0.566    0.071    8.003    0.000    0.566    0.558
+##     visual            0.809    0.145    5.564    0.000    1.000    1.000
+##     textual           0.979    0.112    8.737    0.000    1.000    1.000
+##     speed             0.384    0.086    4.451    0.000    1.000    1.000</code></pre>
+</div>
+<div id="literatur" class="section level1 unnumbered">
+<h1>Literatur</h1>
+<div id="refs" class="references">
+<div id="ref-Holzinger.1939">
+<p>Holzinger, K. J., &amp; Swineford, F. (1939). A study in factor analysis: the stability of a bi-factor solution. <em>Supplementary Educational Monographs</em>, <em>48</em>, xi + 91.</p>
+</div>
+<div id="ref-Schreiber.2017">
+<p>Schreiber, J. B. (2017). Update to core reporting practices in structural equation modeling. <em>Research in Social &amp; Administrative Pharmacy</em>, <em>13</em>(3), 634–643. <a href="https://doi.org/10.1016/j.sapharm.2016.06.006">https://doi.org/10.1016/j.sapharm.2016.06.006</a></p>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

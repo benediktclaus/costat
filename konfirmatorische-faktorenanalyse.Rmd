@@ -9,7 +9,7 @@ editor_options:
 
 <!-- Only when working on it -->
 ```{r echo=FALSE, message=FALSE}
-knitr::opts_chunk$set(fig.align = "center", dpi = 350)
+knitr::opts_chunk$set(fig.align = "center", dpi = 350, message = FALSE, warning = FALSE)
 ggplot2::theme_set(ggplot2::theme_minimal())
 
 
@@ -29,42 +29,130 @@ library(gt)
 <!-- ``` -->
 
 <!-- Spanner Image -->
-![]()
+![](images/party_r.jpg)
 
-Dieses Verfahren...
+Bei der **konfirmatorischen Faktorenanalyse (CFA)** sind wir etwas sicherer als bei der [explorativen Schwester](explorative-faktorenanalyse.html), denn hier haben wir bereits eine Idee davon welche Faktorenstruktur unseren Daten zugrunde liegt. Mit der CFA können wir also überprüfen, ob unsere Daten zu dem theoretischen Modell passen. Das beurteilen wir anhand des **Modell-Fits**.
 
 # Pakete 
 Alle Berechnungen und Abbildungen können wir mit unseren [Standardpaketen](pakete.html) durchführen. Wir benötigen das `tidyverse` zum Data Wrangling und zur Visualisierung der Daten. `haven` benötigen wir für den Import von SPSS-Dateien und `rstatix` für statistische Analysen. Wenn man sich den Import und das Bereinigen der Daten sparen möchte (Schritte, die man dennoch üben sollte), findet man die Daten auch im Paket `costatcompanion`.
 
-```{r message=FALSE}
+Für die CFA benötigen wir das Paket `lavaan`, für Korrelogramme das Paket `corrgram`.
+
+```{r}
 library(tidyverse)
 library(haven)
 library(rstatix)
 library(costatcompanion)
+library(corrgram)
+library(lavaan)
 ```
 
 # Beispiel
-## Klassisch
-### Voraussetzungen
-### EDA
-### Durchführung
-### Berichten
+Bei der [explorativen Faktorenanalyse](explorative-faktorenanalyse.html) haben wir bereits den Fragebogen zur Freude an Festivitäten (FFF) kennengelernt, bei dem wir eine zugrundeliegende Struktur mit drei latenten Faktoren vermuten. Diese drei Faktoren waren "Vorfreude", "Tanzen" und "Geselligkeit". Nun sind wir auf mehrere Feiern und in Clubs im Raum Dortmund gegangen und haben den Fragebogen 442 Probanden erneut ausfüllen lassen. Nun wollen wir überprüfen, ob die in der ersten Stichprobe gefundene Faktorenstruktur auch für diese Stichprobe angemessen ist.
 
-## Robust
+Die neuen Daten finden wir in der Datei `party_people.sav` im [GitHub-Repository](https://github.com/benediktclaus/costat/tree/master/data), oder als `party_people` im [`costatcompanion`](pakete.html#costatcompanion).
+
+```{r}
+party_people
+```
 
 
-## Non-parametrisch
+## Voraussetzungen
+Siehe die [Voraussetzungen bei der EFA](explorative-faktorenanalyse.html#Voraussetzungen), wobei Bartlett und KMO hier entfallen. Die Daten sollten pro Item nicht unbedingt schief sein und jeder Faktor sollte mit mindestens 3 Items/Variablen geschätzt werden.
 
+## Vorgehen
+Eine gute Übersicht über das Vorgehen ist bei @Schreiber.2017[, S. 635] dargestellt.
+
+## EDA
+Eine gute Idee ist es, wie immer, sich die Daten vorher einmal anzuschauen. Um uns die Arbeit einfacher zu machen, entfernen wir aber zunächst wieder die Probanden ID.
+
+```{r}
+party_people_raw <- party_people %>% 
+  select(-id)
+
+party_people_raw
+
+party_people_raw %>% 
+  get_summary_stats()
+
+party_people_raw %>% 
+  corrgram(panel = panel.fill, order = TRUE)
+```
+
+Bei der CFA müssen wir falsch herum codierte Items übrigens nicht umkodieren; dadurch würde sich nur das Vorzeichen des standardisierten Pfadkoeffizienten ändern, der Modell-Fit jedoch nicht.
+
+## Durchführung
+Zunächst müssen wir das hypothetische Modell definieren. Aus der [EFA](explorative-faktorenanalyse.html) ging hervor, dass auf dem Faktor "Vorfreude" die Items 1, 4, 7, 12, 13 und 15 laden. Zum Faktor "Tanzen" sollen die Items 3, 5, 9 und 11 gehören und zum Faktor "Geselligkeit" die Items 2, 6, 8, 10 und 14. Das Modell müssen wir in der lavaan-Syntax formulieren, die relativ selbsterklärend ist. (Reflektive) Faktoren werden  durch `=~` definiert und die Syntax muss in Anführgungszeichen stehen (`''`).
+
+```{r}
+party_model <- '
+anticipation =~ item_1 + item_4 + item_7 + item_12 + item_13 + item_15
+dancing =~ item_3 + item_5 + item_9 + item_11
+socializing =~ item_2 + item_6 + item_8 + item_10 + item_14
+'
+```
+
+Dieses Modell können wir dann mit der Funktion `cfa()` schätzen lassen. Die Ergebnisse speichern wir in einem Objekt, um uns danach eine Zusammenfassung ausgeben zu lassen.
+
+```{r}
+party_cfa <-  cfa(party_model, data = party_people)
+
+summary(party_cfa)
+```
+
+Der Output ist schon ziemlich ausführlich, aber richtig informativ wird er, wenn wir uns die standardisierten Koeffizienten und zusätzliche Fit-Measures ausgeben lassen.
+
+```{r}
+summary(party_cfa, standardized = TRUE, fit.measures = TRUE)
+```
+
+Diesen Output kann man mit dem Paket `broom` natürlich auch *tidy* machen, um sie weiter verwenden zu können, oder um mit `glance()` einen schnellen Blick auf die Fit-Measures zu kriegen.
+
+```{r}
+library(broom)
+
+tidy(party_cfa)
+
+glance(party_cfa)
+```
+
+
+## Beurteilung des Modell-Fits
+Es gibt unzählige "Vorgaben" oder "Grenzen", in die diese Fit-Measures fallen sollen , damit ein Modell "akzeptabel" ist. Wenn man mit diesen Kriterien arbeiten möchte, ist es falsch, ein "Schwarz-Weiß-", oder "Alles-oder-Nichts-Denken" an den Tag zu legen. Nur weil ein (willkürlich gewähltes) Kriterium knapp nicht erfüllt wird, muss das Modell nicht schlecht sein. Es kommt, wie immer bei Faktorenanalysen, zunächst einmal auf die **Interpretierbarkeit** des Modells an.
+
+Wer solche Kriterien nutzen möchte, ist bei @Schreiber.2017[, S. 639] gut aufgehoben. Die wichtigsten Fit-Measures sind in der unteren Tabelle.
+
+```{r echo=FALSE}
+tribble(
+  ~ Name, ~ Abkürzung, ~ Regel, ~ Sample_sensitivity, ~ Complex_penalty,
+  "Chi-Quadrat", "-", "Verhältnis von Chi-Quadrat/df < 3 oder < 2 für geschachtelte Modelle", "Ja", "Nein",
+  "Tucker-Lewis Index", "TLI", ">= .95, sollte nahe 1 sein", "Nein", "Ja",
+  "Comparative Fit Index", "CFI", ">= .95, sollte nahe 1 sein", "Nein", "Ja",
+  "Root Mean Square Residual", "RMR", "Je keiner, desto besser; 0 wäre perfekt", "Ja", "Nein",
+  "Standardized RMR", "SRMR", "<= .08", "Ja", "Nein",
+  "Root Mean Square Error of Approximation", "RMSEA", "< .05", "Ja (bei kleinem N)", "Ja"
+) %>% 
+  gt() %>% 
+  cols_label(Sample_sensitivity = "N-sensitiv", Complex_penalty = "Bestraft Komplexität")
+```
+
+Unser Modell passt für diese Daten also nicht optimal, jediglich der SRMR wäre im akzeptierten Bereich. An dieser Stelle aber noch einmal der Hinweis: Diese Grenzen sind willkürlich!
 
 # Aus der Praxis
-## Klassisch
-### EDA
-### Durchführung
-### Berichten
+@Holzinger.1939
 
-## Robust
+```{r}
+holzinger_model <- '
+visual  =~ x1 + x2 + x3      
+textual =~ x4 + x5 + x6
+speed   =~ x7 + x8 + x9
+'
 
-## Non-parametrisch
+holzinger_fit <- cfa(holzinger_model, data = HolzingerSwineford1939)
+
+
+summary(holzinger_fit, standardized = TRUE, fit.measures = TRUE)
+```
 
 
 # Literatur
