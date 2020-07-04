@@ -217,3 +217,18 @@ simulateData(model = factor_model, model.type = "cfa", sample.nobs = 320, ov.var
   ) %>% 
   rownames_to_column(var = "id") %>% 
   write_sav("data/party.sav")
+
+# CFA
+set.seed(20200704)
+simulateData(model = factor_model, model.type = "cfa", sample.nobs = 442, ov.var = rep(1.5, times = 15)) %>% 
+  as_tibble() %>% 
+  mutate(across(everything(), ~ . + 5),
+         # across(everything(), round),
+         across(everything(), pmax, 0),
+         across(everything(), pmin, 10)
+  ) %>% 
+  select(
+    num_range("item_", 1:15)
+  ) %>% 
+  rownames_to_column(var = "id") %>% 
+  write_sav("data/party_people.sav")
