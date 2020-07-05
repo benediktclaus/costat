@@ -25,7 +25,7 @@ Für viele Methoden und Verfahren ist es zwar wichtig zu verstehen, was diese ma
 ### Cohens $d$
 Nach @Cohen.1988[S. 20]^[im Sinne einer einheitlichen, einfachen und bekannten Notation, weiche ich an dieser Stelle von Cohens Notation ab und verwende die gängige Notation, die Studierende mehrheitlich lernen. Für die Übersichtlichkeit wird auf Indizes verzichtet.] $$d = \dfrac{\mu_1-\mu_2}{\sigma}$$ mit $\sigma$ als Standardabweichung der beiden Gruppen.
 
-Nach @Cohen.1988[S. 67] berechnet man $d$ für Gruppen mit ungelichen Standardabweichungen gemäß $$\dfrac{\mu_1 - \mu_2}{s}$$ mit der **gepoolten Standardabweichung** $$s = \sqrt{\dfrac{\sum{(x_1 - \mu_1)^2} + \sum{(x_2 - \mu_2)^2}}{n_1 + n_2 -2}}$$ und $x_1$, sowie $x_2$ als individuelle Werte der Probanden in den Gruppen $1$ und $2$.
+Nach @Cohen.1988[S. 67] berechnet man $d$ für Gruppen mit ungleichen Standardabweichungen gemäß $$\dfrac{\mu_1 - \mu_2}{s}$$ mit der **gepoolten Standardabweichung** $$s = \sqrt{\dfrac{\sum{(x_1 - \mu_1)^2} + \sum{(x_2 - \mu_2)^2}}{n_1 + n_2 -2}}$$ und $x_1$, sowie $x_2$ als individuelle Werte der Probanden in den Gruppen $1$ und $2$.
 
 ### Hedges' $g$
 Nach @Hedges.1981[S. 110] $$g = \dfrac{\mu_1 - \mu_2}{s_\text{corrected}}$$ mit der korrigierten Standardabweichung $$s_\text{corrected} = \sqrt{\dfrac{(n_1 - 1) s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 -2}}$$
