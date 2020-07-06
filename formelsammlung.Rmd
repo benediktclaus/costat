@@ -27,6 +27,8 @@ Nach @Cohen.1988[S. 20]^[im Sinne einer einheitlichen, einfachen und bekannten N
 
 Nach @Cohen.1988[S. 67] berechnet man $d$ für Gruppen mit ungleichen Standardabweichungen gemäß $$\dfrac{\mu_1 - \mu_2}{s}$$ mit der **gepoolten Standardabweichung** $$s = \sqrt{\dfrac{\sum{(x_1 - \mu_1)^2} + \sum{(x_2 - \mu_2)^2}}{n_1 + n_2 -2}}$$ und $x_1$, sowie $x_2$ als individuelle Werte der Probanden in den Gruppen $1$ und $2$.
 
+Hat man bereits deskriptive Statistiken berechnet, kann man die gepoolte Standardabweichung auch berechnen als $$s = \sqrt{\dfrac{s_1^2 + s_2^2}{2}}$$
+
 ### Hedges' $g$
 Nach @Hedges.1981[S. 110] $$g = \dfrac{\mu_1 - \mu_2}{s_\text{corrected}}$$ mit der korrigierten Standardabweichung $$s_\text{corrected} = \sqrt{\dfrac{(n_1 - 1) s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 -2}}$$
 
