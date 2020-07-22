@@ -120,10 +120,10 @@ party_recoded %>%
 Und schon sind alle Items miteinander positiv korreliert. Anhand der bereits sichtbaren Clusterung können wir davon ausgehen, dass mindestens ein latenter Faktor vorhanden ist.
 
 ### Bartlett-Test
-Den Bartlett-Test kann man folgendermaßen ausführen. Das Ergebnis ist signifikant, $K^2(14) = 56.075, p < .001$, und bedeutet, dass unsere Korrelationsmatrix *keine* Einheitsmatrix ist. Also alles super!
+Den Bartlett-Test kann man folgendermaßen ausführen. Das Ergebnis ist signifikant, $\chi^2(105) = 1547.5, p < .001$, und bedeutet, dass unsere Korrelationsmatrix *keine* Einheitsmatrix ist. Also alles super!
 
-```{r}
-bartlett.test(party_recoded)
+```{r message=FALSE, warning=FALSE}
+psych::cortest.bartlett(party_recoded)
 ```
 
 ### KMO
@@ -323,10 +323,10 @@ nichols_nicki_raw %>%
 ```
 
 ### Bartlett-Test
-Der Bartlett-Test ist signifikant, weshalb alles super ist, $K^2(30) = 603.72, p < .001$.
+Der Bartlett-Test ist signifikant, weshalb alles super ist, $\chi^2(465) = 4239.0, p < .001$.
 
-```{r}
-bartlett.test(nichols_nicki_raw)
+```{r message=FALSE, warning=FALSE}
+psych::cortest.bartlett(nichols_nicki_raw)
 ```
 
 ### KMO
