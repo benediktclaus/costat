@@ -51,7 +51,7 @@ Es gelten die üblichen [Voraussetzungen des GLM](voraussetzungen.html), allerdi
 ```{r}
 patience_data %>%
   group_by(measurement) %>% 
-  skim()
+  get_summary_stats()
 ```
 
 Anhand der wichtigsten statistischen Kennwerte können wir sehen, dass sich die mittlere Geduld der 53 untersuchten Hufflepuffs von Beginn bis Ende des Schuljahres leicht gesteigert hat, von $M = 42.42, SD = 7.20$ auf $M = 48.68, SD = 8.85$. 
@@ -132,8 +132,23 @@ Am Ende des Schuljahres haben die Hufflepuffs eine größere Geduld, die Effekts
 We found Hufflepuff's students to gain significantly more patience from begin ($M = 42.42, SD = 7.20$) to end of school year ($M = 48.68, SD = 8.85$), $t(52) = -3.57, p < .001$. Hedges' $g$ between these measurements was $g = 0.483$, indicating a small to medium effect.
 
 # Robuste Alternativen
-Folgen.
+Auch für verbundene $t$-Tests hat @Wilcox.2017 natürlich wieder vorgesorgt und die benötigte Funktion (`yuend`) im Paket `WRS2` [@Mair.2020] hinterlegt. Leider müssen wir den Datensatz dafür erst "breiter" machen, was wir mit `pivot_wider()` umsetzen.
 
+```{r}
+library(WRS2)
+
+# Breiten Datensatz erstellen
+patience_wide <- patience_data %>% 
+  pivot_wider(names_from = measurement, values_from = patience)
+
+# Yuens t-Test berechnen
+with(
+  patience_wide,
+  yuend(Begin, End)
+)
+```
+
+In diesem Fall ist der Unterschied wieder signifikant, $T_y(32) = -3.45, p = .002, \xi^2 = .51$, da $p < .05$ ist. Ungefähr 51% der Varianz in den Daten lassen sich durch die Unterschiede zu Beginn und Ende des Schuljahres erklären.
 
 # Aus der Praxis
 @Moore.2017 stellen uns Daten von Patienten mit Demenz zur Verfügung. Sie haben im Rahmen einer größeren Studie erfasst, ob sich diese Patienten mit Demenz in bestimmten Situationen störender Verhalten als üblich. Genauer gesagt sollte das störende Verhalten in Abhängigkeit verschiedener Phasen des Mondzyklus betrachtet werden. Die Daten sind aus der [JASP Data Library](https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf) [@JASPTeam.2019] und in der Datei `moon_and_aggression.csv`.

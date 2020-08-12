@@ -609,161 +609,26 @@ div.tocify {
 <h2>EDA</h2>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>patience_data <span class="op">%&gt;%</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="st">  </span><span class="kw">group_by</span>(measurement) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="st">  </span><span class="kw">skim</span>()</span></code></pre></div>
-<table>
-<caption>Data summary</caption>
-<tbody>
-<tr class="odd">
-<td align="left">Name</td>
-<td align="left">Piped data</td>
-</tr>
-<tr class="even">
-<td align="left">Number of rows</td>
-<td align="left">106</td>
-</tr>
-<tr class="odd">
-<td align="left">Number of columns</td>
-<td align="left">3</td>
-</tr>
-<tr class="even">
-<td align="left">_______________________</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">Column type frequency:</td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="left">character</td>
-<td align="left">1</td>
-</tr>
-<tr class="odd">
-<td align="left">numeric</td>
-<td align="left">1</td>
-</tr>
-<tr class="even">
-<td align="left">________________________</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">Group variables</td>
-<td align="left">measurement</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Variable type: character</strong></p>
-<table style="width:100%;">
-<colgroup>
-<col width="16%" />
-<col width="14%" />
-<col width="11%" />
-<col width="16%" />
-<col width="4%" />
-<col width="4%" />
-<col width="7%" />
-<col width="10%" />
-<col width="13%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">skim_variable</th>
-<th align="left">measurement</th>
-<th align="right">n_missing</th>
-<th align="right">complete_rate</th>
-<th align="right">min</th>
-<th align="right">max</th>
-<th align="right">empty</th>
-<th align="right">n_unique</th>
-<th align="right">whitespace</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">id</td>
-<td align="left">Begin</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">53</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">id</td>
-<td align="left">End</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">53</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Variable type: numeric</strong></p>
-<table>
-<thead>
-<tr class="header">
-<th align="left">skim_variable</th>
-<th align="left">measurement</th>
-<th align="right">n_missing</th>
-<th align="right">complete_rate</th>
-<th align="right">mean</th>
-<th align="right">sd</th>
-<th align="right">p0</th>
-<th align="right">p25</th>
-<th align="right">p50</th>
-<th align="right">p75</th>
-<th align="right">p100</th>
-<th align="left">hist</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">patience</td>
-<td align="left">Begin</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">42.42</td>
-<td align="right">7.20</td>
-<td align="right">24</td>
-<td align="right">38</td>
-<td align="right">42</td>
-<td align="right">47</td>
-<td align="right">60</td>
-<td align="left">▂▃▇▅▂</td>
-</tr>
-<tr class="even">
-<td align="left">patience</td>
-<td align="left">End</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">48.68</td>
-<td align="right">8.85</td>
-<td align="right">27</td>
-<td align="right">43</td>
-<td align="right">48</td>
-<td align="right">54</td>
-<td align="right">73</td>
-<td align="left">▁▆▇▅▁</td>
-</tr>
-</tbody>
-</table>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 14
+##   measurement variable     n   min   max median    q1    q3   iqr   mad  mean
+##   &lt;fct&gt;       &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Begin       patience    53    24    60     42    38    47     9  5.93  42.4
+## 2 End         patience    53    27    73     48    43    54    11  8.90  48.7
+## # ... with 3 more variables: sd &lt;dbl&gt;, se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
 <p>Anhand der wichtigsten statistischen Kennwerte können wir sehen, dass sich die mittlere Geduld der 53 untersuchten Hufflepuffs von Beginn bis Ende des Schuljahres leicht gesteigert hat, von <span class="math inline">\(M = 42.42, SD = 7.20\)</span> auf <span class="math inline">\(M = 48.68, SD = 8.85\)</span>.</p>
 <p><img src="t-test-abhaengig_files/figure-html/unnamed-chunk-7-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Diesen leichten Trend finden wir auch in der entsprechenden Abbildung (C) wieder. Bezüglich der Voraussetzungen können wir anhand der Kerndichteschätzung (= “geglättetes” Histogramm in A) und dem QQ-Plot (B) davon ausgehen, dass die Unterschiede in den Messwerten annähernd normalverteilt sind. Aufgrund des zentralen Grenzwertsatzes können wir jedoch in jedem Fall davon ausgehen, dass die Voraussetzung der Normalverteilung (der Stichprobenkennwerteverteilung) erfüllt ist.</p>
 <p>Wer seine Voraussetzungen gegen <a href="voraussetzungen.html">ausdrückliche Empfehlung</a> in großen Stichproben dennoch statistisch prüfen will, kann das natürlich trotzdem machen.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>patience_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw">pivot_wider</span>(</span>
-<span id="cb4-3"><a href="#cb4-3"></a>    <span class="dt">names_from =</span> measurement,</span>
-<span id="cb4-4"><a href="#cb4-4"></a>    <span class="dt">values_from =</span> patience</span>
-<span id="cb4-5"><a href="#cb4-5"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
-<span id="cb4-7"><a href="#cb4-7"></a>    <span class="dt">difference =</span> End <span class="op">-</span><span class="st"> </span>Begin</span>
-<span id="cb4-8"><a href="#cb4-8"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb4-9"><a href="#cb4-9"></a><span class="st">  </span><span class="kw">shapiro_test</span>(difference)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>patience_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="st">  </span><span class="kw">pivot_wider</span>(</span>
+<span id="cb5-3"><a href="#cb5-3"></a>    <span class="dt">names_from =</span> measurement,</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    <span class="dt">values_from =</span> patience</span>
+<span id="cb5-5"><a href="#cb5-5"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    <span class="dt">difference =</span> End <span class="op">-</span><span class="st"> </span>Begin</span>
+<span id="cb5-8"><a href="#cb5-8"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="st">  </span><span class="kw">shapiro_test</span>(difference)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 3
 ##   variable   statistic     p
 ##   &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt;
@@ -773,15 +638,15 @@ div.tocify {
 <div id="durchführung" class="section level2">
 <h2>Durchführung</h2>
 <p>Ist Die Zunahme der Geduld von Anfang bis Ende des Schuljahres nun statistisch signifikant? Das überprüfen wir nun mit dem <span class="math inline">\(t\)</span>-Test für abhängige Stichproben.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>patience_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="st">  </span><span class="kw">t_test</span>(patience <span class="op">~</span><span class="st"> </span>measurement, <span class="dt">paired =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>patience_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="st">  </span><span class="kw">t_test</span>(patience <span class="op">~</span><span class="st"> </span>measurement, <span class="dt">paired =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 8
 ##   .y.      group1 group2    n1    n2 statistic    df        p
 ## * &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
 ## 1 patience Begin  End       53    53     -3.57    52 0.000778</code></pre>
 <p><span class="math inline">\(p &lt; .001\)</span>, also können wir fetstellten, dass sich die Geduld der untersuchten Hufflepuffs von Beginn zu Ende des Schuljahres tatsächlich gesteigert hat. Natürlich interessiert uns nicht nur, ob der Effekt statistisch signifikant ist, vielmehr wollen wir auch die Größe des Effekts, also die Effektstärke berechnen.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>patience_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="st">  </span><span class="kw">cohens_d</span>(patience <span class="op">~</span><span class="st"> </span>measurement, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>patience_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="st">  </span><span class="kw">cohens_d</span>(patience <span class="op">~</span><span class="st"> </span>measurement, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 7
 ##   .y.      group1 group2 effsize    n1    n2 magnitude
 ## * &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;ord&gt;    
@@ -795,7 +660,29 @@ div.tocify {
 </div>
 <div id="robuste-alternativen" class="section level1">
 <h1>Robuste Alternativen</h1>
-<p>Folgen.</p>
+<p>Auch für verbundene <span class="math inline">\(t\)</span>-Tests hat <span class="citation">Wilcox (<a href="#ref-Wilcox.2017" role="doc-biblioref">2017</a>)</span> natürlich wieder vorgesorgt und die benötigte Funktion (<code>yuend</code>) im Paket <code>WRS2</code> <span class="citation">(Mair &amp; Wilcox, <a href="#ref-Mair.2020" role="doc-biblioref">2020</a>)</span> hinterlegt. Leider müssen wir den Datensatz dafür erst “breiter” machen, was wir mit <code>pivot_wider()</code> umsetzen.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">library</span>(WRS2)</span>
+<span id="cb11-2"><a href="#cb11-2"></a></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="co"># Breiten Datensatz erstellen</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a>patience_wide &lt;-<span class="st"> </span>patience_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> measurement, <span class="dt">values_from =</span> patience)</span>
+<span id="cb11-6"><a href="#cb11-6"></a></span>
+<span id="cb11-7"><a href="#cb11-7"></a><span class="co"># Yuens t-Test berechnen</span></span>
+<span id="cb11-8"><a href="#cb11-8"></a><span class="kw">with</span>(</span>
+<span id="cb11-9"><a href="#cb11-9"></a>  patience_wide,</span>
+<span id="cb11-10"><a href="#cb11-10"></a>  <span class="kw">yuend</span>(Begin, End)</span>
+<span id="cb11-11"><a href="#cb11-11"></a>)</span></code></pre></div>
+<pre><code>## Call:
+## yuend(x = Begin, y = End)
+## 
+## Test statistic: -3.4467 (df = 32), p-value = 0.00161
+## 
+## Trimmed mean difference:  -6 
+## 95 percent confidence interval:
+## -9.5458     -2.4542 
+## 
+## Explanatory measure of effect size: 0.51</code></pre>
+<p>In diesem Fall ist der Unterschied wieder signifikant, <span class="math inline">\(T_y(32) = -3.45, p = .002, \xi^2 = .51\)</span>, da <span class="math inline">\(p &lt; .05\)</span> ist. Ungefähr 51% der Varianz in den Daten lassen sich durch die Unterschiede zu Beginn und Ende des Schuljahres erklären.</p>
 </div>
 <div id="aus-der-praxis" class="section level1">
 <h1>Aus der Praxis</h1>
@@ -803,10 +690,10 @@ div.tocify {
 <p>Der Datensatz besteht auch zwei Spalten, einmal <code>moon</code> und einmal <code>other</code>. In der ersten Spalte steht die Anzahl der störenden Verhaltensweisen eines Patienten während einer Mondphase, in der zweiten die Anzahl der störenden Verhaltens <em>desselben</em> Patienten in anderen Phasen. Höhere Werte bedeuten hier mehr störendes Verhalten.</p>
 <div id="eda-1" class="section level2">
 <h2>EDA</h2>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>moon &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/moon_and_aggression.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()</span>
-<span id="cb10-3"><a href="#cb10-3"></a></span>
-<span id="cb10-4"><a href="#cb10-4"></a>moon</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>moon &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/moon_and_aggression.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()</span>
+<span id="cb13-3"><a href="#cb13-3"></a></span>
+<span id="cb13-4"><a href="#cb13-4"></a>moon</span></code></pre></div>
 <pre><code>## # A tibble: 15 x 2
 ##     moon other
 ##    &lt;dbl&gt; &lt;dbl&gt;
@@ -826,17 +713,17 @@ div.tocify {
 ## 14  0.33  0.23
 ## 15  2     0.38</code></pre>
 <p>Die Daten kommen im wide format, mit dem wir in R ungerne, bzw. selten arbeiten. Die meisten longitudinalen Daten sind im wide format, weil sie so intuitiv einzutragen sind, aber so sind sie eben <a href="data-wrangling.html">nicht tidy</a>. Wir müssen die Daten zunächst ins long format überführen, also “länger machen”. Damit wir den Überblick darüber behalten, von wem die Daten eigentlich sind, sollten wir auch Probanden IDs vergeben; dafür reicht eine fortlaufende Nummer. Das erreichen wir ganz unkompliziert mit der Funktion <code>rownames_to_column()</code>, der wir das Argument <code>var = "id"</code> mitgeben, so wird die neu erstellte Spalte direkt nach unseren Wünschen benannt.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>moon &lt;-<span class="st"> </span>moon <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="st">  </span><span class="kw">rownames_to_column</span>(<span class="dt">var =</span> <span class="st">&quot;id&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="st">  </span><span class="kw">pivot_longer</span>(</span>
-<span id="cb12-4"><a href="#cb12-4"></a>    <span class="dt">cols =</span> <span class="op">-</span>id,</span>
-<span id="cb12-5"><a href="#cb12-5"></a>    <span class="dt">names_to =</span> <span class="st">&quot;cycle&quot;</span>,</span>
-<span id="cb12-6"><a href="#cb12-6"></a>    <span class="dt">values_to =</span> <span class="st">&quot;aggressive_behavior&quot;</span></span>
-<span id="cb12-7"><a href="#cb12-7"></a>  )</span>
-<span id="cb12-8"><a href="#cb12-8"></a></span>
-<span id="cb12-9"><a href="#cb12-9"></a>moon <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb12-10"><a href="#cb12-10"></a><span class="st">  </span><span class="kw">group_by</span>(cycle) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb12-11"><a href="#cb12-11"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>moon &lt;-<span class="st"> </span>moon <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="st">  </span><span class="kw">rownames_to_column</span>(<span class="dt">var =</span> <span class="st">&quot;id&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="st">  </span><span class="kw">pivot_longer</span>(</span>
+<span id="cb15-4"><a href="#cb15-4"></a>    <span class="dt">cols =</span> <span class="op">-</span>id,</span>
+<span id="cb15-5"><a href="#cb15-5"></a>    <span class="dt">names_to =</span> <span class="st">&quot;cycle&quot;</span>,</span>
+<span id="cb15-6"><a href="#cb15-6"></a>    <span class="dt">values_to =</span> <span class="st">&quot;aggressive_behavior&quot;</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a>  )</span>
+<span id="cb15-8"><a href="#cb15-8"></a></span>
+<span id="cb15-9"><a href="#cb15-9"></a>moon <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-10"><a href="#cb15-10"></a><span class="st">  </span><span class="kw">group_by</span>(cycle) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-11"><a href="#cb15-11"></a><span class="st">  </span><span class="kw">get_summary_stats</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 14
 ##   cycle variable     n   min   max median    q1    q3   iqr   mad  mean    sd
 ##   &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -844,15 +731,15 @@ div.tocify {
 ## 2 other aggress~    15  0.11  1.59   0.4  0.285  0.67 0.385 0.297 0.589 0.445
 ## # ... with 2 more variables: se &lt;dbl&gt;, ci &lt;dbl&gt;</code></pre>
 <p>Anhand der deskriptiven Kennwerte können wir die Tendenz erahnen, dass sich die untersuchten Patienten mit Demenz in Mondphasen störender verhielten (<span class="math inline">\(M = 3.02, SD = 1.50\)</span>) als in anderen Mondphasen (<span class="math inline">\(M = 0.59, SD = 0.45\)</span>). Wir haben eine sehr kleine Stichprobe von <span class="math inline">\(n = 15\)</span> Probanden mit zwei Messungen. Wir sollten unsere Voraussetzungen also auf jeden Fall gründlich prüfen. Bei dem <span class="math inline">\(t\)</span>-Test mit verbundenen Stichproben müssen die Differenzen normalverteilt sein.</p>
-<p><img src="t-test-abhaengig_files/figure-html/unnamed-chunk-13-1.png" width="2450" style="display: block; margin: auto;" /></p>
+<p><img src="t-test-abhaengig_files/figure-html/unnamed-chunk-14-1.png" width="2450" style="display: block; margin: auto;" /></p>
 <p>Aus Abbildungen A (der Kerndichteschätzung der Differenzen) und B (dem QQ-Plot der Differenzen) können wir entnehmen, dass das ganz gut aussieht. Bis auf einen kleinen bumper am Ende sehen die Daten recht normalverteilt aus. Was sagt der Shapiro-Wilk-Test?</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>moon <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb14-2"><a href="#cb14-2"></a><span class="st">  </span><span class="kw">pivot_wider</span>(</span>
-<span id="cb14-3"><a href="#cb14-3"></a>    <span class="dt">names_from =</span> <span class="st">&quot;cycle&quot;</span>,</span>
-<span id="cb14-4"><a href="#cb14-4"></a>    <span class="dt">values_from =</span> <span class="st">&quot;aggressive_behavior&quot;</span></span>
-<span id="cb14-5"><a href="#cb14-5"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb14-6"><a href="#cb14-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">difference =</span> other <span class="op">-</span><span class="st"> </span>moon) <span class="op">%&gt;%</span></span>
-<span id="cb14-7"><a href="#cb14-7"></a><span class="st">  </span><span class="kw">shapiro_test</span>(difference)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>moon <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="st">  </span><span class="kw">pivot_wider</span>(</span>
+<span id="cb17-3"><a href="#cb17-3"></a>    <span class="dt">names_from =</span> <span class="st">&quot;cycle&quot;</span>,</span>
+<span id="cb17-4"><a href="#cb17-4"></a>    <span class="dt">values_from =</span> <span class="st">&quot;aggressive_behavior&quot;</span></span>
+<span id="cb17-5"><a href="#cb17-5"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb17-6"><a href="#cb17-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">difference =</span> other <span class="op">-</span><span class="st"> </span>moon) <span class="op">%&gt;%</span></span>
+<span id="cb17-7"><a href="#cb17-7"></a><span class="st">  </span><span class="kw">shapiro_test</span>(difference)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 3
 ##   variable   statistic     p
 ##   &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt;
@@ -862,16 +749,16 @@ div.tocify {
 <div id="durchführung-1" class="section level2">
 <h2>Durchführung</h2>
 <p>Die eigentliche Durchführung ist auch hier wieder kurz und schmerzlos.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># t-test</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a>moon <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb16-3"><a href="#cb16-3"></a><span class="st">  </span><span class="kw">t_test</span>(aggressive_behavior <span class="op">~</span><span class="st"> </span>cycle, <span class="dt">paired =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># t-test</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>moon <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="st">  </span><span class="kw">t_test</span>(aggressive_behavior <span class="op">~</span><span class="st"> </span>cycle, <span class="dt">paired =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 8
 ##   .y.                 group1 group2    n1    n2 statistic    df         p
 ## * &lt;chr&gt;               &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
 ## 1 aggressive_behavior moon   other     15    15      6.45    14 0.0000152</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Hedges&#39; g</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a>moon <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb18-3"><a href="#cb18-3"></a><span class="st">  </span><span class="kw">cohens_d</span>(aggressive_behavior <span class="op">~</span><span class="st"> </span>cycle, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># Hedges&#39; g</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>moon <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb21-3"><a href="#cb21-3"></a><span class="st">  </span><span class="kw">cohens_d</span>(aggressive_behavior <span class="op">~</span><span class="st"> </span>cycle, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">hedges.correction =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 7
 ##   .y.                 group1 group2 effsize    n1    n2 magnitude
 ## * &lt;chr&gt;               &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;ord&gt;    
@@ -892,11 +779,17 @@ div.tocify {
 <div id="ref-JASPTeam.2019">
 <p>JASP Team. (2019). <em>The JASP Data Library: Version 2</em>. JASP Publishing. <a href="https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf">https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf</a></p>
 </div>
+<div id="ref-Mair.2020">
+<p>Mair, P., &amp; Wilcox, R. R. (2020). Robust statistical methods in R using the WRS2 package. <em>Behavior Research Methods</em>, <em>52</em>(2), 464–488. <a href="https://doi.org/10.3758/s13428-019-01246-w">https://doi.org/10.3758/s13428-019-01246-w</a></p>
+</div>
 <div id="ref-Moore.2017">
 <p>Moore, D. S., McCabe, G. P., &amp; Craig, B. A. (2017). <em>Introduction to the practice of statistics</em> (9th ed.). W. H. Freeman.</p>
 </div>
 <div id="ref-Rowling.1997">
 <p>Rowling, J. K. (1997). <em>Harry Potter and the Philosopher’s Stone</em>. Bloomsbury.</p>
+</div>
+<div id="ref-Wilcox.2017">
+<p>Wilcox, R. R. (2017). <em>Introduction to Robust Estimation and Hypothesis Testing</em> (4th ed.). Elsevier Academic Press.</p>
 </div>
 </div>
 </div>
