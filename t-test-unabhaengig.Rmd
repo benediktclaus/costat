@@ -121,7 +121,24 @@ chivalry_data %>%
 Members of the Hogwarts house "Gryffindor" yielded greater scores on a test estimating chivalry as opposed to members of house "Slytherin". The mean difference of 44.2 points was statistically significant, $t(69.2) = 24.6, p < .001$ with an effect size of Hedges' $g = 5.50$, indicating a huge effect.
 
 # Robuste Alternativen
-Folgen.
+Auch für den $t$-Test hat @Wilcox.2017 natürlich wieder vorgesorgt. Im Paket `WRS2` [@Mair.2020] gibt es den Yuen-Test [@Yuen.1974] fü getrimmte Mittelwerte, der mit der passend benannten Funktion `yuen` ausgeführt wird.
+
+```{r}
+library(WRS2)
+
+yuen(chivalry ~ house, data = chivalry_data)
+```
+
+In diesem Fall ist der Unterschied zwischen den beiden Häusern ebenfalls signifikant, da $p < .05$ ist. Das Ergebnis des Yuen-Tests berichtet man in diesem Beispiel als $T_y(43.7) = 28.72, p < .001, \xi^2 = .98$. Dabei ist $\xi^2$ [@Wilcox.2011] die Effektstärke des "erklärten Effekts", man kann sie also ähnlich interpretieren wie das Bestimmtsheitsmaß $R^2$. In diesem Fall lassen sich also 98% der Varianz zwischen den Gruppen durch die Zugehörigkeit zu den Häusern erklären. Besonders elegant ist, dass die Varianzen der Gruppen für $\xi^2$ *nicht* homogen sein müssen.
+
+Möchte man eher eine robuste Effektstärke im Geiste Cohens haben [wie etwa Cohens $d$; @Cohen.1988], dann schlagen @Algina.2005 genau die robuste Version von Cohens $d$ vor (Varianzhomogenität vorausgesetzt).
+
+```{r}
+akp.effect(chivalry ~ house, data = chivalry_data)
+```
+
+Der Effekt wäre also $\delta_t = 6.72 [4.38, 7.79]$.
+
 
 # Aus der Praxis
 @Matzke.2015 ließen eine Reihe von Probanden neutrale Worte auswendig lernen. Die Autoren teilten ihre Probanden unter anderem nun in zwei Gruppen ein: die eine Gruppe ließen sie nun nach dem Lernen und vor dem Abruf (im *retention interval*) ihre Augen horizontal  bewegen, die andere Gruppe ließen sie einen Punkt fixieren. Anschließend sollten die Probanden so viele gelernte Worte wie möglich abrufen. Die Frage war nun, ob die Augenbewegung den Abruf verbessert oder verschlechtert. Die Daten aus der Original-Studie sind in der Datei `eye_movements.csv` und stammen aus der [JASP Data Library](https://jasp-stats.org/wp-content/uploads/2019/11/The_JASP_Data_Library__version_2-1.pdf) [@JASPTeam.2019].
@@ -141,7 +158,7 @@ Wenn wir die Daten einlesen, lassen wir uns die Variablennamen direkt mit der Fu
 
 ```{r}
 eye_movement %>% 
-  skim(condition)
+  get_summary_stats()
 ```
 
 Dieser ersten Übersicht können wir entnehmen, dass 25 Probanden ihre Augen horizontal bewegten und 24 einen Punkt fixierten.
@@ -149,7 +166,7 @@ Dieser ersten Übersicht können wir entnehmen, dass 25 Probanden ihre Augen hor
 ```{r}
 eye_movement %>% 
   group_by(condition) %>% 
-  skim(critical_recall)
+  get_summary_stats()
 ```
 
 Dem ersten Eindruck nach, scheint der Abruf in der Gruppe mit horizontalen Augenbewegungen schlechter zu sein. Im Durchschnitt haben die Probanden dieser experimentellen Bedingung $M = 10.88, SD = 4.32$ Wörter abgerufen, Probanden, die einen Punkt fixierten jedoch $M = 15.29, SD = 6.38$ Worte. Den gleichen Effekt können wir ganz gut im Violin-Plot^[Der Violin-Plot ist im Prinzip nichts anderes als ein detaillierterer Boxplot. Die Breite des Körpers gibt die relative Menge an Datenpunkten wieder; ist der Körper an einer Stelle also breit, sind dort viele Datenpunkte. Die schwarze Linie kennzeichnet auch hier wieder den Median.] (C) erkennt. In beiden Bedingungen hatten wir auf jeden Fall auch richtige Brains sitzen, die maximalen abgerufenen Worte sind hier 22 und 25. Allerdings gab es auch Probanden, die nur 3 oder 4 Worte abrufen konnten. Da wir eine ziemlich kleine Stichprobe haben (in beiden Bedingungen jeweils $n < 30$), sollten wir die Daten tatsächlich auf Normalverteilung und Varianzhomogenität prüfen und uns entsprechende Abbildungen zur Beurteilung ansehen.
